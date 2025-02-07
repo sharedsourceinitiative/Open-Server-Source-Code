@@ -1,0 +1,42 @@
+*** ./Configure-OSR6.osr6	Wed Aug 31 21:02:54 2005
+--- ./Configure-OSR6	Wed Aug 31 21:03:51 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --with-pgsql --with-apxs=/usr/lib/apache/bin/apxs \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Wed Aug 31 21:02:54 2005
+--- ./Install-OSR6	Wed Aug 31 21:02:54 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/php
++ INSTALL_ROOT=$D
++ export INSTALL_ROOT
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install INSTALL_ROOT=$D 2>&1 | tee $MOUT
++ 

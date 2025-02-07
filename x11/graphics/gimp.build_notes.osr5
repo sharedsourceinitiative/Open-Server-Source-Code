@@ -1,0 +1,150 @@
+
+                  Build notes for The Gimp v0.99.10
+                       for SCO OpenServer 5.0.*
+
+            Steve Ginzburg <stevegi@sco.com> -- July 1997
+
+
+NOTE:  This is (essentially) a beta version of The Gimp.  I have used
+it quite a bit, and it is _mostly_ stable.  It does crash occasionally.
+It does put some debugging messages on stderr.  Watch the Gimp website
+(http://www.xcf.berkeley.edu/~gimp/) for information about the upcoming
+release version 1.0.
+
+
+  - If you have a previous version of The Gimp installed,
+    remove all gimp libraries and header files from /usr/local/lib
+    and /usr/local/include respectively.  Also rm -rf .gimp in all
+    user home directories.
+
+
+  - Virgin source from ftp://ftp.xcf.berkeley.edu/pub/gimp/developers/
+    You'll need "gimp-0.99.10.tar.gz" and "gimp-data-0.99.9.tar.gz".
+
+
+  - Unpack the gimp-0.99.10.tar.gz archive first.
+  
+
+  - Apply patches from http://copper.ucs.indiana.edu/~sgoehrin/gimp/patches/
+
+	- Download the "all-patches.gz" file and gunzip it.
+
+	- From the directory _containing_ the directory "gimp-0.99.10",
+	  run "patch < all-patches".
+
+
+  - Needs tiff, jpeg, xpm libraries for the corresponding plug-ins to compile.
+
+
+  - gtk+/Configure.in, line 75, add $X_EXTRA_LIBS to last arg.
+
+ 	- Without this fix, "configure" fails to realize that we need
+	  the -lXext on our link line.
+
+	- I submitted this fix to the gimp developers' mailing list.
+	  (It should be fixed in the next release.)
+
+	- Need autoconf to remake the ./configure script from Configure.in.
+	  Autoconf requires m4.
+
+		- Both are available from ftp://ftp.gnu.ai.mit.edu/pub/gnu/
+
+		- Both build cleanly from virgin source with "./configure"
+		  followed by "make" followed by "make install".
+
+		- After autoconf is installed, cd to gtk+ and type "autoconf"
+		  The warning message about cross-compilation can be safely
+		  ignored.
+
+
+  - Fix or remove the C++-style comment in plug-ins/sinus.c, line 724.
+
+
+  - If your jpeg library is old, you may have to change the order of
+    the #include lines in plug-ins/jpeg.c.  Try putting the <jpeglib.h>
+    line last.  This solves weird errors about redefined symbols from
+    <math.h>.
+
+
+  - If you have gcc installed, set the environment variable "CC=cc"
+    before running "./configure"
+
+
+  - Optimization breaks things.  Don't use it.  "gcc" optimization isn't
+    any better.  I tried it.  It breaks different things.
+
+
+  - Make sure your FLAGS and LIBS lines in /etc/default/cc contain the
+    following options:
+
+	FLAGS=-I/usr/local/include -DMAXPATHLEN=1024
+	LIBS=-L/usr/local/lib
+
+
+  - I ran out of virtual memory the first time I tried to link the main
+    app binary.  If you have problems, try adding a swap file using the
+    "/etc/swap -a" command.
+
+
+  - Type 'make install'.  Come back a long time later.  (This took several
+    hours on a 486-75 w/32 megs of RAM.  It took about 1/2 an hour on a
+    Cyrix 6x86/166.)
+
+
+  - "gimp" binary is ~16 megs if -g option used.  Be sure to strip and
+    mcs -d.  This brings it below 1 meg.  Also strip/mcs -d everything
+    in /usr/local/lib/gimp/0.99.10/plug-ins
+
+
+  - Rename "gimp" to "gimp.real" and create the following shell-script
+    wrapper for running The Gimp:
+
+	#!/bin/sh
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+	export LD_LIBRARY_PATH
+
+	exec /usr/local/bin/gimp.real
+
+    Don't forget to "chmod +rx" the wrapper.
+
+
+  - Unpack the gimp-data archive.
+
+
+  - Run "./configure" and "make install".
+
+
+  - Put all the data files into gimp-0.99.10:
+
+	- cd /usr/local/share/gimp
+
+	- mv 0.99.9/* 0.99.10
+
+	- rmdir 0.99.9
+
+
+  - "scoinst" leaves permissions funny on a lot of files.
+    Check the following files:
+
+	- All .h files under /usr/local/include		(Should be 444)
+
+	- All dirs under /usr/local/include		(Should be 555)
+
+	- /usr/local/info/gtk.*
+	  /usr/local/info/pdb.*				(Should be 444)
+
+	- /usr/local/lib/libg*				(Should be 644)
+
+	- All dirs & files under /usr/local/lib/gimp	(Should be 755)
+
+	- /usr/local/bin/gimp*				(Should be 755)
+
+	- /usr/local/share/gimp/0.99.10/user_install	(Should be 755)
+
+	- Everything else below /usr/local/share/gimp	(Files should be 644,
+							 dir's should be 755)
+
+    Everything should have owner/group bin/bin.
+
+
+*******

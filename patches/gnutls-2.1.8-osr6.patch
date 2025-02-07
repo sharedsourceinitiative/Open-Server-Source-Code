@@ -1,0 +1,43 @@
+*** ./Install-OSR6.osr6	Mon Dec 10 09:48:23 2007
+--- ./Install-OSR6	Mon Dec 10 09:48:23 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gnutls
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Mon Dec 10 09:48:42 2007
+--- ./Configure-OSR6	Mon Dec 10 09:51:37 2007
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --program-prefix="" \
++             --with-libintl-prefix=/usr/gnu \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

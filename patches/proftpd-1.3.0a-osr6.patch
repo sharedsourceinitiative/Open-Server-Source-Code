@@ -1,0 +1,196 @@
+*** ./modules/mod_auth_unix.c.00	Sun Jul  3 11:52:02 2005
+--- ./modules/mod_auth_unix.c	Sat Dec  9 12:52:00 2006
+***************
+*** 33,39 ****
+  /* AIX has some rather stupid function prototype inconsistencies between
+   * their crypt.h and stdlib.h's setkey() declarations.  *sigh*
+   */
+! #if defined(HAVE_CRYPT_H) && !defined(AIX4) && !defined(AIX5)
+  # include <crypt.h>
+  #endif
+  
+--- 33,39 ----
+  /* AIX has some rather stupid function prototype inconsistencies between
+   * their crypt.h and stdlib.h's setkey() declarations.  *sigh*
+   */
+! #if defined(HAVE_CRYPT_H) && !defined(AIX4) && !defined(AIX5) && !defined(SYSV5)
+  # include <crypt.h>
+  #endif
+  
+***************
+*** 56,61 ****
+--- 56,67 ----
+  # endif /* !COMSEC */
+  #endif /* HAVE_HPSECURITY_H or HPUX10 or HPUX11 */
+  
++ #if defined(SYSV5)
++ #include  <sys/types.h>
++ #include  <sys/security.h>
++ #include  <sys/audit.h>
++ #endif
++ 
+  #if defined(HAVE_PROT_H) || defined(COMSEC)
+  # include <prot.h>
+  #endif
+*** ./configure.00	Thu Mar  9 10:20:04 2006
+--- ./configure	Sat Dec  9 12:40:23 2006
+***************
+*** 3265,3271 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3265,3271 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5* | sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3273,3279 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3273,3279 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 6357,6363 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6357,6363 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7034,7062 ****
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+        no_undefined_flag='${wl}-z ${wl}text'
+        if test "$GCC" = yes; then
+  	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+  	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        runpath_var='LD_RUN_PATH'
+        hardcode_shlibpath_var=no
+        ;;
+  
+-     sysv5*)
+-       no_undefined_flag=' -z text'
+-       # $CC -shared without GNU ld will not create a library from C++
+-       # object files and a static libstdc++, better avoid it by now
+-       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-       hardcode_libdir_flag_spec=
+-       hardcode_shlibpath_var=no
+-       runpath_var='LD_RUN_PATH'
+-       ;;
+- 
+      uts4*)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec='-L$libdir'
+--- 7034,7051 ----
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5* | unixware7*)
+        no_undefined_flag='${wl}-z ${wl}text'
+        if test "$GCC" = yes; then
+  	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+  	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
++       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        runpath_var='LD_RUN_PATH'
+        hardcode_shlibpath_var=no
+        ;;
+  
+      uts4*)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec='-L$libdir'
+***************
+*** 10212,10220 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+!     archive_cmds_need_lc_CXX=no
+!     ;;
+    tandem*)
+      case $cc_basename in
+        NCC)
+--- 10201,10218 ----
+  	;;
+      esac
+      ;;
+!    sysv5* | unixware7*)
+!       no_undefined_flag_CXX='${wl}-z ${wl}text'
+!       if test "$GCC" = yes; then
+! 	archive_cmds_CXX='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       else
+! 	archive_cmds_CXX='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       fi
+!       archive_expsym_cmds_CXX='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+!       runpath_var_CXX='LD_RUN_PATH'
+!       hardcode_shlibpath_var_CXX=no
+!       ;;
+! 
+    tandem*)
+      case $cc_basename in
+        NCC)
+***************
+*** 13249,13255 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 13247,13253 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+*** ./Install-OSR6.00	Sat Dec  9 12:52:55 2006
+--- ./Install-OSR6	Sat Dec  9 12:52:48 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/proftpd
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

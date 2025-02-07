@@ -1,0 +1,721 @@
+*** ./src/import/ImportMP3.cpp.osr6	Tue Nov 13 14:01:43 2007
+--- ./src/import/ImportMP3.cpp	Mon May  5 21:10:05 2008
+***************
+*** 45,55 ****
+  
+  #ifndef USE_LIBMAD
+  
+  void GetMP3ImportPlugin(ImportPluginList *importPluginList,
+                          UnusableImportPluginList *unusableImportPluginList)
+  {
+     UnusableImportPlugin* mp3IsUnsupported =
+!       new UnusableImportPlugin(DESC, wxArrayString(wxSIZEOF(exts), exts));
+  
+     unusableImportPluginList->Append(mp3IsUnsupported);
+  }
+--- 45,59 ----
+  
+  #ifndef USE_LIBMAD
+  
++ #ifndef DESC
++ #define DESC _("MP3 files")
++ #endif
++ 
+  void GetMP3ImportPlugin(ImportPluginList *importPluginList,
+                          UnusableImportPluginList *unusableImportPluginList)
+  {
+     UnusableImportPlugin* mp3IsUnsupported =
+!       new UnusableImportPlugin(DESC, wxArrayString(WXSIZEOF(exts), exts));
+  
+     unusableImportPluginList->Append(mp3IsUnsupported);
+  }
+*** ./src/Makefile.in.osr6	Tue Nov 13 14:01:40 2007
+--- ./src/Makefile.in	Mon May  5 21:10:05 2008
+***************
+*** 34,40 ****
+  override CXXFLAGS += @CXXFLAGS@
+  
+  # CPPFLAGS are for both C and C++.
+! override CPPFLAGS += -Wall -fno-strict-aliasing -I$(srcdir)/include -I. @CPPFLAGS@ 
+  
+  
+  ########################################
+--- 34,40 ----
+  override CXXFLAGS += @CXXFLAGS@
+  
+  # CPPFLAGS are for both C and C++.
+! override CPPFLAGS += -I$(srcdir)/include -I. @CPPFLAGS@ 
+  
+  
+  ########################################
+*** ./src/AudioIO.cpp.osr6	Tue Nov 13 14:01:37 2007
+--- ./src/AudioIO.cpp	Mon May  5 21:10:05 2008
+***************
+*** 42,47 ****
+--- 42,48 ----
+  #include "Audacity.h"
+  #include "float_cast.h"
+  
++ #include <alloca.h>
+  #include <math.h>
+  #include <stdlib.h>
+  
+*** ./tests/Makefile.in.osr6	Tue Nov 13 14:01:44 2007
+--- ./tests/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 9,15 ****
+  override CXXFLAGS += @CXXFLAGS@
+  
+  # CPPFLAGS are for both C and C++.
+! override CPPFLAGS += -Wall -I../src @CPPFLAGS@ 
+  
+  all: run_tests
+  check: run_tests
+--- 9,15 ----
+  override CXXFLAGS += @CXXFLAGS@
+  
+  # CPPFLAGS are for both C and C++.
+! override CPPFLAGS += -I../src @CPPFLAGS@ 
+  
+  all: run_tests
+  check: run_tests
+*** ./lib-src/FileDialog/Makefile.in.osr6	Tue Nov 13 14:01:48 2007
+--- ./lib-src/FileDialog/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 5,11 ****
+  AR       = @AR@
+  RANLIB   = @RANLIB@
+  
+! CPPFLAGS += -Wall -I. @CPPFLAGS@ 
+  CXXFLAGS += @CXXFLAGS@
+  
+  OBJS     = FileDialog.o @EXTRAOBJS@
+--- 5,11 ----
+  AR       = @AR@
+  RANLIB   = @RANLIB@
+  
+! CPPFLAGS += -I. @CPPFLAGS@ 
+  CXXFLAGS += @CXXFLAGS@
+  
+  OBJS     = FileDialog.o @EXTRAOBJS@
+*** ./lib-src/FileDialog/configure.osr6	Tue Nov 13 14:01:48 2007
+--- ./lib-src/FileDialog/configure	Mon May  5 22:48:13 2008
+***************
+*** 2287,2301 ****
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-g -O2"
+    else
+!     CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS=
+    fi
+  fi
+  ac_ext=c
+--- 2287,2301 ----
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  else
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  fi
+  ac_ext=c
+***************
+*** 2994,3008 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS=
+    fi
+  fi
+  { echo "$as_me:$LINENO: checking for $CC option to accept ISO C89" >&5
+--- 2994,3008 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  fi
+  { echo "$as_me:$LINENO: checking for $CC option to accept ISO C89" >&5
+*** ./lib-src/allegro/Makefile.in.osr6	Tue Nov 13 14:01:48 2007
+--- ./lib-src/allegro/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 4,10 ****
+  CCC = @CXX@
+  srcdir=@srcdir@
+  
+! CFLAGS = -g -O
+  CPPOBJ = \
+  	allegro.cpp.o \
+  	allegrord.cpp.o \
+--- 4,10 ----
+  CCC = @CXX@
+  srcdir=@srcdir@
+  
+! CFLAGS = -O
+  CPPOBJ = \
+  	allegro.cpp.o \
+  	allegrord.cpp.o \
+*** ./lib-src/dlcompat/Makefile.in.osr6	Tue Nov 13 14:01:49 2007
+--- ./lib-src/dlcompat/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 37,43 ****
+  CC=@CC@
+  OPT=@OPT@
+  DEBUGOPT=-g -O0
+! CFLAGS=-Wall -Wstrict-prototypes -Wmissing-prototypes $(OPT)
+  AR=ar cru
+  RANLIB=@RANLIB@
+  INSTALL=/usr/bin/install
+--- 37,43 ----
+  CC=@CC@
+  OPT=@OPT@
+  DEBUGOPT=-g -O0
+! CFLAGS=-Wstrict-prototypes -Wmissing-prototypes $(OPT)
+  AR=ar cru
+  RANLIB=@RANLIB@
+  INSTALL=/usr/bin/install
+*** ./lib-src/libnyquist/misc/Makefile.osr6	Tue Nov 13 14:02:00 2007
+--- ./lib-src/libnyquist/misc/Makefile	Mon May  5 22:44:51 2008
+***************
+*** 9,15 ****
+  
+  # the unix path gets us switches.h:
+  # the cmt path gets us swlogic.h:
+! CFLAGS = -g -I../sys -I../cmt
+  
+  # Directory info:
+  BINPATH = .
+--- 9,15 ----
+  
+  # the unix path gets us switches.h:
+  # the cmt path gets us swlogic.h:
+! CFLAGS = -O2 -I../sys -I../cmt
+  
+  # Directory info:
+  BINPATH = .
+*** ./lib-src/libnyquist/snd/sndconfig.h.osr6	Tue Nov 13 14:02:02 2007
+--- ./lib-src/libnyquist/snd/sndconfig.h	Mon May  5 21:10:06 2008
+***************
+*** 57,62 ****
+--- 57,65 ----
+  #if defined(__linux__)
+    #include "sndlinux.h"
+  
++ #elif defined(__USLC__)
++   #include "sndsco.h"
++ 
+  #elif defined(IRIX)
+    #include "sndirix.h"
+  
+*** ./lib-src/libnyquist/snd/sndsco.h.osr6	Mon May  5 21:10:06 2008
+--- ./lib-src/libnyquist/snd/sndsco.h	Mon May  5 21:10:06 2008
+***************
+*** 0 ****
+--- 1,19 ----
++ /* sndsco.h -- system-specific definitions */
++ 
++ #ifndef SCO
++ #define SCO
++ #endif
++ 
++ typedef double FASTFLOAT;
++ typedef float MEMFLOAT;
++ 
++ /* avoid conflicts if already defined: */
++ #ifndef max
++ 
++ /* min(n, sizeof(long)) doesn't work on RS6K without this: 
++  * (I never tracked down what min() was called and what was wrong.)
++  */
++ #define min(a, b) ((a) < (b) ? (a) : (b))
++ #define max(a, b) ((a) > (b) ? (a) : (b))
++ 
++ #endif
+*** ./lib-src/libnyquist/Makefile.in.osr6	Tue Nov 13 14:01:59 2007
+--- ./lib-src/libnyquist/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 6,12 ****
+  INCL = -Inyqsrc -Itran -Ixlisp -Icmt -Isys -Isnd -Ifft
+  
+  CC = @CC@
+! override CFLAGS += -g -DCMTSTUFF -O2 -DEXT $(INCL)
+  LN = $(CC)
+  LFLAGS = -lm
+  
+--- 6,12 ----
+  INCL = -Inyqsrc -Itran -Ixlisp -Icmt -Isys -Isnd -Ifft
+  
+  CC = @CC@
+! override CFLAGS += -DCMTSTUFF -O2 -DEXT $(INCL)
+  LN = $(CC)
+  LFLAGS = -lm
+  
+*** ./lib-src/libresample/Makefile.in.osr6	Tue Nov 13 14:02:12 2007
+--- ./lib-src/libresample/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 4,10 ****
+  # working Makefile.
+  
+  CC = @CC@
+! CFLAGS = @CFLAGS@ -Wall
+  
+  LIBS = @LIBS@ -lm
+  
+--- 4,10 ----
+  # working Makefile.
+  
+  CC = @CC@
+! CFLAGS = @CFLAGS@
+  
+  LIBS = @LIBS@ -lm
+  
+*** ./lib-src/libvamp/vamp-sdk/hostext/PluginLoader.cpp.osr6	Tue Nov 13 14:02:21 2007
+--- ./lib-src/libvamp/vamp-sdk/hostext/PluginLoader.cpp	Mon May  5 21:10:06 2008
+***************
+*** 550,556 ****
+--- 550,560 ----
+      struct dirent *e = 0;
+      while ((e = readdir(d))) {
+          
++ #ifdef __USLC__
++         if (!e->d_name) continue;
++ #else
+          if (!(e->d_type & DT_REG) || !e->d_name) continue;
++ #endif
+          
+          size_t len = strlen(e->d_name);
+          if (len < extlen + 2 ||
+*** ./lib-src/libvamp/vamp-sdk/RealTime.cpp.osr6	Tue Nov 13 14:02:21 2007
+--- ./lib-src/libvamp/vamp-sdk/RealTime.cpp	Mon May  5 21:10:06 2008
+***************
+*** 55,61 ****
+  
+  #include "RealTime.h"
+  
+! #ifdef __GNUC__
+  #include "sys/time.h"
+  #else
+  #include <time.h>
+--- 55,61 ----
+  
+  #include "RealTime.h"
+  
+! #if defined(__GNUC__) || defined(__USLC__)
+  #include "sys/time.h"
+  #else
+  #include <time.h>
+*** ./lib-src/libvamp/Makefile.in.osr6	Tue Nov 13 14:02:20 2007
+--- ./lib-src/libvamp/Makefile.in	Mon May  5 21:10:06 2008
+***************
+*** 30,36 ****
+  
+  # Compile flags
+  #
+! CXXFLAGS	:= $(CXXFLAGS) -O2 -Wall -I.
+  
+  # Libraries required for the plugins.
+  # (Note that it is desirable to statically link libstdc++ if possible,
+--- 30,36 ----
+  
+  # Compile flags
+  #
+! CXXFLAGS	:= $(CXXFLAGS) -O2 -I.
+  
+  # Libraries required for the plugins.
+  # (Note that it is desirable to statically link libstdc++ if possible,
+*** ./lib-src/portaudio/pa_unix_oss/pa_unix_oss.c.osr6	Tue Nov 13 14:02:31 2007
+--- ./lib-src/portaudio/pa_unix_oss/pa_unix_oss.c	Mon May  5 21:10:06 2008
+***************
+*** 42,48 ****
+  
+  #if defined(__linux__)
+  #include <linux/soundcard.h>
+! #elif defined(__FreeBSD__)
+  #include <sys/soundcard.h>
+  #else
+  #include <machine/soundcard.h> /* JH20010905 */
+--- 42,48 ----
+  
+  #if defined(__linux__)
+  #include <linux/soundcard.h>
+! #elif defined(__FreeBSD__) || defined(__USLC__)
+  #include <sys/soundcard.h>
+  #else
+  #include <machine/soundcard.h> /* JH20010905 */
+*** ./lib-src/portaudio-v19/bindings/cpp/build/gnu/configure.osr6	Tue Nov 13 14:02:34 2007
+--- ./lib-src/portaudio-v19/bindings/cpp/build/gnu/configure	Mon May  5 21:10:06 2008
+***************
+*** 1263,1269 ****
+  
+  PACPP_INC="$PACPP_ROOT/include"
+  INCLUDES="-I$PACPP_INC -I$PORTAUDIO -I$PORTAUDIO/pa_common"
+! CFLAGS="-g -O2 -Wall -ansi -pedantic $INCLUDES"
+  CXXFLAGS="$CFLAGS"
+  PALIBDIR="$PORTAUDIO/lib"
+  
+--- 1263,1269 ----
+  
+  PACPP_INC="$PACPP_ROOT/include"
+  INCLUDES="-I$PACPP_INC -I$PORTAUDIO -I$PORTAUDIO/pa_common"
+! CFLAGS="-O2 $INCLUDES"
+  CXXFLAGS="$CFLAGS"
+  PALIBDIR="$PORTAUDIO/lib"
+  
+*** ./lib-src/portaudio-v19/bindings/cpp/build/gnu/configure.ac.osr6	Tue Nov 13 14:02:35 2007
+--- ./lib-src/portaudio-v19/bindings/cpp/build/gnu/configure.ac	Mon May  5 21:10:06 2008
+***************
+*** 24,30 ****
+  
+  PACPP_INC="$PACPP_ROOT/include"
+  INCLUDES="-I$PACPP_INC -I$PORTAUDIO -I$PORTAUDIO/pa_common"
+! CFLAGS="-g -O2 -Wall -ansi -pedantic $INCLUDES"
+  CXXFLAGS="$CFLAGS"
+  PALIBDIR="$PORTAUDIO/lib"
+  
+--- 24,30 ----
+  
+  PACPP_INC="$PACPP_ROOT/include"
+  INCLUDES="-I$PACPP_INC -I$PORTAUDIO -I$PORTAUDIO/pa_common"
+! CFLAGS="-O2 $INCLUDES"
+  CXXFLAGS="$CFLAGS"
+  PALIBDIR="$PORTAUDIO/lib"
+  
+*** ./lib-src/portaudio-v19/bindings/cpp/configure.osr6	Tue Nov 13 14:02:34 2007
+--- ./lib-src/portaudio-v19/bindings/cpp/configure	Mon May  5 21:10:06 2008
+***************
+*** 2434,2440 ****
+  
+  # Various other variables and flags
+  DEFAULT_INCLUDES="-I$PACPP_ROOT/include -I$PACPP_ROOT/$PORTAUDIO_ROOT/include"
+! CFLAGS=${CFLAGS-"-g -O2 -Wall -ansi -pedantic"}
+  CXXFLAGS=${CXXFLAGS-"${CFLAGS}"}
+  
+  LT_VERSION_INFO="0:12:0"
+--- 2434,2440 ----
+  
+  # Various other variables and flags
+  DEFAULT_INCLUDES="-I$PACPP_ROOT/include -I$PACPP_ROOT/$PORTAUDIO_ROOT/include"
+! CFLAGS=${CFLAGS-"-O2"}
+  CXXFLAGS=${CXXFLAGS-"${CFLAGS}"}
+  
+  LT_VERSION_INFO="0:12:0"
+*** ./lib-src/portaudio-v19/bindings/cpp/configure.ac.osr6	Tue Nov 13 14:02:34 2007
+--- ./lib-src/portaudio-v19/bindings/cpp/configure.ac	Mon May  5 21:10:06 2008
+***************
+*** 25,31 ****
+  
+  # Various other variables and flags
+  DEFAULT_INCLUDES="-I$PACPP_ROOT/include -I$PACPP_ROOT/$PORTAUDIO_ROOT/include"
+! CFLAGS=${CFLAGS-"-g -O2 -Wall -ansi -pedantic"}
+  CXXFLAGS=${CXXFLAGS-"${CFLAGS}"}
+  
+  LT_VERSION_INFO="lt_current:lt_revision:lt_age"
+--- 25,31 ----
+  
+  # Various other variables and flags
+  DEFAULT_INCLUDES="-I$PACPP_ROOT/include -I$PACPP_ROOT/$PORTAUDIO_ROOT/include"
+! CFLAGS=${CFLAGS-"-O2"}
+  CXXFLAGS=${CXXFLAGS-"${CFLAGS}"}
+  
+  LT_VERSION_INFO="lt_current:lt_revision:lt_age"
+*** ./lib-src/portaudio-v19/build/dev-cpp/Makefile-dll.osr6	Tue Nov 13 14:02:36 2007
+--- ./lib-src/portaudio-v19/build/dev-cpp/Makefile-dll	Mon May  5 21:10:06 2008
+***************
+*** 11,18 ****
+  INCS =  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  CXXINCS =  -I"C:/Dev-CPP/include/c++"  -I"C:/Dev-CPP/include/c++/mingw32"  -I"C:/Dev-CPP/include/c++/backward"  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  BIN  = portaudio-dll.dll
+! CXXFLAGS = $(CXXINCS)-O3   -fmessage-length=0 -Wall
+! CFLAGS = $(INCS)-DBUILDING_DLL=1 -O3   -fmessage-length=0 -Wall
+  
+  .PHONY: all all-before all-after clean clean-custom
+  
+--- 11,18 ----
+  INCS =  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  CXXINCS =  -I"C:/Dev-CPP/include/c++"  -I"C:/Dev-CPP/include/c++/mingw32"  -I"C:/Dev-CPP/include/c++/backward"  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  BIN  = portaudio-dll.dll
+! CXXFLAGS = $(CXXINCS) -O3
+! CFLAGS = $(INCS)-DBUILDING_DLL=1 -O3
+  
+  .PHONY: all all-before all-after clean clean-custom
+  
+*** ./lib-src/portaudio-v19/build/dev-cpp/Makefile-static.osr6	Tue Nov 13 14:02:36 2007
+--- ./lib-src/portaudio-v19/build/dev-cpp/Makefile-static	Mon May  5 21:10:06 2008
+***************
+*** 11,18 ****
+  INCS =  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  CXXINCS =  -I"C:/Dev-CPP/include/c++"  -I"C:/Dev-CPP/include/c++/mingw32"  -I"C:/Dev-CPP/include/c++/backward"  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  BIN  = portaudio-static.a
+! CXXFLAGS = $(CXXINCS)-O3   -fmessage-length=0 -Wall
+! CFLAGS = $(INCS)-O3   -fmessage-length=0 -Wall
+  
+  .PHONY: all all-before all-after clean clean-custom
+  
+--- 11,18 ----
+  INCS =  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  CXXINCS =  -I"C:/Dev-CPP/include/c++"  -I"C:/Dev-CPP/include/c++/mingw32"  -I"C:/Dev-CPP/include/c++/backward"  -I"C:/Dev-CPP/include"  -I"../../../asiosdk2"  -I"../../../asiosdk2/common"  -I"../../../asiosdk2/host"  -I"../../../asiosdk2/host/pc"  -I"../../pa_common" 
+  BIN  = portaudio-static.a
+! CXXFLAGS = $(CXXINCS) -O3
+! CFLAGS = $(INCS) -O3
+  
+  .PHONY: all all-before all-after clean clean-custom
+  
+*** ./lib-src/portaudio-v19/Makefile.darwin.osr6	Tue Nov 13 14:02:33 2007
+--- ./lib-src/portaudio-v19/Makefile.darwin	Mon May  5 21:10:06 2008
+***************
+*** 18,25 ****
+  bindir = ${exec_prefix}/bin
+  libdir = ${exec_prefix}/lib
+  includedir = ${prefix}/include
+! CC = gcc
+! CFLAGS = -g -std=gnu99 -Werror -arch i386 -arch ppc -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.3 $(OPT_LEVEL) -Wall -pedantic -pipe -fPIC -DPA_BIG_ENDIAN  -Ipa_common -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DSIZEOF_SHORT=2 -DSIZEOF_INT=4 -DSIZEOF_LONG=4 -DPA_USE_COREAUDIO=1 -Iinclude -Isrc/common
+  LIBS = -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon
+  AR = /usr/bin/ar
+  RANLIB = ranlib
+--- 18,25 ----
+  bindir = ${exec_prefix}/bin
+  libdir = ${exec_prefix}/lib
+  includedir = ${prefix}/include
+! CC = cc
+! CFLAGS = -Werror -arch i386 -arch ppc -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.3 $(OPT_LEVEL) -KPIC -DPA_BIG_ENDIAN  -Ipa_common -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DSIZEOF_SHORT=2 -DSIZEOF_INT=4 -DSIZEOF_LONG=4 -DPA_USE_COREAUDIO=1 -Iinclude -Isrc/common
+  LIBS = -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon
+  AR = /usr/bin/ar
+  RANLIB = ranlib
+*** ./lib-src/portaudio-v19/SConstruct.osr6	Tue Nov 13 14:02:33 2007
+--- ./lib-src/portaudio-v19/SConstruct	Mon May  5 21:10:06 2008
+***************
+*** 36,43 ****
+  
+  # Determine parameters to build tools
+  if Platform in Posix:
+!     baseLinkFlags = threadCFlags = "-pthread"
+!     baseCxxFlags = baseCFlags = "-Wall -pedantic -pipe " + threadCFlags
+      debugCxxFlags = debugCFlags = "-g"
+      optCxxFlags = optCFlags  = "-O2"
+  env["CCFLAGS"] = baseCFlags.split()
+--- 36,43 ----
+  
+  # Determine parameters to build tools
+  if Platform in Posix:
+!     baseLinkFlags = threadCFlags = "-Kpthread"
+!     baseCxxFlags = baseCFlags = "" + threadCFlags
+      debugCxxFlags = debugCFlags = "-g"
+      optCxxFlags = optCFlags  = "-O2"
+  env["CCFLAGS"] = baseCFlags.split()
+*** ./lib-src/portaudio-v19/configure.osr6	Tue Nov 13 14:02:34 2007
+--- ./lib-src/portaudio-v19/configure	Mon May  5 21:10:06 2008
+***************
+*** 21274,21280 ****
+  
+  
+  
+! CFLAGS=${CFLAGS:-"-g -O2 -Wall -pedantic -pipe -fPIC"}
+  
+  if [ $ac_cv_c_bigendian = "yes" ] ; then
+     CFLAGS="$CFLAGS -DPA_BIG_ENDIAN"
+--- 21274,21280 ----
+  
+  
+  
+! CFLAGS=${CFLAGS:-"-O2 -KPIC"}
+  
+  if [ $ac_cv_c_bigendian = "yes" ] ; then
+     CFLAGS="$CFLAGS -DPA_BIG_ENDIAN"
+*** ./lib-src/portaudio-v19/configure.in.osr6	Tue Nov 13 14:02:34 2007
+--- ./lib-src/portaudio-v19/configure.in	Mon May  5 21:10:06 2008
+***************
+*** 130,136 ****
+  AC_SUBST(NASM)
+  AC_SUBST(NASMOPT)
+  
+! CFLAGS=${CFLAGS:-"-g -O2 -Wall -pedantic -pipe -fPIC"}
+  
+  if [[ $ac_cv_c_bigendian = "yes" ]] ; then
+     CFLAGS="$CFLAGS -DPA_BIG_ENDIAN"
+--- 130,136 ----
+  AC_SUBST(NASM)
+  AC_SUBST(NASMOPT)
+  
+! CFLAGS=${CFLAGS:-"-O2 -KPIC"}
+  
+  if [[ $ac_cv_c_bigendian = "yes" ]] ; then
+     CFLAGS="$CFLAGS -DPA_BIG_ENDIAN"
+*** ./lib-src/portmixer/px_tests/Makefile.osr6	Tue Nov 13 14:02:43 2007
+--- ./lib-src/portmixer/px_tests/Makefile	Mon May  5 21:10:06 2008
+***************
+*** 1,16 ****
+  all: px_test
+  
+! CFLAGS = -g -Wall -O -I../../portaudio/pa_common -I../px_common
+  
+  px_test: px_test.o px_unix_oss.o ../px_common/portmixer.h
+! 	gcc -g -o px_test px_test.o px_unix_oss.o -lm \
+  		-L../../portaudio/pa_unix_oss -lportaudio -lpthread
+  
+  px_test.o: px_test.c ../px_common/portmixer.h
+! 	gcc $(CFLAGS) -c px_test.c
+  
+  
+  px_unix_oss.o: ../px_unix_oss/px_unix_oss.c ../px_common/portmixer.h
+! 	gcc $(CFLAGS) -c ../px_unix_oss/px_unix_oss.c
+  
+  
+--- 1,16 ----
+  all: px_test
+  
+! CFLAGS = -O -I../../portaudio/pa_common -I../px_common
+  
+  px_test: px_test.o px_unix_oss.o ../px_common/portmixer.h
+! 	cc -o px_test px_test.o px_unix_oss.o -lm \
+  		-L../../portaudio/pa_unix_oss -lportaudio -lpthread
+  
+  px_test.o: px_test.c ../px_common/portmixer.h
+! 	cc $(CFLAGS) -c px_test.c
+  
+  
+  px_unix_oss.o: ../px_unix_oss/px_unix_oss.c ../px_common/portmixer.h
+! 	cc $(CFLAGS) -c ../px_unix_oss/px_unix_oss.c
+  
+  
+*** ./Install-OSR6.osr6	Mon May  5 21:10:06 2008
+--- ./Install-OSR6	Mon May  5 21:10:06 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/audacity
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.osr6	Tue Nov 13 14:01:28 2007
+--- ./configure	Mon May  5 21:10:06 2008
+***************
+*** 2602,2616 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS=
+    fi
+  fi
+  { echo "$as_me:$LINENO: checking for $CC option to accept ISO C89" >&5
+--- 2602,2616 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  fi
+  { echo "$as_me:$LINENO: checking for $CC option to accept ISO C89" >&5
+***************
+*** 3531,3545 ****
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-g -O2"
+    else
+!     CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS=
+    fi
+  fi
+  ac_ext=cpp
+--- 3531,3545 ----
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  else
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  fi
+  ac_ext=cpp
+*** ./Configure-OSR6.osr6	Mon May  5 21:10:06 2008
+--- ./Configure-OSR6	Mon May  5 21:10:06 2008
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ LIBMAD_LIBS="-lmad"
++ LIBMAD_CFLAGS="$CFLAGS"
++ export CC CXX CFLAGS NM M4 INSTALL LIBMAD_LIBS LIBMAD_CFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/man --with-libmad \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

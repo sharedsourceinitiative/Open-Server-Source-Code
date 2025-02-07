@@ -1,0 +1,245 @@
+*** ./cdrbq.osr6	Thu Aug  7 09:30:21 2003
+--- ./cdrbq	Fri Sep 30 10:40:04 2005
+***************
+*** 8,21 ****
+  global hdir
+  
+  # Program home
+! set hdir [file dirname [info script]]
+  
+  # Is this a symlink?
+! set sdir [info script]
+! while {![catch {file readlink $sdir} sdir]} {
+!   set hdir [file nativename [file dirname $sdir]]
+! }
+! if {[string equal $hdir .]} {set hdir [pwd]}
+  
+  # Source libraries
+  
+--- 8,22 ----
+  global hdir
+  
+  # Program home
+! #set hdir [file dirname [info script]]
+! set hdir "/usr/lib/cdrbq"
+  
+  # Is this a symlink?
+! #set sdir [info script]
+! #while {![catch {file readlink $sdir} sdir]} {
+! #  set hdir [file nativename [file dirname $sdir]]
+! #}
+! #if {[string equal $hdir .]} {set hdir [pwd]}
+  
+  # Source libraries
+  
+*** ./genlib.tcl.osr6	Thu Aug  7 09:30:21 2003
+--- ./genlib.tcl	Fri Sep 30 10:40:04 2005
+***************
+*** 7,18 ****
+  proc dispatch {cmdList title} {
+  
+  	set shellCommand ""
+! 	set systype [exec /bin/uname -s]
+! 
+! 	switch $systype {
+! 		"SunOS" { set xdir "/usr/openwin/bin" }
+! 		default { set xdir "/usr/X11R6/bin" }
+! 	}
+  
+  	foreach cmd $cmdList {
+  		set tmp [join $cmd "' '"]
+--- 7,13 ----
+  proc dispatch {cmdList title} {
+  
+  	set shellCommand ""
+! 	set xdir "/usr/X11R6/bin"
+  
+  	foreach cmd $cmdList {
+  		set tmp [join $cmd "' '"]
+***************
+*** 85,91 ****
+  proc pref_init no_msg {
+  	#Initialize global variables
+  	global cfg ds
+! 	set cfg(device) "/dev/sg0"
+  	set cfg(speed) 32
+  	set cfg(joliet) 1
+  	set cfg(rock) "none"
+--- 80,86 ----
+  proc pref_init no_msg {
+  	#Initialize global variables
+  	global cfg ds
+! 	set cfg(device) "/dev/cd0"
+  	set cfg(speed) 32
+  	set cfg(joliet) 1
+  	set cfg(rock) "none"
+*** ./helplib.tcl.osr6	Thu Aug  7 09:30:21 2003
+--- ./helplib.tcl	Fri Sep 30 10:40:04 2005
+***************
+*** 109,115 ****
+  }
+  	{All Files}
+  {  Ordinarily files with names containing '#' or '~'
+!   are backup files on Linux. CDRBQ will instruct
+    mkisofs to skip these files in the creation of a
+    CD. If you DON'T want to skip them, click this box.
+  }
+--- 109,115 ----
+  }
+  	{All Files}
+  {  Ordinarily files with names containing '#' or '~'
+!   are backup files. CDRBQ will instruct
+    mkisofs to skip these files in the creation of a
+    CD. If you DON'T want to skip them, click this box.
+  }
+***************
+*** 118,124 ****
+    machines can read them. Unlike the Joliet CDs produced
+    on MS-Windows, you can still see the 8.3 filenames on
+    MS-Dos and other systems that don't support Joliet.
+-   Linux kernels 2.2 and up can also read Joliet names.
+  }
+  	{Rock Ridge}
+  {  This is another way to store long filenames on a CD.
+--- 118,123 ----
+***************
+*** 272,278 ****
+  	{Burning Bootable CDs}
+  {  When your computer boots from a CD, it treats part of
+    the CD as a floppy drive. The emulation is at the BIOS
+!   level, so programs like the Linux Kernel operate
+    normally but programs like LILO or SYSLINUX are fooled.
+    All attempts to access the (primary) floppy drive are
+    mapped to the "BOOT" extent on the CD.
+--- 271,277 ----
+  	{Burning Bootable CDs}
+  {  When your computer boots from a CD, it treats part of
+    the CD as a floppy drive. The emulation is at the BIOS
+!   level, so programs like the Kernel operate
+    normally but programs like LILO or SYSLINUX are fooled.
+    All attempts to access the (primary) floppy drive are
+    mapped to the "BOOT" extent on the CD.
+***************
+*** 286,292 ****
+       system install disk. Make sure the floppy actually
+       boots properly.
+  
+!   2. Copy this floppy disk to an image file. Under Linux
+       you can type:
+  		dd if=/dev/fd0 of=bootimage.bin bs=18k
+  
+--- 285,291 ----
+       system install disk. Make sure the floppy actually
+       boots properly.
+  
+!   2. Copy this floppy disk to an image file. Under UNIX
+       you can type:
+  		dd if=/dev/fd0 of=bootimage.bin bs=18k
+  
+***************
+*** 321,361 ****
+    your system for CDRBQ to operate properly.
+  }
+  	{Using ATAPI CDR(W) Devices}
+! {  ATAPI CDR(W)s are special. The Linux kernel needs to be 
+    compiled specially for them to work properly.
+  
+-   If you have never compiled a kernel before, you are wise 
+-   to read the Kernel Howto.
+- 
+-   I tend to use "make menuconfig" to configure the kernel, 
+-   and these are the things I did:
+- 
+-   Under "Block devices", I set "Include IDE/ATAPI CDROM 
+-   support" to "n" and I set "SCSI emulation support" to 
+-   "Y" (or "M" if you prefer to compile as a module).
+- 
+-   Under "SCSI support", I make sure there is "SCSI CD-ROM 
+-   support" and "SCSI generic support" turned on. Since I
+-   have no true SCSI cards, I need nothing from the "SCSI 
+-   low-level drivers" section.
+- 
+-   Once the kernel has been compiled and installed you will
+-   need to append the directive "hdx=ide-scsi" to your boot
+-   command.  This can be done automatically by editing the
+-   /etc/lilo.conf and adding the following under your kernel
+-   image section:
+- 
+- 	append="hdc=ide-scsi"
+- 
+-   Be sure to replace "hdc" with your proper device.  
+-   Similar things can be done with other boot loaders, 
+-   but I will not get into those.
+- 
+-   I built and installed this kernel. As a result, my 
+-   CD-ROM detected as a scsi device (/dev/scd0 in my case) 
+-   during bootup and I have been able to burn to /dev/sg0 
+-   as is the default in CDRBQ.
+- 
+    For more information on the special needs of your 
+    CDR(W), see the documentation for "cdrecord" which is 
+    the burn program that CDRBQ calls out to.
+--- 320,328 ----
+    your system for CDRBQ to operate properly.
+  }
+  	{Using ATAPI CDR(W) Devices}
+! {  ATAPI CDR(W)s are special. The kernel needs to be 
+    compiled specially for them to work properly.
+  
+    For more information on the special needs of your 
+    CDR(W), see the documentation for "cdrecord" which is 
+    the burn program that CDRBQ calls out to.
+*** ./interface.tcl.osr6	Thu Aug  7 09:30:21 2003
+--- ./interface.tcl	Fri Sep 30 10:40:04 2005
+***************
+*** 260,266 ****
+  message .pad.audio.amesg -text {This option will pad audio track data to be a multiple of 2352 bytes. The padding is done with all zeroes which means complete silence. See also PCM vs. WAV in help.}
+  frame .pad.data
+  checkbutton .pad.data.cb -text {Pad Data Track} -variable {cfg(dpad)}
+! message .pad.data.dmesg -text {This option appends 15 sectors of zeroes to each data track. This works around a bug in very old Linux kernels.}
+  button .pad.ok -text Dismiss -command {destroy .pad}
+  
+  pack .pad.audio -fill x
+--- 260,266 ----
+  message .pad.audio.amesg -text {This option will pad audio track data to be a multiple of 2352 bytes. The padding is done with all zeroes which means complete silence. See also PCM vs. WAV in help.}
+  frame .pad.data
+  checkbutton .pad.data.cb -text {Pad Data Track} -variable {cfg(dpad)}
+! message .pad.data.dmesg -text {This option appends 15 sectors of zeroes to each data track. This works around a bug in very old kernels.}
+  button .pad.ok -text Dismiss -command {destroy .pad}
+  
+  pack .pad.audio -fill x
+*** ./Build-OSR6.osr6	Fri Sep 30 10:40:04 2005
+--- ./Build-OSR6	Fri Sep 30 10:40:04 2005
+***************
+*** 0 ****
+--- 1,3 ----
++ #!/bin/sh
++ 
++ true
+*** ./Install-OSR6.osr6	Fri Sep 30 10:40:04 2005
+--- ./Install-OSR6	Fri Sep 30 10:44:41 2005
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ 
++ DESTDIR=/u/tmp/cdrbq
++ PATH=/usr/gnu/bin:$PATH
++ export PATH
++ 
++ echo Installing CDRBQ 1.23
++ [ -d $DESTDIR ] && rm -rf $DESTDIR
++ mkdir -p $DESTDIR/usr/lib/cdrbq
++ mkdir -p $DESTDIR/usr/bin
++ install -m 754 cdrbq $DESTDIR/usr/bin/cdrbq
++ install -m 754 toc2cue $DESTDIR/usr/lib/cdrbq/toc2cue
++ install -m 644 genlib.tcl $DESTDIR/usr/lib/cdrbq/genlib.tcl
++ install -m 644 audiolib.tcl $DESTDIR/usr/lib/cdrbq/audiolib.tcl
++ install -m 644 burnlib.tcl $DESTDIR/usr/lib/cdrbq/burnlib.tcl
++ install -m 644 helplib.tcl $DESTDIR/usr/lib/cdrbq/helplib.tcl
++ install -m 644 interface.tcl $DESTDIR/usr/lib/cdrbq/interface.tcl
++ chown -R bin:bin $DESTDIR/usr/lib/cdrbq
++ chown bin:bin $DESTDIR/usr/bin/cdrbq
++ chmod 755 $DESTDIR/usr/bin/cdrbq
++ chmod 644 $DESTDIR/usr/lib/cdrbq/*
++ chmod 755 $DESTDIR/usr/lib/cdrbq/toc2cue

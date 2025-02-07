@@ -1,0 +1,435 @@
+--- ./Expense/Makefile.in.osr6	2004-02-28 15:19:47.000000000 -0800
++++ ./Expense/Makefile.in	2005-06-13 20:06:32.319272015 -0700
+@@ -231,7 +231,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-AM_CFLAGS = -Wall @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
++AM_CFLAGS = @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
+ @MAKE_EXPENSE_TRUE@lib_LTLIBRARIES = libexpense.la
+ @MAKE_EXPENSE_TRUE@libexpense_la_SOURCES = expense.c
+ all: all-am
+--- ./Expense/expense.c.osr6	2004-02-17 16:59:08.000000000 -0800
++++ ./Expense/expense.c	2005-06-13 20:06:32.499192017 -0700
+@@ -541,7 +541,7 @@
+     * so that it can be deleted at sync time.  We need the original record
+     * so that if it has changed on the pilot we can warn the user that
+     * the record has changed on the pilot. */
+-   size = pack_Expense(&(mex->ex), buf, 0xFFFF);
++   size = pack_Expense(&(mex->ex), (unsigned char *)buf, 0xFFFF);
+    
+    br.rt = mex->rt;
+    br.unique_id = mex->unique_id;
+@@ -968,7 +968,7 @@
+    struct ExpenseAppInfo ai;
+    char full_name[256];
+    char buffer[65536];
+-   int num, r;
++   int num;
+    int size;
+    void *buf;
+    struct pi_file *pf;
+@@ -981,7 +981,7 @@
+    memset(&ai, 0, sizeof(ai));
+ 
+    pf = pi_file_open(full_name);
+-   r = pi_file_get_app_info(pf, &buf, &size);
++   pi_file_get_app_info(pf, &buf, (size_t *)(&size));
+ 
+    num = unpack_ExpenseAppInfo(&ai, buf, size);
+    if (num <= 0) {
+--- ./SyncTime/Makefile.in.osr6	2004-02-28 15:19:48.000000000 -0800
++++ ./SyncTime/Makefile.in	2005-06-13 20:06:32.609192007 -0700
+@@ -231,7 +231,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-AM_CFLAGS = -Wall @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
++AM_CFLAGS = @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
+ @MAKE_SYNCTIME_TRUE@lib_LTLIBRARIES = libsynctime.la
+ @MAKE_SYNCTIME_TRUE@libsynctime_la_SOURCES = synctime.c
+ all: all-am
+--- ./KeyRing/Makefile.in.osr6	2004-02-28 15:19:47.000000000 -0800
++++ ./KeyRing/Makefile.in	2005-06-13 20:06:32.709192013 -0700
+@@ -231,7 +231,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-AM_CFLAGS = -Wall @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
++AM_CFLAGS = @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ -I$(top_srcdir)
+ AM_LDFLAGS = @LDFLAGS@ -lcrypto
+ EXTRA_DIST = README.txt
+ @MAKE_KEYRING_TRUE@lib_LTLIBRARIES = libkeyring.la
+--- ./Makefile.in.osr6	2004-02-28 15:19:48.000000000 -0800
++++ ./Makefile.in	2005-06-13 20:06:32.829192016 -0700
+@@ -437,8 +437,8 @@
+ localedir = $(datadir)/locale
+ gnulocaledir = $(prefix)/share/locale
+ I18NDEFS = -DLOCALEDIR=\"$(localedir)\" -DGNULOCALEDIR=\"$(gnulocaledir)\"
+-AM_CFLAGS = -Wall @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ ${I18NDEFS}
+-jpilot_LDFLAGS = -export-dynamic
++AM_CFLAGS = @CFLAGS@ @ccoptions@ @PILOT_FLAGS@ @GTK_CFLAGS@ ${I18NDEFS}
++jpilot_LDFLAGS = -Wl,-Bexport
+ jpilot_LDADD = @LIBS@ @PILOT_LIBS@ @GTK_LIBS@
+ jpilot_dump_LDADD = @LIBS@ @PILOT_LIBS@ @GTK_LIBS@
+ jpilot_sync_LDADD = @LIBS@ @PILOT_LIBS@ @GTK_LIBS@
+--- ./configure.osr6	2004-02-29 15:28:01.000000000 -0800
++++ ./configure	2005-06-13 20:06:33.049192002 -0700
+@@ -3739,7 +3739,11 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv5*)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
++
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -6894,7 +6898,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7583,11 +7587,8 @@
+ 
+     sysv5*)
+       no_undefined_flag=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec=
+       hardcode_shlibpath_var=no
+       runpath_var='LD_RUN_PATH'
+@@ -10748,8 +10749,14 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+-    archive_cmds_need_lc_CXX=no
++  sysv5* | unixware7*)
++      no_undefined_flag_CXX=' -z text'
++      archive_cmds_CXX='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_CXX='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      hardcode_libdir_flag_spec_CXX=
++      hardcode_shlibpath_var_CXX=no
++      archive_cmds_need_lc_CXX=no
++      runpath_var='LD_RUN_PATH'
+     ;;
+   tandem*)
+     case $cc_basename in
+@@ -13761,7 +13768,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_F77=no
+ 	cat <<EOF 1>&2
+@@ -14430,11 +14437,8 @@
+ 
+     sysv5*)
+       no_undefined_flag_F77=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds_F77='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_F77='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec_F77=
+       hardcode_shlibpath_var_F77=no
+       runpath_var='LD_RUN_PATH'
+@@ -16088,7 +16092,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_GCJ=no
+ 	cat <<EOF 1>&2
+@@ -16777,11 +16781,8 @@
+ 
+     sysv5*)
+       no_undefined_flag_GCJ=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds_GCJ='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_GCJ='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec_GCJ=
+       hardcode_shlibpath_var_GCJ=no
+       runpath_var='LD_RUN_PATH'
+@@ -21548,9 +21549,6 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ #include <pi-version.h>
+-int
+-main ()
+-{
+ 
+ int main()
+ {
+@@ -21569,9 +21567,6 @@
+ #endif
+ }
+ 
+-  ;
+-  return 0;
+-}
+ _ACEOF
+ rm -f conftest.$ac_objext
+ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+@@ -21614,18 +21609,12 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ #include <pi-version.h>
+-int
+-main ()
+-{
+ 
+ int main()
+ {
+    exit(0);
+ }
+ 
+-  ;
+-  return 0;
+-}
+ _ACEOF
+ rm -f conftest.$ac_objext
+ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+@@ -21668,9 +21657,6 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ #include <pi-version.h>
+-int
+-main ()
+-{
+ 
+ int main()
+ {
+@@ -21680,10 +21666,6 @@
+ # endif
+ #endif
+ }
+-
+-  ;
+-  return 0;
+-}
+ _ACEOF
+ rm -f conftest.$ac_objext
+ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+@@ -21726,9 +21708,6 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ #include <pi-version.h>
+-int
+-main ()
+-{
+ 
+ int main()
+ {
+@@ -21738,10 +21717,6 @@
+ # endif
+ #endif
+ }
+-
+-  ;
+-  return 0;
+-}
+ _ACEOF
+ rm -f conftest.$ac_objext
+ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+--- ./Configure-OSR6.osr6	2005-06-13 20:06:33.239192003 -0700
++++ ./Configure-OSR6	2005-06-13 20:06:33.219192003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++NM="/usr/ccs/bin/nm -p"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS NM
++rm -f mout-configure
++./configure --prefix=/usr --with-libintl-prefix=/usr/gnu --enable-gtk2 \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./address_gui.c.osr6	2004-02-22 11:34:23.000000000 -0800
++++ ./address_gui.c	2005-06-13 20:06:33.269192012 -0700
+@@ -1534,7 +1534,7 @@
+    struct AddressAppInfo ai;
+    char full_name[FILENAME_MAX];
+    char buffer[65536];
+-   int num, r;
++   int num;
+    int size;
+    void *buf;
+    struct pi_file *pf;
+@@ -1547,7 +1547,7 @@
+    memset(&ai, 0, sizeof(ai));
+ 
+    pf = pi_file_open(full_name);
+-   r = pi_file_get_app_info(pf, &buf, &size);
++   pi_file_get_app_info(pf, &buf, (size_t *)(&size));
+ 
+    num = unpack_AddressAppInfo(&ai, buf, size);
+    if (num <= 0) {
+--- ./memo_gui.c.osr6	2004-02-21 14:40:57.000000000 -0800
++++ ./memo_gui.c	2005-06-13 20:06:33.379192019 -0700
+@@ -880,7 +880,7 @@
+    char pdb_name[FILENAME_MAX];
+    char full_name[FILENAME_MAX];
+    unsigned char buffer[65536];
+-   int num, r;
++   int num;
+    int size;
+    void *buf;
+    long ivalue;
+@@ -902,7 +902,7 @@
+    memset(&ai, 0, sizeof(ai));
+ 
+    pf = pi_file_open(full_name);
+-   r = pi_file_get_app_info(pf, &buf, &size);
++   pi_file_get_app_info(pf, &buf, (size_t *)(&size));
+ 
+    num = unpack_MemoAppInfo(&ai, buf, size);
+    if (num <= 0) {
+--- ./sync.c.osr6	2004-02-22 11:38:28.000000000 -0800
++++ ./sync.c	2005-06-13 20:06:33.569112019 -0700
+@@ -552,12 +552,12 @@
+    }
+    if (dev_usb) {
+       for (i=7; i>0; i--) {
+-	 ret = pi_bind(sd, (struct sockaddr*)&addr, sizeof(addr));
++	 ret = pi_bind(sd, (struct sockaddr*)&addr);
+ 	 if (ret!=-1) break;
+ 	 sleep(1);
+       }
+    } else {
+-      ret = pi_bind(sd, (struct sockaddr*)&addr, sizeof(addr));
++      ret = pi_bind(sd, (struct sockaddr*)&addr);
+    }
+    if (ret == -1) {
+       perror("pi_bind");
+@@ -1086,7 +1086,7 @@
+ 	    return -1;
+ 	 }
+ 	 ret = dlp_ReadRecordById(sd, db, header.unique_id, buffer,
+-				  &index, &size, &attr, &category);
++				  &index, &attr, &category);
+ 	 if (rec_len == size) {
+ 	    jp_logf(JP_LOG_DEBUG, "sizes match!\n");
+ #ifdef JPILOT_DEBUG
+@@ -1227,7 +1227,7 @@
+ 	 jp_logf(JP_LOG_WARN, _("Failed, unable to create file %s\n"), full_name);
+ 	 continue;
+       }
+-      if (pi_file_retrieve(pi_fp, sd, 0)<0) {
++      if (pi_file_retrieve(pi_fp, sd, 0, 0)<0) {
+ 	 jp_logf(JP_LOG_WARN, _("Failed, unable to back up database %s\n"), info.name);
+ 	 times.actime = 0;
+ 	 times.modtime = 0;
+@@ -1577,7 +1577,7 @@
+ 		main_app ? full_name : full_backup_name);
+ 	 continue;
+       }
+-      if (pi_file_retrieve(pi_fp, sd, 0)<0) {
++      if (pi_file_retrieve(pi_fp, sd, 0, 0)<0) {
+ 	 jp_logf(JP_LOG_WARN, "Failed, unable to back up database %s\n", info.name);
+ 	 times.actime = 0;
+ 	 times.modtime = 0;
+@@ -1655,7 +1655,7 @@
+    creator[4] = '\0';
+    jp_logf(JP_LOG_GUI, _("(Creator ID is '%s')..."), creator);
+ 
+-   r = pi_file_install(f, sd, 0);
++   r = pi_file_install(f, sd, 0, 0);
+    if (r<0) {
+       try_again = 0;
+       /* TODO make this generic? Not sure it would work 100% of the time */
+@@ -1717,7 +1717,7 @@
+       }
+       if (try_again) {
+ 	 /* Try again */
+-	 r = pi_file_install(f, sd, 0);
++	 r = pi_file_install(f, sd, 0, 0);
+       }
+    }
+ 
+@@ -2166,7 +2166,7 @@
+ 					  &Pbuf, &size, &index,
+ 					  &attr, &category);
+ 	 /* ret = dlp_ReadRecordById(sd, db, header.unique_id, buffer,
+-				  &index, &size, &attr, &category); */
++				  &index, &attr, &category); */
+ 
+ 	 /* JPA check whether records are the same, before freeing space */
+          same = Pbuf && !memcmp(record, Pbuf, size);
+@@ -2401,7 +2401,7 @@
+ 
+    while(1) {
+       ret = dlp_ReadNextModifiedRec(sd, db, buffer,
+-				    &id, &index, &size, &attr, &category);
++				    &id, &index, &attr, &category);
+       if (ret>=0 ) {
+ 	 jp_logf(JP_LOG_DEBUG, "read next record for %s returned %d\n", DB_name, ret);
+ 	 jp_logf(JP_LOG_DEBUG, "id %ld, index %d, size %d, attr 0x%x, category %d\n",id, index, size, attr, category);
+@@ -2605,7 +2605,7 @@
+       jp_logf(JP_LOG_WARN, _("Error reading at %s : %s %d\n"), full_name, __FILE__, __LINE__);
+       return -1;
+    }
+-   r = pi_file_get_app_info(pf, &Papp_info, &size_Papp_info);
++   pi_file_get_app_info(pf, &Papp_info, &size_Papp_info);
+    if (size_Papp_info <= 0) {
+       jp_logf(JP_LOG_WARN, _("%s:%d Error getting app info %s\n"), __FILE__, __LINE__, full_name);
+       return -1;
+--- ./todo_gui.c.osr6	2004-02-17 21:12:14.000000000 -0800
++++ ./todo_gui.c	2005-06-13 20:06:33.699112015 -0700
+@@ -1239,7 +1239,7 @@
+    memset(&ai, 0, sizeof(ai));
+ 
+    pf = pi_file_open(full_name);
+-   r = pi_file_get_app_info(pf, &buf, &size);
++   pi_file_get_app_info(pf, &buf, (size_t *)(&size));
+ 
+    num = unpack_ToDoAppInfo(&ai, buf, size);
+    if (num <= 0) {
+--- ./jpilot-dump.c.osr6	2004-02-22 19:50:30.000000000 -0800
++++ ./jpilot-dump.c	2005-06-13 20:11:29.505432004 -0700
+@@ -23,6 +23,7 @@
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
+ #include "config.h"
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <time.h>
+--- Install-OSR6.osr6	2005-07-06 12:13:10.050000002 -0700
++++ Install-OSR6	2005-07-06 12:13:19.870000008 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/jpilot
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

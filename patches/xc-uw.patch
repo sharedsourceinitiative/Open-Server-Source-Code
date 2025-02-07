@@ -1,0 +1,54 @@
+--- ./config/cf/svr4.cf.uw	2002-08-19 03:16:31.000000000 +0000
++++ ./config/cf/svr4.cf	2003-09-17 02:22:11.120000008 +0000
+@@ -62,7 +62,7 @@
+  * Here are the default paths to use to pick up tools for building.
+  */
+ #ifndef ArCmdBase
+-#define	ArCmdBase	/usr/ccs/bin/ar
++#define	ArCmdBase	/usr/gnu/bin/ar
+ #endif
+ #ifndef AsCmd
+ #define	AsCmd	/usr/ccs/bin/as
+@@ -79,13 +79,13 @@
+ #define	LdCmd	/usr/ccs/bin/ld
+ #endif
+ #ifndef LexCmd
+-#define	LexCmd	/usr/ccs/bin/lex
++#define	LexCmd	/usr/gnu/bin/flex
+ #endif
+ #ifndef MakeCmd
+-#define	MakeCmd	/usr/ccs/bin/make
++#define	MakeCmd	/usr/gnu/bin/make
+ #endif
+ #ifndef YaccCmd
+-#define	YaccCmd	/usr/ccs/bin/yacc
++#define	YaccCmd	/usr/gnu/bin/bison
+ #endif
+ #ifndef MkdirHierCmd
+ #define MkdirHierCmd mkdir -p
+@@ -132,7 +132,7 @@
+ #define DtPrintDefines		DtSearchDefines
+ #endif
+ #ifndef HasStrcasecmp
+-#define HasStrcasecmp		NO
++#define HasStrcasecmp		YES
+ #endif
+ #endif
+ 
+@@ -164,14 +164,14 @@
+ #define HasGcc3 NO
+ #endif
+ #ifndef HasGcc2
+-#define HasGcc2 HasGcc3
++#define HasGcc2 YES
+ #endif
+ #ifndef HasGcc
+ #define HasGcc HasGcc2
+ #endif
+ 
+ #ifndef HasPerl
+-#define HasPerl			NO
++#define HasPerl			YES
+ #endif
+ 
+ #ifdef i386Architecture

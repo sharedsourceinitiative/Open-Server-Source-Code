@@ -1,0 +1,90 @@
+*** ./tests/Makefile.in.osr6	Thu Aug 31 03:55:41 2006
+--- ./tests/Makefile.in	Sun May  4 21:59:20 2008
+***************
+*** 50,57 ****
+  	dither_test$(EXEEXT) scale_clip_test$(EXEEXT) \
+  	win32_test$(EXEEXT) fix_this$(EXEEXT) aiff_rw_test$(EXEEXT) \
+  	virtual_io_test$(EXEEXT) locale_test$(EXEEXT) \
+! 	largefile_test$(EXEEXT) win32_ordinal_test$(EXEEXT) \
+! 	cpp_test$(EXEEXT)
+  subdir = tests
+  DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+  	$(srcdir)/Makefile.in
+--- 50,56 ----
+  	dither_test$(EXEEXT) scale_clip_test$(EXEEXT) \
+  	win32_test$(EXEEXT) fix_this$(EXEEXT) aiff_rw_test$(EXEEXT) \
+  	virtual_io_test$(EXEEXT) locale_test$(EXEEXT) \
+! 	largefile_test$(EXEEXT) win32_ordinal_test$(EXEEXT)
+  subdir = tests
+  DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+  	$(srcdir)/Makefile.in
+***************
+*** 868,874 ****
+  	flac-tests caf-tests io-tests
+  
+  generic-tests : error_test ulaw_test alaw_test command_test floating_point_test \
+! 		pcm_test win32_ordinal_test cpp_test
+  	uname -a
+  	./error_test
+  	./pcm_test
+--- 867,873 ----
+  	flac-tests caf-tests io-tests
+  
+  generic-tests : error_test ulaw_test alaw_test command_test floating_point_test \
+! 		pcm_test win32_ordinal_test
+  	uname -a
+  	./error_test
+  	./pcm_test
+***************
+*** 887,893 ****
+  	./headerless_test
+  	./locale_test
+  	./win32_ordinal_test
+- 	./cpp_test
+  	@echo "----------------------------------------------------------------------"
+  	@echo "  `./sfversion` passed common tests."
+  	@echo "----------------------------------------------------------------------"
+--- 886,891 ----
+*** ./Install-OSR6.osr6	Sun May  4 22:01:16 2008
+--- ./Install-OSR6	Sun May  4 22:01:36 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/libsndfile
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Sun May  4 22:03:48 2008
+--- ./Configure-OSR6	Sun May  4 22:03:37 2008
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/man \
++             --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

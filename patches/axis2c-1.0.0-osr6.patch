@@ -1,0 +1,627 @@
+*** ./samples/configure.osr6	Wed May  2 23:20:55 2007
+--- ./samples/configure	Fri Aug 10 23:02:15 2007
+***************
+*** 19048,19055 ****
+  fi
+  
+  
+! CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE "
+! LDFLAGS="$LDFLAGS -lpthread"
+  
+  echo "$as_me:$LINENO: checking for ANSI C header files" >&5
+  echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6
+--- 19048,19054 ----
+  fi
+  
+  
+! CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE "
+  
+  echo "$as_me:$LINENO: checking for ANSI C header files" >&5
+  echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6
+*** ./src/core/clientapi/svc_client.c.osr6	Wed May  2 23:16:01 2007
+--- ./src/core/clientapi/svc_client.c	Fri Aug 10 23:00:09 2007
+***************
+*** 581,588 ****
+      const axutil_env_t *env,
+      const axiom_node_t *payload)
+  {
+!     return axis2_svc_client_fire_and_forget_with_op_qname(svc_client, env, NULL,
+          payload);
+  }
+  
+  AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+--- 581,589 ----
+      const axutil_env_t *env,
+      const axiom_node_t *payload)
+  {
+!     axis2_svc_client_fire_and_forget_with_op_qname(svc_client, env, NULL,
+          payload);
++     return;
+  }
+  
+  AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+***************
+*** 866,873 ****
+      const axiom_node_t *payload,
+      axis2_callback_t *callback)
+  {
+!     return axis2_svc_client_send_receive_non_blocking_with_op_qname(svc_client,env, NULL,
+!         payload, callback);
+  }
+  
+  AXIS2_EXTERN axis2_op_client_t *AXIS2_CALL
+--- 867,875 ----
+      const axiom_node_t *payload,
+      axis2_callback_t *callback)
+  {
+!     axis2_svc_client_send_receive_non_blocking_with_op_qname(svc_client,env,
+!         NULL, payload, callback);
+!     return;
+  }
+  
+  AXIS2_EXTERN axis2_op_client_t *AXIS2_CALL
+*** ./src/core/transport/http/server/simple_axis2_server/Makefile.in.osr6	Wed May  2 23:19:00 2007
+--- ./src/core/transport/http/server/simple_axis2_server/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 210,216 ****
+  target_vendor = @target_vendor@
+  prgbindir = $(bindir)
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread
+  axis2_http_server_SOURCES = http_server_main.c
+  axis2_http_server_LDADD = $(LDFLAGS) \
+  		             $(top_builddir)/src/core/transport/http/util/libaxis2_http_util.la \
+--- 210,216 ----
+  target_vendor = @target_vendor@
+  prgbindir = $(bindir)
+  SUBDIRS = 
+! AM_CFLAGS =
+  axis2_http_server_SOURCES = http_server_main.c
+  axis2_http_server_LDADD = $(LDFLAGS) \
+  		             $(top_builddir)/src/core/transport/http/util/libaxis2_http_util.la \
+*** ./test/core/clientapi/Makefile.in.osr6	Wed May  2 23:19:01 2007
+--- ./test/core/clientapi/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 207,213 ****
+  target_vendor = @target_vendor@
+  TESTS = test_client test_clientapi
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread 
+  test_client_SOURCES = test_client.c
+  test_clientapi_SOURCES = test_clientapi.c
+  test_clientapi_LDADD = \
+--- 207,213 ----
+  target_vendor = @target_vendor@
+  TESTS = test_client test_clientapi
+  SUBDIRS = 
+! AM_CFLAGS = 
+  test_client_SOURCES = test_client.c
+  test_clientapi_SOURCES = test_clientapi.c
+  test_clientapi_LDADD = \
+*** ./test/core/addr/Makefile.in.osr6	Wed May  2 23:19:01 2007
+--- ./test/core/addr/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 200,206 ****
+  target_vendor = @target_vendor@
+  TESTS = test_addr
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread
+  test_addr_SOURCES = test_addr.c
+  test_addr_LDADD = \
+                      ../../../util/src/libaxutil.la \
+--- 200,206 ----
+  target_vendor = @target_vendor@
+  TESTS = test_addr
+  SUBDIRS = 
+! AM_CFLAGS = 
+  test_addr_SOURCES = test_addr.c
+  test_addr_LDADD = \
+                      ../../../util/src/libaxutil.la \
+*** ./test/core/description/Makefile.in.osr6	Wed May  2 23:19:02 2007
+--- ./test/core/description/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 199,205 ****
+  target_vendor = @target_vendor@
+  TESTS = test_description
+  SUBDIRS = 
+! AM_CFLAGS = -g -O2 -pthread
+  test_description_SOURCES = test_description.c
+  test_description_LDADD = \
+  			../../../util/src/libaxutil.la \
+--- 199,205 ----
+  target_vendor = @target_vendor@
+  TESTS = test_description
+  SUBDIRS = 
+! AM_CFLAGS = -O2
+  test_description_SOURCES = test_description.c
+  test_description_LDADD = \
+  			../../../util/src/libaxutil.la \
+*** ./test/core/context/Makefile.in.osr6	Wed May  2 23:19:01 2007
+--- ./test/core/context/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 200,206 ****
+  target_vendor = @target_vendor@
+  TESTS = test_context
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread
+  test_context_SOURCES = test_context.c
+  test_context_LDADD = ../../../util/src/libaxutil.la \
+  						../../../axiom/src/om/libaxis2_axiom.la \
+--- 200,206 ----
+  target_vendor = @target_vendor@
+  TESTS = test_context
+  SUBDIRS = 
+! AM_CFLAGS = 
+  test_context_SOURCES = test_context.c
+  test_context_LDADD = ../../../util/src/libaxutil.la \
+  						../../../axiom/src/om/libaxis2_axiom.la \
+*** ./test/core/engine/Makefile.in.osr6	Wed May  2 23:19:02 2007
+--- ./test/core/engine/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 200,206 ****
+  target_vendor = @target_vendor@
+  TESTS = test_engine
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread
+  test_engine_SOURCES = test_engine.c
+  test_engine_LDADD = \
+                      ../../../util/src/libaxutil.la \
+--- 200,206 ----
+  target_vendor = @target_vendor@
+  TESTS = test_engine
+  SUBDIRS = 
+! AM_CFLAGS = 
+  test_engine_SOURCES = test_engine.c
+  test_engine_LDADD = \
+                      ../../../util/src/libaxutil.la \
+*** ./test/core/transport/http/Makefile.in.osr6	Wed May  2 23:19:02 2007
+--- ./test/core/transport/http/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 202,208 ****
+  target_vendor = @target_vendor@
+  TESTS = test_http_transport
+  SUBDIRS = 
+! AM_CFLAGS = -g -pthread
+  test_http_transport_SOURCES = test_http_transport.c
+  test_http_transport_LDADD = \
+                                  $(LDFLAGS) \
+--- 202,208 ----
+  target_vendor = @target_vendor@
+  TESTS = test_http_transport
+  SUBDIRS = 
+! AM_CFLAGS = 
+  test_http_transport_SOURCES = test_http_transport.c
+  test_http_transport_LDADD = \
+                                  $(LDFLAGS) \
+*** ./test/core/deployment/Makefile.in.osr6	Wed May  2 23:19:01 2007
+--- ./test/core/deployment/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 199,205 ****
+  target_vendor = @target_vendor@
+  TESTS = test_deployment
+  SUBDIRS = 
+! AM_CFLAGS = $(CFLAGS) -g -pthread
+  test_deployment_SOURCES = test_deployment.c
+  test_deployment_LDADD = \
+                      ../../../util/src/libaxutil.la \
+--- 199,205 ----
+  target_vendor = @target_vendor@
+  TESTS = test_deployment
+  SUBDIRS = 
+! AM_CFLAGS = $(CFLAGS) 
+  test_deployment_SOURCES = test_deployment.c
+  test_deployment_LDADD = \
+                      ../../../util/src/libaxutil.la \
+*** ./axiom/test/soap/Makefile.in.osr6	Wed May  2 23:18:36 2007
+--- ./axiom/test/soap/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 188,194 ****
+  target_vendor = @target_vendor@
+  TESTS = test_soap
+  SUBDIRS = 
+! AM_CFLAGS = -g -O2 -pthread
+  test_soap_SOURCES = test_soap.c
+  test_soap_LDADD = ../../../util/src/libaxutil.la \
+  					$(top_builddir)/src/om/libaxis2_axiom.la \
+--- 188,194 ----
+  target_vendor = @target_vendor@
+  TESTS = test_soap
+  SUBDIRS = 
+! AM_CFLAGS = -O2
+  test_soap_SOURCES = test_soap.c
+  test_soap_LDADD = ../../../util/src/libaxutil.la \
+  					$(top_builddir)/src/om/libaxis2_axiom.la \
+*** ./axiom/test/om/Makefile.in.osr6	Wed May  2 23:18:36 2007
+--- ./axiom/test/om/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 188,194 ****
+  target_vendor = @target_vendor@
+  TESTS = 
+  SUBDIRS = 
+! AM_CFLAGS = -g -O2 -pthread
+  test_om_SOURCES = test_om.c
+  test_om_LDADD = ../../../util/src/libaxutil.la \
+                      $(top_builddir)/src/om/libaxis2_axiom.la \
+--- 188,194 ----
+  target_vendor = @target_vendor@
+  TESTS = 
+  SUBDIRS = 
+! AM_CFLAGS = -O2
+  test_om_SOURCES = test_om.c
+  test_om_LDADD = ../../../util/src/libaxutil.la \
+                      $(top_builddir)/src/om/libaxis2_axiom.la \
+*** ./axiom/ltmain.sh.osr6	Fri May 26 00:57:20 2006
+--- ./axiom/ltmain.sh	Fri Aug 10 23:00:09 2007
+***************
+*** 5919,5928 ****
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! 	  if test "$inst_prefix_dir" = "$destdir"; then
+! 	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! 	    exit $EXIT_FAILURE
+! 	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.
+--- 5919,5928 ----
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! #	  if test "$inst_prefix_dir" = "$destdir"; then
+! #	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! #	    exit $EXIT_FAILURE
+! #	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.
+*** ./util/src/platforms/unix/scandir.c.osr6	Fri Aug 10 23:00:09 2007
+--- ./util/src/platforms/unix/scandir.c	Fri Aug 10 23:00:09 2007
+***************
+*** 0 ****
+--- 1,136 ----
++ /*
++  * scandir, alphasort - scan a directory
++  *
++  * implementation for systems that do not have it in libc
++  */
++ 
++ #include "config.h"
++ 
++ #ifndef	HAVE_SCANDIR
++ 
++ #include <sys/types.h>
++ #include <dirent.h>
++ #include <stdlib.h>
++ #include <stddef.h>
++ #include <string.h>
++ 
++ /*
++  * convenience helper function for scandir's |compar()| function: 
++  * sort directory entries using strcoll(3)
++  */
++ int
++ alphasort(const void *_a, const void *_b)
++ {
++     struct dirent **a = (struct dirent **)_a;
++     struct dirent **b = (struct dirent **)_b;
++     return strcoll((*a)->d_name, (*b)->d_name);
++ }
++ 
++ 
++ #define strverscmp(a,b) strcoll(a,b) /* for now */
++ 
++ /*
++  * convenience helper function for scandir's |compar()| function: 
++  * sort directory entries using GNU |strverscmp()|
++  */
++ int
++ versionsort(const void *_a, const void *_b)
++ {
++     struct dirent **a = (struct dirent **)_a;
++     struct dirent **b = (struct dirent **)_b;
++     return strverscmp((*a)->d_name, (*b)->d_name);
++ }
++ 
++ /*
++  * The scandir() function reads the directory dirname and builds an
++  * array of pointers to directory entries using malloc(3).  It returns
++  * the number of entries in the array.  A pointer to the array of
++  * directory entries is stored in the location referenced by namelist.
++  *
++  * The select parameter is a pointer to a user supplied subroutine
++  * which is called by scandir() to select which entries are to be
++  * included in the array.  The select routine is passed a pointer to
++  * a directory entry and should return a non-zero value if the
++  * directory entry is to be included in the array.  If select is null,
++  * then all the directory entries will be included.
++  *
++  * The compar parameter is a pointer to a user supplied subroutine
++  * which is passed to qsort(3) to sort the completed array.  If this
++  * pointer is null, the array is not sorted.
++  */
++ int
++ scandir(const char *dirname,
++ 	struct dirent ***ret_namelist,
++ 	int (*select)(const struct dirent *),
++ 	int (*compar)(const struct dirent **, const struct dirent **))
++ {
++     int i, len;
++     int used, allocated;
++     DIR *dir;
++     struct dirent *ent, *ent2;
++     struct dirent **namelist = NULL;
++ 
++     if ((dir = opendir(dirname)) == NULL)
++ 	return -1;
++ 
++     used = 0;
++     allocated = 2;
++     namelist = malloc(allocated * sizeof(struct dirent *));
++     if (!namelist)
++ 	goto error;
++ 
++     while ((ent = readdir(dir)) != NULL) {
++ 
++ 	if (select != NULL && !select(ent))
++ 	    continue;
++ 
++ 	/* duplicate struct direct for this entry */
++ 	len = offsetof(struct dirent, d_name) + strlen(ent->d_name) + 1;
++ 	if ((ent2 = malloc(len)) == NULL)
++ 	    goto error;
++ 	
++ 	if (used >= allocated) {
++ 	    allocated *= 2;
++ 	    namelist = realloc(namelist, allocated * sizeof(struct dirent *));
++ 	    if (!namelist)
++ 		goto error;
++ 	}
++ 	memcpy(ent2, ent, len);
++ 	namelist[used++] = ent2;
++     }
++     closedir(dir);
++ 
++     if (compar)
++ 	qsort(namelist, used, sizeof(struct dirent *),
++ 	      (int (*)(const void *, const void *)) compar);
++ 
++     *ret_namelist = namelist;
++     return used;
++ 
++ 
++ error:
++     closedir(dir);
++ 
++     if (namelist) {
++ 	for (i = 0; i < used; i++) 
++ 	    free(namelist[i]);
++ 	free(namelist);
++     }
++     return -1;
++ }
++ #endif
++ 
++ 
++ #if	STANDALONE_MAIN
++ int
++ main(int argc, char **argv)
++ {
++ 	struct dirent **namelist;
++ 	int i, n;
++ 
++ 	n = scandir("/etc", &namelist, NULL, alphasort);
++ 
++ 	for (i = 0; i < n; i++)
++ 		printf("%s\n", namelist[i]->d_name);
++ }
++ #endif
+*** ./util/src/platforms/unix/Makefile.in.osr6	Wed May  2 23:18:24 2007
+--- ./util/src/platforms/unix/Makefile.in	Fri Aug 10 23:00:09 2007
+***************
+*** 49,55 ****
+  LTLIBRARIES = $(noinst_LTLIBRARIES)
+  libaxis2_unix_la_LIBADD =
+  am_libaxis2_unix_la_OBJECTS = uuid_gen_unix.lo thread_unix.lo \
+! 	date_time_util_unix.lo
+  libaxis2_unix_la_OBJECTS = $(am_libaxis2_unix_la_OBJECTS)
+  DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+  depcomp = $(SHELL) $(top_srcdir)/depcomp
+--- 49,55 ----
+  LTLIBRARIES = $(noinst_LTLIBRARIES)
+  libaxis2_unix_la_LIBADD =
+  am_libaxis2_unix_la_OBJECTS = uuid_gen_unix.lo thread_unix.lo \
+! 	date_time_util_unix.lo scandir.lo
+  libaxis2_unix_la_OBJECTS = $(am_libaxis2_unix_la_OBJECTS)
+  DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+  depcomp = $(SHELL) $(top_srcdir)/depcomp
+***************
+*** 173,179 ****
+  target_vendor = @target_vendor@
+  noinst_LTLIBRARIES = libaxis2_unix.la
+  libaxis2_unix_la_SOURCES = uuid_gen_unix.c\
+!                            thread_unix.c date_time_util_unix.c 
+  
+  INCLUDES = -I$(top_builddir)/include \
+             -I$(top_builddir)/include/platforms \
+--- 173,179 ----
+  target_vendor = @target_vendor@
+  noinst_LTLIBRARIES = libaxis2_unix.la
+  libaxis2_unix_la_SOURCES = uuid_gen_unix.c\
+!                            thread_unix.c date_time_util_unix.c scandir.c
+  
+  INCLUDES = -I$(top_builddir)/include \
+             -I$(top_builddir)/include/platforms \
+***************
+*** 233,238 ****
+--- 233,239 ----
+  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/date_time_util_unix.Plo@am__quote@
+  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/thread_unix.Plo@am__quote@
+  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uuid_gen_unix.Plo@am__quote@
++ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scandir.Plo@am__quote@
+  
+  .c.o:
+  @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+*** ./util/src/stream.c.osr6	Wed May  2 23:17:09 2007
+--- ./util/src/stream.c	Fri Aug 10 23:00:09 2007
+***************
+*** 20,25 ****
+--- 20,30 ----
+  #include <axutil_stream.h>
+  #include <platforms/axutil_platform_auto_sense.h>
+  
++ #ifdef __USLC__
++ #ifdef socket
++ #undef socket
++ #endif
++ #endif /* USLC */
+  
+  /** basic stream operatons **/
+  int AXIS2_CALL
+*** ./util/include/axutil_utils_defines.h.osr6	Wed May  2 23:17:05 2007
+--- ./util/include/axutil_utils_defines.h	Fri Aug 10 23:00:09 2007
+***************
+*** 78,84 ****
+  #define AXIS2_CALL
+  #endif
+  #else
+! #if defined(__unix)
+  #define AXIS2_CALL
+  #else                           /* WIN32 */
+  #define AXIS2_CALL __stdcall
+--- 78,84 ----
+  #define AXIS2_CALL
+  #endif
+  #else
+! #if defined(__unix) || defined(__USLC__)
+  #define AXIS2_CALL
+  #else                           /* WIN32 */
+  #define AXIS2_CALL __stdcall
+*** ./util/ltmain.sh.osr6	Fri May 26 00:57:20 2006
+--- ./util/ltmain.sh	Fri Aug 10 23:00:09 2007
+***************
+*** 5919,5928 ****
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! 	  if test "$inst_prefix_dir" = "$destdir"; then
+! 	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! 	    exit $EXIT_FAILURE
+! 	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.
+--- 5919,5928 ----
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! #	  if test "$inst_prefix_dir" = "$destdir"; then
+! #	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! #	    exit $EXIT_FAILURE
+! #	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.
+*** ./Install-OSR6.osr6	Fri Aug 10 23:00:09 2007
+--- ./Install-OSR6	Fri Aug 10 23:00:09 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/axis2c
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Build-OSR6.osr6	Fri Aug 10 23:00:09 2007
+--- ./Build-OSR6	Fri Aug 10 23:00:09 2007
+***************
+*** 0 ****
+--- 1,56 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ AXIS2C_HOME=/usr/local/axis2c
++ export AXIS2C_HOME
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr/local/axis2c --sysconfdir=/etc --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT
++ 
++ MOUT=mout-install
++ D=/usr/local/axis2c
++ DESTDIR=
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && mv $D $D.bak$$
++ mkdir -p $D
++ make install DESTDIR= 2>&1 | tee $MOUT
++ 
++ cd samples
++ 
++ LD_LIBRARY_PATH=/usr/local/axis2c
++ export LD_LIBRARY_PATH
++ 
++ ./configure --prefix=/usr/local/axis2c --sysconfdir=/etc --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST \
++             --with-axis2_util=/usr/local/axis2c/include \
++             --with-axiom=/usr/local/axis2c/include \
++             2>&1 | tee ../mout-samples-configure
++ 
++ MOUT=mout-samples
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee ../$MOUT
++ make install DESTDIR= 2>&1 | tee ../mout-samples-install
+*** ./ltmain.sh.osr6	Fri May 26 00:57:20 2006
+--- ./ltmain.sh	Fri Aug 10 23:00:09 2007
+***************
+*** 5919,5928 ****
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! 	  if test "$inst_prefix_dir" = "$destdir"; then
+! 	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! 	    exit $EXIT_FAILURE
+! 	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.
+--- 5919,5928 ----
+  	  # At present, this check doesn't affect windows .dll's that
+  	  # are installed into $libdir/../bin (currently, that works fine)
+  	  # but it's something to keep an eye on.
+! #	  if test "$inst_prefix_dir" = "$destdir"; then
+! #	    $echo "$modename: error: cannot install \`$file' to a directory not ending in $libdir" 1>&2
+! #	    exit $EXIT_FAILURE
+! #	  fi
+  
+  	  if test -n "$inst_prefix_dir"; then
+  	    # Stick the inst_prefix_dir data into the link command.

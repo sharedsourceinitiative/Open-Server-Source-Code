@@ -1,0 +1,2253 @@
+*** ./libs/kbase/kb_intelli.cpp.osr6	Tue Feb 13 12:35:41 2007
+--- ./libs/kbase/kb_intelli.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 774,780 ****
+  	m_listBox    ->setMinimumSize	(300, 200) ;
+  
+  
+! #ifdef	Q_OS_LINUX
+  	QFont font = QToolTip::font	() ;
+  	font.setPointSize (font.pointSize() - 2) ;
+  	m_listBox    ->setFont		(font) ;
+--- 774,780 ----
+  	m_listBox    ->setMinimumSize	(300, 200) ;
+  
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	QFont font = QToolTip::font	() ;
+  	font.setPointSize (font.pointSize() - 2) ;
+  	m_listBox    ->setFont		(font) ;
+*** ./libs/kbase/kb_manual.cpp.osr6	Thu Aug 10 08:29:39 2006
+--- ./libs/kbase/kb_manual.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 23,29 ****
+  #include	<io.h>
+  #endif
+  
+! #ifdef		Q_OS_LINUX 
+  #include	<unistd.h>
+  #endif
+  
+--- 23,29 ----
+  #include	<io.h>
+  #endif
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE) 
+  #include	<unistd.h>
+  #endif
+  
+***************
+*** 123,129 ****
+  
+  	m_helpProcess = new QProcess( this );
+  
+! #ifdef	Q_OS_LINUX
+  	m_helpProcess->addArgument (__KB_APPNAME "Manual" ) ;
+  	m_helpProcess->addArgument ("--helpdir") ;
+  	m_helpProcess->addArgument (locateDir("appdata", "manual/rekall.xml") + "manual/") ;
+--- 123,129 ----
+  
+  	m_helpProcess = new QProcess( this );
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_helpProcess->addArgument (__KB_APPNAME "Manual" ) ;
+  	m_helpProcess->addArgument ("--helpdir") ;
+  	m_helpProcess->addArgument (locateDir("appdata", "manual/rekall.xml") + "manual/") ;
+*** ./libs/kbase/kb_plugins.cpp.osr6	Thu Aug 10 08:29:39 2006
+--- ./libs/kbase/kb_plugins.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 20,26 ****
+  #include	"kb_libloader.h"
+  
+  
+! #ifdef		Q_OS_LINUX
+  #include	<dlfcn.h>
+  #define		DLERROR()	dlerror()
+  #endif
+--- 20,26 ----
+  #include	"kb_libloader.h"
+  
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<dlfcn.h>
+  #define		DLERROR()	dlerror()
+  #endif
+*** ./libs/kbase/kb_optionsdlg.cpp.osr6	Sun Nov 26 03:17:06 2006
+--- ./libs/kbase/kb_optionsdlg.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 570,576 ****
+  	else if	(libver == "15") m_eVersion->setCurrentItem (0) ;
+  #endif
+  
+! #ifdef	Q_OS_LINUX
+  	new QLabel	(TR("Executable path"), this)	;
+  	m_eBinpath	= new RKLineEdit  (this)	;
+  #endif
+--- 570,576 ----
+  	else if	(libver == "15") m_eVersion->setCurrentItem (0) ;
+  #endif
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	new QLabel	(TR("Executable path"), this)	;
+  	m_eBinpath	= new RKLineEdit  (this)	;
+  #endif
+***************
+*** 599,605 ****
+  	addFillerRow ()	;
+  
+  	m_eUserpy ->setChecked (config->readBoolEntry ("userpy" )) ;
+! #ifdef	Q_OS_LINUX
+  	m_eBinpath->setText    (config->readEntry     ("binpath")) ;
+  #endif
+  	m_ePypath ->setText    (config->readEntry     ("pypath" )) ;
+--- 599,605 ----
+  	addFillerRow ()	;
+  
+  	m_eUserpy ->setChecked (config->readBoolEntry ("userpy" )) ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_eBinpath->setText    (config->readEntry     ("binpath")) ;
+  #endif
+  	m_ePypath ->setText    (config->readEntry     ("pypath" )) ;
+***************
+*** 616,622 ****
+          config->setGroup ("Debug Options/py") ;
+  
+  	config->writeEntry	("userpy",	m_eUserpy    ->isChecked()) ;
+! #ifdef	Q_OS_LINUX
+  	config->writeEntry	("binpath",	m_eBinpath   ->text()) ;
+  #endif
+  	config->writeEntry	("pypath",	m_ePypath    ->text()) ;
+--- 616,622 ----
+          config->setGroup ("Debug Options/py") ;
+  
+  	config->writeEntry	("userpy",	m_eUserpy    ->isChecked()) ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	config->writeEntry	("binpath",	m_eBinpath   ->text()) ;
+  #endif
+  	config->writeEntry	("pypath",	m_ePypath    ->text()) ;
+***************
+*** 638,644 ****
+  #if	!__KB_USESYSPY
+  	m_eVersion->setEnabled (userpy) ;
+  #endif
+! #ifdef	Q_OS_LINUX
+  	m_eBinpath->setEnabled (userpy) ;
+  #endif
+  	m_ePypath ->setEnabled (userpy) ;
+--- 638,644 ----
+  #if	!__KB_USESYSPY
+  	m_eVersion->setEnabled (userpy) ;
+  #endif
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_eBinpath->setEnabled (userpy) ;
+  #endif
+  	m_ePypath ->setEnabled (userpy) ;
+*** ./libs/kbase/kb_table.cpp.osr6	Tue Oct 10 23:30:04 2006
+--- ./libs/kbase/kb_table.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 31,37 ****
+  #include	<qglobal.h>
+  #include	<qregexp.h>
+  
+! #ifdef		Q_OS_LINUX
+  #include	<unistd.h>
+  #endif
+  
+--- 31,37 ----
+  #include	<qglobal.h>
+  #include	<qregexp.h>
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<unistd.h>
+  #endif
+  
+*** ./libs/kbase/libkbase_exports.h.osr6	Thu Aug 10 08:29:40 2006
+--- ./libs/kbase/libkbase_exports.h	Sat Nov 24 23:15:50 2007
+***************
+*** 24,30 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBKBASE_API
+  #endif		// Q_OS_LINUX
+  
+--- 24,30 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBKBASE_API
+  #endif		// Q_OS_LINUX
+  
+*** ./libs/kbase/kb_linktree.h.osr6	Sun Nov 26 03:17:06 2006
+--- ./libs/kbase/kb_linktree.h	Sat Nov 24 23:15:50 2007
+***************
+*** 38,44 ****
+  {
+  public	:
+  
+! 	KBLinkTreeDummy	(KBObject *, const QString &, const QString $) ;
+  	virtual	~KBLinkTreeDummy () ;
+  
+  	virtual	void	buildGUI	(uint, int, int	)	;
+--- 38,44 ----
+  {
+  public	:
+  
+! 	KBLinkTreeDummy	(KBObject *, const QString &, const QString) ;
+  	virtual	~KBLinkTreeDummy () ;
+  
+  	virtual	void	buildGUI	(uint, int, int	)	;
+*** ./libs/wizard/libwizard_exports.h.osr6	Thu Aug 10 08:29:40 2006
+--- ./libs/wizard/libwizard_exports.h	Sat Nov 24 23:15:50 2007
+***************
+*** 23,29 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBWIZARD_API
+  #endif
+  
+--- 23,29 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBWIZARD_API
+  #endif
+  
+*** ./libs/extra/libextra_exports.h.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/extra/libextra_exports.h	Sat Nov 24 23:15:50 2007
+***************
+*** 23,29 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBEXTRA_API
+  #endif
+  
+--- 23,29 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBEXTRA_API
+  #endif
+  
+*** ./libs/common/kb_database.h.osr6	Tue Feb 20 00:01:41 2007
+--- ./libs/common/kb_database.h	Sat Nov 24 23:15:50 2007
+***************
+*** 30,36 ****
+  #include	<qintdict.h>
+  #include	<qtextcodec.h>
+  
+! #ifdef		Q_OS_LINUX
+  #include	<sys/types.h>
+  #endif
+  
+--- 30,36 ----
+  #include	<qintdict.h>
+  #include	<qtextcodec.h>
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<sys/types.h>
+  #endif
+  
+***************
+*** 289,295 ****
+  	QTextCodec	*m_dataCodec	;	/* Non-default data	*/
+  	QTextCodec	*m_objCodec	;	/* Non-default object	*/
+  
+! #ifdef	Q_OS_LINUX
+  	QString		m_sshTarget	;
+  	pid_t		m_sshPID	;
+  	int		m_sshPort	;
+--- 289,295 ----
+  	QTextCodec	*m_dataCodec	;	/* Non-default data	*/
+  	QTextCodec	*m_objCodec	;	/* Non-default object	*/
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	QString		m_sshTarget	;
+  	pid_t		m_sshPID	;
+  	int		m_sshPort	;
+*** ./libs/common/kb_db.cpp.osr6	Tue Feb 20 00:01:41 2007
+--- ./libs/common/kb_db.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 35,41 ****
+  
+  #include	"kb_locator.h"
+  
+! #ifdef		Q_OS_LINUX
+  
+  #include	"kb_sshtunnel.h"
+  
+--- 35,41 ----
+  
+  #include	"kb_locator.h"
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  
+  #include	"kb_sshtunnel.h"
+  
+***************
+*** 73,79 ****
+  	m_dataCodec	= 0	;
+  	m_objCodec	= 0	;
+  
+! #ifdef	Q_OS_LINUX
+  	m_sshPID	= 0	;
+  	m_sshPort	= -1	;
+  #endif
+--- 73,79 ----
+  	m_dataCodec	= 0	;
+  	m_objCodec	= 0	;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshPID	= 0	;
+  	m_sshPort	= -1	;
+  #endif
+***************
+*** 87,93 ****
+  
+  KBServer::~KBServer ()
+  {
+! #ifdef	Q_OS_LINUX
+  	if (m_sshPID != 0)
+  	{
+  		DPRINTF
+--- 87,93 ----
+  
+  KBServer::~KBServer ()
+  {
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	if (m_sshPID != 0)
+  	{
+  		DPRINTF
+***************
+*** 131,137 ****
+  	m_pkReadOnly		= svInfo->pkReadOnly	() ;
+  	m_fakeKeys		= svInfo->fakeKeys	() ;
+  	m_readOnly		= svInfo->readOnly	() ;
+! #ifdef	Q_OS_LINUX
+  	m_sshTarget		= svInfo->sshTarget	() ;
+  #endif
+  	QString	dataCodec	= svInfo->dataEncoding	() ;
+--- 131,137 ----
+  	m_pkReadOnly		= svInfo->pkReadOnly	() ;
+  	m_fakeKeys		= svInfo->fakeKeys	() ;
+  	m_readOnly		= svInfo->readOnly	() ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshTarget		= svInfo->sshTarget	() ;
+  #endif
+  	QString	dataCodec	= svInfo->dataEncoding	() ;
+***************
+*** 1280,1286 ****
+  }
+  
+  
+! #ifdef	Q_OS_LINUX
+  
+  /*  KBServer								*/
+  /*  openSSHTunnel: Open SSH tunnel to target system			*/
+--- 1280,1286 ----
+  }
+  
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  
+  /*  KBServer								*/
+  /*  openSSHTunnel: Open SSH tunnel to target system			*/
+*** ./libs/common/kb_error.cpp.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/common/kb_error.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 15,21 ****
+  #include	<stdlib.h>
+  #include	<qglobal.h>
+  
+! #ifdef		Q_OS_LINUX
+  #include	<unistd.h>
+  #endif
+  
+--- 15,21 ----
+  #include	<stdlib.h>
+  #include	<qglobal.h>
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<unistd.h>
+  #endif
+  
+*** ./libs/common/kb_file.cpp.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/common/kb_file.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 22,28 ****
+  #ifdef	Q_OS_WIN32
+  	return	0	;
+  #endif
+! #ifdef	Q_OS_LINUX
+  	return	strerror(errno)	;
+  #endif
+  #ifdef	Q_OS_MACX
+--- 22,28 ----
+  #ifdef	Q_OS_WIN32
+  	return	0	;
+  #endif
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	return	strerror(errno)	;
+  #endif
+  #ifdef	Q_OS_MACX
+*** ./libs/common/kb_serverinfo.h.osr6	Tue Oct 10 23:30:03 2006
+--- ./libs/common/kb_serverinfo.h	Sat Nov 24 23:15:50 2007
+***************
+*** 96,102 ****
+  	QString		m_skinSuffix	;	/* Skin suffix		*/
+  	QString		m_comment	;
+  
+! #ifdef	Q_OS_LINUX
+  	QString		m_sshTarget	;
+  #endif
+  
+--- 96,102 ----
+  	QString		m_skinSuffix	;	/* Skin suffix		*/
+  	QString		m_comment	;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	QString		m_sshTarget	;
+  #endif
+  
+***************
+*** 166,172 ****
+   	inline	const QString	&objEncoding	() const { return m_objEncoding   ; }
+   	inline	const QString	&webDirectory	() const { return m_webDirectory  ; }
+   	inline	const QString	&comment	() const { return m_comment	  ; }
+! #ifdef	Q_OS_LINUX
+  	inline	const QString	&sshTarget	() const { return m_sshTarget     ; }
+  #endif
+  	const QString		&getDBPath	() const ;
+--- 166,172 ----
+   	inline	const QString	&objEncoding	() const { return m_objEncoding   ; }
+   	inline	const QString	&webDirectory	() const { return m_webDirectory  ; }
+   	inline	const QString	&comment	() const { return m_comment	  ; }
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	inline	const QString	&sshTarget	() const { return m_sshTarget     ; }
+  #endif
+  	const QString		&getDBPath	() const ;
+*** ./libs/common/kb_serverinfo.cpp.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/common/kb_serverinfo.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 245,251 ****
+  	m_skinSuffix	= svInfo->m_skinSuffix		;
+  	m_comment	= svInfo->m_comment		;
+  
+! #ifdef	Q_OS_LINUX
+  	m_sshTarget	= svInfo->m_sshTarget		;
+  #endif
+  	if (svInfo->m_advanced != 0)
+--- 245,251 ----
+  	m_skinSuffix	= svInfo->m_skinSuffix		;
+  	m_comment	= svInfo->m_comment		;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshTarget	= svInfo->m_sshTarget		;
+  #endif
+  	if (svInfo->m_advanced != 0)
+***************
+*** 330,336 ****
+  	m_webDirectory	= serverSpec.attribute("WebDirectory") ;
+  	m_skinSuffix	= serverSpec.attribute("SkinSuffix"  ) ;
+  	m_comment	= serverSpec.attribute("Comment"     ) ;
+! #ifdef	Q_OS_LINUX
+  	m_sshTarget	= serverSpec.attribute("SSHTarget"   ) ;
+  #endif
+  	m_isDisabled    = serverSpec.attribute("IsDisabled"  ).lower() == "yes" ;
+--- 330,336 ----
+  	m_webDirectory	= serverSpec.attribute("WebDirectory") ;
+  	m_skinSuffix	= serverSpec.attribute("SkinSuffix"  ) ;
+  	m_comment	= serverSpec.attribute("Comment"     ) ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshTarget	= serverSpec.attribute("SSHTarget"   ) ;
+  #endif
+  	m_isDisabled    = serverSpec.attribute("IsDisabled"  ).lower() == "yes" ;
+***************
+*** 512,518 ****
+  	info.setAttribute("WebDirectory",	m_webDirectory  ) ;
+  	info.setAttribute("SkinSuffix",		m_skinSuffix    ) ;
+  	info.setAttribute("Comment",		m_comment	) ;
+! #ifdef	Q_OS_LINUX
+  	info.setAttribute("SSHTarget",		m_sshTarget     ) ;
+  #endif
+  	if (m_advanced != 0)
+--- 512,518 ----
+  	info.setAttribute("WebDirectory",	m_webDirectory  ) ;
+  	info.setAttribute("SkinSuffix",		m_skinSuffix    ) ;
+  	info.setAttribute("Comment",		m_comment	) ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	info.setAttribute("SSHTarget",		m_sshTarget     ) ;
+  #endif
+  	if (m_advanced != 0)
+*** ./libs/common/kb_value.cpp.osr6	Sun Nov 26 16:15:04 2006
+--- ./libs/common/kb_value.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 17,23 ****
+  #include	<qstringlist.h>
+  #include	<qregexp.h>
+  
+! #ifdef		Q_OS_LINUX
+  #include	<stdlib.h>
+  #include	<malloc.h>
+  #include	<locale.h>
+--- 17,23 ----
+  #include	<qstringlist.h>
+  #include	<qregexp.h>
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<stdlib.h>
+  #include	<malloc.h>
+  #include	<locale.h>
+***************
+*** 170,176 ****
+  	}
+  
+  #endif
+! #if	defined(Q_OS_LINUX) && __KB_TKC
+  	/* Under QT on linux, use the locale routines to get the	*/
+  	/* information. As fore KDE above, this is stored locally for	*/
+  	/* future reuse.						*/
+--- 170,176 ----
+  	}
+  
+  #endif
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE) && __KB_TKC
+  	/* Under QT on linux, use the locale routines to get the	*/
+  	/* information. As fore KDE above, this is stored locally for	*/
+  	/* future reuse.						*/
+*** ./libs/common/libcommon_exports.h.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/common/libcommon_exports.h	Sat Nov 24 23:15:50 2007
+***************
+*** 25,31 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBCOMMON_API
+  #endif		// Q_OS_LINUX
+  
+--- 25,31 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBCOMMON_API
+  #endif		// Q_OS_LINUX
+  
+*** ./libs/app/libapp_exports.h.osr6	Thu Aug 10 08:29:36 2006
+--- ./libs/app/libapp_exports.h	Sat Nov 24 23:15:50 2007
+***************
+*** 23,29 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBAPP_API
+  #endif		// Q_OS_LINUX
+  
+--- 23,29 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBAPP_API
+  #endif		// Q_OS_LINUX
+  
+*** ./kbase/kb_serverdlg.cpp.osr6	Tue Oct 10 23:30:03 2006
+--- ./kbase/kb_serverdlg.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 266,272 ****
+  		SLOT	(webBrowse())
+  	)	;
+  
+! #ifdef	Q_OS_LINUX
+  	new QLabel (TR("SSH Tunneling"), layAdvanced) ;
+  	m_sshTarget		= new RKLineEdit(layAdvanced) ;
+  #endif
+--- 266,272 ----
+  		SLOT	(webBrowse())
+  	)	;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	new QLabel (TR("SSH Tunneling"), layAdvanced) ;
+  	m_sshTarget		= new RKLineEdit(layAdvanced) ;
+  #endif
+***************
+*** 373,379 ****
+  	m_skinSuffix	->setText    (m_serverData->m_skinSuffix    ) ;
+  	m_comment	->setText    (m_serverData->m_comment	    ) ;
+  
+! #ifdef	Q_OS_LINUX
+  	m_sshTarget	->setText    (m_serverData->m_sshTarget	    ) ; 
+  #endif
+  	m_webDirectory	->setText    (m_serverData->m_webDirectory  ) ;
+--- 373,379 ----
+  	m_skinSuffix	->setText    (m_serverData->m_skinSuffix    ) ;
+  	m_comment	->setText    (m_serverData->m_comment	    ) ;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshTarget	->setText    (m_serverData->m_sshTarget	    ) ; 
+  #endif
+  	m_webDirectory	->setText    (m_serverData->m_webDirectory  ) ;
+***************
+*** 479,485 ****
+  	m_portNumber->setEnabled ((opts & AF_PORTNUMBER  ) != 0) ;
+  	m_socketName->setEnabled ((opts & AF_SOCKETNAME  ) != 0) ;
+  	m_flags     ->setEnabled ((opts & AF_FLAGS       ) != 0) ;
+! #ifdef	Q_OS_LINUX
+  	m_sshTarget ->setEnabled ((opts & AF_SSHTUNNEL   ) != 0) ;
+  #endif
+  }
+--- 479,485 ----
+  	m_portNumber->setEnabled ((opts & AF_PORTNUMBER  ) != 0) ;
+  	m_socketName->setEnabled ((opts & AF_SOCKETNAME  ) != 0) ;
+  	m_flags     ->setEnabled ((opts & AF_FLAGS       ) != 0) ;
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_sshTarget ->setEnabled ((opts & AF_SSHTUNNEL   ) != 0) ;
+  #endif
+  }
+***************
+*** 676,682 ****
+  	m_serverData->m_dataEncoding	= dataEnc ;
+  	m_serverData->m_objEncoding	= objEnc  ;
+  
+! #ifdef	Q_OS_LINUX
+  	m_serverData->m_sshTarget	= m_sshTarget	  ->text () ;
+  #endif
+  	if (m_serverData->m_advanced != 0)
+--- 676,682 ----
+  	m_serverData->m_dataEncoding	= dataEnc ;
+  	m_serverData->m_objEncoding	= objEnc  ;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	m_serverData->m_sshTarget	= m_sshTarget	  ->text () ;
+  #endif
+  	if (m_serverData->m_advanced != 0)
+*** ./kbase/kb_serverdlg.h.osr6	Thu Aug 10 08:29:35 2006
+--- ./kbase/kb_serverdlg.h	Sat Nov 24 23:15:50 2007
+***************
+*** 88,94 ****
+  	RKTextEdit		*m_initSQL		;
+  	RKTextEdit		*m_comment		;
+  
+! #ifdef	Q_OS_LINUX
+  	RKLineEdit		*m_sshTarget		;
+  #endif
+  
+--- 88,94 ----
+  	RKTextEdit		*m_initSQL		;
+  	RKTextEdit		*m_comment		;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	RKLineEdit		*m_sshTarget		;
+  #endif
+  
+*** ./kbase/kb_main_kde.cpp.osr6	Fri Sep  8 01:23:10 2006
+--- ./kbase/kb_main_kde.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 13,20 ****
+--- 13,29 ----
+  
+  #include	<stdio.h>
+  #include	<stdlib.h>
++ #ifdef __USLC__
++ #include	<strings.h>
++ #endif
+  #include	<time.h>
+  
++ #ifdef __USLC__
++ #ifdef index
++ #undef index
++ #endif
++ #endif
++ 
+  #include	<qglobal.h>
+  #include	<qfileinfo.h>
+  #include	<qlibrary.h>
+***************
+*** 51,57 ****
+  
+  #include	"rk_application.h"
+  
+- 
+  static	const	KCmdLineOptions	options[] =
+  {
+  	{	"useMDI",		I18N_NOOP("Run in MDI mode"		),	0	},
+--- 60,65 ----
+*** ./kjs/kjs/ustring.cpp.osr6	Thu Aug 10 08:29:36 2006
+--- ./kjs/kjs/ustring.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 166,172 ****
+  static inline UChar* allocateChars(int s)
+  {
+    // work around default UChar constructor code
+!   return reinterpret_cast<UChar*>(new short[s]);
+  }
+  
+  UString::Rep *UString::Rep::create(UChar *d, int l)
+--- 166,174 ----
+  static inline UChar* allocateChars(int s)
+  {
+    // work around default UChar constructor code
+! //    return reinterpret_cast<UChar*>(new short[s]);
+! // this "enhancement" causes the subsequent delete to fail on SCO
+!   return new UChar[s];
+  }
+  
+  UString::Rep *UString::Rep::create(UChar *d, int l)
+*** ./kjs/kjs/date_object.cpp.osr6	Thu Aug 10 08:29:35 2006
+--- ./kjs/kjs/date_object.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 102,107 ****
+--- 102,117 ----
+  {
+      int tz;
+      char buffer[256];
++ 
++ #if defined(__USLC__)
++     // make p_offset equivalent to tm_gmtoff
++     time_t p_offset;
++     if (tm.tm_isdst > 0)
++         p_offset = -(timezone - 3600);
++     else
++         p_offset = -timezone;
++     if (p_offset == 0) {
++ #else
+  #if defined BSD || defined(__linux__) || defined(__APPLE__)
+      tz = tm.tm_gmtoff;
+  #else
+***************
+*** 112,126 ****
+--- 122,147 ----
+  #  endif
+  #endif
+      if (tz == 0) {
++ #endif
+          sprintf(buffer, "%02d:%02d:%02d GMT", tm.tm_hour, tm.tm_min, tm.tm_sec);
+      } else {
++ #if defined(__USLC__)
++         int offset = (int)p_offset;
++ #else
+          int offset = tz;
++ #endif
+          if (offset < 0) {
+              offset = -offset;
+          }
++ #if defined(__USLC__)
++         snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d GMT%c%02d%02d",
++                 tm.tm_hour, tm.tm_min, tm.tm_sec,
++                 p_offset < 0 ? '-' : '+', offset / (60*60), (offset / 60) % 60);
++ #else
+          sprintf(buffer, "%02d:%02d:%02d GMT%c%02d%02d",
+                  tm.tm_hour, tm.tm_min, tm.tm_sec,
+                  tz < 0 ? '-' : '+', offset / (60*60), (offset / 60) % 60);
++ #endif
+      }
+      return UString(buffer);
+  }
+*** ./kjs/kjs/config_linux.h.osr6	Thu Aug 10 08:29:35 2006
+--- ./kjs/kjs/config_linux.h	Sat Nov 24 23:15:50 2007
+***************
+*** 486,501 ****
+  #define HAVE_STRING_H 1
+  
+  /* Define if you have strlcat */
+! /* #undef HAVE_STRLCAT */
+  
+  /* Define if you have the strlcat prototype */
+! /* #undef HAVE_STRLCAT_PROTO */
+  
+  /* Define if you have strlcpy */
+! /* #undef HAVE_STRLCPY */
+  
+  /* Define if you have the strlcpy prototype */
+! /* #undef HAVE_STRLCPY_PROTO */
+  
+  /* Define to 1 if you have the `strrchr' function. */
+  #define HAVE_STRRCHR 1
+--- 486,501 ----
+  #define HAVE_STRING_H 1
+  
+  /* Define if you have strlcat */
+! #define HAVE_STRLCAT
+  
+  /* Define if you have the strlcat prototype */
+! #define HAVE_STRLCAT_PROTO
+  
+  /* Define if you have strlcpy */
+! #define HAVE_STRLCPY
+  
+  /* Define if you have the strlcpy prototype */
+! #define HAVE_STRLCPY_PROTO
+  
+  /* Define to 1 if you have the `strrchr' function. */
+  #define HAVE_STRRCHR 1
+*** ./kjs/3.5.6/kjs/array_instance.h.osr6	Mon Nov 19 00:22:49 2007
+--- ./kjs/3.5.6/kjs/array_instance.h	Sat Nov 24 23:15:50 2007
+***************
+*** 69,71 ****
+--- 69,142 ----
+  } // namespace KJS
+  
+  #endif
++ // -*- c-basic-offset: 2 -*-
++ /*
++  *  This file is part of the KDE libraries
++  *  Copyright (C) 1999-2000 Harri Porten (porten@kde.org)
++  *  Copyright (C) 2003 Apple Computer, Inc.
++  *
++  *  This library is free software; you can redistribute it and/or
++  *  modify it under the terms of the GNU Lesser General Public
++  *  License as published by the Free Software Foundation; either
++  *  version 2 of the License, or (at your option) any later version.
++  *
++  *  This library is distributed in the hope that it will be useful,
++  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  *  Lesser General Public License for more details.
++  *
++  *  You should have received a copy of the GNU Lesser General Public
++  *  License along with this library; if not, write to the Free Software
++  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++  *
++  */
++ 
++ #ifndef ARRAY_INSTANCE_H
++ #define ARRAY_INSTANCE_H
++ 
++ #include "object.h"
++ 
++ namespace KJS {
++ 
++   class ArrayInstanceImp : public ObjectImp {
++   public:
++     ArrayInstanceImp(ObjectImp *proto, unsigned initialLength);
++     ArrayInstanceImp(ObjectImp *proto, const List &initialValues);
++     ~ArrayInstanceImp();
++ 
++     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
++     virtual Value getPropertyByIndex(ExecState *exec, unsigned propertyName) const;
++     virtual void put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
++     virtual void putPropertyByIndex(ExecState *exec, unsigned propertyName, const Value &value, int attr = None);
++     virtual bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
++     virtual bool hasPropertyByIndex(ExecState *exec, unsigned propertyName) const;
++     virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
++     virtual bool deletePropertyByIndex(ExecState *exec, unsigned propertyName);
++     virtual ReferenceList propList(ExecState *exec, bool recursive);
++ 
++     virtual void mark();
++ 
++     virtual const ClassInfo *classInfo() const { return &info; }
++     static const ClassInfo info;
++ 
++     unsigned getLength() const { return length; }
++ 
++     void sort(ExecState *exec);
++     void sort(ExecState *exec, Object &compareFunction);
++ 
++   private:
++     void setLength(unsigned newLength, ExecState *exec);
++ 
++     unsigned pushUndefinedObjectsToEnd(ExecState *exec);
++ 
++     void resizeStorage(unsigned);
++ 
++     unsigned length;
++     unsigned storageLength;
++     unsigned capacity;
++     ValueImp **storage;
++   };
++ 
++ } // namespace KJS
++ 
++ #endif
+*** ./kjs/3.5.6/kjs/debugger.h.osr6	Mon Nov 19 00:22:49 2007
+--- ./kjs/3.5.6/kjs/debugger.h	Sat Nov 24 23:15:50 2007
+***************
+*** 208,210 ****
+--- 208,420 ----
+  }
+  
+  #endif
++ // -*- c-basic-offset: 2 -*-
++ /*
++  *  This file is part of the KDE libraries
++  *  Copyright (C) 1999-2001 Harri Porten (porten@kde.org)
++  *  Copyright (C) 2001 Peter Kelly (pmk@post.com)
++  *
++  *  This library is free software; you can redistribute it and/or
++  *  modify it under the terms of the GNU Lesser General Public
++  *  License as published by the Free Software Foundation; either
++  *  version 2 of the License, or (at your option) any later version.
++  *
++  *  This library is distributed in the hope that it will be useful,
++  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  *  Lesser General Public License for more details.
++  *
++  *  You should have received a copy of the GNU Lesser General Public
++  *  License along with this library; if not, write to the Free Software
++  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++  *
++  */
++ 
++ #ifndef _KJSDEBUGGER_H_
++ #define _KJSDEBUGGER_H_
++ 
++ #include "interpreter.h"
++ 
++ namespace KJS {
++ 
++   class DebuggerImp;
++   class Interpreter;
++   class ExecState;
++   class Value;
++   class Object;
++   class UString;
++   class List;
++   class Completion;
++ 
++   /**
++    * @internal
++    *
++    * Provides an interface which receives notification about various
++    * script-execution related events such as statement execution and function
++    * calls.
++    *
++    * WARNING: This interface is still a work in progress and is not yet
++    * offically publicly available. It is likely to change in binary incompatible
++    * (and possibly source incompatible) ways in future versions. It is
++    * anticipated that at some stage the interface will be frozen and made
++    * available for general use.
++    */
++   class KJS_EXPORT Debugger {
++   public:
++ 
++     /**
++      * Creates a new debugger
++      */
++     Debugger();
++ 
++     /**
++      * Destroys the debugger. If the debugger is attached to any interpreters,
++      * it is automatically detached.
++      */
++     virtual ~Debugger();
++ 
++     DebuggerImp *imp() const { return rep; }
++ 
++     /**
++      * Attaches the debugger to specified interpreter. This will cause this
++      * object to receive notification of events from the interpreter.
++      *
++      * If the interpreter is deleted, the debugger will automatically be
++      * detached.
++      *
++      * Note: only one debugger can be attached to an interpreter at a time.
++      * Attaching another debugger to the same interpreter will cause the
++      * original debugger to be detached from that interpreter.
++      *
++      * @param interp The interpreter to attach to
++      *
++      * @see detach()
++      */
++     void attach(Interpreter *interp);
++ 
++     /**
++      * Detach the debugger from an interpreter
++      *
++      * @param interp The interpreter to detach from. If 0, the debugger will be
++      * detached from all interpreters to which it is attached.
++      *
++      * @see attach()
++      */
++     void detach(Interpreter *interp);
++ 
++     /**
++      * Called to notify the debugger that some javascript source code has
++      * been parsed. For calls to Interpreter::evaluate(), this will be called
++      * with the supplied source code before any other code is parsed.
++      * Other situations in which this may be called include creation of a
++      * function using the Function() constructor, or the eval() function.
++      *
++      * The default implementation does nothing. Override this method if
++      * you want to process this event.
++      *
++      * @param exec The current execution state
++      * @param sourceId The ID of the source code (corresponds to the
++      * sourceId supplied in other functions such as atStatement()
++      * @param source The source code that was parsed
++      * @param errorLine The line number at which parsing encountered an
++      * error, or -1 if the source code was valid and parsed successfully
++      * @return true if execution should be continue, false if it should
++      * be aborted
++      */
++     virtual bool sourceParsed(ExecState *exec, int sourceId,
++ 			      const UString &source, int errorLine);
++ 
++     /**
++      * Called when all functions/programs associated with a particular
++      * sourceId have been deleted. After this function has been called for
++      * a particular sourceId, that sourceId will not be used again.
++      *
++      * The default implementation does nothing. Override this method if
++      * you want to process this event.
++      *
++      * @param exec The current execution state
++      * @param sourceId The ID of the source code (corresponds to the
++      * sourceId supplied in other functions such as atLine()
++      * @return true if execution should be continue, false if it should
++      * be aborted
++      */
++     virtual bool sourceUnused(ExecState *exec, int sourceId);
++ 
++     /**
++      * Called when an exception is thrown during script execution.
++      *
++      * The default implementation does nothing. Override this method if
++      * you want to process this event.
++      *
++      * @param exec The current execution state
++      * @param value The value of the exception
++      * @param inTryCatch Whether or not the exception will be caught by the
++      * script
++      * @return true if execution should be continue, false if it should
++      * be aborted
++      */
++     virtual bool exception(ExecState *exec, const Value &value,
++ 			   bool inTryCatch);
++ 
++     /**
++      * Called when a line of the script is reached (before it is executed)
++      *
++      * The exec pointer's Context object can be inspected to determine
++      * the line number and sourceId of the statement.
++      *
++      * The default implementation does nothing. Override this method if
++      * you want to process this event.
++      *
++      * @param exec The current execution state
++      * @return true if execution should be continue, false if it should
++      * be aborted
++      */
++     virtual bool atStatement(ExecState *exec);
++ 
++     /**
++      * Called when the interpreter enters a new execution context (stack
++      * frame). This can happen in three situations:
++      * 
++      * <ul>
++      *   <li>A call to Interpreter::evaluate(). This has a codeType of
++      *   GlobalCode, and the sourceId is the id of the code passed to
++      *   evaluate(). The lineno here is always 0 since execution starts at the
++      *   beginning of the script.</li>
++      *   <li>A call to the builtin eval() function. The sourceId corresponds to
++      *   the code passed in to eval. This has a codeType of EvalCode. The
++      *   lineno here is always 0 since execution starts at the beginning of
++      *   the script.</li>
++      *   <li>A function call. This only occurs for functions defined in
++      *   ECMAScript code, whether via the normal function() { ... } syntax or
++      *   a call to the built-in Function() constructor (anonymous functions).
++      *   In the former case, the sourceId and lineno indicate the location at
++      *   which the function was defined. For anonymous functions, the sourceId
++      *   corresponds to the code passed into the Function() constructor.</li>
++      * </ul>
++      *
++      * enterContext() is not called for functions implemented in the native
++      * code, since these do not use an execution context.
++      * 
++      * @param exec The current execution state (corresponding to the new stack
++      * frame)
++      */
++     virtual bool enterContext(ExecState *exec);
++ 
++     /**
++      * Called when the inteprreter exits an execution context. This always
++      * corresponds to a previous call to enterContext()
++      *
++      * @param exec The current execution state (corresponding to the stack frame
++      * being exited from)
++      * @param completion The result of execution of the context. Can be used to
++      * inspect exceptions and return values
++      */
++     virtual bool exitContext(ExecState *exec, const Completion &completion);
++ 
++   private:
++     DebuggerImp *rep;
++   };
++ 
++ }
++ 
++ #endif
+*** ./kjs/3.5.6/kjs/internal.h.osr6	Mon Nov 19 00:22:49 2007
+--- ./kjs/3.5.6/kjs/internal.h	Sat Nov 24 23:15:50 2007
+***************
+*** 506,508 ****
+--- 506,1016 ----
+  
+  
+  #endif //  _INTERNAL_H_
++ // -*- c-basic-offset: 2 -*-
++ /*
++  *  This file is part of the KDE libraries
++  *  Copyright (C) 1999-2001 Harri Porten (porten@kde.org)
++  *  Copyright (C) 2001 Peter Kelly (pmk@post.com)
++  *  Copyright (C) 2003 Apple Computer, Inc.
++  *
++  *  This library is free software; you can redistribute it and/or
++  *  modify it under the terms of the GNU Library General Public
++  *  License as published by the Free Software Foundation; either
++  *  version 2 of the License, or (at your option) any later version.
++  *
++  *  This library is distributed in the hope that it will be useful,
++  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  *  Library General Public License for more details.
++  *
++  *  You should have received a copy of the GNU Library General Public License
++  *  along with this library; see the file COPYING.LIB.  If not, write to
++  *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++  *  Boston, MA 02110-1301, USA.
++  *
++  */
++ 
++ #ifndef _INTERNAL_H_
++ #define _INTERNAL_H_
++ 
++ #include "ustring.h"
++ #include "value.h"
++ #include "object.h"
++ #include "function.h"
++ #include "types.h"
++ #include "interpreter.h"
++ #include "scope_chain.h"
++ #include "array_instance.h"
++ 
++ #ifndef I18N_NOOP
++ #define I18N_NOOP(s) s
++ #endif
++ 
++ namespace KJS {
++ 
++   static const double D16 = 65536.0;
++   static const double D32 = 4294967296.0;
++ 
++   class FunctionBodyNode;
++   class FunctionBodyNode;
++   class FunctionPrototypeImp;
++   class FunctionImp;
++   class Parameter;
++   class Debugger;
++ 
++   // ---------------------------------------------------------------------------
++   //                            Primitive impls
++   // ---------------------------------------------------------------------------
++ 
++   class UndefinedImp : public ValueImp {
++   public:
++     Type type() const { return UndefinedType; }
++ 
++     Value toPrimitive(ExecState *exec, Type preferred = UnspecifiedType) const;
++     bool toBoolean(ExecState *exec) const;
++     double toNumber(ExecState *exec) const;
++     UString toString(ExecState *exec) const;
++     Object toObject(ExecState *exec) const;
++ 
++     static UndefinedImp *staticUndefined;
++   };
++ 
++   inline Undefined::Undefined(UndefinedImp *imp) : Value(imp) { }
++ 
++   class NullImp : public ValueImp {
++   public:
++     Type type() const { return NullType; }
++ 
++     Value toPrimitive(ExecState *exec, Type preferred = UnspecifiedType) const;
++     bool toBoolean(ExecState *exec) const;
++     double toNumber(ExecState *exec) const;
++     UString toString(ExecState *exec) const;
++     Object toObject(ExecState *exec) const;
++ 
++     static NullImp *staticNull;
++   };
++ 
++   inline Null::Null(NullImp *imp) : Value(imp) { }
++ 
++   class BooleanImp : public ValueImp {
++   public:
++     BooleanImp(bool v = false) : val(v) { }
++     bool value() const { return val; }
++ 
++     Type type() const { return BooleanType; }
++ 
++     Value toPrimitive(ExecState *exec, Type preferred = UnspecifiedType) const;
++     bool toBoolean(ExecState *exec) const;
++     double toNumber(ExecState *exec) const;
++     UString toString(ExecState *exec) const;
++     Object toObject(ExecState *exec) const;
++ 
++     static BooleanImp *staticTrue;
++     static BooleanImp *staticFalse;
++   private:
++     bool val;
++   };
++ 
++   inline Boolean::Boolean(BooleanImp *imp) : Value(imp) { }
++ 
++   class StringImp : public ValueImp {
++   public:
++     StringImp(const UString& v) : val(v) { }
++     UString value() const { return val; }
++ 
++     Type type() const { return StringType; }
++ 
++     Value toPrimitive(ExecState *exec, Type preferred = UnspecifiedType) const;
++     bool toBoolean(ExecState *exec) const;
++     double toNumber(ExecState *exec) const;
++     UString toString(ExecState *exec) const;
++     Object toObject(ExecState *exec) const;
++ 
++   private:
++     UString val;
++   };
++ 
++   inline String::String(StringImp *imp) : Value(imp) { }
++ 
++   class NumberImp : public ValueImp {
++     friend class Number;
++     friend class InterpreterImp;
++   public:
++     static ValueImp *create(int);
++     static ValueImp *create(double);
++     static ValueImp *zero() { return SimpleNumber::make(0); }
++     static ValueImp *one() { return SimpleNumber::make(1); }
++     static ValueImp *two() { return SimpleNumber::make(2); }
++ 
++     double value() const { return val; }
++ 
++     Type type() const { return NumberType; }
++ 
++     Value toPrimitive(ExecState *exec, Type preferred = UnspecifiedType) const;
++     bool toBoolean(ExecState *exec) const;
++     double toNumber(ExecState *exec) const;
++     UString toString(ExecState *exec) const;
++     Object toObject(ExecState *exec) const;
++ 
++     static NumberImp *staticNaN;
++ 
++   private:
++     NumberImp(double v) : val(v) { }
++ 
++     virtual bool toUInt32(unsigned&) const;
++ 
++     double val;
++   };
++ 
++   inline Number::Number(NumberImp *imp) : Value(imp) { }
++ 
++   /**
++    * @short The "label set" in Ecma-262 spec
++    */
++   class LabelStack {
++   public:
++     LabelStack(): tos(0L), iterationDepth(0), switchDepth(0) {}
++     ~LabelStack();
++ 
++     LabelStack(const LabelStack &other);
++     LabelStack &operator=(const LabelStack &other);
++ 
++     /**
++      * If id is not empty and is not in the stack already, puts it on top of
++      * the stack and returns true, otherwise returns false
++      */
++     bool push(const Identifier &id);
++     /**
++      * Is the id in the stack?
++      */
++     bool contains(const Identifier &id) const;
++     /**
++      * Removes from the stack the last pushed id (what else?)
++      */
++     void pop();
++ 
++     void pushIteration() { iterationDepth++; }
++     void popIteration() { iterationDepth--; }
++     bool inIteration() const { return (iterationDepth > 0); }
++ 
++     void pushSwitch() { switchDepth++; }
++     void popSwitch() { switchDepth--; }
++     bool inSwitch() const { return (switchDepth > 0); }
++ 
++   private:
++     struct StackElem {
++       Identifier id;
++       StackElem *prev;
++     };
++ 
++     StackElem *tos;
++     void clear();
++     int iterationDepth;
++     int switchDepth;
++   };
++ 
++ 
++   // ---------------------------------------------------------------------------
++   //                            Parsing & evaluateion
++   // ---------------------------------------------------------------------------
++ 
++   class SourceCode {
++   public:
++     SourceCode(int _sid)
++       : sid(_sid), interpreter(0), refcount(0), next(0) {}
++ 
++     void ref() { refcount++; }
++     void deref() { if (!--refcount) cleanup(); }
++     void cleanup();
++ 
++     int sid;
++     InterpreterImp *interpreter;
++     int refcount;
++     SourceCode *next;
++   };
++ 
++   /**
++    * @internal
++    *
++    * Parses ECMAScript source code and converts into FunctionBodyNode objects, which
++    * represent the root of a parse tree. This class provides a conveniant workaround
++    * for the problem of the bison parser working in a static context.
++    */
++   class Parser {
++   public:
++     static FunctionBodyNode *parse(const UChar *code, unsigned int length, SourceCode **src,
++ 				   int *errLine = 0, UString *errMsg = 0);
++ 
++     static FunctionBodyNode *progNode;
++     static SourceCode *source;
++     static int sid;
++   private:
++   };
++ 
++   class InterpreterImp {
++     friend class Collector;
++   public:
++     static void globalInit();
++     static void globalClear();
++ 
++     InterpreterImp(Interpreter *interp, const Object &glob);
++     ~InterpreterImp();
++ 
++     Object &globalObject() const { return const_cast<Object &>(global); }
++     Interpreter* interpreter() const { return m_interpreter; }
++ 
++     void initGlobalObject();
++     static void lock();
++     static void unlock();
++ 
++     void mark();
++ 
++     ExecState *globalExec() { return globExec; }
++     bool checkSyntax(const UString &code,int *errLine, UString *errMsg);
++     bool checkSyntax(const UString &code);
++     Completion evaluate(const UString &code, const Value &thisV);
++     Debugger *debugger() const { return dbg; }
++     void setDebugger(Debugger *d);
++ 
++     Object builtinObject() const { return b_Object; }
++     Object builtinFunction() const { return b_Function; }
++     Object builtinArray() const { return b_Array; }
++     Object builtinBoolean() const { return b_Boolean; }
++     Object builtinString() const { return b_String; }
++     Object builtinNumber() const { return b_Number; }
++     Object builtinDate() const { return b_Date; }
++     Object builtinRegExp() const { return b_RegExp; }
++     Object builtinError() const { return b_Error; }
++ 
++     Object builtinObjectPrototype() const { return b_ObjectPrototype; }
++     Object builtinFunctionPrototype() const { return b_FunctionPrototype; }
++     Object builtinArrayPrototype() const { return b_ArrayPrototype; }
++     Object builtinBooleanPrototype() const { return b_BooleanPrototype; }
++     Object builtinStringPrototype() const { return b_StringPrototype; }
++     Object builtinNumberPrototype() const { return b_NumberPrototype; }
++     Object builtinDatePrototype() const { return b_DatePrototype; }
++     Object builtinRegExpPrototype() const { return b_RegExpPrototype; }
++     Object builtinErrorPrototype() const { return b_ErrorPrototype; }
++ 
++     Object builtinEvalError() const { return b_evalError; }
++     Object builtinRangeError() const { return b_rangeError; }
++     Object builtinReferenceError() const { return b_referenceError; }
++     Object builtinSyntaxError() const { return b_syntaxError; }
++     Object builtinTypeError() const { return b_typeError; }
++     Object builtinURIError() const { return b_uriError; }
++ 
++     Object builtinEvalErrorPrototype() const { return b_evalErrorPrototype; }
++     Object builtinRangeErrorPrototype() const { return b_rangeErrorPrototype; }
++     Object builtinReferenceErrorPrototype() const { return b_referenceErrorPrototype; }
++     Object builtinSyntaxErrorPrototype() const { return b_syntaxErrorPrototype; }
++     Object builtinTypeErrorPrototype() const { return b_typeErrorPrototype; }
++     Object builtinURIErrorPrototype() const { return b_uriErrorPrototype; }
++ 
++     void setCompatMode(Interpreter::CompatMode mode) { m_compatMode = mode; }
++     Interpreter::CompatMode compatMode() const { return m_compatMode; }
++ 
++     // Chained list of interpreters (ring)
++     static InterpreterImp* firstInterpreter() { return s_hook; }
++     InterpreterImp *nextInterpreter() const { return next; }
++     InterpreterImp *prevInterpreter() const { return prev; }
++ 
++     void addSourceCode(SourceCode *code);
++     void removeSourceCode(SourceCode *code);
++ 
++     void setContext(ContextImp *c) { _context = c; }
++ 
++   private:
++     void clear();
++     Interpreter *m_interpreter;
++     Object global;
++     Debugger *dbg;
++ 
++     // Built-in properties of the object prototype. These are accessible
++     // from here even if they are replaced by js code (e.g. assigning to
++     // Array.prototype)
++ 
++     Object b_Object;
++     Object b_Function;
++     Object b_Array;
++     Object b_Boolean;
++     Object b_String;
++     Object b_Number;
++     Object b_Date;
++     Object b_RegExp;
++     Object b_Error;
++ 
++     Object b_ObjectPrototype;
++     Object b_FunctionPrototype;
++     Object b_ArrayPrototype;
++     Object b_BooleanPrototype;
++     Object b_StringPrototype;
++     Object b_NumberPrototype;
++     Object b_DatePrototype;
++     Object b_RegExpPrototype;
++     Object b_ErrorPrototype;
++ 
++     Object b_evalError;
++     Object b_rangeError;
++     Object b_referenceError;
++     Object b_syntaxError;
++     Object b_typeError;
++     Object b_uriError;
++ 
++     Object b_evalErrorPrototype;
++     Object b_rangeErrorPrototype;
++     Object b_referenceErrorPrototype;
++     Object b_syntaxErrorPrototype;
++     Object b_typeErrorPrototype;
++     Object b_uriErrorPrototype;
++ 
++     ExecState *globExec;
++     Interpreter::CompatMode m_compatMode;
++ 
++     // Chained list of interpreters (ring) - for collector
++     static InterpreterImp* s_hook;
++     InterpreterImp *next, *prev;
++ 
++     ContextImp *_context;
++ 
++     int recursion;
++     SourceCode *sources;
++   };
++ 
++   class AttachedInterpreter;
++   class DebuggerImp {
++   public:
++ 
++     DebuggerImp() {
++       interps = 0;
++       isAborted = false;
++     }
++ 
++     void abort() { isAborted = true; }
++     bool aborted() const { return isAborted; }
++ 
++     AttachedInterpreter *interps;
++     bool isAborted;
++   };
++ 
++   /**
++    * @short Implementation class for functions implemented in JS.
++    */
++   class FunctionImp : public InternalFunctionImp {
++     friend class ActivationImp;
++   public:
++     FunctionImp(ExecState *exec, const Identifier &n = Identifier::null());
++     virtual ~FunctionImp();
++ 
++     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
++     virtual void put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
++     virtual bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
++     virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
++ 
++     virtual bool implementsCall() const;
++     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
++ 
++     void addParameter(const Identifier &n);
++     Identifier parameterProperty(int index) const;
++     // parameters in string representation, e.g. (a, b, c)
++     UString parameterString() const;
++     virtual CodeType codeType() const = 0;
++ 
++     virtual Completion execute(ExecState *exec) = 0;
++     int firstLine() const { return line0; }
++     int lastLine() const { return line1; }
++     int sourceId() const { return sid; }
++ 
++     virtual const ClassInfo *classInfo() const { return &info; }
++     static const ClassInfo info;
++   protected:
++     Parameter *param;
++     int line0;
++     int line1;
++     int sid;
++ 
++   private:
++     void processParameters(ExecState *exec, const List &);
++     virtual void processVarDecls(ExecState *exec);
++   };
++ 
++   class DeclaredFunctionImp : public FunctionImp {
++   public:
++     DeclaredFunctionImp(ExecState *exec, const Identifier &n,
++ 			FunctionBodyNode *b, const ScopeChain &sc);
++     ~DeclaredFunctionImp();
++ 
++     bool implementsConstruct() const;
++     Object construct(ExecState *exec, const List &args);
++ 
++     virtual Completion execute(ExecState *exec);
++     CodeType codeType() const { return FunctionCode; }
++     FunctionBodyNode *body;
++ 
++     virtual const ClassInfo *classInfo() const { return &info; }
++     KJS_EXPORT static const ClassInfo info;
++   private:
++     virtual void processVarDecls(ExecState *exec);
++   };
++ 
++   class ActivationImp;
++ 
++   class ArgumentsImp : public ObjectImp {
++   public:
++     ArgumentsImp(ExecState *exec, FunctionImp *func, const List &args, ActivationImp *act);
++ 
++     virtual void mark();
++ 
++     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
++     virtual void put(ExecState *exec, const Identifier &propertyName,
++ 		     const Value &value, int attr = None);
++ 
++     virtual const ClassInfo *classInfo() const { return &info; }
++     static const ClassInfo info;
++ 
++   private:
++     ActivationImp *activation;
++   };
++ 
++   class ActivationImp : public ObjectImp {
++   public:
++     ActivationImp(FunctionImp *function, const List &arguments);
++ 
++     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
++     virtual bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
++     virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
++ 
++     virtual const ClassInfo *classInfo() const { return &info; }
++     static const ClassInfo info;
++ 
++     virtual void mark();
++ 
++   private:
++     FunctionImp *_function;
++     List _arguments;
++     mutable ArgumentsImp *_argumentsObject;
++   };
++ 
++   class GlobalFuncImp : public InternalFunctionImp {
++   public:
++     GlobalFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto,
++ 		  int i, int len, const Identifier &_ident);
++     virtual bool implementsCall() const;
++     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
++     virtual CodeType codeType() const;
++     enum { Eval, ParseInt, ParseFloat, IsNaN, IsFinite, DecodeURI, DecodeURIComponent,
++ 	   EncodeURI, EncodeURIComponent, Escape, UnEscape, KJSPrint };
++   private:
++     int id;
++   };
++ 
++   // helper function for toInteger, toInt32, toUInt32 and toUInt16
++   double roundValue(ExecState *exec, const Value &v);
++ 
++ #ifndef NDEBUG
++   void printInfo(ExecState *exec, const char *s, const Value &o, int lineno = -1);
++ #endif
++ 
++ } // namespace
++ 
++ 
++ #endif //  _INTERNAL_H_
+*** ./kjs/3.5.6/kjs/object_object.h.osr6	Mon Nov 19 00:22:49 2007
+--- ./kjs/3.5.6/kjs/object_object.h	Sat Nov 24 23:15:50 2007
+***************
+*** 82,84 ****
+--- 82,168 ----
+  } // namespace
+  
+  #endif
++ // -*- c-basic-offset: 2 -*-
++ /*
++  *  This file is part of the KDE libraries
++  *  Copyright (C) 1999-2000 Harri Porten (porten@kde.org)
++  *
++  *  This library is free software; you can redistribute it and/or
++  *  modify it under the terms of the GNU Lesser General Public
++  *  License as published by the Free Software Foundation; either
++  *  version 2 of the License, or (at your option) any later version.
++  *
++  *  This library is distributed in the hope that it will be useful,
++  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  *  Lesser General Public License for more details.
++  *
++  *  You should have received a copy of the GNU Lesser General Public
++  *  License along with this library; if not, write to the Free Software
++  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++  *
++  */
++ 
++ #ifndef _OBJECT_OBJECT_H_
++ #define _OBJECT_OBJECT_H_
++ 
++ #include "internal.h"
++ #include "function.h"
++ 
++ namespace KJS {
++ 
++   class FunctionPrototypeImp;
++ 
++   /**
++    * @internal
++    *
++    * The initial value of Object.prototype (and thus all objects created
++    * with the Object constructor
++    */
++   class ObjectPrototypeImp : public ObjectImp {
++   public:
++     ObjectPrototypeImp(ExecState *exec, FunctionPrototypeImp *funcProto);
++   };
++ 
++   /**
++    * @internal
++    *
++    * Class to implement all methods that are properties of the
++    * Object.prototype object
++    */
++   class ObjectProtoFuncImp : public InternalFunctionImp {
++   public:
++     ObjectProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto,
++                        int i, int len, const Identifier &_ident);
++ 
++     virtual bool implementsCall() const;
++     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
++ 
++     enum { ToString, ToLocaleString, ValueOf, HasOwnProperty,
++ 	   IsPrototypeOf, PropertyIsEnumerable };
++ 
++   private:
++     int id;
++   };
++ 
++   /**
++    * @internal
++    *
++    * The initial value of the the global variable's "Object" property
++    */
++   class ObjectObjectImp : public InternalFunctionImp {
++   public:
++ 
++     ObjectObjectImp(ExecState *exec,
++                     ObjectPrototypeImp *objProto,
++                     FunctionPrototypeImp *funcProto);
++ 
++     virtual bool implementsConstruct() const;
++     virtual Object construct(ExecState *exec, const List &args);
++     virtual bool implementsCall() const;
++     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
++   };
++ 
++ } // namespace
++ 
++ #endif
+*** ./stock/databases/RekallDemoMYSQL.dbspec.osr6	Tue Jul 25 02:33:39 2006
+--- ./stock/databases/RekallDemoMYSQL.dbspec	Sat Nov 24 23:18:13 2007
+***************
+*** 1428,1434 ****
+   <table view="" type="table" name="Products" >
+    <column indexed="No" unique="Yes" serial="Yes" insavail="Yes" notnull="Yes" length="11" ftype="Primary Key" defval="" colno="0" name="ProductID" itype="2" precision="0" primary="Yes" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="80" ftype="VarChar" defval="" colno="1" name="Description" itype="8" precision="0" primary="No" />
+!   <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="22" ftype="Double" defval="" colno="2" name="UnitCost" itype="3" precision="31" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="11" ftype="Integer" defval="" colno="3" name="Stock" itype="2" precision="0" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="10" ftype="Date" defval="" colno="4" name="DeliveryDate" itype="5" precision="0" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="No" length="16777215" ftype="Blob" defval="" colno="5" name="Image" itype="9" precision="0" primary="No" />
+--- 1428,1434 ----
+   <table view="" type="table" name="Products" >
+    <column indexed="No" unique="Yes" serial="Yes" insavail="Yes" notnull="Yes" length="11" ftype="Primary Key" defval="" colno="0" name="ProductID" itype="2" precision="0" primary="Yes" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="80" ftype="VarChar" defval="" colno="1" name="Description" itype="8" precision="0" primary="No" />
+!   <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="22" ftype="Double" defval="" colno="2" name="UnitCost" itype="3" precision="3" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="11" ftype="Integer" defval="" colno="3" name="Stock" itype="2" precision="0" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="Yes" length="10" ftype="Date" defval="" colno="4" name="DeliveryDate" itype="5" precision="0" primary="No" />
+    <column indexed="No" unique="No" serial="No" insavail="No" notnull="No" length="16777215" ftype="Blob" defval="" colno="5" name="Image" itype="9" precision="0" primary="No" />
+*** ./doc/rekall/rkScan_doc.py.osr6	Wed Jan  3 05:20:29 2007
+--- ./doc/rekall/rkScan_doc.py	Sat Nov 24 23:15:50 2007
+***************
+*** 32,38 ****
+      else :
+          text = text + "packman = 0\n"
+  
+!     if settings.mode() == 'kde' :
+          kdedocdir  = settings.lookup ('kdedocdir')
+          if kdedocdir is None :
+              docList = \
+--- 32,38 ----
+      else :
+          text = text + "packman = 0\n"
+  
+!     if settings.mode() in [ 'kde', 'qt3'] :
+          kdedocdir  = settings.lookup ('kdedocdir')
+          if kdedocdir is None :
+              docList = \
+*** ./doc/rekall/extract_dict.sh.osr6	Tue Jul 25 02:33:36 2006
+--- ./doc/rekall/extract_dict.sh	Sat Nov 24 23:15:50 2007
+***************
+*** 11,21 ****
+  SOURCE=$2
+  XSL=$3
+  
+! sed	-e 's/<!\[CDATA\[//g'			\
+  	-e 's/\]\]>//g'				\
+  	$SOURCE					> /tmp/dict.xml
+  
+  xsltproc $XSL /tmp/dict.xml			|
+! 	 grep -v '?xml'				|
+! 	 grep -v '!DOCTYPE'			|
+! 	 sed "s/xmlns=''//"			> $TARGET
+--- 11,21 ----
+  SOURCE=$2
+  XSL=$3
+  
+! gsed	-e 's/<!\[CDATA\[//g'			\
+  	-e 's/\]\]>//g'				\
+  	$SOURCE					> /tmp/dict.xml
+  
+  xsltproc $XSL /tmp/dict.xml			|
+! 	 ggrep -v '?xml'				|
+! 	 ggrep -v '!DOCTYPE'			|
+! 	 gsed "s/xmlns=''//"			> $TARGET
+*** ./doc/rekall/mkman.sh.osr6	Sun Jul 30 13:29:50 2006
+--- ./doc/rekall/mkman.sh	Sat Nov 24 23:15:50 2007
+***************
+*** 11,23 ****
+  	mkdir	manual
+  	mkdir	manual/rekall
+  
+! 	for d in `find . -maxdepth 1 -name 'chap[0-9]*' -type d`
+  	do
+! 		cp -a $d manual/rekall
+  	done
+! 	for d in `find . -maxdepth 1 -name 'app[0-9]*' -type d`
+  	do
+! 		cp -a $d manual/rekall
+  	done
+  
+  	cp	*.sgml			manual
+--- 11,23 ----
+  	mkdir	manual
+  	mkdir	manual/rekall
+  
+! 	for d in `gfind . -maxdepth 1 -name 'chap[0-9]*' -type d`
+  	do
+! 		gcp -a $d manual/rekall
+  	done
+! 	for d in `gfind . -maxdepth 1 -name 'app[0-9]*' -type d`
+  	do
+! 		gcp -a $d manual/rekall
+  	done
+  
+  	cp	*.sgml			manual
+***************
+*** 32,37 ****
+  
+  	./mkman.py
+  
+! 	tar -czf  $TOPDIR/doc/rekall/manual.tgz manual index.xml
+  #	zip -r -o $TOPDIR/doc/rekall/manual.zip manual index.xml
+  )
+--- 32,37 ----
+  
+  	./mkman.py
+  
+! 	gtar -czf  $TOPDIR/doc/rekall/manual.tgz manual index.xml
+  #	zip -r -o $TOPDIR/doc/rekall/manual.zip manual index.xml
+  )
+*** ./db/odbc/kb_odbc.h.osr6	Tue Oct 10 23:30:03 2006
+--- ./db/odbc/kb_odbc.h	Sat Nov 24 23:15:50 2007
+***************
+*** 29,35 ****
+  
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #include	<unistd.h>
+  #include	<pwd.h>
+  #endif
+--- 29,35 ----
+  
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #include	<unistd.h>
+  #include	<pwd.h>
+  #endif
+*** ./db/dbtcp/kb_dbtcp.cpp.osr6	Thu Aug 10 08:29:34 2006
+--- ./db/dbtcp/kb_dbtcp.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 433,439 ****
+  	QString	host	= svInfo->hostName  ()		;
+  	int	port	= svInfo->portNumber().toInt()	;
+  
+! #ifdef	Q_OS_LINUX
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+--- 433,439 ----
+  	QString	host	= svInfo->hostName  ()		;
+  	int	port	= svInfo->portNumber().toInt()	;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+*** ./db/mysql/kb_mysql.cpp.osr6	Thu Mar 29 01:04:27 2007
+--- ./db/mysql/kb_mysql.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 503,509 ****
+  	QString	host		= m_host.stripWhiteSpace() ;
+  	QString	port		= m_port.stripWhiteSpace() ;
+  
+! #ifdef	Q_OS_LINUX
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+--- 503,509 ----
+  	QString	host		= m_host.stripWhiteSpace() ;
+  	QString	port		= m_port.stripWhiteSpace() ;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+*** ./db/pgsql/kb_pgsql.cpp.osr6	Thu Aug 10 08:29:34 2006
+--- ./db/pgsql/kb_pgsql.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 583,589 ****
+  	QString	host		= m_host.stripWhiteSpace() ;
+  	QString	port		= m_port.stripWhiteSpace() ;
+  
+! #ifdef	Q_OS_LINUX
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+--- 583,589 ----
+  	QString	host		= m_host.stripWhiteSpace() ;
+  	QString	port		= m_port.stripWhiteSpace() ;
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  	/* The driver supports SSH tunneling. If there is a tunnel	*/
+  	/* target then attempt to open the tunnel; if this succeeds	*/
+  	/* then the host becomes the local host and the port is that	*/
+*** ./db/sqlite3/kb_sqlite3.cpp.osr6	Wed Jan  3 05:20:29 2007
+--- ./db/sqlite3/kb_sqlite3.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 11,16 ****
+--- 11,21 ----
+      email                : ferringb@gentoo.org
+  ***************************************************************************/
+  
++ #include	<unistd.h>
++ 
++ #ifndef W_OK
++ #define W_OK 2
++ #endif
+  
+  #include	"kb_sqlite3.h"
+  #include	"kb_basequery.h"
+*** ./parts/query/kb_queryviewer.cpp.osr6	Thu Aug 10 08:29:41 2006
+--- ./parts/query/kb_queryviewer.cpp	Sat Nov 24 23:15:50 2007
+***************
+*** 162,169 ****
+  	if (size.isEmpty()) size = hint ;
+  
+  	m_partWidget->resize	    (size.width(), size.height(), true, false) ;
+  	m_qryDialog->setExprSizes   (config->readIntListEntry ("exprs")) ;
+! 
+  	m_showing = KB::ShowAsDesign ;
+  	return	KB::ShowRCOK	   ;
+  #else
+--- 162,170 ----
+  	if (size.isEmpty()) size = hint ;
+  
+  	m_partWidget->resize	    (size.width(), size.height(), true, false) ;
++ #if !defined __USLC__
+  	m_qryDialog->setExprSizes   (config->readIntListEntry ("exprs")) ;
+! #endif
+  	m_showing = KB::ShowAsDesign ;
+  	return	KB::ShowRCOK	   ;
+  #else
+*** ./support/xbsql/xb_datetime.cpp.osr6	Thu Aug 10 08:29:44 2006
+--- ./support/xbsql/xb_datetime.cpp	Sat Nov 24 23:15:51 2007
+***************
+*** 18,23 ****
+--- 18,26 ----
+  #include	<stdlib.h>
+  #include	<ctype.h>
+  #include	<string.h>
++ #ifdef __USLC__
++ #include <strings.h>
++ #endif
+  
+  #include	"xbsql.h"
+  
+*** ./support/xbsql/xb_enode.cpp.osr6	Thu Aug 10 08:29:44 2006
+--- ./support/xbsql/xb_enode.cpp	Sat Nov 24 23:15:51 2007
+***************
+*** 16,21 ****
+--- 16,24 ----
+  
+  #include	<stdio.h>
+  #include	<ctype.h>
++ #ifdef __USLC__
++ #include <strings.h>
++ #endif
+  
+  #include	"xbsql.h"
+  
+*** ./support/xbsql/xbsql.y.osr6	Tue Jul 25 02:33:40 2006
+--- ./support/xbsql/xbsql.y	Sat Nov 24 23:15:51 2007
+***************
+*** 1,6 ****
+--- 1,9 ----
+  %{
+  #include	<stdlib.h>
+  #include	<string.h>
++ #ifdef __USLC__
++ #include <strings.h>
++ #endif
+  #include	<ctype.h>
+  
+  #ifdef 		_WIN32
+*** ./support/xbase/fields.cpp.osr6	Thu Aug 10 08:29:44 2006
+--- ./support/xbase/fields.cpp	Sat Nov 24 23:15:51 2007
+***************
+*** 60,65 ****
+--- 60,68 ----
+  
+  #include <stdlib.h>
+  #include <string.h>
++ #ifdef __USLC__
++ #include <strings.h>
++ #endif
+  #include <ctype.h>
+  
+  #include <xbase/xbexcept.h>
+*** ./ports/qt3/libtkkde_exports.h.osr6	Thu Aug 10 08:29:41 2006
+--- ./ports/qt3/libtkkde_exports.h	Sat Nov 24 23:15:51 2007
+***************
+*** 23,29 ****
+  #endif	
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBTKKDE_API
+  #endif
+  
+--- 23,29 ----
+  #endif	
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBTKKDE_API
+  #endif
+  
+*** ./ports/rkdcop/rk_dcoplib.cpp.osr6	Sun Nov 26 16:15:04 2006
+--- ./ports/rkdcop/rk_dcoplib.cpp	Sat Nov 24 23:15:51 2007
+***************
+*** 17,23 ****
+  #include	<qcstring.h>
+  #include	<qvariant.h>
+  
+! #if		defined(Q_OS_LINUX) || defined(Q_OS_MACX)
+  #include	<stdlib.h>
+  #include	<sys/types.h>
+  #include	<sys/socket.h>
+--- 17,23 ----
+  #include	<qcstring.h>
+  #include	<qvariant.h>
+  
+! #if	defined(Q_OS_LINUX) || defined(Q_OS_MACX) || defined(Q_OS_UNIXWARE)
+  #include	<stdlib.h>
+  #include	<sys/types.h>
+  #include	<sys/socket.h>
+***************
+*** 38,44 ****
+  typedef	struct sockaddr			SOCKADR	;
+  
+  
+! #if		defined(Q_OS_LINUX)
+  #define		SOCKET			int
+  #define		SOCKETCLOSE(s)		close(s)
+  #define		SOCKETWRITE(s,b,l)	write(s,b,l)
+--- 38,44 ----
+  typedef	struct sockaddr			SOCKADR	;
+  
+  
+! #if		defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		SOCKET			int
+  #define		SOCKETCLOSE(s)		close(s)
+  #define		SOCKETWRITE(s,b,l)	write(s,b,l)
+***************
+*** 232,238 ****
+  	{
+  		int         rv ;
+  		result	 >> rv ;
+! 		resv	 =  QVariant::QVariant((bool)rv, 0) ;
+  		return	QString::null ;
+  	}
+  
+--- 232,238 ----
+  	{
+  		int         rv ;
+  		result	 >> rv ;
+! 		resv	 =  QVariant((bool)rv, 0) ;
+  		return	QString::null ;
+  	}
+  
+*** ./ports/rkdcop/librkcop_exports.h.osr6	Thu Aug 10 08:29:41 2006
+--- ./ports/rkdcop/librkcop_exports.h	Sat Nov 24 23:15:51 2007
+***************
+*** 23,29 ****
+  #endif	
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBRKCOP_API
+  #endif
+  
+--- 23,29 ----
+  #endif	
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBRKCOP_API
+  #endif
+  
+*** ./scons/build/settings.kde.osr6	Wed Aug  2 05:29:14 2006
+--- ./scons/build/settings.kde	Sat Nov 24 23:15:51 2007
+***************
+*** 9,15 ****
+  libprefix=rekall
+  appname=rekall
+  mode=kde
+- with-ora10i-includes=/opt/Oracle/10.2.0/client/rdbms/public
+- with-ora10i-libraries=/opt/Oracle/10.2.0/client/lib
+- with-db2cli-includes=/opt/IBM/db2/V8.1/include
+- with-db2cli-libraries=/opt/IBM/db2/V8.1/lib
+--- 9,11 ----
+*** ./scons/build/settings.qt3.osr6	Tue Jul 25 02:33:38 2006
+--- ./scons/build/settings.qt3	Sat Nov 24 23:15:51 2007
+***************
+*** 6,15 ****
+  enable-rt=yes
+  enable-kjs=yes
+  enable-nongpl=yes
+  libprefix=rekallqt
+  appname=rekallqt
+  mode=qt3
+- with-ora10i-includes=/opt/Oracle/10.2.0/client/rdbms/public
+- with-ora10i-libraries=/opt/Oracle/10.2.0/client/lib
+- with-db2cli-includes=/opt/IBM/db2/V8.1/include
+- with-db2cli-libraries=/opt/IBM/db2/V8.1/lib
+--- 6,12 ----
+  enable-rt=yes
+  enable-kjs=yes
+  enable-nongpl=yes
++ prefix=/usr
+  libprefix=rekallqt
+  appname=rekallqt
+  mode=qt3
+*** ./scons/Makefile.osr6	Tue Feb 13 12:35:41 2007
+--- ./scons/Makefile	Sat Nov 24 23:15:51 2007
+***************
+*** 11,21 ****
+  
+  install.kde:
+  		REKALL_MODE=kde PYTHONPATH=scons/ scons -Q install
+- 		[ `id -u` = 0 ] && ldconfig
+  
+  install.qt3:
+  		REKALL_MODE=qt3 PYTHONPATH=scons/ scons -Q install
+- 		[ `id -u` = 0 ] && ldconfig
+  
+  install.mac:
+  		REKALL_MODE=mac PYTHONPATH=scons/ scons -Q install
+--- 11,19 ----
+*** ./scons/rkBuilder.py.osr6	Wed Sep 13 03:53:27 2006
+--- ./scons/rkBuilder.py	Sat Nov 24 23:15:51 2007
+***************
+*** 460,475 ****
+  
+          if self.m_type == typeLoadedLib :
+              if self.m_build in [ buildKDE, buildQT3 ] :
+!                 self.addLFlags ('-Wl,-soname,' + self.target() + '.so.' + rkConfig.libver)
+              self.setDefine ('__KB_INITNAME', 'init_' + self.target())
+  
+          if self.m_type == typeSharedLib :
+              if self.m_build in [ buildKDE, buildQT3 ] :
+!                 self.addLFlags ('-Wl,-soname,' + self.target() + '.so.' + rkConfig.libver)
+! 
+!         if self.m_build not in [ buildMAC, buildWIN ] :
+!             self.addLFlags ('-Wl,--no-undefined')
+!             self.addCFlags ('-Wall')
+  
+          if self.m_build in [ buildMAC ] :
+              if self.m_type == typeSharedLib :
+--- 460,471 ----
+  
+          if self.m_type == typeLoadedLib :
+              if self.m_build in [ buildKDE, buildQT3 ] :
+!                 self.addLFlags ('-Wl,-h,' + self.target() + '.so.' + rkConfig.libver)
+              self.setDefine ('__KB_INITNAME', 'init_' + self.target())
+  
+          if self.m_type == typeSharedLib :
+              if self.m_build in [ buildKDE, buildQT3 ] :
+!                 self.addLFlags ('-Wl,-h,' + self.target() + '.so.' + rkConfig.libver)
+  
+          if self.m_build in [ buildMAC ] :
+              if self.m_type == typeSharedLib :
+***************
+*** 501,506 ****
+--- 497,503 ----
+  
+          if self.m_build in [ buildQT3, buildGTK, buildMAC ] :
+  	    self.setDefine ('ROOTDIR', '"\\"%s"\\"' % (rkConfig.prefix))
++             self.addCFlags ('-Kpthread')
+  
+          if self.m_build in [ buildWIN ] :
+  	    self.setDefine ('ROOTDIR', '"\\"%s"\\"' % (rkConfig.prefix))
+***************
+*** 721,728 ****
+  
+          if rkConfig.mode not in [ 'win', 'mingw' ] :
+              self.addLib	   ('dl')
+-             self.addLib	   ('pthread')
+-             self.addLib	   ('util')
+  
+  
+      # addPorting
+--- 718,723 ----
+***************
+*** 833,838 ****
+--- 828,835 ----
+  	    self.m_env = SCons.Environment.Environment \
+  			 (
+  				ENV		= os.environ,
++                                 CXX             = '/bin/CC -KPIC -Kudk -Kpthread -Kalloca -DPIC -DQT_THREAD_SUPPORT -D_REENTRANT -DSVR4 -DQ_OS_LINUX',
++                                 CC              = '/bin/cc -KPIC -Kudk -Kpthread -Kalloca -DPIC -DQT_THREAD_SUPPORT -D_REENTRANT -DSVR4 -DQ_OS_LINUX',
+  				CPPPATH		= self.includes(),
+  				CPPFLAGS	= self.defines () + self.cFlags(),
+  				LIBPATH		= self.libPath (),
+*** ./plugins/scriptall/libscriptall_exports.h.osr6	Thu Aug 10 08:29:41 2006
+--- ./plugins/scriptall/libscriptall_exports.h	Sat Nov 24 23:15:51 2007
+***************
+*** 23,29 ****
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #ifdef		Q_OS_LINUX
+  #define		LIBSCRIPTALL_API
+  #endif
+  
+--- 23,29 ----
+  #endif
+  #endif		// Q_OS_WIN32
+  
+! #if defined(Q_OS_LINUX) || defined(Q_OS_UNIXWARE)
+  #define		LIBSCRIPTALL_API
+  #endif
+  
+*** ./Build-OSR6.osr6	Sat Nov 24 23:15:51 2007
+--- ./Build-OSR6	Sat Nov 24 23:15:51 2007
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ 
++ LD_LIBRARY_PATH=/usr/lib/qt3/lib:/usr/gnu/lib; export LD_LIBRARY_PATH
++ 
++ LD_RUN_PATH=/usr/lib/qt3:/usr/lib:/usr/X11R6/lib; export LD_RUN_PATH
++ 
++ PATH=/usr/gnu/bin:/opt/kde/bin:/usr/X11R6/bin:/bin:/etc:/usr/bin:/tcb/bin:/sbin:/usr/sbin:/usr/lib/qt3/bin:/usr/bin/X11; export PATH
++ 
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ CC="cc -Kpthread -Kalloca"
++ CXX ="/bin/CC -KPIC -Kudk -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ rm -f mout-config mout
++ cp scons/build/settings.qt3 .
++ cp scons/Makefile .
++ make config.qt3 2>&1 | tee mout-config
++ make qt3 2>&1 | tee mout
++ 
+*** ./Install-OSR6.osr6	Sat Nov 24 23:15:51 2007
+--- ./Install-OSR6	Sat Nov 24 23:15:51 2007
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ LD_LIBRARY_PATH=/usr/lib/qt3/lib:/usr/gnu/lib; export LD_LIBRARY_PATH
++ 
++ LD_RUN_PATH=/usr/lib/qt3:/usr/lib:/usr/X11R6/lib; export LD_RUN_PATH
++ 
++ PATH=/usr/gnu/bin:/opt/kde/bin:/usr/X11R6/bin:/bin:/etc:/usr/bin:/tcb/bin:/sbin:/usr/sbin:/usr/lib/qt3/bin:/usr/bin/X11; export PATH
++ 
++ MOUT=mout-install
++ D=/u/tmp/rekall
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install.qt3 DESTDIR=$D 2>&1 | tee $MOUT
++ 

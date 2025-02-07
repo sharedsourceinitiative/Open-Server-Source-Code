@@ -1,0 +1,880 @@
+*** ./configure.osr6	Mon Sep  5 01:24:54 2005
+--- ./configure	Sat Oct  1 15:22:00 2005
+***************
+*** 4722,4728 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 4722,4728 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 4730,4736 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 4730,4736 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 8025,8031 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 8025,8031 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 8702,8710 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 8702,8709 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 15120,15126 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 15119,15125 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 21144,21166 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_XML_CFLAGS... $ECHO_C" >&6
+!             MODULES_XML_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_XML_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_LIBS" >&5
+  echo $ECHO_N "checking MODULES_XML_LIBS... $ECHO_C" >&6
+!             MODULES_XML_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_LIBS" >&5
+  echo "${ECHO_T}$MODULES_XML_LIBS" >&6
+          else
+--- 21143,21165 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_XML_CFLAGS... $ECHO_C" >&6
+!             MODULES_XML_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_XML_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_LIBS" >&5
+  echo $ECHO_N "checking MODULES_XML_LIBS... $ECHO_C" >&6
+!             MODULES_XML_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_LIBS" >&5
+  echo "${ECHO_T}$MODULES_XML_LIBS" >&6
+          else
+***************
+*** 21168,21174 ****
+              MODULES_XML_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_XML_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo $MODULES_XML_PKG_ERRORS
+          fi
+  
+--- 21167,21173 ----
+              MODULES_XML_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_XML_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED"`
+              echo $MODULES_XML_PKG_ERRORS
+          fi
+  
+***************
+*** 21183,21190 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21182,21189 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21245,21267 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_CFLAGS... $ECHO_C" >&6
+!             MODULES_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_LIBS" >&5
+  echo $ECHO_N "checking MODULES_LIBS... $ECHO_C" >&6
+!             MODULES_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_LIBS" >&5
+  echo "${ECHO_T}$MODULES_LIBS" >&6
+          else
+--- 21244,21266 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_CFLAGS... $ECHO_C" >&6
+!             MODULES_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_LIBS" >&5
+  echo $ECHO_N "checking MODULES_LIBS... $ECHO_C" >&6
+!             MODULES_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_LIBS" >&5
+  echo "${ECHO_T}$MODULES_LIBS" >&6
+          else
+***************
+*** 21269,21275 ****
+              MODULES_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo $MODULES_PKG_ERRORS
+          fi
+  
+--- 21268,21274 ----
+              MODULES_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo $MODULES_PKG_ERRORS
+          fi
+  
+***************
+*** 21284,21291 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21283,21290 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21346,21368 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_FILE_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_FILE_CFLAGS... $ECHO_C" >&6
+!             MODULES_FILE_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_FILE_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_FILE_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_FILE_LIBS" >&5
+  echo $ECHO_N "checking MODULES_FILE_LIBS... $ECHO_C" >&6
+!             MODULES_FILE_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_FILE_LIBS" >&5
+  echo "${ECHO_T}$MODULES_FILE_LIBS" >&6
+          else
+--- 21345,21367 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_FILE_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_FILE_CFLAGS... $ECHO_C" >&6
+!             MODULES_FILE_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_FILE_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_FILE_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_FILE_LIBS" >&5
+  echo $ECHO_N "checking MODULES_FILE_LIBS... $ECHO_C" >&6
+!             MODULES_FILE_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_FILE_LIBS" >&5
+  echo "${ECHO_T}$MODULES_FILE_LIBS" >&6
+          else
+***************
+*** 21370,21376 ****
+              MODULES_FILE_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_FILE_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_FILE_PKG_ERRORS
+          fi
+  
+--- 21369,21375 ----
+              MODULES_FILE_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_FILE_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_FILE_PKG_ERRORS
+          fi
+  
+***************
+*** 21385,21392 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21384,21391 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21447,21469 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_GCONF_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_GCONF_CFLAGS... $ECHO_C" >&6
+!             MODULES_GCONF_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_GCONF_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_GCONF_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_GCONF_LIBS" >&5
+  echo $ECHO_N "checking MODULES_GCONF_LIBS... $ECHO_C" >&6
+!             MODULES_GCONF_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_GCONF_LIBS" >&5
+  echo "${ECHO_T}$MODULES_GCONF_LIBS" >&6
+          else
+--- 21446,21468 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_GCONF_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_GCONF_CFLAGS... $ECHO_C" >&6
+!             MODULES_GCONF_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_GCONF_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_GCONF_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_GCONF_LIBS" >&5
+  echo $ECHO_N "checking MODULES_GCONF_LIBS... $ECHO_C" >&6
+!             MODULES_GCONF_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_GCONF_LIBS" >&5
+  echo "${ECHO_T}$MODULES_GCONF_LIBS" >&6
+          else
+***************
+*** 21471,21477 ****
+              MODULES_GCONF_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_GCONF_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_GCONF_PKG_ERRORS
+          fi
+  
+--- 21470,21476 ----
+              MODULES_GCONF_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_GCONF_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_GCONF_PKG_ERRORS
+          fi
+  
+***************
+*** 21486,21493 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21485,21492 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21548,21570 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_GCONF_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_XML_GCONF_CFLAGS... $ECHO_C" >&6
+!             MODULES_XML_GCONF_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_GCONF_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_XML_GCONF_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_GCONF_LIBS" >&5
+  echo $ECHO_N "checking MODULES_XML_GCONF_LIBS... $ECHO_C" >&6
+!             MODULES_XML_GCONF_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_GCONF_LIBS" >&5
+  echo "${ECHO_T}$MODULES_XML_GCONF_LIBS" >&6
+          else
+--- 21547,21569 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_GCONF_CFLAGS" >&5
+  echo $ECHO_N "checking MODULES_XML_GCONF_CFLAGS... $ECHO_C" >&6
+!             MODULES_XML_GCONF_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_GCONF_CFLAGS" >&5
+  echo "${ECHO_T}$MODULES_XML_GCONF_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MODULES_XML_GCONF_LIBS" >&5
+  echo $ECHO_N "checking MODULES_XML_GCONF_LIBS... $ECHO_C" >&6
+!             MODULES_XML_GCONF_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MODULES_XML_GCONF_LIBS" >&5
+  echo "${ECHO_T}$MODULES_XML_GCONF_LIBS" >&6
+          else
+***************
+*** 21572,21578 ****
+              MODULES_XML_GCONF_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_XML_GCONF_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_XML_GCONF_PKG_ERRORS
+          fi
+  
+--- 21571,21577 ----
+              MODULES_XML_GCONF_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MODULES_XML_GCONF_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED"`
+              echo $MODULES_XML_GCONF_PKG_ERRORS
+          fi
+  
+***************
+*** 21587,21594 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21586,21593 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED libxml-2.0 >= $XML_REQUIRED gconf-2.0 >= $GCONF_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21649,21671 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MONIKERS_CFLAGS" >&5
+  echo $ECHO_N "checking MONIKERS_CFLAGS... $ECHO_C" >&6
+!             MONIKERS_CFLAGS=`$PKG_CONFIG --cflags "libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MONIKERS_CFLAGS" >&5
+  echo "${ECHO_T}$MONIKERS_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MONIKERS_LIBS" >&5
+  echo $ECHO_N "checking MONIKERS_LIBS... $ECHO_C" >&6
+!             MONIKERS_LIBS=`$PKG_CONFIG --libs "libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MONIKERS_LIBS" >&5
+  echo "${ECHO_T}$MONIKERS_LIBS" >&6
+          else
+--- 21648,21670 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MONIKERS_CFLAGS" >&5
+  echo $ECHO_N "checking MONIKERS_CFLAGS... $ECHO_C" >&6
+!             MONIKERS_CFLAGS=`$PKG_CONFIG --cflags "libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MONIKERS_CFLAGS" >&5
+  echo "${ECHO_T}$MONIKERS_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MONIKERS_LIBS" >&5
+  echo $ECHO_N "checking MONIKERS_LIBS... $ECHO_C" >&6
+!             MONIKERS_LIBS=`$PKG_CONFIG --libs "libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $MONIKERS_LIBS" >&5
+  echo "${ECHO_T}$MONIKERS_LIBS" >&6
+          else
+***************
+*** 21673,21679 ****
+              MONIKERS_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MONIKERS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED"`
+              echo $MONIKERS_PKG_ERRORS
+          fi
+  
+--- 21672,21678 ----
+              MONIKERS_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             MONIKERS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED"`
+              echo $MONIKERS_PKG_ERRORS
+          fi
+  
+***************
+*** 21688,21695 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (libbonobo-2.0 >= $BONOBO_REQUIRED gobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21687,21694 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (libbonobo-2.0 >= $BONOBO_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 21750,21772 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking TEST_CFLAGS" >&5
+  echo $ECHO_N "checking TEST_CFLAGS... $ECHO_C" >&6
+!             TEST_CFLAGS=`$PKG_CONFIG --cflags "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $TEST_CFLAGS" >&5
+  echo "${ECHO_T}$TEST_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking TEST_LIBS" >&5
+  echo $ECHO_N "checking TEST_LIBS... $ECHO_C" >&6
+!             TEST_LIBS=`$PKG_CONFIG --libs "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $TEST_LIBS" >&5
+  echo "${ECHO_T}$TEST_LIBS" >&6
+          else
+--- 21749,21771 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED" >&5
+! echo $ECHO_N "checking for bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking TEST_CFLAGS" >&5
+  echo $ECHO_N "checking TEST_CFLAGS... $ECHO_C" >&6
+!             TEST_CFLAGS=`$PKG_CONFIG --cflags "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $TEST_CFLAGS" >&5
+  echo "${ECHO_T}$TEST_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking TEST_LIBS" >&5
+  echo $ECHO_N "checking TEST_LIBS... $ECHO_C" >&6
+!             TEST_LIBS=`$PKG_CONFIG --libs "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED"`
+              echo "$as_me:$LINENO: result: $TEST_LIBS" >&5
+  echo "${ECHO_T}$TEST_LIBS" >&6
+          else
+***************
+*** 21774,21780 ****
+              TEST_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             TEST_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED"`
+              echo $TEST_PKG_ERRORS
+          fi
+  
+--- 21773,21779 ----
+              TEST_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             TEST_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED"`
+              echo $TEST_PKG_ERRORS
+          fi
+  
+***************
+*** 21789,21796 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED gthread-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 21788,21795 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED gconf-2.0 >= $GCONF_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 35637,35659 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0" >&5
+! echo $ECHO_N "checking for glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFS_CFLAGS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFS_CFLAGS... $ECHO_C" >&6
+!             LIBGNOMEVFS_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFS_CFLAGS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFS_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFS_LIBS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFS_LIBS... $ECHO_C" >&6
+!             LIBGNOMEVFS_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFS_LIBS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFS_LIBS" >&6
+          else
+--- 35636,35658 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0" >&5
+! echo $ECHO_N "checking for newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFS_CFLAGS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFS_CFLAGS... $ECHO_C" >&6
+!             LIBGNOMEVFS_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFS_CFLAGS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFS_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFS_LIBS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFS_LIBS... $ECHO_C" >&6
+!             LIBGNOMEVFS_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFS_LIBS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFS_LIBS" >&6
+          else
+***************
+*** 35661,35667 ****
+              LIBGNOMEVFS_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             LIBGNOMEVFS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo $LIBGNOMEVFS_PKG_ERRORS
+          fi
+  
+--- 35660,35666 ----
+              LIBGNOMEVFS_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             LIBGNOMEVFS_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0"`
+              echo $LIBGNOMEVFS_PKG_ERRORS
+          fi
+  
+***************
+*** 35676,35683 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 35675,35682 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 >= $GLIB_REQUIRED newgmodule-no-export-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED libbonobo-2.0 >= $BONOBO_REQUIRED ORBit-2.0 >= $ORBIT_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+***************
+*** 35740,35762 ****
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for glib-2.0 $USE_HAL" >&5
+! echo $ECHO_N "checking for glib-2.0 $USE_HAL... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "glib-2.0 $USE_HAL" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFSDAEMON_CFLAGS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFSDAEMON_CFLAGS... $ECHO_C" >&6
+!             LIBGNOMEVFSDAEMON_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 $USE_HAL"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFSDAEMON_CFLAGS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFSDAEMON_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFSDAEMON_LIBS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFSDAEMON_LIBS... $ECHO_C" >&6
+!             LIBGNOMEVFSDAEMON_LIBS=`$PKG_CONFIG --libs "glib-2.0 $USE_HAL"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFSDAEMON_LIBS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFSDAEMON_LIBS" >&6
+          else
+--- 35739,35761 ----
+    else
+       PKG_CONFIG_MIN_VERSION=0.9.0
+       if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+!         echo "$as_me:$LINENO: checking for newglib-2.0 $USE_HAL" >&5
+! echo $ECHO_N "checking for newglib-2.0 $USE_HAL... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "newglib-2.0 $USE_HAL" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFSDAEMON_CFLAGS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFSDAEMON_CFLAGS... $ECHO_C" >&6
+!             LIBGNOMEVFSDAEMON_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 $USE_HAL"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFSDAEMON_CFLAGS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFSDAEMON_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking LIBGNOMEVFSDAEMON_LIBS" >&5
+  echo $ECHO_N "checking LIBGNOMEVFSDAEMON_LIBS... $ECHO_C" >&6
+!             LIBGNOMEVFSDAEMON_LIBS=`$PKG_CONFIG --libs "newglib-2.0 $USE_HAL"`
+              echo "$as_me:$LINENO: result: $LIBGNOMEVFSDAEMON_LIBS" >&5
+  echo "${ECHO_T}$LIBGNOMEVFSDAEMON_LIBS" >&6
+          else
+***************
+*** 35764,35770 ****
+              LIBGNOMEVFSDAEMON_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             LIBGNOMEVFSDAEMON_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 $USE_HAL"`
+              echo $LIBGNOMEVFSDAEMON_PKG_ERRORS
+          fi
+  
+--- 35763,35769 ----
+              LIBGNOMEVFSDAEMON_LIBS=""
+              ## If we have a custom action on failure, don't print errors, but
+              ## do set a variable so people can do so.
+!             LIBGNOMEVFSDAEMON_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 $USE_HAL"`
+              echo $LIBGNOMEVFSDAEMON_PKG_ERRORS
+          fi
+  
+***************
+*** 35779,35786 ****
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (glib-2.0 $USE_HAL) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (glib-2.0 $USE_HAL) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+--- 35778,35785 ----
+    if test $succeeded = yes; then
+       :
+    else
+!      { { echo "$as_me:$LINENO: error: Library requirements (newglib-2.0 $USE_HAL) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&5
+! echo "$as_me: error: Library requirements (newglib-2.0 $USE_HAL) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them." >&2;}
+     { (exit 1); exit 1; }; }
+    fi
+  
+*** ./Configure-OSR6.osr6	Sat Oct  1 13:59:03 2005
+--- ./Configure-OSR6	Sat Oct  1 15:00:45 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

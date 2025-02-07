@@ -1,0 +1,19 @@
+*** Makefile.00	Thu Feb 24 11:00:45 2005
+--- Makefile	Thu Feb 24 11:05:11 2005
+***************
+*** 469,475 ****
+  LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+  	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+  CCLD = $(CC)
+! LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+  	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+  DIST_SOURCES = $(libmysqlclient_la_SOURCES) $(conf_to_src_SOURCES)
+  HEADERS = $(noinst_HEADERS)
+--- 469,475 ----
+  LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+  	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+  CCLD = $(CC)
+! LINK = $(LIBTOOL) --mode=link /usr/ccs/bin/cc \
+  	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+  DIST_SOURCES = $(libmysqlclient_la_SOURCES) $(conf_to_src_SOURCES)
+  HEADERS = $(noinst_HEADERS)

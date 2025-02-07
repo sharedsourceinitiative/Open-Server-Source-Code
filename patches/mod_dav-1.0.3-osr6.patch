@@ -1,0 +1,20 @@
+--- ./Configure-OSR6.osr6	2005-06-12 19:56:48.009321013 -0700
++++ ./Configure-OSR6	2005-06-12 19:56:48.009321010 -0700
+@@ -0,0 +1,7 @@
++#!/bin/sh
++#
++CC=cc
++CFLAGS=-O2
++export CC CFLAGS
++rm -f mout-configure
++./configure --with-apxs=/usr/lib/apache/bin/apxs 2>&1 | tee mout-configure
+--- ./Install-OSR6.osr6	2005-06-12 20:47:03.000000000 -0700
++++ ./Install-OSR6	2005-06-12 20:46:54.055481002 -0700
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++MOUT=mout-install
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make install 2>&1 | tee $MOUT
++cp mod_dav.h /usr/lib/apache/include/mod_dav.h
++

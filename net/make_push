@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# make_push - make a server-push file out of all .jpg files in the current dir
+#
+# To use the results, put the output into a file with extension .push
+# and then add this to your .htaccess:
+#   AddType multipart/x-mixed-replace;boundary=ThisRandomString .push
+
+for f in *.jpg ; do
+    echo '--ThisRandomString'
+    echo 'Content-type: image/jpeg'
+    echo ''
+    cat $f
+    echo ''
+done
+echo '--ThisRandomString--'

@@ -1,0 +1,90 @@
+*** ./Build-OSR6.osr6	Thu Dec 13 08:37:30 2007
+--- ./Build-OSR6	Thu Dec 13 08:37:30 2007
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ CFLAGS="-O2"
++ CXXFLAGS=$CFLAGS
++ NM="/usr/ccs/bin/nm -p"
++ PKGS=../xemacs-all-packages.tar.bz2
++ 
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS CXXFLAGS NM PATH
++ 
++ # Extract the packages
++ [ -f $PKGS ] && bzcat $PKGS | tar xf -
++ 
++ rm -f mout-configure
++ libtoolize -c -f --copy --force
++ ./configure --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin \
++             --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include \
++             2>&1 | tee mout-configure
++ /usr/gnu/bin/make 2>&1 | tee mout
+*** ./Install-OSR6.osr6	Thu Dec 13 08:37:30 2007
+--- ./Install-OSR6	Thu Dec 13 09:21:26 2007
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ export PATH
++ VER=21.4.21
++ D=/u/tmp/xemacs-$VER-root
++ 
++ rm -rf $D
++ mkdir -p $D
++ 
++ /usr/gnu/bin/make prefix=$D/usr \
++                   exec_prefix=$D/usr \
++                   bindir=$D/usr/bin \
++                   install 2>&1 | tee mout-install
++ 
++ cp -pR xemacs-packages $D/usr/lib/xemacs/xemacs-packages
+*** ./configure.osr6	Thu Dec  7 19:31:17 2006
+--- ./configure	Thu Dec 13 08:37:30 2007
+***************
+*** 2875,2892 ****
+  echo "$ac_t""no" 1>&6
+  fi
+  
+- if test "$pdump" != "yes"; then
+-   echo $ac_n "checking for \"-z nocombreloc\" linker flag""... $ac_c" 1>&6
+- echo "configure:2881: checking for \"-z nocombreloc\" linker flag" >&5
+-   case "`ld --help 2>&1`" in
+-     *-z\ nocombreloc* ) echo "$ac_t""yes" 1>&6
+-       ld_switch_site="-z nocombreloc $ld_switch_site" &&  if test "$extra_verbose" = "yes"; then echo "    Prepending \"-z nocombreloc\" to \$ld_switch_site"; fi ;;
+-     *) echo "$ac_t""no" 1>&6 ;;
+-   esac
+- fi
+- 
+- 
+- 
+  if test "$GCC" = "yes"; then
+    set x $ld_switch_system; shift; ld_switch_system=""
+    while test -n "$1"; do
+--- 2875,2880 ----
+***************
+*** 16504,16513 ****
+  
+  echo "  Relocating allocator for buffers:  $rel_alloc"
+  echo "  GNU version of malloc:             ${GNU_MALLOC}${GNU_MALLOC_reason}"
+- case "$ld_switch_site" in
+-   *nocombreloc*) echo "  Linking with \`-z nocombreloc'.
+-     - Consider configuring with --pdump." ;;
+- esac
+  
+  case "$canonical" in
+  	*-*-linux*) 
+--- 16492,16497 ----

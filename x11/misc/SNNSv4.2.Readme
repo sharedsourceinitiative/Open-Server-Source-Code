@@ -1,0 +1,312 @@
+**********************************************************************
+   SNNS (Stuttgart Neural Network Simulator) Version 4.2 available
+**********************************************************************
+
+The new version 4.2 of SNNS is available now.
+
+
+**********************************************************************
+                        New features of SNNSv4.2
+**********************************************************************
+
+Version 4.2 of SNNS features the following improvements and extensions
+over the earlier version 4.1:
+
+* greatly improved installation procedure
+
+* pattern remapping functions introduced to SNNS
+
+* class information in patterns introduced to SNNS
+
+* change to all batch algorithms: The learning rate is now divided by 
+  the number of patterns in the set. This allows for direct comparisons
+  of learning rates and training of large pattern files with BP-Batch 
+  since it doesn't require ridiculous learning rates like 0.0000001 
+  anymore.
+
+* Changes to Cascade-Correlation:
+  -- Several modifications can be used to achieve a net with a smaller
+     depth or smaller Fan-In. 
+  -- New activation functions ACT_GAUSS and ACT_SIN
+  -- The backpropagation algorithm of Cascade-Correlation is now
+     available in an off-line and a batch version. 
+  -- The activations of the units can be cached. The result is a faster
+     learning for nets with many units. On the other hand, the 
+     necessary memory space will increase for large pattern sets.
+  -- Changes in the 2D-display, the hidden units are displayed in 
+     layers, the candidate units are placed on the top of the net.
+  -- validation now possible 
+  -- automatic deletion of candidate units at the end of training.
+
+* new meta learning algorithm TACOMA.
+
+* new learning algorithm BackpropChunk. It allows chunkwise updating of
+  the weights as well as selective training of units on the basis of 
+  pattern class names.
+
+* new learning algorithm RPROP with weight decay.
+
+* algorithm "Recurrent Cascade Correlation" deleted from repository.
+
+* the options of adding noise to the weights with the JogWeights
+  function improved im multiple ways.
+
+* improved plotting in the graph panel as well as printing option.
+
+* when standard colormap is full, SNNS will now start with a privat map
+  instead of aborting.
+
+* analyze tool now features a confusion matrix.
+
+* pruning panel now more "SNNS-like". You do not need to close
+  the panel anymore before pruning a network.
+
+* Changes in batchman
+  -- batchman can now handle DLVQ training
+  -- new batchman command "setActFunc" allows the changing of unit
+     activation functions from within the training script. 
+  -- batchman output now with "\#" prefix. This enables direct
+     processing by a lot of unix tools like gnuplot.
+  -- batchman now automatically converts function parameters to
+     correct type instead of aborting.
+  -- jogWeights can now also be called from batchman.
+  -- batchman catches some non-fatal signals (SIGINT, SIGTERM, ...)
+     and sets the internal variable SIGNAL so that the script can react
+     to them.
+  -- batchman features ResetNet function (e.g. for Jordan networks).
+
+* new tool "linknets" introduced to combine existing networks.
+
+* new tools "td_bignet" and "ff_bignet" introduced for script-based 
+  generation of network files; Old tool "bignet" removed.
+
+* displays will be refreshed more often when using the graphical editor
+
+* weight and projection display with changed color scale. They now
+  match the 2D-display scale.
+  
+* pat_sel now can handle pattern files with multi-line comments
+
+* manpages now available for most of the SNNS programs.
+
+* the number of things stored in an xgui configuration file was
+  greatly enhanced.
+
+* Extensive debugging:
+ -- batchman computes MSE now correctly from the number of (sub-)
+    patterns.
+ -- RBFs receive now correct number of parameters.
+ -- spurious segmentation faults in the graphical editor tracked and 
+    eliminated.
+ -- segmentation fault when training on huge pattern files cleared.
+ -- various seg-faults under single operating systems tracked and 
+    cleared.
+ -- netperf now can test on networks that need multiple training
+    parameters.
+ -- segmentaion faults when displaying 3D-Networks cleared.
+ -- correct default values for initialization functions in batchman.
+ -- the call "TestNet()" prohibited further training in batchman. 
+    Now everything works as expected.
+ -- segmentation fault in batchman when doing multiple string concats 
+    cleared and memory leak in string operations closed. 
+ -- the output of the validation error on the shell window was giving 
+    wrong values.
+ -- algorithm SCG now respects special units and handles them correctly
+ -- the description of the learning function parameters in section 4.4
+    is finally ordered alphabetically.
+
+
+**********************************************************************
+                              What is SNNS ?
+**********************************************************************
+
+SNNS (Stuttgart Neural Network Simulator) is a  software simulator for
+neural networks  on Unix  workstations developed at the Institute  for
+Parallel  and  Distributed  High  Performance  Systems (IPVR)  at  the
+University of Stuttgart.  The goal of the SNNS project is to create an
+efficient  and  flexible  simulation  environment for research  on and
+application of neural nets.
+
+The SNNS simulator consists of two main components:
+
+1) simultor kernel written in C
+2) graphical user interface under X11R5 or X11R6
+
+The simulator kernel operates  on the internal network data structures
+of the neural nets and performs all operations of learning and recall.
+It can also be used without the other parts as a C program embedded in
+custom  applications. It supports arbitrary  network  topologies  and,
+like RCS, supports the concept of  sites. SNNS can  be extended by the
+user with user defined activation  functions, output  functions,  site
+functions and learning  procedures, which  are  written  as  simple  C
+programs and linked to the simulator kernel.
+
+Currently the following network architectures and learning procedures
+are included:
+
+ * Backpropagation (BP) for feedforward networks
+        vanilla (online) BP
+        BP with momentum term and flat spot elimination
+        batch BP
+        BP with Chunkwise Updating
+ * Counterpropagation
+ * Quickprop
+ * Backpercolation 1
+ * RProp
+ * RProp with Weight Decay
+ * Generalized radial basis functions (RBF)
+ * ART1
+ * ART2
+ * ARTMAP
+ * Cascade Correlation
+ * Dynamic LVQ
+ * Backpropagation through time (for recurrent networks)
+ * Quickprop through time (for recurrent networks)
+ * Self-organizing maps (Kohonen maps)
+ * TDNN (time-delay networks) with Backpropagation
+ * Jordan networks
+ * Elman networks and extended hierarchical Elman networks
+ * Associative Memory
+ * RBF_DDA
+ * Simulated Annealing
+ * Monte Carlo. 
+ * Pruned-Cascade-Correlation
+
+A number of network pruning algorithms are available as well:
+ * Optimal Brain Damage (OBD), 
+ * Optimal Brain Surgeon (OBS), 
+ * Skeletonization, 
+ * Magnitute based pruning (Mag).
+
+The graphical  user interface XGUI (X Graphical User Interface), built
+on top of the kernel, gives  a 2D and a 3D graphical representation of
+the neural networks and controls the kernel during the simulation run.
+In addition, the 2D user interface  has  an integrated  network editor
+which  can be used to directly create, manipulate and visualize neural
+nets in various ways.
+
+
+**********************************************************************
+         Machine architectures on which SNNSv4.2 is available
+**********************************************************************
+
+We  have tested  SNNSv4.2  on  the  following  machines  and operating
+systems:
+
+machine type                    OS              user interface with
+ 
+SUN Sparcstation                Solaris         X11R5, X11R6, OW 3.0
+SGI Indigo II                   IRIX 5.1, 5.2   X11R5
+DEC Alpha Workstation           OSF1 V4.0       X11R5
+IBM RS 6000                     AIX V3.2        X11R5
+HP 9000/720, 730                HP/UX 9.0.1     X11R5
+IBM-PC Pentium                  Linux           X11R6
+
+Our parallel versions of SNNS are only available for research partners
+with whom we have sponsored joint research projects. These parallel
+versions include
+
+Neurocomputer   Adaptive Solutions CNAPS serverII
+SIMD computer   MasPar MP-1, MP-2
+MIMD computer   Intel Paragon XP/S5, 
+                Connection Machine CM-5
+
+
+**********************************************************************
+                  SNNSv4.2 licensing terms (short)
+**********************************************************************
+
+SNNSv4.2 is available NOW free of charge for research purposes under a
+GNU-style copyright  agreement. See the license agreement in  the user
+manual and in the file Readme.license of the distribution for details.
+SNNS is (C) (Copyright) 1990-96 SNNS Group, Institute for Parallel and 
+Distributed High-Performance Systems (IPVR), University of Stuttgart, 
+Breitwiesenstrasse 20-22, 70565 Stuttgart, Germany, and (C) (Copyright)
+1996-98 SNNS Group, Wilhelm Schickard Institute for Computer Science, 
+University of Tuebingen, Koestlinstr. 6, 72074 Tuebingen, Germany.
+
+SNNSv4.2 can only be  obtained by anonymous ftp over the Internet. See
+the detailed  description of how  to obtain SNNS below. We  don't have
+the  time  and capacity  to send tapes or floppy  disks, so don't ask.
+SNNSv4.2 is also too large to be  mailed  by e-mail, so don't ask  for
+that,  either.  You  may,  however,  obtain  the  unmodified  SNNSv4.2
+distribution from other sites  which already have obtained  it,  under
+the terms  of our license agreement, if you  are  unable to connect to
+our machine.
+
+Note that SNNS has not been tested  extensively  in different computer
+environments and is a research tool with frequent substantial changes.
+It should be obvious that WE DO NOT GUARANTEE ANYTHING. 
+
+We  are also not staffed  to answer problems with SNNS or to  fix bugs
+quickly. For questions and/or comments concerning SNNS we refer you to 
+the SNNS mailing list. To subscribe, send a mail to 
+  
+        SNNS-Mail-Request@Informatik.Uni-Tuebingen.DE
+
+With the one line message (in the mail body, not in the subject)
+
+        subscribe 
+
+
+
+**********************************************************************
+                      How to obtain SNNSv4.2
+**********************************************************************
+
+The SNNS simulator can be obtained via anonymous ftp from host
+
+        ftp.informatik.uni-tuebingen.de   (129.69.211.2)
+
+in the subdirectory        /pub/SNNS
+as file
+
+        SNNSv4.2.tar.Z                  (2.60 MB)
+
+or in gzipped form as file
+
+        SNNSv4.2.tar.gz                 (2.18 MB)
+
+Be  sure to set  the ftp  mode  to  binary before transmission  of the
+files.  Also watch out for possible higher version numbers, patches or
+Readme files in  the above  directory  /pub/SNNS .  After   successful
+transmission of the  file move it to the  directory where you  want to
+install SNNS, uncompress and extract the file with the Unix command
+
+        tar xvfz SNNSv4.2.tar.gz
+
+The   SNNS  distribution  includes  full   source  code,  installation
+procedures  for  supported  machine  architectures   and  some  simple
+examples of trained networks.
+
+The PostScript version of the user manual can be obtained as file 
+
+        SNNSv4.2.Manual.ps.Z            (1.61 MB)
+or      SNNSv4.2.Manual.ps.gz           (1.35 MB)
+
+or in 15 parts as files
+
+        SNNSv4.2.Manual.part01.ps.Z  ...  SNNSv4.2.Manual.part15.ps.Z
+        
+These parts are all under 1 MB in size when uncompressed and should be
+printable on any PostScript printer.Again remember to set the ftp mode 
+to binary before transmission of the file(s).
+
+There is also an Implementation Manual available as file
+
+        SNNSv4.2.Implem.ps.Z            (0.24 MB)
+
+and a set of extension  chapters for those users  who just printed the
+manual of version 4.2 in file
+
+        SNNSv4.2.Manual.Extensions.ps.Z         (0.30MB)
+
+More information about SNNS as well as a html version of the manual can
+be found at 
+
+        http://www-ra.informatik.uni-tuebingen.de/SNNS/
+
+A printed version of the 4.2 manual is also available. To cover for the
+cost  of printing  and postage you should  include DM  20.- for Europe,
+US $ 20.-  overseas in a request for any bound manual; (this covers 
+surface mail postage).

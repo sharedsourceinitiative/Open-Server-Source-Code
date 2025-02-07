@@ -1,0 +1,298 @@
+*** ./libelfsh/include/libelfsh/libelfsh-internal.h.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/include/libelfsh/libelfsh-internal.h	Fri Jul 28 12:47:14 2006
+***************
+*** 8,14 ****
+  #ifndef __LIBELFSH_INTERN_
+   #define __LIBELFSH_INTERN_
+  
+! #if defined(sun) || defined(__linux__) || defined(__BEOS__) || defined(HPUX)
+   #define		ELFSH_ERR_ARRAY		strerror(errno)
+  #else
+   #define		ELFSH_ERR_ARRAY		sys_errlist[sys_nerr]
+--- 8,14 ----
+  #ifndef __LIBELFSH_INTERN_
+   #define __LIBELFSH_INTERN_
+  
+! #if defined(sun) || defined(__linux__) || defined(__sco__) || defined(__BEOS__) || defined(HPUX)
+   #define		ELFSH_ERR_ARRAY		strerror(errno)
+  #else
+   #define		ELFSH_ERR_ARRAY		sys_errlist[sys_nerr]
+*** ./libelfsh/include/libelfsh/libelfsh-compat.h.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/include/libelfsh/libelfsh-compat.h	Fri Jul 28 12:47:14 2006
+***************
+*** 11,16 ****
+--- 11,18 ----
+  
+  #if defined(__linux__) || defined (__BEOS__)
+   #include <endian.h>
++ #elif defined(__sco__)
++  #include <sys/byteorder.h>
+  #elif defined(__FreeBSD__) || defined (__OpenBSD__) || defined(__NetBSD__)
+   #include <machine/endian.h>
+   #define __LITTLE_ENDIAN _LITTLE_ENDIAN
+***************
+*** 46,51 ****
+--- 48,57 ----
+   #include "libelfsh-sunos.h"
+  #endif
+  
++ #if defined(__sco__)
++  #include <strings.h>
++ #endif
++ 
+  #include "libelfsh-bsd.h"	/* Various BSD need this */
+  
+  #if defined(ELFSH_INTERN)
+***************
+*** 87,93 ****
+  /* Portability Stuffs */
+  #if defined(__OpenBSD__) || defined(__NetBSD__)
+   #include <sys/exec_elf.h>
+! #elif defined(__linux__) || defined(__FreeBSD__) || defined(sun)
+   #include <elf.h>
+  #endif
+  
+--- 93,99 ----
+  /* Portability Stuffs */
+  #if defined(__OpenBSD__) || defined(__NetBSD__)
+   #include <sys/exec_elf.h>
+! #elif defined(__linux__) || defined(__FreeBSD__) || defined(sun) || defined(__sco__)
+   #include <elf.h>
+  #endif
+  
+*** ./libelfsh/include/libelfsh.h.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/include/libelfsh.h	Fri Jul 28 12:47:14 2006
+***************
+*** 13,18 ****
+--- 13,19 ----
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <string.h>
+  #include <unistd.h>
+  #include <fcntl.h>
+***************
+*** 71,77 ****
+  #define		ELFSH_OS_SOLARIS		4
+  #define		ELFSH_OS_UNICOS			5
+  #define		ELFSH_OS_BEOS			6
+! #define		ELFSH_OSNUM			7
+  #define		ELFSH_OS_ERROR			0xFF
+  
+  /* libelfsh block hijack types */
+--- 72,79 ----
+  #define		ELFSH_OS_SOLARIS		4
+  #define		ELFSH_OS_UNICOS			5
+  #define		ELFSH_OS_BEOS			6
+! #define		ELFSH_OS_SCO		    7
+! #define		ELFSH_OSNUM			8
+  #define		ELFSH_OS_ERROR			0xFF
+  
+  /* libelfsh block hijack types */
+*** ./libelfsh/reloc.c.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/reloc.c	Fri Jul 28 12:47:14 2006
+***************
+*** 145,157 ****
+  /* Change endianess of relocation tables */
+  int		elfsh_endianize_relocs(elfshsect_t *s)
+  {
+-   ELFSH_PROFILE_IN(__FILE__, __FUNCTION__, __LINE__);
+- 
+    u_int		idx;
+    elfsh_Rel	*rel;
+    elfsh_Rela	*rela;
+    u_int		sz;
+    
+    if (!s)
+      ELFSH_PROFILE_ERR(__FILE__, __FUNCTION__, __LINE__,
+  		      "Invalid NULL parameter", -1);
+--- 145,157 ----
+  /* Change endianess of relocation tables */
+  int		elfsh_endianize_relocs(elfshsect_t *s)
+  {
+    u_int		idx;
+    elfsh_Rel	*rel;
+    elfsh_Rela	*rela;
+    u_int		sz;
+    
++   ELFSH_PROFILE_IN(__FILE__, __FUNCTION__, __LINE__);
++ 
+    if (!s)
+      ELFSH_PROFILE_ERR(__FILE__, __FUNCTION__, __LINE__,
+  		      "Invalid NULL parameter", -1);
+*** ./libelfsh/runtime.c.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/runtime.c	Fri Jul 28 12:47:14 2006
+***************
+*** 44,54 ****
+    printf("[DEBUG_RUNTIME] MMAP: " XFMT " of %d bytes \n", segment->p_vaddr, segment->p_memsz);
+  #endif
+    
+    addr = (elfsh_Addr) mmap((void *) 0, segment->p_memsz, 
+  			   prot,
+  			   //elfsh_get_segment_flags(segment), 
+! 			   MAP_PRIVATE | MAP_ANONYMOUS, 
+! 			   0, 0);
+    
+    if (addr == 0 && segment->p_vaddr)
+      ELFSH_PROFILE_ERR(__FILE__, __FUNCTION__, __LINE__, 
+--- 44,56 ----
+    printf("[DEBUG_RUNTIME] MMAP: " XFMT " of %d bytes \n", segment->p_vaddr, segment->p_memsz);
+  #endif
+    
++   { int zfd = open("/dev/zero", O_RDWR);
+    addr = (elfsh_Addr) mmap((void *) 0, segment->p_memsz, 
+  			   prot,
+  			   //elfsh_get_segment_flags(segment), 
+! 			   MAP_PRIVATE, 
+! 			   zfd, 0);
+!   close(zfd);}
+    
+    if (addr == 0 && segment->p_vaddr)
+      ELFSH_PROFILE_ERR(__FILE__, __FUNCTION__, __LINE__, 
+*** ./libelfsh/hooks.c.osr6	Mon Aug  1 23:43:52 2005
+--- ./libelfsh/hooks.c	Fri Jul 28 12:47:14 2006
+***************
+*** 770,775 ****
+--- 770,777 ----
+      ELFSH_PROFILE_ROUT(__FILE__, __FUNCTION__, __LINE__, ELFSH_OS_OPENBSD);
+  #elif defined(sun)
+      ELFSH_PROFILE_ROUT(__FILE__, __FUNCTION__, __LINE__, ELFSH_OS_SOLARIS);
++ #elif defined(__sco__)
++     ELFSH_PROFILE_ROUT(__FILE__, __FUNCTION__, __LINE__, ELFSH_OS_SCO);
+  #elif defined(__BEOS__)
+      ELFSH_PROFILE_ROUT(__FILE__, __FUNCTION__, __LINE__, ELFSH_OS_BEOS);
+  #else
+*** ./vm/opt.c.osr6	Mon Aug  1 23:43:53 2005
+--- ./vm/opt.c	Fri Jul 28 12:47:14 2006
+***************
+*** 138,145 ****
+  	  *off = 0;								
+  	}									
+        
+!       if (regcomp(&cur->name, argv[idx + 1], REG_EXTENDED) < 0 ||
+! 	  !cur->name.buffer)
+  	{
+  	  vm_output("[elfsh:vm_add2list] Regular expression failed \n");
+  	  return (-1);
+--- 138,144 ----
+  	  *off = 0;								
+  	}									
+        
+!       if (regcomp(&cur->name, argv[idx + 1], REG_EXTENDED) != 0)
+  	{
+  	  vm_output("[elfsh:vm_add2list] Regular expression failed \n");
+  	  return (-1);
+*** ./vm/hdr.c.osr6	Mon Aug  1 23:43:53 2005
+--- ./vm/hdr.c	Fri Jul 28 12:47:14 2006
+***************
+*** 53,58 ****
+--- 53,60 ----
+        return ("OpenBSD");
+      case ELFSH_OS_SOLARIS:
+        return ("Solaris");
++     case ELFSH_OS_SCO:
++       return ("SCO UNIX");
+      case ELFSH_OS_BEOS:
+        return ("BeoS");
+      case ELFSH_OS_ERROR:
+*** ./Configure-OSR6.osr6	Fri Jul 28 12:47:14 2006
+--- ./Configure-OSR6	Fri Jul 28 12:47:14 2006
+***************
+*** 0 ****
+--- 1,26 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ if [ -x configure ]
++ then
++     ./configure --enable-32 --enable-readline 2>&1 | tee mout-configure
++ else
++     [ -f Makefile.PL ] && perl Makefile.PL 2>&1 | tee mout-configure
++ fi
++ 
++ [ -f postconfigure-osr6.patch ] && {
++     /usr/gnu/bin/patch -p0 -b -z .postconfigure -i postconfigure-osr6.patch
++ }
+*** ./Install-OSR6.osr6	Fri Jul 28 12:47:14 2006
+--- ./Install-OSR6	Fri Jul 28 12:52:47 2006
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/elfsh
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/usr/bin
++ mkdir -p $D/usr/lib
++ mkdir -p $D/usr/include
++ mkdir -p $D/usr/man/man1
++ make install DESTDIR=$D 2>&1 | tee mout-install
+*** ./postconfigure-osr6.patch.osr6	Fri Jul 28 12:47:14 2006
+--- ./postconfigure-osr6.patch	Fri Jul 28 12:55:43 2006
+***************
+*** 0 ****
+--- 1,49 ----
++ --- config.h.00	2006-07-28 10:46:40.000000000 -0700
++ +++ config.h	2006-07-28 10:48:36.360795002 -0700
++ @@ -1,5 +1,5 @@
++  
++ -BITS = -DELFSH32
++ +BITS = -DELFSH32 -include /usr/include/link.h -DEM_IA_64=50 -DEM_PARISC=15 -DREG_EAX=EAX -DREG_EBP=EBP -DREG_EBX=EBX -DREG_ECX=ECX -DREG_EDI=EDI -DREG_EDX=EDX -DREG_EIP=EIP -DREG_ESI=ESI -DREG_ESP=ESP -D__sco__
++  READLNOPT	= -DUSE_READLN
++  LDREADLNOPT	= -lreadline -ltermcap
++  BUILDOP = -DM32
++ --- Makefile.postconfigure	2006-07-28 12:47:14.839515237 -0700
++ +++ Makefile	2006-07-28 12:54:55.729515004 -0700
++ @@ -16,9 +16,9 @@
++  BINPATH = $(BASEPATH)/bin/
++  LIBPATH = $(BASEPATH)/lib/
++  INCPATH = $(BASEPATH)/include/
++ -MANPATH = $(BASEPATH)/share/man
++ +MANPATH = $(BASEPATH)/man
++   
++ -all     : world final modules tags
++ +all     : world final tags
++   
++  world   : 
++  	@echo 'Builting libasm...' 
++ @@ -38,7 +38,7 @@
++  	@cd modules && $(MAKE) 
++  	@echo 'ELFsh modules suite built successfully.' 
++   
++ -install : mod_install 
++ +install :
++  	@cp vm/elfsh $(BINPATH)/ 
++  	@cp libelfsh/libelfsh.a libelfsh/libelfsh.so $(LIBPATH) 
++  	@cp libasm/libasm.a $(LIBPATH) 
++ @@ -49,7 +49,6 @@
++  	@chmod 755 $(MANPATH)/man1/elfsh.1 
++  	@chmod 755 $(BINPATH)/elfsh 
++  	@chmod 755 $(LIBPATH)libelfsh.so 
++ -	@chmod 755 $(LIBPATH)e2dbg.so 
++  	@chmod 755 $(INCPATH)libelfsh*.h 
++  	@chmod 755 $(LIBPATH)libelfsh.a 
++  	@chmod 755 $(LIBPATH)libasm.a 
++ @@ -62,7 +61,7 @@
++  	@cd vm && $(MAKE)			     	
++  	@echo 'ELFsh ET_EXEC has been built successfully.' 
++   
++ -e2dbg: world et_dyn modules tags			
++ +e2dbg: world et_dyn tags			
++  
++  et_dyn:						
++  	@echo 'Builting ELFsh ET_DYN' 

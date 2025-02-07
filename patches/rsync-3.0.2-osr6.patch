@@ -1,0 +1,20 @@
+*** ./Install-OSR6.osr6	Thu May  8 09:51:52 2008
+--- ./Install-OSR6	Thu May  8 09:56:34 2008
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rsync
++ DESTDIR=$D
++ DOC=$DESTDIR/usr/share/doc/packages/rsync
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $DOC
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
++ cp COPYING NEWS OLDNEWS README tech_report.tex $DOC
++ cp -r support $DOC/support

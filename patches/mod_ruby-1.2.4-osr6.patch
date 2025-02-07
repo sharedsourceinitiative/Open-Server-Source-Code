@@ -1,0 +1,41 @@
+*** ./Configure-OSR6.osr6	Sun Sep  4 19:45:14 2005
+--- ./Configure-OSR6	Sun Sep  4 19:45:08 2005
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure.rb --with-apxs=/usr/lib/apache/bin/apxs 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sun Sep  4 19:57:17 2005
+--- ./Install-OSR6	Sun Sep  4 19:57:36 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/modruby
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

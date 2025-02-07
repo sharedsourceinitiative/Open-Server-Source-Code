@@ -1,0 +1,444 @@
+*** ./kcdlabel/audiocd.h.orig Tue Jan  7 02:09:38 2003
+--- ./kcdlabel/audiocd.h Sun May 15 22:48:37 2005
+***************
+*** 30,36 ****
+  #include <qobject.h>
+  #include <qstring.h>
+  
+! #include <linux/cdrom.h>		// specific to Linux !!! --> must be encapsulated in DEFINE IFDEF to enable compilation on other Un*x platforms...
+  
+  /**Access all the audio CD functions and compute CDDB DiscID
+    *@author Pascal 'PeP' Panneels
+--- 30,36 ----
+  #include <qobject.h>
+  #include <qstring.h>
+  
+! #include <sys/cdrom.h>		// specific to Linux !!! --> must be encapsulated in DEFINE IFDEF to enable compilation on other Un*x platforms...
+  
+  /**Access all the audio CD functions and compute CDDB DiscID
+    *@author Pascal 'PeP' Panneels
+***************
+*** 74,79 ****
+  	QString DiscID;				// CDDB DiscID
+  	int cdromfd;				// device descriptor of the CDROM
+  	unsigned int nr_tracks;	   	// # of tracks
+  	struct cdrom_msf0 TOC[101];	// Table Of Content of the CD (max 99 tracks + lead-out + lead in)
+  	bool TOCAvailable;          // true when the TOC is available
+  	unsigned long ulDiscID;		// computed disc id as an unsigned long
+--- 74,80 ----
+  	QString DiscID;				// CDDB DiscID
+  	int cdromfd;				// device descriptor of the CDROM
+  	unsigned int nr_tracks;	   	// # of tracks
++ #ifndef __USLC__
+  	struct cdrom_msf0 TOC[101];	// Table Of Content of the CD (max 99 tracks + lead-out + lead in)
+  #endif
+  	bool TOCAvailable;          // true when the TOC is available
+***************
+*** 75,80 ****
+  	int cdromfd;				// device descriptor of the CDROM
+  	unsigned int nr_tracks;	   	// # of tracks
+  	struct cdrom_msf0 TOC[101];	// Table Of Content of the CD (max 99 tracks + lead-out + lead in)
+  	bool TOCAvailable;          // true when the TOC is available
+  	unsigned long ulDiscID;		// computed disc id as an unsigned long
+  	VectorIntType TrackOffsets;	// offsets of each track
+--- 76,82 ----
+  	unsigned int nr_tracks;	   	// # of tracks
+  #ifndef __USLC__
+  	struct cdrom_msf0 TOC[101];	// Table Of Content of the CD (max 99 tracks + lead-out + lead in)
++ #endif
+  	bool TOCAvailable;          // true when the TOC is available
+  	unsigned long ulDiscID;		// computed disc id as an unsigned long
+  	VectorIntType TrackOffsets;	// offsets of each track
+*** ./kcdlabel/audiocd.cpp.orig Tue Jan  7 02:19:46 2003
+--- ./kcdlabel/audiocd.cpp Sun May 15 22:48:37 2005
+***************
+*** 58,63 ****
+  
+  bool AudioCD::readTOC()
+  {
+  	struct cdrom_tochdr tochdr;
+  	struct cdrom_tocentry tocentry;
+  	int i;
+--- 58,66 ----
+  
+  bool AudioCD::readTOC()
+  {
++ #if defined(__USLC__)
++ 	return(false);
++ #else
+  	struct cdrom_tochdr tochdr;
+  	struct cdrom_tocentry tocentry;
+  	int i;
+***************
+*** 107,112 ****
+  	close(cdromfd);
+  	TOCAvailable=true;
+  	return(true);
+  }
+  
+  /** compute the cddb disc id */
+--- 110,116 ----
+  	close(cdromfd);
+  	TOCAvailable=true;
+  	return(true);
++ #endif
+  }
+  
+  /** compute the cddb disc id */
+***************
+*** 112,117 ****
+  /** compute the cddb disc id */
+  void AudioCD::computeDiscID()
+  {
+  	int i=0, t=0, n=0;
+  	char str[10];
+  	
+--- 116,124 ----
+  /** compute the cddb disc id */
+  void AudioCD::computeDiscID()
+  {
++ #if defined(__USLC__)
++ 	return;
++ #else
+  	int i=0, t=0, n=0;
+  	char str[10];
+  	
+***************
+*** 132,137 ****
+  	
+  	emit statusText((char *)"DiscID computed !");
+  
+  }
+  
+  /** described in cddb documentation */
+--- 139,145 ----
+  	
+  	emit statusText((char *)"DiscID computed !");
+  
++ #endif
+  }
+  
+  /** described in cddb documentation */
+*** ./kcdlabel/psocket.h.orig Tue Jan  7 01:27:20 2003
+--- ./kcdlabel/psocket.h Sun May 15 22:48:37 2005
+***************
+*** 22,27 ****
+  #include <stdlib.h>
+  #include <errno.h>
+  #include <string>
+  #include <netdb.h>
+  #include <ctype.h>
+  #include <unistd.h>
+--- 22,28 ----
+  #include <stdlib.h>
+  #include <errno.h>
+  #include <string>
++ #include <strings.h>
+  #include <netdb.h>
+  #include <ctype.h>
+  #include <unistd.h>
+*** ./kcdlabel/kdirtree.cpp.orig Sun Jan 26 08:29:27 2003
+--- ./kcdlabel/kdirtree.cpp Sun May 15 22:48:37 2005
+***************
+*** 20,26 ****
+  #include <string>
+  #include <vector>
+  #include <algorithm>
+- #include <error.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+--- 20,25 ----
+  #include <string>
+  #include <vector>
+  #include <algorithm>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+*** ./kcdlabel/kcovercurvedstring.cpp.orig Tue Jan  7 02:46:43 2003
+--- ./kcdlabel/kcovercurvedstring.cpp Sun May 15 22:48:37 2005
+***************
+*** 106,112 ****
+  	QFontMetrics fm(*Font->Font);
+  	int H = fm.height();
+  	
+! 	double distance = sqrt( pow( pos.x()-X , 2 ) + pow( pos.y()-Y , 2 ) );
+  	
+  	switch (Type)
+  		{
+--- 106,112 ----
+  	QFontMetrics fm(*Font->Font);
+  	int H = fm.height();
+  	
+! 	double distance = sqrt( pow( (double)pos.x()-X , 2 ) + pow( (double)pos.y()-Y , 2 ) );
+  	
+  	switch (Type)
+  		{
+*** ./kcdlabel/Makefile.in.orig Tue Jan  7 02:03:26 2003
+--- ./kcdlabel/Makefile.in Sun May 15 22:55:19 2005
+***************
+*** 213,219 ****
+  idldir = @idldir@
+  install_sh = @install_sh@
+  jni_includes = @jni_includes@
+! kde_appsdir = @kde_appsdir@
+  kde_bindir = @kde_bindir@
+  kde_confdir = @kde_confdir@
+  kde_datadir = @kde_datadir@
+--- 213,219 ----
+  idldir = @idldir@
+  install_sh = @install_sh@
+  jni_includes = @jni_includes@
+! kde_appsdir = /usr/share/applications
+  kde_bindir = @kde_bindir@
+  kde_confdir = @kde_confdir@
+  kde_datadir = @kde_datadir@
+***************
+*** 441,446 ****
+  install-binPROGRAMS: $(bin_PROGRAMS)
+  	@$(NORMAL_INSTALL)
+  	$(mkinstalldirs) $(DESTDIR)$(bindir)
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+  	p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+  	if test -f $$p \
+--- 441,447 ----
+  install-binPROGRAMS: $(bin_PROGRAMS)
+  	@$(NORMAL_INSTALL)
+  	$(mkinstalldirs) $(DESTDIR)$(bindir)
++ 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/kcdlabel
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+  	p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+  	if test -f $$p \
+***************
+*** 447,454 ****
+  	|| test -f $$p1 \
+  	; then \
+  	f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+! 	echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(bindir)/$$f"; \
+! 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(bindir)/$$f; \
+  	else :; fi; \
+  	done
+  
+--- 448,455 ----
+  	|| test -f $$p1 \
+  	; then \
+  	f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+! 	echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(kde_datadir)/kcdlabel/$$f"; \
+! 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(kde_datadir)/kcdlabel/$$f; \
+  	else :; fi; \
+  	done
+  	$(INSTALL_SCRIPT) $(srcdir)/kcdlabel.sh $(bindir)/kcdlabel
+***************
+*** 451,456 ****
+  	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(bindir)/$$f; \
+  	else :; fi; \
+  	done
+  
+  uninstall-binPROGRAMS:
+  	@$(NORMAL_UNINSTALL)
+--- 452,458 ----
+  	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(kde_datadir)/kcdlabel/$$f; \
+  	else :; fi; \
+  	done
++ 	$(INSTALL_SCRIPT) $(srcdir)/kcdlabel.sh $(bindir)/kcdlabel
+  
+  uninstall-binPROGRAMS:
+  	@$(NORMAL_UNINSTALL)
+***************
+*** 456,463 ****
+  	@$(NORMAL_UNINSTALL)
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+  	f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+! 	echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+! 	rm -f $(DESTDIR)$(bindir)/$$f; \
+  	done
+  
+  clean-binPROGRAMS:
+--- 458,465 ----
+  	@$(NORMAL_UNINSTALL)
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+  	f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+! 	echo " rm -f $(DESTDIR)$(kde_datadir)/kcdlabel/$$f"; \
+! 	rm -f $(DESTDIR)$(kde_datadir)/kcdlabel/$$f; \
+  	done
+  	rm -f $(DESTDIR)$(bindir)/kcdlabel
+  
+***************
+*** 459,464 ****
+  	echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+  	rm -f $(DESTDIR)$(bindir)/$$f; \
+  	done
+  
+  clean-binPROGRAMS:
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+--- 461,467 ----
+  	echo " rm -f $(DESTDIR)$(kde_datadir)/kcdlabel/$$f"; \
+  	rm -f $(DESTDIR)$(kde_datadir)/kcdlabel/$$f; \
+  	done
++ 	rm -f $(DESTDIR)$(bindir)/kcdlabel
+  
+  clean-binPROGRAMS:
+  	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+***************
+*** 708,713 ****
+  installdirs: installdirs-recursive
+  installdirs-am:
+  	$(mkinstalldirs) $(DESTDIR)$(bindir)
+  
+  install: install-recursive
+  install-exec: install-exec-recursive
+--- 711,717 ----
+  installdirs: installdirs-recursive
+  installdirs-am:
+  	$(mkinstalldirs) $(DESTDIR)$(bindir)
++ 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/kcdlabel
+  
+  install: install-recursive
+  install-exec: install-exec-recursive
+***************
+*** 797,803 ****
+  
+  
+  install-data-local:
+! #>- 	$(mkinstalldirs) $(kde_appsdir)/Multimedia/
+  #>+ 1
+  	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Multimedia/
+  #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/Multimedia/kcdlabel.desktop
+--- 801,807 ----
+  
+  
+  install-data-local:
+! #>- 	$(mkinstalldirs) $(kde_appsdir)/
+  #>+ 1
+  	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/
+  #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/kcdlabel.desktop
+***************
+*** 799,806 ****
+  install-data-local:
+  #>- 	$(mkinstalldirs) $(kde_appsdir)/Multimedia/
+  #>+ 1
+! 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Multimedia/
+! #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>+ 1
+  	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(DESTDIR)$(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>- 	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+--- 803,810 ----
+  install-data-local:
+  #>- 	$(mkinstalldirs) $(kde_appsdir)/
+  #>+ 1
+! 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/
+! #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/kcdlabel.desktop
+  #>+ 1
+  	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(DESTDIR)$(kde_appsdir)/kcdlabel.desktop
+  #>- 	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+***************
+*** 802,808 ****
+  	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Multimedia/
+  #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>+ 1
+! 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(DESTDIR)$(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>- 	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+  #>+ 1
+  	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/medium/locolor/apps/
+--- 806,812 ----
+  	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/
+  #>- 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(kde_appsdir)/kcdlabel.desktop
+  #>+ 1
+! 	$(INSTALL_DATA) $(srcdir)/kcdlabel.desktop $(DESTDIR)$(kde_appsdir)/kcdlabel.desktop
+  #>- 	$(mkinstalldirs) $(kde_icondir)/medium/locolor/apps/
+  #>+ 1
+  	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/medium/locolor/apps/
+***************
+*** 817,823 ****
+  	$(INSTALL_DATA) $(srcdir)/mini-kcdlabel.xpm $(DESTDIR)$(kde_icondir)/small/locolor/apps/mini-kcdlabel.xpm
+  
+  uninstall-local:
+! #>- 	-rm -f $(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>+ 1
+  	-rm -f $(DESTDIR)$(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>- 	-rm -f $(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+--- 821,827 ----
+  	$(INSTALL_DATA) $(srcdir)/mini-kcdlabel.xpm $(DESTDIR)$(kde_icondir)/small/locolor/apps/mini-kcdlabel.xpm
+  
+  uninstall-local:
+! #>- 	-rm -f $(kde_appsdir)/kcdlabel.desktop
+  #>+ 1
+  	-rm -f $(DESTDIR)$(kde_appsdir)/kcdlabel.desktop
+  #>- 	-rm -f $(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+***************
+*** 819,825 ****
+  uninstall-local:
+  #>- 	-rm -f $(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>+ 1
+! 	-rm -f $(DESTDIR)$(kde_appsdir)/Multimedia/kcdlabel.desktop
+  #>- 	-rm -f $(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+  #>+ 1
+  	-rm -f $(DESTDIR)$(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+--- 823,829 ----
+  uninstall-local:
+  #>- 	-rm -f $(kde_appsdir)/kcdlabel.desktop
+  #>+ 1
+! 	-rm -f $(DESTDIR)$(kde_appsdir)/kcdlabel.desktop
+  #>- 	-rm -f $(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+  #>+ 1
+  	-rm -f $(DESTDIR)$(kde_icondir)/medium/locolor/apps/kcdlabel.xpm
+*** ./kcdlabel/kcdlabel.desktop.orig Tue Jan  7 01:11:43 2003
+--- ./kcdlabel/kcdlabel.desktop Sun May 15 22:48:37 2005
+***************
+*** 2,9 ****
+  [KDE Desktop Entry]
+  Type=Application
+  Exec=kcdlabel -caption "%c" %i %m  
+! Icon=kcdlabel.xpm
+! MiniIcon=kcdlabel.xpm
+  DocPath=kcdlabel/index.html
+  Comment=
+  Comment[de]=
+--- 2,9 ----
+  [KDE Desktop Entry]
+  Type=Application
+  Exec=kcdlabel -caption "%c" %i %m  
+! Icon=/usr/share/icons/medium/locolor/apps/kcdlabel.xpm
+! MiniIcon=/usr/share/icons/small/locolor/apps/mini-kcdlabel.xpm
+  DocPath=kcdlabel/index.html
+  Comment=
+  Comment[de]=
+***************
+*** 10,12 ****
+  Terminal=0
+  Name=KCDLabel
+  Name[de]=KCDLabel
+--- 10,13 ----
+  Terminal=0
+  Name=KCDLabel
+  Name[de]=KCDLabel
++ Categories=Application;Graphics;Multimedia;
+*** ./kcdlabel/kcdlabel.sh.orig Sun May 15 22:48:37 2005
+--- ./kcdlabel/kcdlabel.sh Sun May 15 22:48:37 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ LD_LIBRARY_PATH=/opt/kde/lib
++ export LD_LIBRARY_PATH
++ 
++ /usr/share/kcdlabel/kcdlabel $*
+*** ./Configure-OSR6.orig Sun May 15 22:48:37 2005
+--- ./Configure-OSR6 Sun May 15 22:48:37 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ KDE_RPATH="-R /opt/kde/lib"
++ WITH="--with-qt-dir=/opt/kde \
++       --with-qt-includes=/opt/kde/include \
++       --with-qt-libraries=/opt/kde/lib"
++ export CC CXX KDE_RPATH
++ rm -f mout-configure
++ ./configure $* --prefix=/usr --program-prefix="" $WITH \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

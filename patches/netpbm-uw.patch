@@ -1,0 +1,128 @@
+--- ./lib/Makefile.uw	2002-11-24 18:16:28.000000000 +0000
++++ ./lib/Makefile	2003-09-10 00:17:32.090000007 +0000
+@@ -86,7 +86,7 @@
+     $(LIBOBJECTS) $(LIBOBJECTS_X) 
+ 	$(LD) $(LDSHLIB) -o $@ $(LIBOBJECTS) $(LIBOBJECTS_X) \
+           -lc $(LADD) \
+-	  -soname libnetpbm.$(NETPBMLIBSUFFIX) \
++	  -h libnetpbm.$(NETPBMLIBSUFFIX) \
+ 	  -set_version `perl -e 'print "sgi$(MAJ).".join(":sgi$(MAJ).",(0..$(MIN)))."\n"'`
+ endif
+ 
+@@ -113,7 +113,7 @@
+ $(NETPBMSHLIBPREFIX)netpbm$(DLLVER).dll: $(LIBOBJECTS) $(LIBOBJECTS_X)
+ endif
+ 	$(LD) $(LDSHLIB) -Wl,--export-all-symbols \
+-            -Wl,-soname,$(NETPBMSHLIBPREFIX)netpbm$(DLLVER).dll \
++            -Wl,-h,$(NETPBMSHLIBPREFIX)netpbm$(DLLVER).dll \
+             -Wl,--out-implib,libnetpbm.dll.a -o $@ \
+             $(LIBOBJECTS) $(LIBOBJECTS_X) $(LADD) $(LDFLAGS)
+ endif
+--- ./converter/pbm/thinkjettopbm.l.uw	2003-09-10 00:17:30.860000021 +0000
++++ ./converter/pbm/thinkjettopbm.l	2003-09-10 00:17:32.090000027 +0000
+@@ -28,7 +28,6 @@
+ 
+ %{
+ 
+-#include <stdio.h>
+ #include <stdarg.h>
+ #include <string.h>
+ #include <errno.h>
+--- ./Makefile.config.in.uw	2003-09-10 00:17:29.880000009 +0000
++++ ./Makefile.config.in	2003-09-10 00:17:32.090000088 +0000
+@@ -52,15 +52,15 @@
+ 
+ # MAKE is set automatically by Make to what was used to invoke Make.
+ 
+-INSTALL = $(SRCDIR)/buildtools/install.sh
++#INSTALL = $(SRCDIR)/buildtools/install.sh
+ #Solaris:
+-#INSTALL = /usr/ucb/install
++INSTALL = /usr/ucb/install
+ #Tru64:
+ #INSTALL = installbsd
+ #OSF1:
+ #INSTALL = $(SRCDIR)/buildtools/installosf
+ #Red Hat Linux:
+-INSTALL = install
++#INSTALL = install
+ 
+ # STRIPFLAG is the option you pass to the above install program to make it
+ # strip unnecessary information out of binaries.
+@@ -81,9 +81,9 @@
+ #MANPAGE_FORMAT = cat
+ 
+ AR = ar
+-RANLIB = ranlib
++#RANLIB = ranlib
+ # IRIX, SCO don't have Ranlib:
+-#RANLIB = true
++RANLIB = true
+ LEX = flex
+ # Solaris:
+ # LEX = flex -e
+@@ -154,7 +154,7 @@
+ 
+ # Here, $(SONAME) resolves to the soname for the shared library being created.
+ # The following are gcc options.  This works on GNU libc systems.
+-LDSHLIB = -shared -Wl,-soname,$(SONAME)
++#LDSHLIB = -shared -Wl,-h,$(SONAME)
+ # You need -nostart instead of -shared on BeOS.  Though the BeOS compiler is
+ # ostensibly gcc, it has the -nostart option, which is not mentioned in gcc
+ # documentation and doesn't exist in at least one non-BeOS installation.
+@@ -165,7 +165,7 @@
+ # These systems have no soname option.
+ #LDSHLIB = -shared
+ # Solaris with Sun Ld:
+-#LDSHLIB = -Wl,-Bdynamic,-G,-h,$(SONAME) 
++LDSHLIB = -Wl,-Bdynamic,-G,-h,$(SONAME) 
+ #Tru64:
+ #LDSHLIB = -shared -expect_unresolved "*"
+ #AIX:
+@@ -187,11 +187,11 @@
+ 
+ # CFLAGS_SHLIB = 
+ # Solaris or SunOS with gcc, and NetBSD:
+-CFLAGS_SHLIB = -fPIC
++#CFLAGS_SHLIB = -fPIC
+ #CFLAGS_SHLIB = -fPIC
+ # Sun compiler:
+ #CFLAGS_SHLIB = -Kpic
+-#CFLAGS_SHLIB = -KPIC
++CFLAGS_SHLIB = -KPIC
+ 
+ # SHLIB_CLIB is the link option to include the C library in a shared library,
+ # normally "-lc".  On typical systems, this serves no purpose.  On some,
+@@ -252,11 +252,11 @@
+ 
+ # If your Tiff library depends on libraries other than libc and libm, 
+ # put the required linker options here.
+-TIFFLIB_LDFLAGS =
++#TIFFLIB_LDFLAGS =
+ # John Milton <jmilton@fundsxpress.com> in September 2000 and
+ # John Bartelt <bartelt@SLAC.Stanford.EDU> in August 2002 reported
+ # needing libz with libtiff 3.5.5 (with and without LZW patch):
+-#TIFFLIB_LDFLAGS = -lz
++TIFFLIB_LDFLAGS = -lz
+ 
+ # The JPEG library.  See above.  If you want to build the jpeg
+ # converters you must have the jpeg library already installed.
+@@ -337,9 +337,9 @@
+ # network functions is the option in ppmtompeg to run it on multiple
+ # computers simultaneously.
+ 
+-NETWORKLD = 
++#NETWORKLD = 
+ # Solaris, SunOS:
+-#NETWORKLD = -lsocket -lnsl
++NETWORKLD = -lsocket -lnsl
+ # SCO:
+ #NETWORKLD = -lsocket, -lresolv
+ # Don't build network functions:
+@@ -450,4 +450,4 @@
+ #NETPBM_DOCURL = file:/usr/doc/netpbm/
+ 
+ # This is where everything goes when you do 'make package':
+-PKGDIR = /tmp/netpbm
+\ No newline at end of file
++PKGDIR = /tmp/netpbm

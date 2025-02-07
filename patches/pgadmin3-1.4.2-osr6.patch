@@ -1,0 +1,1275 @@
+*** ./src/frm/frmEditGrid.cpp.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/frm/frmEditGrid.cpp	Wed Mar 15 20:01:49 2006
+***************
+*** 1216,1223 ****
+                      columns[i].attr->SetReadOnly(false);
+                      editor = new wxGridCellBoolEditor();
+                      break;
+!                 case PGOID_TYPE_INT8:
+!                 case PGOID_TYPE_SERIAL8:
+                      SetNumberEditor(i, 20);
+                      break;
+                  case PGOID_TYPE_INT2:
+--- 1216,1223 ----
+                      columns[i].attr->SetReadOnly(false);
+                      editor = new wxGridCellBoolEditor();
+                      break;
+!                 case (Oid)PGOID_TYPE_INT8:
+!                 case (Oid)PGOID_TYPE_SERIAL8:
+                      SetNumberEditor(i, 20);
+                      break;
+                  case PGOID_TYPE_INT2:
+*** ./src/base/base.cpp.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/base/base.cpp	Wed Mar 15 20:01:49 2006
+***************
+*** 136,142 ****
+  double StrToDouble(const wxString& value)
+  {
+      wxCharBuffer buf = value.ToAscii();
+!     char *p=strchr(buf, '.');
+      if (p)
+          *p = localeconv()->decimal_point[0];
+  
+--- 136,142 ----
+  double StrToDouble(const wxString& value)
+  {
+      wxCharBuffer buf = value.ToAscii();
+!     char *p=(char *)strchr(buf, '.');
+      if (p)
+          *p = localeconv()->decimal_point[0];
+  
+*** ./src/agent/include/dlgJob.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/agent/include/dlgJob.h	Wed Mar 15 20:01:49 2006
+***************
+*** 47,53 ****
+      void OnAddSchedule(wxCommandEvent &ev);
+      void OnRemoveSchedule(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 47,53 ----
+      void OnAddSchedule(wxCommandEvent &ev);
+      void OnRemoveSchedule(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/agent/include/dlgStep.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/agent/include/dlgStep.h	Wed Mar 15 20:01:49 2006
+***************
+*** 41,47 ****
+      pgaStep *step;
+      pgaJob *job;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 41,47 ----
+      pgaStep *step;
+      pgaJob *job;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/agent/include/dlgSchedule.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/agent/include/dlgSchedule.h	Wed Mar 15 20:01:49 2006
+***************
+*** 53,59 ****
+  	const wxString ChkListBox2PgArray(wxCheckListBox *lb);
+  	const wxString ChkListBox2StrArray(wxCheckListBox *lb);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 53,59 ----
+  	const wxString ChkListBox2PgArray(wxCheckListBox *lb);
+  	const wxString ChkListBox2StrArray(wxCheckListBox *lb);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepSet.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepSet.h	Wed Mar 15 20:01:49 2006
+***************
+*** 33,39 ****
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 33,39 ----
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 52,58 ****
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  class dlgRepSetMove : public dlgRepProperty
+--- 52,58 ----
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  class dlgRepSetMove : public dlgRepProperty
+***************
+*** 70,76 ****
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 70,76 ----
+  private:
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepSubscription.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepSubscription.h	Wed Mar 15 20:01:49 2006
+***************
+*** 34,40 ****
+      slSubscription *subscription;
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 34,40 ----
+      slSubscription *subscription;
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepCluster.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepCluster.h	Wed Mar 15 20:01:49 2006
+***************
+*** 43,49 ****
+      wxString remoteVersion;
+      wxString createScript;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 43,49 ----
+      wxString remoteVersion;
+      wxString createScript;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 71,77 ****
+      wxString clusterBackup;
+  
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 71,77 ----
+      wxString clusterBackup;
+  
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 93,99 ****
+  
+      wxString version;
+      wxString sql;
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 93,99 ----
+  
+      wxString version;
+      wxString sql;
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepTable.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepTable.h	Wed Mar 15 20:01:49 2006
+***************
+*** 41,47 ****
+      void OnChangeTable(wxCommandEvent &ev);
+      void OnChangeTableSel(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 41,47 ----
+      void OnChangeTable(wxCommandEvent &ev);
+      void OnChangeTableSel(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepNode.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepNode.h	Wed Mar 15 20:01:49 2006
+***************
+*** 34,40 ****
+  private:
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  #endif
+--- 34,40 ----
+  private:
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  #endif
+*** ./src/slony/include/dlgRepPath.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepPath.h	Wed Mar 15 20:01:49 2006
+***************
+*** 35,41 ****
+      slPath *path;
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 35,41 ----
+      slPath *path;
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepListen.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepListen.h	Wed Mar 15 20:01:49 2006
+***************
+*** 35,41 ****
+      slListen *listen;
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 35,41 ----
+      slListen *listen;
+      slNode *node;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/slony/include/dlgRepSequence.h.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/slony/include/dlgRepSequence.h	Wed Mar 15 20:01:49 2006
+***************
+*** 37,43 ****
+      slSequence *sequence;
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 37,43 ----
+      slSequence *sequence;
+      slSet *set;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgTable.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgTable.h	Wed Mar 15 20:01:49 2006
+***************
+*** 70,76 ****
+      double settingVacFactor, settingAnlFactor;
+      double tableVacFactor, tableAnlFactor;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 70,76 ----
+      double settingVacFactor, settingAnlFactor;
+      double tableVacFactor, tableAnlFactor;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgAggregate.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgAggregate.h	Wed Mar 15 20:01:49 2006
+***************
+*** 37,43 ****
+      void OnChangeTypeBase(wxCommandEvent &ev);
+      void OnChangeTypeState(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 37,43 ----
+      void OnChangeTypeBase(wxCommandEvent &ev);
+      void OnChangeTypeState(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/ctlSecurityPanel.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/ctlSecurityPanel.h	Wed Mar 15 20:01:49 2006
+***************
+*** 68,74 ****
+      bool GrantAllowed() const;
+  
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 68,74 ----
+      bool GrantAllowed() const;
+  
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgLanguage.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgLanguage.h	Wed Mar 15 20:01:49 2006
+***************
+*** 31,37 ****
+  private:
+      pgLanguage *language;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 31,37 ----
+  private:
+      pgLanguage *language;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/frmStatus.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/frmStatus.h	Wed Mar 15 20:01:49 2006
+***************
+*** 78,84 ****
+      long logfileLength;
+      int xactPage, logPage;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 78,84 ----
+      long logfileLength;
+      int xactPage, logPage;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/frmHelp.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/frmHelp.h	Wed Mar 15 20:01:49 2006
+***************
+*** 41,47 ****
+      ctlHelpWindow *htmlWindow;
+      wxString currentPage;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  class ctlHelpWindow : public wxHtmlWindow 
+--- 41,47 ----
+      ctlHelpWindow *htmlWindow;
+      wxString currentPage;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  class ctlHelpWindow : public wxHtmlWindow 
+*** ./src/include/frmHint.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/frmHint.h	Wed Mar 15 20:01:49 2006
+***************
+*** 54,60 ****
+      wxString GetPage(const wxChar *hintpage);
+      wxString GetHelpPage() const;
+  
+!     DECLARE_EVENT_TABLE();
+  
+      wxArrayInt hintnos;
+      int currentHint;
+--- 54,60 ----
+      wxString GetPage(const wxChar *hintpage);
+      wxString GetHelpPage() const;
+  
+!     DECLARE_EVENT_TABLE()
+  
+      wxArrayInt hintnos;
+      int currentHint;
+*** ./src/include/dlgClasses.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgClasses.h	Wed Mar 15 20:03:57 2006
+***************
+*** 42,48 ****
+      wxString dlgName;
+      wxStatusBar *statusBar;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 42,48 ----
+      wxString dlgName;
+      wxStatusBar *statusBar;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 82,88 ****
+      wxToolBar *toolBar;
+      bool changed;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 82,88 ----
+      wxToolBar *toolBar;
+      bool changed;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 97,103 ****
+  
+  private:
+      virtual wxString GetHelpPage() const = 0;
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  class ExecutionDialog : public DialogWithHelp
+--- 97,103 ----
+  
+  private:
+      virtual wxString GetHelpPage() const = 0;
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  class ExecutionDialog : public DialogWithHelp
+***************
+*** 118,124 ****
+      wxTextCtrl *txtMessages;
+  
+  private:
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 118,124 ----
+      wxTextCtrl *txtMessages;
+  
+  private:
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 143,149 ****
+      bool done, final;
+      wxArrayString environment;
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+  public:
+  #endif
+      void OnOK(wxCommandEvent& ev);
+--- 143,149 ----
+      bool done, final;
+      wxArrayString environment;
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || defined(__USLC__)
+  public:
+  #endif
+      void OnOK(wxCommandEvent& ev);
+***************
+*** 156,162 ****
+      void checkStreams();
+  
+      wxTimer *timer;
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  #endif
+--- 156,162 ----
+      void checkStreams();
+  
+      wxTimer *timer;
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  #endif
+*** ./src/include/dlgIndexConstraint.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgIndexConstraint.h	Wed Mar 15 20:01:49 2006
+***************
+*** 39,45 ****
+  
+  private:
+      void OnCheckDeferrable(wxCommandEvent &ev);
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 39,45 ----
+  
+  private:
+      void OnCheckDeferrable(wxCommandEvent &ev);
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgSchema.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgSchema.h	Wed Mar 15 20:01:49 2006
+***************
+*** 31,37 ****
+  private:
+      pgSchema *schema;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 31,37 ----
+  private:
+      pgSchema *schema;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgGroup.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgGroup.h	Wed Mar 15 20:01:49 2006
+***************
+*** 36,42 ****
+  
+      wxArrayString usersIn;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 36,42 ----
+  
+      wxArrayString usersIn;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgCast.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgCast.h	Wed Mar 15 20:01:49 2006
+***************
+*** 36,42 ****
+      pgCast *cast;
+      wxArrayString functions;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 36,42 ----
+      pgCast *cast;
+      wxArrayString functions;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgColumn.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgColumn.h	Wed Mar 15 20:01:49 2006
+***************
+*** 43,49 ****
+      wxString previousDefinition;
+      wxArrayString sequences;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 43,49 ----
+      wxString previousDefinition;
+      wxArrayString sequences;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgOperator.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgOperator.h	Wed Mar 15 20:01:49 2006
+***************
+*** 41,47 ****
+      pgOperator *oper;
+      wxArrayString procedures;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 41,47 ----
+      pgOperator *oper;
+      wxArrayString procedures;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgConversion.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgConversion.h	Wed Mar 15 20:01:49 2006
+***************
+*** 34,40 ****
+      pgSchema *schema;
+      wxArrayString functions;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 34,40 ----
+      pgSchema *schema;
+      wxArrayString functions;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgFunction.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgFunction.h	Wed Mar 15 20:01:49 2006
+***************
+*** 57,63 ****
+  protected:
+      bool isProcedure;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 57,63 ----
+  protected:
+      bool isProcedure;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgIndex.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgIndex.h	Wed Mar 15 20:01:49 2006
+***************
+*** 37,43 ****
+      void OnAddCol(wxCommandEvent &ev);
+      void OnRemoveCol(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 37,43 ----
+      void OnAddCol(wxCommandEvent &ev);
+      void OnRemoveCol(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 52,58 ****
+      pgObject *CreateObject(pgCollection *collection);
+  
+  private:
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 52,58 ----
+      pgObject *CreateObject(pgCollection *collection);
+  
+  private:
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgCheck.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgCheck.h	Wed Mar 15 20:01:49 2006
+***************
+*** 37,43 ****
+      pgTable *table;
+      void OnCheckDeferrable(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 37,43 ----
+      pgTable *table;
+      void OnCheckDeferrable(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgTrigger.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgTrigger.h	Wed Mar 15 20:01:49 2006
+***************
+*** 35,41 ****
+  
+      void OnChangeFunc(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 35,41 ----
+  
+      void OnChangeFunc(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgRole.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgRole.h	Wed Mar 15 20:01:49 2006
+***************
+*** 53,59 ****
+  
+      wxArrayString groupsIn;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 53,59 ----
+  
+      wxArrayString groupsIn;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgRule.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgRule.h	Wed Mar 15 20:01:49 2006
+***************
+*** 37,43 ****
+  
+      bool didChange();
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 37,43 ----
+  
+      bool didChange();
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgType.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgType.h	Wed Mar 15 20:01:49 2006
+***************
+*** 44,50 ****
+  
+      wxArrayString memberTypes, memberSizes;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 44,50 ----
+  
+      wxArrayString memberTypes, memberSizes;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgProperty.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgProperty.h	Wed Mar 15 20:04:03 2006
+***************
+*** 66,72 ****
+      void AppendQuoted(wxString &sql, const wxString &name);
+  
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+      // ANSI spec 11.5 is quite brain dead about pointers of protected members: In order to access 
+      // them using the base class name, they can't be protected.
+      // apparently, only gcc 3.4 knows that; other compilers take protected as protected.
+--- 66,72 ----
+      void AppendQuoted(wxString &sql, const wxString &name);
+  
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || defined(__USLC__)
+      // ANSI spec 11.5 is quite brain dead about pointers of protected members: In order to access 
+      // them using the base class name, they can't be protected.
+      // apparently, only gcc 3.4 knows that; other compilers take protected as protected.
+***************
+*** 109,115 ****
+      bool tryUpdate(wxTreeItemId collectionItem);
+      bool apply(const wxString &sql);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 109,115 ----
+      bool tryUpdate(wxTreeItemId collectionItem);
+      bool apply(const wxString &sql);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 178,184 ****
+      ctlSecurityPanel *securityPage;
+      wxArrayString currentAcl;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 178,184 ----
+      ctlSecurityPanel *securityPage;
+      wxArrayString currentAcl;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+***************
+*** 196,202 ****
+      wxString GetSql();
+      long GetRecId() { return recId; }
+  
+!     DECLARE_EVENT_TABLE();
+  
+      long recId;
+  };
+--- 196,202 ----
+      wxString GetSql();
+      long GetRecId() { return recId; }
+  
+!     DECLARE_EVENT_TABLE()
+  
+      long recId;
+  };
+*** ./src/include/dlgUser.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgUser.h	Wed Mar 15 20:01:49 2006
+***************
+*** 52,58 ****
+  
+      wxArrayString groupsIn;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 52,58 ----
+  
+      wxArrayString groupsIn;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgView.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgView.h	Wed Mar 15 20:01:49 2006
+***************
+*** 35,41 ****
+      pgView *view;
+      wxString oldDefinition;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 35,41 ----
+      pgView *view;
+      wxString oldDefinition;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgDatabase.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgDatabase.h	Wed Mar 15 20:01:49 2006
+***************
+*** 42,48 ****
+  
+      void OnVarnameSelChange(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  
+      friend class pgDatabaseFactory;
+  };
+--- 42,48 ----
+  
+      void OnVarnameSelChange(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  
+      friend class pgDatabaseFactory;
+  };
+*** ./src/include/dlgServer.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgServer.h	Wed Mar 15 20:01:49 2006
+***************
+*** 41,47 ****
+      void OnChangeTryConnect(wxCommandEvent &ev);
+      void OnPageSelect(wxNotebookEvent &event);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 41,47 ----
+      void OnChangeTryConnect(wxCommandEvent &ev);
+      void OnPageSelect(wxNotebookEvent &event);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgForeignKey.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgForeignKey.h	Wed Mar 15 20:01:49 2006
+***************
+*** 48,54 ****
+      void OnRemoveRef(wxCommandEvent &ev);
+      void OnOK(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 48,54 ----
+      void OnRemoveRef(wxCommandEvent &ev);
+      void OnOK(wxCommandEvent &ev);
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgTablespace.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgTablespace.h	Wed Mar 15 20:01:49 2006
+***************
+*** 32,38 ****
+  private:
+      pgTablespace *tablespace;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 32,38 ----
+  private:
+      pgTablespace *tablespace;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgSequence.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgSequence.h	Wed Mar 15 20:01:49 2006
+***************
+*** 33,39 ****
+      pgSchema *schema;
+      pgSequence *sequence;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 33,39 ----
+      pgSchema *schema;
+      pgSequence *sequence;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/dlgDomain.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/dlgDomain.h	Wed Mar 15 20:01:49 2006
+***************
+*** 35,41 ****
+      pgSchema *schema;
+      pgDomain *domain;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 35,41 ----
+      pgSchema *schema;
+      pgDomain *domain;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/include/frmEditGrid.h.osr6	Mon Mar  6 03:53:49 2006
+--- ./src/include/frmEditGrid.h	Wed Mar 15 20:01:49 2006
+***************
+*** 197,203 ****
+      wxString orderBy;
+  	wxString rowFilter;
+  
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 197,203 ----
+      wxString orderBy;
+  	wxString rowFilter;
+  
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./src/Makefile.in.osr6	Mon Mar  6 03:54:27 2006
+--- ./src/Makefile.in	Wed Mar 15 20:01:49 2006
+***************
+*** 385,396 ****
+  $(srcdir)/ui/*.xrc
+  
+  @APPBUNDLE_FALSE@nobase_dist_pkgdata_DATA = $(TMP_ui)
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -Wno-non-virtual-dtor -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -Wall -Wno-non-virtual-dtor -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -Wno-non-virtual-dtor -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -Wall -Wno-non-virtual-dtor -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -Wall -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+  @APPBUNDLE_TRUE@nobase_dist_data_DATA = $(TMP_ui)
+  all: all-am
+  
+--- 385,396 ----
+  $(srcdir)/ui/*.xrc
+  
+  @APPBUNDLE_FALSE@nobase_dist_pkgdata_DATA = $(TMP_ui)
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include -I$(top_srcdir)/src/slony/include
+  @APPBUNDLE_TRUE@nobase_dist_data_DATA = $(TMP_ui)
+  all: all-am
+  
+*** ./src/pgAdmin3.cpp.osr6	Mon Mar  6 03:53:50 2006
+--- ./src/pgAdmin3.cpp	Wed Mar 15 20:01:49 2006
+***************
+*** 119,125 ****
+  private:
+      void OnSelect(wxCommandEvent &ev);
+      wxListBox *dlgList;
+!     DECLARE_EVENT_TABLE();
+  };
+  
+  
+--- 119,125 ----
+  private:
+      void OnSelect(wxCommandEvent &ev);
+      wxListBox *dlgList;
+!     DECLARE_EVENT_TABLE()
+  };
+  
+  
+*** ./xtra/pgagent/Makefile.in.osr6	Mon Mar  6 03:54:28 2006
+--- ./xtra/pgagent/Makefile.in	Wed Mar 15 20:01:49 2006
+***************
+*** 201,212 ****
+  		$(srcdir)/include/misc.h \
+  		$(srcdir)/include/pgAgent.h
+  
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -Wno-non-virtual-dtor -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -Wall -Wno-non-virtual-dtor -I$(srcdir)/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -Wno-non-virtual-dtor -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -Wall -Wno-non-virtual-dtor -I$(srcdir)/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -Wall -I$(srcdir)/include
+  all: all-recursive
+  
+  .SUFFIXES:
+--- 201,212 ----
+  		$(srcdir)/include/misc.h \
+  		$(srcdir)/include/pgAgent.h
+  
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -I$(srcdir)/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -I$(srcdir)/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(srcdir)/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -I$(srcdir)/include
+  all: all-recursive
+  
+  .SUFFIXES:
+*** ./configure.osr6	Mon Mar  6 03:54:33 2006
+--- ./configure	Wed Mar 15 20:01:49 2006
+***************
+*** 2517,2523 ****
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS="-g"
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+--- 2517,2523 ----
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS=""
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+***************
+*** 2575,2583 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 2575,2583 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 3198,3204 ****
+  GXX=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CXXFLAGS=${CXXFLAGS+set}
+  ac_save_CXXFLAGS=$CXXFLAGS
+! CXXFLAGS="-g"
+  echo "$as_me:$LINENO: checking whether $CXX accepts -g" >&5
+  echo $ECHO_N "checking whether $CXX accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cxx_g+set}" = set; then
+--- 3198,3204 ----
+  GXX=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CXXFLAGS=${CXXFLAGS+set}
+  ac_save_CXXFLAGS=$CXXFLAGS
+! CXXFLAGS=""
+  echo "$as_me:$LINENO: checking whether $CXX accepts -g" >&5
+  echo $ECHO_N "checking whether $CXX accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cxx_g+set}" = set; then
+***************
+*** 3256,3264 ****
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-g -O2"
+    else
+!     CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+--- 3256,3264 ----
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  else
+    if test "$GXX" = yes; then
+*** ./Configure-OSR6.osr6	Wed Mar 15 20:01:49 2006
+--- ./Configure-OSR6	Wed Mar 15 20:01:49 2006
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Wed Mar 15 20:01:49 2006
+--- ./Install-OSR6	Wed Mar 15 20:01:49 2006
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgadmin3
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

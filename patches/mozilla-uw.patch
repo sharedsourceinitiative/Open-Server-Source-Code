@@ -1,0 +1,2393 @@
+--- ./nsprpub/lib/tests/Makefile.in.uw	2001-05-17 21:42:02.000000000 +0000
++++ ./nsprpub/lib/tests/Makefile.in	2004-08-30 17:08:53.570000110 +0000
+@@ -168,6 +168,22 @@
+ endif
+ endif # SunOS
+ 
++ifeq ($(OS_ARCH),UnixWare)
++EXTRA_LIBS = -lsocket -lnsl
++export LD_RUN_PATH = $(ABSOLUTE_LIB_DIR)
++ifeq ($(USE_PTHREADS),1)
++  ifdef NS_USE_GCC
++    LDOPTS += -pthread
++    XCFLAGS += -pthread
++    OS_CFLAGS += -pthread
++  else
++    LDOPTS += -Kpthread
++    XCFLAGS += -Kpthread
++    OS_CFLAGS += -Kpthread
++  endif
++endif
++endif # UnixWare
++
+ ifeq ($(OS_ARCH), NCR)
+ # NCR needs to link against -lsocket -lnsl (and -lc, which is linked
+ # implicitly by $(CC)) again even though we already linked with these
+--- ./nsprpub/pr/include/md/_scoos.cfg.uw	2000-06-20 21:24:02.000000000 +0000
++++ ./nsprpub/pr/include/md/_scoos.cfg	2004-08-30 17:08:53.570000136 +0000
+@@ -45,7 +45,7 @@
+ 
+ #define IS_LITTLE_ENDIAN 1
+ #undef  IS_BIG_ENDIAN
+-#undef	HAVE_LONG_LONG
++#define	HAVE_LONG_LONG 1
+ #undef	HAVE_ALIGNED_DOUBLES
+ #undef	HAVE_ALIGNED_LONGLONGS
+ 
+--- ./nsprpub/pr/include/md/_scoos.h.uw	2000-06-20 21:24:05.000000000 +0000
++++ ./nsprpub/pr/include/md/_scoos.h	2004-08-30 17:08:53.570000170 +0000
+@@ -57,6 +57,12 @@
+ #define HAVE_STRERROR
+ #endif
+ 
++/*
++** Pipe I/O Related definitions (not implemented)
++*/
++
++#define _MD_PIPEAVAILABLE(fd) -1
++
+ #ifndef	HAVE_WEAK_IO_SYMBOLS
+ #define	HAVE_WEAK_IO_SYMBOLS
+ #endif
+@@ -66,6 +72,9 @@
+ #define _PR_NO_LARGE_FILES
+ #define _PR_STAT_HAS_ONLY_ST_ATIME
+ 
++#define _PR_HAVE_SYSV_SEMAPHORES
++#define PR_HAVE_SYSV_NAMED_SHARED_MEMORY
++
+ #define NEED_STRFTIME_LOCK
+ #define NEED_TIME_R
+ #define _PR_RECV_BROKEN /* recv doesn't work on Unix Domain Sockets */
+@@ -109,7 +118,9 @@
+ #endif /* _PR_LOCAL_THREADS_ONLY */
+ 
+ struct _MDThread {
++#ifdef _PR_LOCAL_THREADS_ONLY
+     jmp_buf jb;
++#endif
+     int id;
+     int errcode;
+ };
+--- ./nsprpub/pr/include/md/_unixware.h.uw	2000-06-20 21:24:34.000000000 +0000
++++ ./nsprpub/pr/include/md/_unixware.h	2004-08-30 17:08:53.570000199 +0000
+@@ -56,11 +56,16 @@
+ #define _PR_USE_POLL
+ #define _PR_STAT_HAS_ST_ATIM_UNION
+ 
++#define _PR_HAVE_SYSV_SEMAPHORES
++#define PR_HAVE_SYSV_NAMED_SHARED_MEMORY
++
+ #undef  HAVE_STACK_GROWING_UP
+ #define HAVE_NETCONFIG
+ #define	HAVE_DLL
+ #define	USE_DLFCN
+-#define HAVE_STRERROR
++#if ! defined(HAVE_STRERROR)
++  #define HAVE_STRERROR
++#endif
+ #define NEED_STRFTIME_LOCK
+ #define NEED_TIME_R
+ #define _PR_NEED_STRCASECMP
+--- ./nsprpub/pr/include/md/_pth.h.uw	2003-09-16 20:44:04.000000000 +0000
++++ ./nsprpub/pr/include/md/_pth.h	2004-08-30 17:08:53.580000025 +0000
+@@ -139,7 +139,7 @@
+ 	|| defined(HPUX) || defined(LINUX) || defined(FREEBSD) \
+ 	|| defined(NETBSD) || defined(OPENBSD) || defined(BSDI) \
+ 	|| defined(VMS) || defined(NTO) || defined(DARWIN) \
+-	|| defined(UNIXWARE)
++	|| defined(UNIXWARE) || defined(SCO)
+ #define _PT_PTHREAD_INVALIDATE_THR_HANDLE(t)  (t) = 0
+ #define _PT_PTHREAD_THR_HANDLE_IS_INVALID(t)  (t) == 0
+ #define _PT_PTHREAD_COPY_THR_HANDLE(st, dt)   (dt) = (st)
+@@ -190,7 +190,7 @@
+  */
+ #if (defined(AIX) && !defined(AIX4_3_PLUS)) || defined(LINUX) \
+ 	|| defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
+-	|| defined(BSDI) || defined(VMS) || defined(UNIXWARE) \
++	|| defined(BSDI) || defined(VMS) || defined(UNIXWARE) || defined(SCO) \
+ 	|| defined(DARWIN)
+ #define PT_NO_SIGTIMEDWAIT
+ #endif
+@@ -252,7 +252,8 @@
+ #define PT_PRIO_MIN            0
+ #define PT_PRIO_MAX            31
+ #elif defined(NETBSD) \
+-	|| defined(BSDI) || defined(DARWIN) || defined(UNIXWARE) /* XXX */
++	|| defined(BSDI) || defined(DARWIN) || defined(UNIXWARE) \
++        || defined(SCO) /* XXX */
+ #define PT_PRIO_MIN            0
+ #define PT_PRIO_MAX            126
+ #else
+@@ -286,7 +287,7 @@
+ #elif defined(HPUX) || defined(LINUX) || defined(SOLARIS) \
+ 	|| defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
+ 	|| defined(BSDI) || defined(NTO) || defined(DARWIN) \
+-	|| defined(UNIXWARE)
++	|| defined(UNIXWARE) || defined(SCO)
+ #define _PT_PTHREAD_YIELD()            	sched_yield()
+ #else
+ #error "Need to define _PT_PTHREAD_YIELD for this platform"
+--- ./nsprpub/pr/src/io/prmwait.c.uw	2002-03-14 23:20:41.000000000 +0000
++++ ./nsprpub/pr/src/io/prmwait.c	2004-08-30 17:08:53.650000014 +0000
+@@ -649,7 +649,7 @@
+         desc->bytesRecv = 0;
+     else
+     {
+-        desc->bytesRecv = desc->fd->methods->recv(
++        desc->bytesRecv = (*desc->fd->methods->recv)(
+             desc->fd, desc->buffer.start,
+             desc->buffer.length, 0, desc->timeout);
+         if (desc->bytesRecv < 0)  /* SetError should already be there */
+--- ./nsprpub/pr/src/md/unix/scoos.c.uw	2000-06-20 21:33:03.000000000 +0000
++++ ./nsprpub/pr/src/md/unix/scoos.c	2004-08-30 17:08:53.670000016 +0000
+@@ -37,7 +37,9 @@
+  */
+ #include "primpl.h"
+ 
+-#include <setjmp.h>
++#if defined(_PR_LOCAL_THREADS_ONLY)
++  #include <setjmp.h>
++#endif
+ 
+ void _MD_EarlyInit(void)
+ {
+@@ -45,14 +47,19 @@
+ 
+ PRWord *_MD_HomeGCRegisters(PRThread *t, int isCurrent, int *np)
+ {
++#if ! defined(_PR_PTHREADS)
+     if (isCurrent) {
+ 	(void) setjmp(CONTEXT(t));
+     }
+     *np = sizeof(CONTEXT(t)) / sizeof(PRWord);
+     return (PRWord *) CONTEXT(t);
++#else /*      ! defined(_PR_PTHREADS) */
++    *np = 0;
++    return NULL;
++#endif        /*      ! defined(_PR_PTHREADS) */
+ }
+ 
+-#ifdef ALARMS_BREAK_TCP /* I don't think they do */
++#if defined(ALARMS_BREAK_TCP) /* I don't think they do */
+ 
+ PRInt32 _MD_connect(PRInt32 osfd, PRNetAddr *addr, PRInt32 addrlen,
+                         PRIntervalTime timeout)
+@@ -74,14 +81,14 @@
+     _MD_UNBLOCK_CLOCK_INTERRUPTS();
+     return(rv);
+ }
+-#endif
++#endif        /*      defined(ALARMS_BREAK_TCP)       */
+ 
+ /*
+  * These are also implemented in pratom.c using NSPR locks.  Any reason
+  * this might be better or worse?  If you like this better, define
+  * _PR_HAVE_ATOMIC_OPS in include/md/unixware.h
+  */
+-#ifdef _PR_HAVE_ATOMIC_OPS
++#if defined(_PR_HAVE_ATOMIC_OPS)
+ /* Atomic operations */
+ #include  <stdio.h>
+ static FILE *_uw_semf;
+@@ -127,7 +134,9 @@
+     *val = newval;
+     unflockfile(_uw_semf);
+ }
+-#endif
++#endif        /*      defined(_PR_HAVE_ATOMIC_OPS)    */
++
++#if defined(_PR_LOCAL_THREADS_ONLY)
+ 
+ void
+ _MD_SET_PRIORITY(_MDThread *thread, PRUintn newPri)
+@@ -176,3 +185,4 @@
+ {
+     PR_NOT_REACHED("_MD_CREATE_THREAD should not be called for SCO.");
+ }
++#endif        /*      defined(_PR_LOCAL_THREADS_ONLY) */
+--- ./nsprpub/pr/src/md/unix/unixware.c.uw	2000-06-20 21:33:22.000000000 +0000
++++ ./nsprpub/pr/src/md/unix/unixware.c	2004-08-30 17:08:53.670000047 +0000
+@@ -34,7 +34,7 @@
+ 
+ #include "primpl.h"
+ 
+-#if !defined (USE_SVR4_THREADS)
++#if ! defined (USE_SVR4_THREADS)
+ 
+ /*
+          * using only NSPR threads here
+@@ -48,14 +48,19 @@
+ 
+ PRWord *_MD_HomeGCRegisters(PRThread *t, int isCurrent, int *np)
+ {
++#if ! defined(_PR_PTHREADS)
+     if (isCurrent) {
+ 	(void) setjmp(CONTEXT(t));
+     }
+     *np = sizeof(CONTEXT(t)) / sizeof(PRWord);
+     return (PRWord *) CONTEXT(t);
++#else /*      ! defined(_PR_PTHREADS) */
++    *np = 0;
++    return NULL;
++#endif        /*      ! defined(_PR_PTHREADS) */
+ }
+ 
+-#ifdef ALARMS_BREAK_TCP /* I don't think they do */
++#if defined(ALARMS_BREAK_TCP) /* I don't think they do */
+ 
+ PRInt32 _MD_connect(PRInt32 osfd, const PRNetAddr *addr, PRInt32 addrlen,
+                         PRIntervalTime timeout)
+@@ -77,14 +82,14 @@
+     _MD_UNBLOCK_CLOCK_INTERRUPTS();
+     return(rv);
+ }
+-#endif
++#endif        /*      defined(ALARMS_BREAK_TCP)       */
+ 
+ /*
+  * These are also implemented in pratom.c using NSPR locks.  Any reason
+  * this might be better or worse?  If you like this better, define
+  * _PR_HAVE_ATOMIC_OPS in include/md/unixware.h
+  */
+-#ifdef _PR_HAVE_ATOMIC_OPS
++#if defined(_PR_HAVE_ATOMIC_OPS)
+ /* Atomic operations */
+ #include  <stdio.h>
+ static FILE *_uw_semf;
+@@ -130,8 +135,9 @@
+     *val = newval;
+     unflockfile(_uw_semf);
+ }
+-#endif
++#endif        /*      defined(_PR_HAVE_ATOMIC_OPS)    */
+ 
++#if defined(_PR_LOCAL_THREADS_ONLY)
+ void
+ _MD_SET_PRIORITY(_MDThread *thread, PRUintn newPri)
+ {
+@@ -179,8 +185,9 @@
+ {
+     PR_NOT_REACHED("_MD_CREATE_THREAD should not be called for Unixware.");
+ }
++#endif        /*       defined(_PR_LOCAL_THREADS_ONLY)        */
+ 
+-#else  /* USE_SVR4_THREADS */
++#else /*      ! defined (USE_SVR4_THREADS)    */
+ 
+ /* NOTE:
+  * SPARC v9 (Ultras) do have an atomic test-and-set operation.  But
+@@ -239,6 +246,7 @@
+ #include <signal.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <mt.h>
+ 
+ #include <sys/lwp.h>
+ #include <sys/procfs.h>
+@@ -434,7 +442,8 @@
+ 
+ _MDLock _pr_ioq_lock;
+ 
+-void _MD_INIT_IO (void)
++void
++_MD_InitIO(void)
+ {
+     _MD_NEW_LOCK(&_pr_ioq_lock);
+ }
+@@ -577,4 +586,4 @@
+ }
+ 
+ 
+-#endif /* USE_SVR4_THREADS */
++#endif        /*      ! defined (USE_SVR4_THREADS)    */
+--- ./nsprpub/pr/src/misc/prsystem.c.uw	2003-04-04 04:49:02.000000000 +0000
++++ ./nsprpub/pr/src/misc/prsystem.c	2004-08-30 17:08:53.670000060 +0000
+@@ -221,6 +221,8 @@
+     }
+ #elif defined(IRIX)
+     numCpus = sysconf( _SC_NPROC_ONLN );
++#elif defined(SCO)
++    numCpus = 1;
+ #elif defined(XP_UNIX)
+     numCpus = sysconf( _SC_NPROCESSORS_ONLN );
+ #else
+--- ./nsprpub/pr/src/pthreads/ptio.c.uw	2004-02-04 01:31:33.000000000 +0000
++++ ./nsprpub/pr/src/pthreads/ptio.c	2004-08-30 17:08:53.760000211 +0000
+@@ -205,7 +205,7 @@
+ #elif defined(IRIX) || defined(OSF1) || defined(AIX) || defined(HPUX) \
+     || defined(LINUX) || defined(FREEBSD) || defined(BSDI) || defined(VMS) \
+     || defined(NTO) || defined(OPENBSD) || defined(DARWIN) \
+-    || defined(UNIXWARE) || defined(NETBSD)
++    || defined(UNIXWARE) || defined(SCO) || defined(NETBSD)
+ #define _PRSockOptVal_t void *
+ #else
+ #error "Cannot determine architecture"
+@@ -220,7 +220,7 @@
+     || defined(HPUX10_30) || defined(HPUX11) || defined(LINUX) \
+     || defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
+     || defined(BSDI) || defined(VMS) || defined(NTO) || defined(DARWIN) \
+-    || defined(UNIXWARE)
++    || defined(UNIXWARE) || defined(SCO)
+ #define _PRSelectFdSetArg_t fd_set *
+ #else
+ #error "Cannot determine architecture"
+@@ -1721,8 +1721,10 @@
+     if (newfd == NULL) close(osfd);  /* $$$ whoops! this doesn't work $$$ */
+     else
+     {
++#if !defined(UNIXWARE)
+         PR_ASSERT(IsValidNetAddr(addr) == PR_TRUE);
+         PR_ASSERT(IsValidNetAddrLen(addr, addr_len) == PR_TRUE);
++#endif
+ #ifdef LINUX
+         /*
+          * On Linux, experiments showed that the accepted sockets
+@@ -2784,8 +2786,10 @@
+ 		if (AF_INET6 == addr->raw.family)
+ 			addr->raw.family = PR_AF_INET6;
+ #endif
++#if !defined(UNIXWARE)
+         PR_ASSERT(IsValidNetAddr(addr) == PR_TRUE);
+         PR_ASSERT(IsValidNetAddrLen(addr, addr_len) == PR_TRUE);
++#endif
+         return PR_SUCCESS;
+     }
+ }  /* pt_GetSockName */
+@@ -2815,8 +2819,10 @@
+ 		if (AF_INET6 == addr->raw.family)
+         	addr->raw.family = PR_AF_INET6;
+ #endif
++#if !defined(UNIXWARE)
+         PR_ASSERT(IsValidNetAddr(addr) == PR_TRUE);
+         PR_ASSERT(IsValidNetAddrLen(addr, addr_len) == PR_TRUE);
++#endif
+         return PR_SUCCESS;
+     }
+ }  /* pt_GetPeerName */
+@@ -3257,7 +3263,7 @@
+ #if defined(HPUX) || defined(OSF1) || defined(SOLARIS) || defined (IRIX) \
+     || defined(AIX) || defined(LINUX) || defined(FREEBSD) || defined(NETBSD) \
+     || defined(OPENBSD) || defined(BSDI) || defined(VMS) || defined(NTO) \
+-    || defined(DARWIN) || defined(UNIXWARE)
++    || defined(DARWIN) || defined(UNIXWARE) || defined(SCO)
+ #define _PR_FCNTL_FLAGS O_NONBLOCK
+ #else
+ #error "Can't determine architecture"
+--- ./nsprpub/pr/src/pthreads/ptsynch.c.uw	2004-03-09 01:43:11.000000000 +0000
++++ ./nsprpub/pr/src/pthreads/ptsynch.c	2004-08-30 17:08:53.820000159 +0000
+@@ -241,6 +241,10 @@
+ #define PT_NANOPERMICRO 1000UL
+ #define PT_BILLION 1000000000UL
+ 
++#if defined(SCO)
++#include <sched.h>
++#endif
++
+ static PRIntn pt_TimedWait(
+     pthread_cond_t *cv, pthread_mutex_t *ml, PRIntervalTime timeout)
+ {
+--- ./nsprpub/pr/src/pthreads/ptthread.c.uw	2002-08-28 14:42:52.000000000 +0000
++++ ./nsprpub/pr/src/pthreads/ptthread.c	2004-08-30 17:08:53.880000152 +0000
+@@ -384,6 +384,21 @@
+         if (PR_LOCAL_THREAD == scope)
+         	scope = PR_GLOBAL_THREAD;
+ 			
++#ifdef SYSV5
++      scope = PR_GLOBAL_BOUND_THREAD;
++              rv = pthread_attr_setscope(&tattr, PTHREAD_SCOPE_SYSTEM);
++                      if (rv) {
++                              /*
++                               * system scope not supported
++                               */
++                      scope = PR_GLOBAL_THREAD;
++                              /*
++                               * reset scope
++                               */
++                      rv = pthread_attr_setscope(&tattr, PTHREAD_SCOPE_PROCESS);
++                      PR_ASSERT(0 == rv);
++                      }
++#endif
+         if (PR_GLOBAL_BOUND_THREAD == scope) {
+ #if defined(_POSIX_THREAD_PRIORITY_SCHEDULING)
+     		rv = pthread_attr_setscope(&tattr, PTHREAD_SCOPE_SYSTEM);
+@@ -1013,6 +1028,10 @@
+ /* Not so bogus in AIX as we really do a sigwait */
+ static sigset_t sigwait_set;
+ 
++#if defined(SCO)
++#include <sched.h>
++#endif
++
+ static struct timespec onemillisec = {0, 1000000L};
+ #ifndef PT_NO_SIGTIMEDWAIT
+ static struct timespec hundredmillisec = {0, 100000000L};
+@@ -1214,7 +1233,8 @@
+ 	while (me->suspend & PT_THREAD_SUSPENDED)
+ 	{
+ #if !defined(FREEBSD) && !defined(NETBSD) && !defined(OPENBSD) \
+-    && !defined(BSDI) && !defined(VMS) && !defined(UNIXWARE) && !defined(DARWIN)  /*XXX*/
++    && !defined(BSDI) && !defined(VMS) && !defined(UNIXWARE) \
++    && !defined(SCO) && !defined(DARWIN)  /*XXX*/
+         PRIntn rv;
+ 	    sigwait(&sigwait_set, &rv);
+ #endif
+--- ./nsprpub/pr/src/Makefile.in.uw	2004-03-23 00:40:17.000000000 +0000
++++ ./nsprpub/pr/src/Makefile.in	2004-08-30 17:08:53.930000247 +0000
+@@ -157,6 +157,10 @@
+ endif
+ endif
+ 
++ifeq ($(OS_ARCH),UnixWare)
++OS_LIBS		= -ldl
++endif
++
+ ifeq ($(OS_ARCH),Linux)
+ ifeq ($(USE_PTHREADS), 1)
+ OS_LIBS		= -lpthread -ldl
+--- ./nsprpub/pr/tests/Makefile.in.uw	2004-03-23 00:40:17.000000000 +0000
++++ ./nsprpub/pr/tests/Makefile.in	2004-08-30 17:08:53.940000016 +0000
+@@ -383,7 +383,7 @@
+     endif
+ endif
+ 
+-ifeq ($(OS_ARCH), SCOOS)
++ifeq ($(OS_ARCH), SCO_SV)
+ # SCO Unix needs to link against -lsocket again even though we
+ # already linked with these system libraries when we built libnspr.so.
+ EXTRA_LIBS = -lsocket
+@@ -401,16 +401,21 @@
+ export LD_RUN_PATH = $(ABSOLUTE_LIB_DIR)
+ endif
+ 
+-ifeq ($(OS_ARCH),OpenUNIX)
+-export LD_RUN_PATH = $(ABSOLUTE_LIB_DIR)
+-ifeq ($(USE_PTHREADS),1)
+-LDOPTS += -pthread
+-endif
+-endif
+-
+ ifeq ($(OS_ARCH), UNIXWARE)
++EXTRA_LIBS = -lsocket -lnsl
+ export LD_RUN_PATH = $(ABSOLUTE_LIB_DIR)
++ifeq ($(USE_PTHREADS),1)
++  ifdef NS_USE_GCC
++    LDOPTS += -pthread
++    XCFLAGS += -pthread
++    OS_CFLAGS += -pthread
++  else
++    LDOPTS += -Kpthread
++    XCFLAGS += -Kpthread
++    OS_CFLAGS += -Kpthread
++  endif
+ endif
++endif # UnixWare
+ 
+ ifeq ($(OS_ARCH),FreeBSD)
+ ifeq ($(USE_PTHREADS),1)
+@@ -436,7 +441,7 @@
+ ifeq ($(OS_ARCH),AIX)
+ LIBPTHREAD = -lpthreads
+ endif
+-ifeq (,$(filter-out FreeBSD OpenBSD BSD_OS QNX Darwin OpenUNIX,$(OS_ARCH)))
++ifeq (,$(filter-out FreeBSD OpenBSD BSD_OS QNX Darwin UnixWare OpenUNIX,$(OS_ARCH)))
+ LIBPTHREAD =
+ endif
+ ifeq ($(OS_ARCH)$(basename $(OS_RELEASE)),HP-UXB.10)
+--- ./nsprpub/pr/tests/layer.c.uw	2000-06-20 21:41:25.000000000 +0000
++++ ./nsprpub/pr/tests/layer.c	2004-08-30 17:08:53.940000058 +0000
+@@ -205,14 +205,14 @@
+     char *b = (char*)buf;
+     PRFileDesc *lo = fd->lower;
+     PRInt32 rv, readin = 0, request = 0;
+-    rv = lo->methods->recv(lo, &request, sizeof(request), flags, timeout);
++    rv = (lo->methods->recv)(lo, &request, sizeof(request), flags, timeout);
+     if (verbosity > chatty) PR_fprintf(
+         logFile, "MyRecv sending permission for %d bytes\n", request);
+     if (0 < rv)
+     {
+         if (verbosity > chatty) PR_fprintf(
+             logFile, "MyRecv received permission request for %d bytes\n", request);
+-        rv = lo->methods->send(
++        rv = (lo->methods->send)(
+             lo, &request, sizeof(request), flags, timeout);
+         if (0 < rv)
+         {
+@@ -220,7 +220,7 @@
+                 logFile, "MyRecv sending permission for %d bytes\n", request);
+             while (readin < request)
+             {
+-                rv = lo->methods->recv(
++                rv = (lo->methods->recv)(
+                     lo, b + readin, amount - readin, flags, timeout);
+                 if (rv <= 0) break;
+                 if (verbosity > chatty) PR_fprintf(
+@@ -242,10 +242,10 @@
+     PRInt32 rv, wroteout = 0, request;
+     if (verbosity > chatty) PR_fprintf(
+         logFile, "MySend asking permission to send %d bytes\n", amount);
+-    rv = lo->methods->send(lo, &amount, sizeof(amount), flags, timeout);
++    rv = (lo->methods->send)(lo, &amount, sizeof(amount), flags, timeout);
+     if (0 < rv)
+     {
+-        rv = lo->methods->recv(
++        rv = (lo->methods->recv)(
+             lo, &request, sizeof(request), flags, timeout);
+         if (0 < rv)
+         {
+@@ -254,7 +254,7 @@
+                 logFile, "MySend got permission to send %d bytes\n", request);
+             while (wroteout < request)
+             {
+-                rv = lo->methods->send(
++                rv = (lo->methods->send)(
+                     lo, b + wroteout, request - wroteout, flags, timeout);
+                 if (rv <= 0) break;
+                 if (verbosity > chatty) PR_fprintf(
+--- ./nsprpub/pr/tests/nblayer.c.uw	2001-06-05 04:31:20.000000000 +0000
++++ ./nsprpub/pr/tests/nblayer.c	2004-08-30 17:08:53.940000109 +0000
+@@ -425,7 +425,7 @@
+         case rcv_get_debit:
+             b = (char*)&mine->rcvreq;
+             mine->rcvreq = amount;
+-            rv = lo->methods->recv(
++            rv = (lo->methods->recv)(
+                 lo, b + mine->rcvinprogress,
+                 sizeof(mine->rcvreq) - mine->rcvinprogress, flags, timeout);
+             if (0 == rv) goto closed;
+@@ -436,7 +436,7 @@
+             mine->rcvinprogress = 0;
+         case rcv_send_credit:
+             b = (char*)&mine->rcvreq;
+-            rv = lo->methods->send(
++            rv = (lo->methods->send)(
+                 lo, b + mine->rcvinprogress,
+                 sizeof(mine->rcvreq) - mine->rcvinprogress, flags, timeout);
+             if ((-1 == rv) && (PR_WOULD_BLOCK_ERROR == PR_GetError())) break;
+@@ -446,7 +446,7 @@
+             mine->rcvinprogress = 0;
+         case rcv_data:
+             b = (char*)buf;
+-            rv = lo->methods->recv(
++            rv = (lo->methods->recv)(
+                 lo, b + mine->rcvinprogress,
+                 mine->rcvreq - mine->rcvinprogress, flags, timeout);
+             if (0 == rv) goto closed;
+@@ -483,7 +483,7 @@
+         case xmt_send_debit:
+             b = (char*)&mine->xmtreq;
+             mine->xmtreq = amount;
+-            rv = lo->methods->send(
++            rv = (lo->methods->send)(
+                 lo, b - mine->xmtinprogress,
+                 sizeof(mine->xmtreq) - mine->xmtinprogress, flags, timeout);
+             if ((-1 == rv) && (PR_WOULD_BLOCK_ERROR == PR_GetError())) break;
+@@ -493,7 +493,7 @@
+             mine->xmtinprogress = 0;
+         case xmt_recv_credit:
+              b = (char*)&mine->xmtreq;
+-             rv = lo->methods->recv(
++             rv = (lo->methods->recv)(
+                 lo, b + mine->xmtinprogress,
+                 sizeof(mine->xmtreq) - mine->xmtinprogress, flags, timeout);
+             if ((-1 == rv) && (PR_WOULD_BLOCK_ERROR == PR_GetError())) break;
+@@ -503,7 +503,7 @@
+             mine->xmtinprogress = 0;
+         case xmt_data:
+             b = (char*)buf;
+-            rv = lo->methods->send(
++            rv = (lo->methods->send)(
+                 lo, b + mine->xmtinprogress,
+                 mine->xmtreq - mine->xmtinprogress, flags, timeout);
+             if ((-1 == rv) && (PR_WOULD_BLOCK_ERROR == PR_GetError())) break;
+--- ./nsprpub/configure.in.uw	2004-04-16 22:28:02.000000000 +0000
++++ ./nsprpub/configure.in	2004-08-30 17:19:13.020000150 +0000
+@@ -229,6 +229,11 @@
+ dnl ========================================================
+ case "$target" in
+ 
++*-sco3.2v5*)
++        CFLAGS="$CFLAGS -fPIC -I/usr/lib/mozilla/include"
++        CXXFLAGS="$CXXFLAGS -fPIC -I/usr/lib/mozilla/include"
++      ;;
++
+ *-aix*)
+     case "${target_os}" in
+     aix3.2*)
+@@ -542,6 +547,15 @@
+     OS_RELEASE=`uname -v`
+ fi
+ 
++if test "$OS_ARCH" = "OpenUNIX"; then
++    OS_ARCH=UnixWare
++fi
++if test "$OS_ARCH" = "UnixWare"; then
++    if test "$OS_RELEASE" = "5"; then
++        OS_RELEASE="7"
++    fi
++fi
++
+ #######################################################################
+ # Master "Core Components" macros for getting the OS target           #
+ #######################################################################
+@@ -1562,20 +1576,21 @@
+     PR_MD_CSRCS=qnx.c
+     ;;
+ 
+-*-*-sco*)
++*-*-sco3.2v5*)
+     AC_DEFINE(XP_UNIX)
+     AC_DEFINE(SCO)
+     AC_DEFINE(sco)
+     AC_DEFINE(SYSV)
+     AC_DEFINE(_SVID3)
+     AC_DEFINE(_PR_NEED_H_ERRNO)
+-    CC='cc -b elf -KPIC'
+-    CXX='$(NSDEPTH)/build/hcpp CC +.cpp +w'
+     USE_NSPR_THREADS=1
++    AC_DEFINE(_PR_LOCAL_THREADS_ONLY)
++    OS_LIBS="$OS_LIBS -lsocket"
++    LDFLAGS="-lsocket"
+     CPU_ARCH=x86
+-    DSO_LDOPTS='-b elf -G'
++    DSO_LDOPTS='-shared -L.'
+     MDCPUCFG_H=_scoos.cfg
+-    PR_MD_SRCS=scoos.c
++    PR_MD_CSRCS=scoos.c
+     ;;
+ 
+ *-sinix*)
+@@ -1764,26 +1779,38 @@
+     OS_LIBS="$OS_LIBS $_librt"
+     ;;
+ 
+-*-sco-sysv5*)
++*-*-sysv5*)
++    CFLAGS="$CFLAGS -D_EFTSAFE"
++    CXXFLAGS="$CXXFLAGS -D_EFTSAFE"
+     AC_DEFINE(XP_UNIX)
+     AC_DEFINE(UNIXWARE)
+     AC_DEFINE(SVR4)
+     AC_DEFINE(SYSV)
+-    USE_NSPR_THREADS=1
+-    if echo $OS_RELEASE | grep -c 2.1 2>/dev/null; then
+-        AC_DEFINE(_PR_NO_LARGE_FILES)
+-        CC='$(NSDEPTH)/build/hcc cc'
+-        CXX='$(NSDEPTH)/build/hcpp CC'
+-        MDCPUCFG_H=_unixware.cfg
++    AC_DEFINE(SYSV5)
++    USE_PTHREADS=1
++    AC_DEFINE(_LARGEFILE64_SOURCE)
++    AC_DEFINE(_PR_HAVE_OFF64_T)
++    AC_DEFINE(_PR_HAVE_SOCKADDR_LEN)
++    MDCPUCFG_H=_unixware7.cfg
++    PR_MD_CSRCS=unixware.c
++    if test -n "$GNU_CC"; then
++        DSO_CFLAGS=-fPIC
++        DSO_LDOPTS='-shared -h $(notdir $@)'
+     else
+-        AC_DEFINE(_LARGEFILE64_SOURCE)
+-        AC_DEFINE(_PR_HAVE_OFF64_T)
+-        AC_DEFINE(_PR_HAVE_SOCKADDR_LEN)
+-        MDCPUCFG_H=_unixware7.cfg
++        # For native C++ compiler - suppress specific pedantic warnings 
++        #  177 - variable "x" was declared but never referenced
++        #  816 - type qualifier on return type is meaningless
++        #  838 - omission of explicit type is nonstandard ("int" assumed)
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,177"
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,816"
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,838"
++
++        DSO_CFLAGS=-KPIC
++        DSO_LDOPTS='-G -h $(notdir $@)'
+     fi
+-    PR_MD_CSRCS=unixware.c
+-    DSO_LDOPTS=-G
++    MKSHLIB='$(CC) $(CXXFLAGS) $(DSO_CFLAGS) $(DSO_LDOPTS) -o $@'
+     CPU_ARCH=x86
++    OS_LIBS="$OS_LIBS -lsocket -lnsl"
+     ;;
+ 
+ *-os2*)
+@@ -2138,7 +2165,7 @@
+    echo 'int main() { return 0; }' | cat > conftest.c
+    ${CC-cc} -pthread -o conftest conftest.c > conftest.out 2>&1
+    if test $? -eq 0; then
+-	if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++        if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 	    ac_cv_have_dash_pthread=yes
+ 		case "$target_os" in
+ 	    freebsd*)
+@@ -2163,7 +2190,7 @@
+     	echo 'int main() { return 0; }' | cat > conftest.c
+ 	    ${CC-cc} -pthreads -o conftest conftest.c > conftest.out 2>&1
+     	if test $? -eq 0; then
+-	    	if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++                if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 			    ac_cv_have_dash_pthreads=yes
+ 			    CFLAGS="$CFLAGS -pthreads"
+ 			    CXXFLAGS="$CXXFLAGS -pthreads"
+@@ -2210,6 +2237,16 @@
+     *-linux*)
+         AC_DEFINE(_REENTRANT)
+         ;;
++    *-*-sysv5*)
++      if test ! "$GNU_CC"; then
++              CFLAGS="$CFLAGS -Kpthread"
++              CXXFLAGS="$CXXFLAGS -Kpthread"
++              _PTHREAD_LDFLAGS=""
++      else
++              _PTHREAD_LDFLAGS="-pthread"
++      fi
++      ;;
++
+     esac
+ 
+ else 
+--- ./security/nss/lib/ssl/sslmutex.h.uw	2002-05-18 03:24:17.000000000 +0000
++++ ./security/nss/lib/ssl/sslmutex.h	2004-08-30 17:08:54.030000055 +0000
+@@ -97,7 +97,11 @@
+ #elif defined(XP_UNIX) /* other types of Unix */
+ 
+ #include <sys/types.h>	/* for pid_t */
++#ifdef SCO_SV
++#include <sys/semaphore.h>
++#else
+ #include <semaphore.h>  /* for sem_t, and sem_* functions */
++#endif
+ 
+ typedef struct
+ {
+--- ./security/coreconf/OpenUNIX.mk.uw	2002-02-06 14:29:38.000000000 +0000
++++ ./security/coreconf/OpenUNIX.mk	2004-08-30 17:20:30.860000150 +0000
+@@ -37,55 +37,22 @@
+ 
+ DEFAULT_COMPILER = gcc
+ 
+-CC         = gcc
+-OS_CFLAGS += -fPIC
+-CCC        = g++
+-CCC       += -DPRFSTREAMS_BROKEN -I/usr/gnu/lib/g++-include
+-# CCC      = $(CORE_DEPTH)/build/hcpp
+-# CCC     += +.cpp +w
+-RANLIB     = /bin/true
++OS_CFLAGS += -KPIC
++RANLIB     = :
+ 
+-#
+-# -DSCO_PM - Policy Manager AKA: SCO Licensing
+-# -DSCO - Changes to Netscape source (consistent with AIX, LINUX, etc..)
+-# -Dsco - Needed for /usr/include/X11/*
+-#
+-OS_CFLAGS   += -DSCO_SV -DSYSV -D_SVID3 -DHAVE_STRERROR -DSW_THREADS -DSCO_PM -DSCO -Dsco
+-#OS_LIBS     += -lpmapi -lsocket -lc
+-MKSHLIB      = $(LD)
+-MKSHLIB     += $(DSO_LDOPTS)
+-XINC         = /usr/include/X11
+-MOTIFLIB    += -lXm
+-INCLUDES    += -I$(XINC)
+-CPU_ARCH     = x86
+-GFX_ARCH     = x
+-ARCH         = sco
+-LOCALE_MAP   = $(CORE_DEPTH)/cmd/xfe/intl/sco.lm
+-EN_LOCALE    = C
+-DE_LOCALE    = de_DE.ISO8859-1
+-FR_LOCALE    = fr_FR.ISO8859-1
+-JP_LOCALE    = ja
+-SJIS_LOCALE  = ja_JP.SJIS
+-KR_LOCALE    = ko_KR.EUC
+-CN_LOCALE    = zh
+-TW_LOCALE    = zh
+-I2_LOCALE    = i2
+-LOC_LIB_DIR  = /usr/lib/X11
+-NOSUCHFILE   = /solaris-rm-f-sucks
+-BSDECHO      = /bin/echo
+-ifdef MAPFILE
+-# Add LD options to restrict exported symbols to those in the map file
+-endif
+-# Change PROCESS to put the mapfile in the correct format for this platform
+-PROCESS_MAP_FILE = cp $(LIBRARY_NAME).def $@
++OS_CFLAGS   += -DSYSV -Dsco
++#OS_CFLAGS   += -DSCO_SV -DSYSV -D_SVID3 -DHAVE_STRERROR -DSW_THREADS -DSCO_PM -DSCO -Dsco
++OS_LIBS     += -lsocket -lnsl
++
++#DSO_LDOPTS=-G -h $@
++DSO_LDOPTS=-shared
++DSO_PIC_FLAGS=-fpic
++MKSHLIB=$(CC) $(CFLAGS) $(DSO_PIC_FLAGS) $(DSO_LDOPTS) 
+ 
+ #
+ # These defines are for building unix plugins
+ #
+ BUILD_UNIX_PLUGINS  = 1
+-#DSO_LDOPTS         += -b elf -G -z defs
+-DSO_LDOPTS         += -G
+-DSO_LDFLAGS        += -nostdlib -L/lib -L/usr/lib -lXm -lXt -lX11 -lgen
+ 
+ # Used for Java compiler
+-EXPORT_FLAGS += -W l,-Bexport
++EXPORT_FLAGS += -Wl,-Bexport
+--- ./security/coreconf/SCO_SV3.2.mk.uw	2001-11-07 19:34:46.000000000 +0000
++++ ./security/coreconf/SCO_SV3.2.mk	2004-08-30 17:20:51.540000061 +0000
+@@ -35,12 +35,12 @@
+ 
+ include $(CORE_DEPTH)/coreconf/UNIX.mk
+ 
+-DEFAULT_COMPILER = cc
++DEFAULT_COMPILER = gcc
+ 
+-CC         = cc
+-OS_CFLAGS += -b elf -KPIC
++CC         = gcc
++OS_CFLAGS += -fPIC
+ CCC        = g++
+-CCC       += -b elf -DPRFSTREAMS_BROKEN -I/usr/local/lib/g++-include
++CCC       += -DPRFSTREAMS_BROKEN -I/usr/gnu/lib/g++-include
+ # CCC      = $(CORE_DEPTH)/build/hcpp
+ # CCC     += +.cpp +w
+ RANLIB     = /bin/true
+@@ -84,8 +84,8 @@
+ #
+ BUILD_UNIX_PLUGINS  = 1
+ #DSO_LDOPTS         += -b elf -G -z defs
+-DSO_LDOPTS         += -b elf -G
++DSO_LDOPTS         += -shared
+ DSO_LDFLAGS        += -nostdlib -L/lib -L/usr/lib -lXm -lXt -lX11 -lgen
+ 
+ # Used for Java compiler
+-EXPORT_FLAGS += -W l,-Bexport
++EXPORT_FLAGS += -Wl,-Bexport
+--- ./security/coreconf/arch.mk.uw	2003-07-21 23:40:51.000000000 +0000
++++ ./security/coreconf/arch.mk	2004-08-30 17:08:54.090000122 +0000
+@@ -88,6 +88,15 @@
+ # Catch Deterim if SVR4 is NCR or UNIXWARE
+ #
+ 
++ifeq ($(OS_ARCH),UnixWare)    # Unixware 7.x.x
++    OS_RELEASE = 7
++endif
++
++ifeq ($(OS_ARCH),OpenUNIX)    # handle as UnixWare 7.1.2
++      OS_RELEASE = 7
++      OS_ARCH = UnixWare
++endif
++
+ ifeq ($(OS_ARCH),UNIX_SV)
+     ifneq ($(findstring NCR, $(shell grep NCR /etc/bcheckrc | head -1 )),)
+ 	OS_ARCH = NCR
+--- ./security/coreconf/UnixWare7.mk.uw	2004-08-30 17:08:54.090000136 +0000
++++ ./security/coreconf/UnixWare7.mk	2004-08-30 17:21:05.070000006 +0000
+@@ -0,0 +1,58 @@
++#
++# The contents of this file are subject to the Mozilla Public
++# License Version 1.1 (the "License"); you may not use this file
++# except in compliance with the License. You may obtain a copy of
++# the License at http://www.mozilla.org/MPL/
++# 
++# Software distributed under the License is distributed on an "AS
++# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
++# implied. See the License for the specific language governing
++# rights and limitations under the License.
++# 
++# The Original Code is the Netscape security libraries.
++# 
++# The Initial Developer of the Original Code is Netscape
++# Communications Corporation.  Portions created by Netscape are 
++# Copyright (C) 1994-2000 Netscape Communications Corporation.  All
++# Rights Reserved.
++# 
++# Contributor(s):
++# 
++# Alternatively, the contents of this file may be used under the
++# terms of the GNU General Public License Version 2 or later (the
++# "GPL"), in which case the provisions of the GPL are applicable 
++# instead of those above.  If you wish to allow use of your 
++# version of this file only under the terms of the GPL and not to
++# allow others to use your version of this file under the MPL,
++# indicate your decision by deleting the provisions above and
++# replace them with the notice and other provisions required by
++# the GPL.  If you do not delete the provisions above, a recipient
++# may use your version of this file under either the MPL or the
++# GPL.
++#
++# Config stuff for Open UNIX 8.
++#
++
++include $(CORE_DEPTH)/coreconf/UNIX.mk
++
++DEFAULT_COMPILER = gcc
++
++OS_CFLAGS += -fPIC
++RANLIB     = :
++
++OS_CFLAGS   += -DSYSV -Dsco
++#OS_CFLAGS   += -DSCO_SV -DSYSV -D_SVID3 -DHAVE_STRERROR -DSW_THREADS -DSCO_PM -DSCO -Dsco
++OS_LIBS     += -lsocket -lnsl
++
++#DSO_LDOPTS=-G -h $@
++DSO_LDOPTS=-shared
++DSO_PIC_FLAGS=-fpic
++MKSHLIB=$(CC) $(CFLAGS) $(DSO_PIC_FLAGS) $(DSO_LDOPTS) 
++
++#
++# These defines are for building unix plugins
++#
++BUILD_UNIX_PLUGINS  = 1
++
++# Used for Java compiler
++EXPORT_FLAGS += -Wl,-Bexport
+--- ./security/manager/ssl/src/nsNSSIOLayer.cpp.uw	2004-03-10 05:28:39.000000000 +0000
++++ ./security/manager/ssl/src/nsNSSIOLayer.cpp	2004-08-30 17:08:54.130000121 +0000
+@@ -834,7 +834,7 @@
+   PR_SetSocketOption(fd, &sockopt);
+ #endif
+   
+-  status = fd->lower->methods->connect(fd->lower, addr, 
++  status = (fd->lower->methods->connect)(fd->lower, addr,
+ #if defined(XP_BEOS)  // bug 70217
+                                        PR_INTERVAL_NO_TIMEOUT);
+ #else
+--- ./security/manager/ssl/src/nsKeygenThread.cpp.uw	2003-01-18 14:02:53.000000000 +0000
++++ ./security/manager/ssl/src/nsKeygenThread.cpp	2004-08-30 17:08:54.150000127 +0000
+@@ -174,7 +174,7 @@
+ 
+ nsresult nsKeygenThread::UserCanceled(PRBool *threadAlreadyClosedDialog)
+ {
+-  threadAlreadyClosedDialog = PR_FALSE;
++  *threadAlreadyClosedDialog = PR_FALSE;
+ 
+   if (!mutex)
+     return NS_OK;
+--- ./directory/c-sdk/ldap/include/portable.h.uw	2003-09-17 03:18:10.000000000 +0000
++++ ./directory/c-sdk/ldap/include/portable.h	2004-08-30 17:08:54.160000135 +0000
+@@ -67,7 +67,8 @@
+ /*
+  * System V has socket options in filio.h
+  */
+-#if !defined( NEED_FILIO ) && defined( SYSV ) && !defined( hpux ) && !defined( AIX )
++#if !defined( NEED_FILIO ) && defined( SYSV ) && !defined( hpux ) \
++    && !defined( AIX ) && !defined( SCO )
+ #define NEED_FILIO
+ #endif
+ 
+@@ -272,7 +273,7 @@
+ #define STRTOK( s1, s2, l )		strtok_r( s1, s2, l )
+ #define HAVE_STRTOK_R
+ #else /* UNIX */
+-#if defined(sgi) || defined(HPUX9) || defined(LINUX1_2) || defined(SCOOS) || \
++#if defined(sgi) || defined(HPUX9) || defined(LINUX1_2) || defined(SCO) || \
+     defined(UNIXWARE) || defined(SUNOS4) || defined(SNI) || defined(BSDI) || \
+     defined(NCR) || defined(OSF1) || defined(NEC) || defined(VMS) || \
+     ( defined(HPUX10) && !defined(_REENTRANT)) || defined(HPUX11) || \
+@@ -301,7 +302,7 @@
+ #endif
+ #if defined(HPUX9) || defined(LINUX1_2) || defined(LINUX2_0) || \
+     defined(LINUX2_1) || defined(SUNOS4) || defined(SNI) || \
+-    defined(SCOOS) || defined(BSDI) || defined(NCR) || \
++    defined(SCO) || defined(BSDI) || defined(NCR) || \
+     defined(NEC) || ( defined(HPUX10) && !defined(_REENTRANT)) || \
+     (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+ #define NSLDAPI_CTIME( c, b, l )	ctime( c )
+@@ -319,7 +320,7 @@
+ #define NSLDAPI_CTIME( c, b, l )	ctime_r( c, b, l )
+ #endif
+ #if defined(hpux9) || defined(LINUX1_2) || defined(SUNOS4) || defined(SNI) || \
+-    defined(SCOOS) || defined(BSDI) || defined(NCR) || defined(VMS) || \
++    defined(SCO) || defined(BSDI) || defined(NCR) || defined(VMS) || \
+     defined(NEC) || defined(LINUX) || (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+ #define STRTOK( s1, s2, l )		strtok( s1, s2 )
+ #else
+--- ./directory/c-sdk/ldap/libraries/libprldap/ldappr-error.c.uw	2003-03-25 13:57:38.000000000 +0000
++++ ./directory/c-sdk/ldap/libraries/libprldap/ldappr-error.c	2004-08-30 17:08:54.170000154 +0000
+@@ -208,7 +208,7 @@
+ #define ETXTBSY         -1
+ #endif
+ 
+-#if defined(BSDI) || defined(OPENBSD) || defined (NETBSD)
++#if defined(BSDI) || defined(OPENBSD) || defined (NETBSD) || defined (SCO)
+ #define ENOTSUP		-1
+ #endif
+ 
+--- ./directory/c-sdk/configure.in.uw	2004-03-30 19:38:43.000000000 +0000
++++ ./directory/c-sdk/configure.in	2004-08-30 17:08:54.190000036 +0000
+@@ -543,6 +543,15 @@
+     OS_RELEASE=`echo $OS_RELEASE | sed 's/-.*//'`
+ fi
+ 
++if test "$OS_ARCH" = "OpenUNIX"; then
++    OS_ARCH=UnixWare
++fi
++if test "$OS_ARCH" = "UnixWare"; then
++    if test "$OS_RELEASE" = "5"; then
++        OS_RELEASE="7"
++    fi
++fi
++
+ #######################################################################
+ # Master "Core Components" macros for getting the OS target           #
+ #######################################################################
+@@ -1592,11 +1601,11 @@
+     AC_DEFINE(SYSV)
+     AC_DEFINE(_SVID3)
+     AC_DEFINE(_PR_NEED_H_ERRNO)
+-    CC='cc -b elf -KPIC'
+-    CXX='$(NSDEPTH)/build/hcpp CC +.cpp +w'
++    CC='gcc -fPIC'
++    CXX='c++ -fPIC'
+     USE_NSPR_THREADS=1
+     CPU_ARCH=x86
+-    DSO_LDOPTS='-b elf -G'
++    DSO_LDOPTS='-G'
+     MDCPUCFG_H=_scoos.cfg
+     PR_MD_SRCS=scoos.c
+     ;;
+@@ -1757,11 +1766,14 @@
+     fi
+     ;;
+ 
+-*-sco-sysv5*)
++*-*-sysv5*)
++    CFLAGS="$CFLAGS -D_EFTSAFE"
++    CXXFLAGS="$CXXFLAGS -D_EFTSAFE"
+     AC_DEFINE(XP_UNIX)
+     AC_DEFINE(UNIXWARE)
+     AC_DEFINE(SVR4)
+     AC_DEFINE(SYSV)
++    AC_DEFINE(SYSV5)
+     USE_NSPR_THREADS=1
+     if echo $OS_RELEASE | grep -c 2.1 2>/dev/null; then
+         AC_DEFINE(_PR_NO_LARGE_FILES)
+@@ -1775,7 +1787,22 @@
+         MDCPUCFG_H=_unixware7.cfg
+     fi
+     PR_MD_CSRCS=unixware.c
+-    DSO_LDOPTS=-G
++    if test -n "$GNU_CC"; then
++      DSO_LDOPTS='-shared -h $@'
++        DSO_CFLAGS=-fPIC
++    else
++        # For native C++ compiler - suppress specific pedantic warnings 
++        #  177 - variable "x" was declared but never referenced
++        #  816 - type qualifier on return type is meaningless
++        #  838 - omission of explicit type is nonstandard ("int" assumed)
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,177"
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,816"
++        CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,838"
++
++      DSO_LDOPTS='-G -h $@'
++        DSO_CFLAGS=-KPIC
++    fi
++    MKSHLIB='$(CC) $(CFLAGS) $(DSO_CFLAGS) $(DSO_LDOPTS) -o $@'
+     CPU_ARCH=x86
+     ;;
+ 
+@@ -2007,7 +2034,7 @@
+    echo 'int main() { return 0; }' | cat > conftest.c
+    ${CC-cc} -pthread -o conftest conftest.c > conftest.out 2>&1
+    if test $? -eq 0; then
+-	if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++        if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 	    ac_cv_have_dash_pthread=yes
+ 	    CFLAGS="$CFLAGS -pthread"
+ 	    CXXFLAGS="$CXXFLAGS -pthread"
+@@ -2025,7 +2052,7 @@
+     	echo 'int main() { return 0; }' | cat > conftest.c
+ 	    ${CC-cc} -pthreads -o conftest conftest.c > conftest.out 2>&1
+     	if test $? -eq 0; then
+-	    	if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++                if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 			    ac_cv_have_dash_pthreads=yes
+ 			    CFLAGS="$CFLAGS -pthreads"
+ 			    CXXFLAGS="$CXXFLAGS -pthreads"
+@@ -2051,6 +2078,16 @@
+     *-linux*)
+         AC_DEFINE(_REENTRANT)
+         ;;
++    *-*-sysv5*)
++      if test ! "$GNU_CC"; then
++              CFLAGS="$CFLAGS -Kpthread"
++              CXXFLAGS="$CXXFLAGS -Kpthread"
++              _PTHREAD_LDFLAGS=""
++      else
++              _PTHREAD_LDFLAGS="-pthread"
++      fi
++      ;;
++
+     esac
+ 
+ else 
+--- ./directory/c-sdk/build.mk.uw	2003-03-25 13:57:30.000000000 +0000
++++ ./directory/c-sdk/build.mk	2004-08-30 17:08:54.280000255 +0000
+@@ -418,7 +418,7 @@
+ SO_FILES_TO_REMOVE=so_locations
+ endif
+ 
+-ifneq (,$(filter BeOS Darwin NetBSD,$(OS_ARCH)))
++ifneq (,$(filter BeOS Darwin NetBSD UnixWare,$(OS_ARCH)))
+ LINK_DLL	= $(MKSHLIB) $(OBJS)
+ endif
+ 
+--- ./modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp.uw	2003-09-18 20:38:36.000000000 +0000
++++ ./modules/libpr0n/decoders/jpeg/nsJPEGDecoder.cpp	2004-08-30 17:08:54.430000001 +0000
+@@ -233,7 +233,7 @@
+     LOG_SCOPE(gJPEGlog, "nsJPEGDecoder::WriteFrom -- entering JPEG_HEADER case");
+ 
+     /* Step 3: read file parameters with jpeg_read_header() */
+-    if (jpeg_read_header(&mInfo, TRUE) == JPEG_SUSPENDED)
++    if (jpeg_read_header(&mInfo, PR_TRUE) == JPEG_SUSPENDED)
+       return NS_OK; /* I/O suspension */
+ 
+     /* let libjpeg take care of gray->RGB and YCbCr->RGB conversions */
+@@ -366,12 +366,12 @@
+      */
+     mInfo.dct_method =  JDCT_ISLOW;
+     mInfo.dither_mode = JDITHER_FS;
+-    mInfo.do_fancy_upsampling = TRUE;
+-    mInfo.enable_2pass_quant = FALSE;
+-    mInfo.do_block_smoothing = TRUE;
++    mInfo.do_fancy_upsampling = PR_TRUE;
++    mInfo.enable_2pass_quant = PR_FALSE;
++    mInfo.do_block_smoothing = PR_TRUE;
+ 
+     /* Step 5: Start decompressor */
+-    if (jpeg_start_decompress(&mInfo) == FALSE)
++    if (jpeg_start_decompress(&mInfo) == PR_FALSE)
+       return NS_OK; /* I/O suspension */
+ 
+     /* If this is a progressive JPEG ... */
+@@ -460,7 +460,7 @@
+ 
+     /* Step 7: Finish decompression */
+ 
+-    if (jpeg_finish_decompress(&mInfo) == FALSE)
++    if (jpeg_finish_decompress(&mInfo) == PR_FALSE)
+       return NS_OK; /* I/O suspension */
+ 
+     mState = JPEG_SINK_NON_JPEG_TRAILER;
+--- ./modules/libjar/nsZipArchive.cpp.uw	2003-12-27 08:44:10.000000000 +0000
++++ ./modules/libjar/nsZipArchive.cpp	2004-08-30 17:08:54.500000222 +0000
+@@ -58,7 +58,7 @@
+ nsRecyclingAllocator *gZlibAllocator = NULL;
+ 
+ // For placement new used for arena allocations of zip file list
+-#include NEW_H
++#include <new>
+ 
+ #else /* STANDALONE */
+ 
+--- ./editor/libeditor/html/nsHTMLEditor.cpp.uw	2004-04-09 13:55:59.000000000 +0000
++++ ./editor/libeditor/html/nsHTMLEditor.cpp	2004-08-30 17:08:54.610000232 +0000
+@@ -767,7 +767,7 @@
+   if (!aNode)
+   {
+     NS_NOTREACHED("null node passed to GetBlockNodeParent()");
+-    return PR_FALSE;
++    return nsnull;
+   }
+ 
+   if (NS_FAILED(aNode->GetParentNode(getter_AddRefs(p))))  // no parent, ran off top of tree
+--- ./config/rules.mk.uw	2004-05-05 13:44:22.000000000 +0000
++++ ./config/rules.mk	2004-08-30 17:08:54.670000212 +0000
+@@ -624,6 +624,10 @@
+ DEPENDENT_LIBS = $(filter-out %_s$(DLL_SUFFIX), $(patsubst -l%,$(DLL_PREFIX)%$(DLL_SUFFIX),$(filter -l%, $(EXTRA_DSO_LDOPTS))))
+ endif
+ 
++ifeq ($(OS_ARCH),UnixWare)
++INCLUDES +=
++endif
++
+ ifneq (,$(strip $(DEPENDENT_LIBS)))
+ DEFINES	+= -DHAVE_DEPENDENT_LIBS
+ INCLUDES += -I.
+@@ -950,6 +954,12 @@
+ 	@for lib in $(SHARED_LIBRARY_LIBS); do $(AR_EXTRACT) $${lib}; $(CLEANUP2); done
+ endif
+ endif
++ifeq ($(OS_ARCH),UnixWare)
++ifeq ($(GNU_CC)$(GNU_CXX),)
++# Non-GNU compilers
++	$(CXX) -Tprelink_objects $(OBJS)
++endif
++endif
+ 	$(AR) $(AR_FLAGS) $(OBJS) $(LOBJS) $(SUB_LOBJS)
+ 	$(RANLIB) $@
+ 	@rm -f foodummyfilefoo $(SUB_LOBJS)
+--- ./config/config.mk.uw	2004-04-10 22:51:37.000000000 +0000
++++ ./config/config.mk	2004-08-30 17:08:54.820000142 +0000
+@@ -130,8 +130,10 @@
+ OS_TEST		:= $(shell uname -p)
+ endif
+ ifeq ($(OS_ARCH),UnixWare)
+-OS_ARCH		:= UNIXWARE
+-OS_RELEASE	:= $(shell uname -v)
++ifneq ($(OS_RELEASE),7)
++OS_ARCH               := UNIXWARE
++OS_RELEASE    := $(shell uname -v)
++endif
+ endif
+ ifeq ($(OS_ARCH),OS_2)
+ OS_ARCH		:= OS2
+--- ./embedding/components/commandhandler/src/nsCommandParams.cpp.uw	2003-06-27 04:12:07.000000000 +0000
++++ ./embedding/components/commandhandler/src/nsCommandParams.cpp	2004-08-30 17:08:54.870000291 +0000
+@@ -37,7 +37,7 @@
+  * ***** END LICENSE BLOCK ***** */
+ 
+ #include "xpcom-config.h"
+-#include NEW_H    // for placement new
++#include <new>    // for placement new
+ #include "nscore.h"
+ #include "nsCRT.h"
+ 
+--- ./intl/uconv/src/nsUNIXCharset.cpp.uw	2004-05-13 21:57:48.000000000 +0000
++++ ./intl/uconv/src/nsUNIXCharset.cpp	2004-08-30 17:08:54.880000026 +0000
+@@ -220,6 +220,13 @@
+ #if HAVE_LANGINFO_CODESET
+   nl_langinfo_codeset = nl_langinfo(CODESET);
+   NS_ASSERTION(nl_langinfo_codeset, "cannot get nl_langinfo(CODESET)");
++#ifdef SYSV5
++  if (*nl_langinfo_codeset == '\0') {
++    // use ISO-8859-1 as the default
++    NS_WARNING("empty nl_langinfo(CODESET) using default ISO-8859-1");
++    nl_langinfo_codeset = "ISO-8859-1";
++  }
++#endif
+ 
+   //
+   // see if we can use nl_langinfo(CODESET) directly
+--- ./js/src/xpconnect/shell/xpcshell.cpp.uw	2003-11-15 00:11:10.000000000 +0000
++++ ./js/src/xpconnect/shell/xpcshell.cpp	2004-08-30 17:08:54.880000058 +0000
+@@ -376,7 +376,8 @@
+         return JS_FALSE;
+     name = JS_GetStringBytes(idstr);
+     value = JS_GetStringBytes(valstr);
+-#if defined XP_WIN || defined HPUX || defined OSF1 || defined IRIX
++#if defined XP_WIN || defined HPUX || defined OSF1 || defined IRIX \
++ || defined(SCO) || defined(UNIXWARE)
+     {
+         char *waste = JS_smprintf("%s=%s", name, value);
+         if (!waste) {
+--- ./js/src/jslock.c.uw	2004-04-03 22:21:03.000000000 +0000
++++ ./js/src/jslock.c	2004-08-30 17:08:54.880000093 +0000
+@@ -118,6 +118,44 @@
+                           : "cc", "memory");
+     return (int)res;
+ }
++  
++#elif defined(__USLC__) && defined(i386)
++
++/* Note: This fails on 386 cpus, cmpxchgl is a >= 486 instruction */
++
++asm int
++js_CompareAndSwap(jsword *w, jsword ov, jsword nv)
++{
++%ureg w, nv;
++	movl	ov,%eax
++	lock
++	cmpxchgl nv,(w)
++	sete	%al
++	andl	$1,%eax
++%ureg w;  mem ov, nv;
++	movl	ov,%eax
++	movl	nv,%ecx
++	lock
++	cmpxchgl %ecx,(w)
++	sete	%al
++	andl	$1,%eax
++%ureg nv;
++	movl	ov,%eax
++	movl	w,%edx
++	lock
++	cmpxchgl nv,(%edx)
++	sete	%al
++	andl	$1,%eax
++%mem w, ov, nv;
++	movl	ov,%eax
++	movl	nv,%ecx
++	movl	w,%edx
++	lock
++	cmpxchgl %ecx,(%edx)
++	sete	%al
++	andl	$1,%eax
++}
++#pragma asm full_optimization js_CompareAndSwap
+ 
+ #elif defined(SOLARIS) && defined(sparc) && defined(ULTRA_SPARC)
+ 
+--- ./js/src/jslock.h.uw	2003-11-15 00:10:57.000000000 +0000
++++ ./js/src/jslock.h	2004-08-30 17:08:55.020000071 +0000
+@@ -205,6 +205,7 @@
+ #if defined(JS_USE_ONLY_NSPR_LOCKS) ||                                        \
+     !( (defined(_WIN32) && defined(_M_IX86)) ||                               \
+        (defined(__GNUC__) && defined(__i386__)) ||                            \
++       (defined(__USLC__) && defined(i386)) ||                                \
+        (defined(SOLARIS) && defined(sparc) && defined(ULTRA_SPARC)) ||        \
+        defined(AIX) )
+ 
+--- ./netwerk/socket/base/nsSOCKSIOLayer.cpp.uw	2003-09-11 20:32:22.000000000 +0000
++++ ./netwerk/socket/base/nsSOCKSIOLayer.cpp	2004-08-30 17:08:55.020000130 +0000
+@@ -539,7 +539,7 @@
+     PRIntervalTime connectWait = PR_SecondsToInterval(10);
+ 
+     // Connect to the proxy server.
+-    status = fd->lower->methods->connect(fd->lower, &proxyAddr, connectWait);
++    status = (fd->lower->methods->connect)(fd->lower, &proxyAddr, connectWait);
+     
+     if (PR_SUCCESS != status) {
+         LOGERROR(("Failed to TCP connect to the proxy server (%s): timeout = %d, status = %x.",proxyHost.get(), connectWait, status));
+@@ -615,7 +615,7 @@
+ nsSOCKSIOLayerAccept(PRFileDesc *fd, PRNetAddr *addr, PRIntervalTime timeout)
+ {
+     // TODO: implement SOCKS support for accept
+-    return fd->lower->methods->accept(fd->lower, addr, timeout);
++    return (fd->lower->methods->accept)(fd->lower, addr, timeout);
+ }
+ 
+ static PRInt32 PR_CALLBACK
+@@ -629,7 +629,7 @@
+ nsSOCKSIOLayerBind(PRFileDesc *fd, const PRNetAddr *addr)
+ {
+     // TODO: implement SOCKS support for bind (very similar to connect)
+-    return fd->lower->methods->bind(fd->lower, addr);
++    return (fd->lower->methods->bind)(fd->lower, addr);
+ }
+ 
+ static PRStatus PR_CALLBACK
+@@ -662,7 +662,7 @@
+ nsSOCKSIOLayerListen(PRFileDesc *fd, PRIntn backlog)
+ {
+     // TODO: implement SOCKS support for listen
+-    return fd->lower->methods->listen(fd->lower, backlog);
++    return (fd->lower->methods->listen)(fd->lower, backlog);
+ }
+ 
+ // add SOCKS IO layer to an existing socket
+--- ./netwerk/test/sites.txt.uw	1999-07-10 05:44:16.000000000 +0000
++++ ./netwerk/test/sites.txt	2004-08-30 17:08:55.020000174 +0000
+@@ -35,14 +35,11 @@
+ http://www.real.com/
+ http://www.sportsline.com/
+ http://www.dejanews.com/
+-http://www.the-park.com/
+ http://www.cmpnet.com/
+ http://www.go2net.com/
+ http://www.metacrawler.com/
+ http://www.playsite.com/
+-http://www.stocksite.com/
+ http://www.sony.com/
+-http://www.music.sony.com/
+ http://www.station.sony.com/
+ http://www.scea.sony.com/
+ http://www.infospace.com/
+@@ -50,13 +47,11 @@
+ http://www.hotfiles.com/
+ http://www.chathouse.com/
+ http://www.looksmart.com/
+-http://www.iamginegames.com/
+ http://www.macaddict.com/
+ http://www.rsac.org/
+ http://www.apple.com/
+ http://www.beseen.com/
+ http://www.dogpile.com/
+-http://www.xoom.com/
+ http://www.tucows.com/
+ http://www.freethemes.com/
+ http://www.winfiles.com/
+@@ -83,7 +78,6 @@
+ http://www.gamespot.com/
+ http://www.bloomberg.com/
+ http://www.winzip.com/
+-http://www.filez.com/
+ http://www.westwood.com/
+ http://www.internet.com/
+ http://www.cardmaster.com/
+@@ -111,7 +105,6 @@
+ http://www.nasa.gov/
+ http://www.ogr.com/
+ http://www.warzone.com/
+-http://www.gamestats.com/
+ http://www.winamp.com/
+ http://java.sun.com/
+ http://www.hp.com/
+@@ -144,7 +137,6 @@
+ http://www.nasa.gov/
+ http://www.ogr.com/
+ http://www.warzone.com/
+-http://www.gamestats.com/
+ http://www.winamp.com/
+ http://java.sun.com/
+ http://www.hp.com/
+@@ -184,26 +176,22 @@
+ http://www.real.com/
+ http://www.sportsline.com/
+ http://www.dejanews.com/
+-http://www.the-park.com/
+ http://www.cmpnet.com/
+ http://www.excite.com/
+ http://www.go2net.com/
+ http://www.metacrawler.com/
+ http://www.playsite.com/
+-http://www.stocksite.com/
+ http://www.infospace.com/
+ http://www.zdnet.com/
+ http://www.mckinley.com/
+ http://www.hotfiles.com/
+ http://www.chathouse.com/
+ http://www.looksmart.com/
+-http://www.iamginegames.com/
+ http://www.macaddict.com/
+ http://www.rsac.org/
+ http://www.apple.com/
+ http://www.beseen.com/
+ http://www.dogpile.com/
+-http://www.xoom.com/
+ http://www.city.net/
+ http://www.tucows.com/
+ http://www.freethemes.com/
+@@ -233,7 +221,6 @@
+ http://www.gamespot.com/
+ http://www.bloomberg.com/
+ http://www.winzip.com/
+-http://www.filez.com/
+ http://www.westwood.com/
+ http://www.internet.com/
+ http://www.cardmaster.com/
+@@ -250,7 +237,6 @@
+ http://www.ebay.com/
+ http://www.aol.com/
+ http://www.cnn.com/
+-http://www.music.sony.com/
+ http://www.scea.sony.com/
+ http://www.sony.com/
+ http://www.station.sony.com/
+--- ./rdf/base/src/nsCompositeDataSource.cpp.uw	2003-09-08 00:17:59.000000000 +0000
++++ ./rdf/base/src/nsCompositeDataSource.cpp	2004-08-30 17:08:55.030000011 +0000
+@@ -62,7 +62,7 @@
+ */
+ 
+ #include "xpcom-config.h"
+-#include NEW_H
++#include <new>
+ #include "nsCOMPtr.h"
+ #include "nsIComponentManager.h"
+ #include "nsIEnumerator.h"
+--- ./xpcom/base/nsExceptionService.cpp.uw	2004-01-15 06:14:10.000000000 +0000
++++ ./xpcom/base/nsExceptionService.cpp	2004-08-30 17:08:55.030000077 +0000
+@@ -142,7 +142,7 @@
+ /* The Exception Service */
+ 
+ PRUintn nsExceptionService::tlsIndex = BAD_TLS_INDEX;
+-PRLock *nsExceptionService::lock = PR_FALSE;
++PRLock *nsExceptionService::lock = nsnull;
+ nsExceptionManager *nsExceptionService::firstThread = nsnull;
+ 
+ #ifdef NS_DEBUG
+--- ./xpcom/build/nsXPComInit.cpp.uw	2004-04-20 00:28:37.000000000 +0000
++++ ./xpcom/build/nsXPComInit.cpp	2004-08-30 17:08:55.030000126 +0000
+@@ -134,6 +134,11 @@
+ #define NS_ENVIRONMENT_CLASSNAME "Environment Service"
+ 
+ #include "nsXPCOM.h"
++
++#if defined(shutdown)
++#undef shutdown
++#endif
++
+ // ds/nsISupportsPrimitives
+ #define NS_SUPPORTS_ID_CLASSNAME "Supports ID"
+ #define NS_SUPPORTS_CSTRING_CLASSNAME "Supports String"
+--- ./xpcom/build/nsXPCOMPrivate.h.uw	2004-04-20 00:28:37.000000000 +0000
++++ ./xpcom/build/nsXPCOMPrivate.h	2004-08-30 17:08:55.030000198 +0000
+@@ -42,6 +42,10 @@
+ #include "nscore.h"
+ #include "nsXPCOM.h"
+ 
++#if defined(shutdown)
++#undef shutdown
++#endif
++
+ class nsStringContainer;
+ class nsCStringContainer;
+ 
+--- ./xpcom/components/nsComponentManager.cpp.uw	2004-03-10 06:40:36.000000000 +0000
++++ ./xpcom/components/nsComponentManager.cpp	2004-08-30 17:08:55.040000084 +0000
+@@ -67,7 +67,7 @@
+ #include "nsInt64.h"
+ #include "nsManifestLineReader.h"
+ 
+-#include NEW_H     // for placement new
++#include <new>     // for placement new
+ 
+ 
+ #ifdef XP_BEOS
+--- ./xpcom/components/nsStaticComponentLoader.cpp.uw	2004-02-19 02:43:43.000000000 +0000
++++ ./xpcom/components/nsStaticComponentLoader.cpp	2004-08-30 17:08:55.050000000 +0000
+@@ -18,7 +18,7 @@
+ #include "nsStaticComponent.h"
+ #include "nsIComponentLoader.h"
+ #include "pldhash.h"
+-#include NEW_H
++#include <new>
+ 
+ struct StaticModuleInfo : public PLDHashEntryHdr {
+     nsStaticModuleInfo  info;
+--- ./xpcom/ds/nsCppSharedAllocator.h.uw	2002-08-19 03:50:27.000000000 +0000
++++ ./xpcom/ds/nsCppSharedAllocator.h	2004-08-30 17:08:55.050000139 +0000
+@@ -3,7 +3,7 @@
+ 
+ #include "nsMemory.h"     // for |nsMemory|
+ #include "nscore.h"       // for |NS_XXX_CAST|
+-#include NEW_H					// to allow placement |new|
++#include <new>					// to allow placement |new|
+ 
+ 
+   // under Metrowerks (Mac), we don't have autoconf yet
+--- ./xpcom/ds/nsFixedSizeAllocator.h.uw	2003-11-29 18:56:08.000000000 +0000
++++ ./xpcom/ds/nsFixedSizeAllocator.h	2004-08-30 17:08:55.060000027 +0000
+@@ -48,7 +48,7 @@
+ 
+   Here is a typical usage pattern:
+ 
+-    #include NEW_H // You'll need this!
++    #include <new> // You'll need this!
+     #include "nsFixedSizeAllocator.h"
+ 
+     // Say this is the object you want to allocate a ton of
+--- ./xpcom/ds/nsHashKeys.h.uw	2004-01-10 02:00:32.000000000 +0000
++++ ./xpcom/ds/nsHashKeys.h	2004-08-30 17:08:55.060000127 +0000
+@@ -46,7 +46,7 @@
+ #include "nsISupports.h"
+ #include "nsCOMPtr.h"
+ #include "pldhash.h"
+-#include NEW_H
++#include <new>
+ 
+ /** @file nsHashKeys.h
+  * standard HashKey classes for nsBaseHashtable and relatives. Each of these
+--- ./xpcom/ds/nsHashSets.cpp.uw	2004-02-19 02:43:44.000000000 +0000
++++ ./xpcom/ds/nsHashSets.cpp	2004-08-30 17:08:55.070000054 +0000
+@@ -37,7 +37,7 @@
+  * ***** END LICENSE BLOCK ***** */
+ 
+ #include "nscore.h"
+-#include NEW_H
++#include <new>
+ 
+ #include "nsHashSets.h"
+ 
+--- ./xpcom/ds/nsTHashtable.h.uw	2003-08-09 19:24:23.000000000 +0000
++++ ./xpcom/ds/nsTHashtable.h	2004-08-30 17:08:55.070000180 +0000
+@@ -41,7 +41,7 @@
+ #include "nscore.h"
+ #include "pldhash.h"
+ #include "nsDebug.h"
+-#include NEW_H
++#include <new>
+ 
+ // helper function for nsTHashtable::Clear()
+ PR_EXTERN(PLDHashOperator) PR_CALLBACK
+--- ./xpcom/glue/standalone/nsXPCOMGlue.cpp.uw	2004-04-20 00:28:38.000000000 +0000
++++ ./xpcom/glue/standalone/nsXPCOMGlue.cpp	2004-08-30 17:08:55.070000226 +0000
+@@ -44,6 +44,10 @@
+ #include "nsXPCOMPrivate.h"
+ #include <stdlib.h>
+ 
++#if defined(shutdown)
++#undef shutdown
++#endif
++
+ #if XP_WIN32
+ #include <windows.h>
+ #endif
+--- ./xpcom/reflect/xptcall/src/md/unix/Makefile.in.uw	2004-04-22 20:50:05.000000000 +0000
++++ ./xpcom/reflect/xptcall/src/md/unix/Makefile.in	2004-08-30 17:08:55.080000122 +0000
+@@ -45,6 +45,14 @@
+ #
+ # Lots of Unixish x86 flavors
+ #
++ifeq ($(OS_ARCH), SCOOS)
++CPPSRCS               := xptcinvoke_unixish_x86.cpp xptcstubs_unixish_x86.cpp
++endif
++
++ifeq ($(OS_ARCH), UnixWare)
++CPPSRCS               := xptcinvoke_unixware7_x86.cpp xptcstubs_unixware7_x86.cpp
++endif
++
+ ifneq (,$(filter FreeBSD NetBSD OpenBSD BSD_OS Darwin,$(OS_ARCH)))
+ ifeq (86,$(findstring 86,$(OS_TEST)))
+ CPPSRCS		:= xptcinvoke_unixish_x86.cpp xptcstubs_unixish_x86.cpp
+--- ./xpcom/reflect/xptcall/src/md/unix/xptc_platforms_unixish_x86.h.uw	2004-01-08 18:17:07.000000000 +0000
++++ ./xpcom/reflect/xptcall/src/md/unix/xptc_platforms_unixish_x86.h	2004-08-30 17:08:55.080000160 +0000
+@@ -137,6 +137,12 @@
+ #define CFRONT_STYLE_THIS_ADJUST
+ #endif
+ 
++#elif defined(SCO)
++  #define CFRONT_STYLE_THIS_ADJUST
++
++#elif defined(UNIXWARE)
++  #define CFRONT_STYLE_THIS_ADJUST
++
+ #elif defined(_WIN32)
+ #define THUNK_BASED_THIS_ADJUST
+ 
+--- ./xpcom/reflect/xptcall/src/md/unix/xptcinvoke_unixware7_x86.cpp.uw	2004-08-30 17:08:55.080000178 +0000
++++ ./xpcom/reflect/xptcall/src/md/unix/xptcinvoke_unixware7_x86.cpp	2004-08-30 17:08:55.080000199 +0000
+@@ -0,0 +1,204 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: NPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Netscape Public License
++ * Version 1.1 (the "License"); you may not use this file except in
++ * compliance with the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/NPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is mozilla.org code.
++ *
++ * The Initial Developer of the Original Code is 
++ * Netscape Communications Corporation.
++ * Portions created by the Initial Developer are Copyright (C) 1998
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or 
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the NPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the NPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++/* Platform specific code to invoke XPCOM methods on native objects */
++
++#include "xptcprivate.h"
++#include "xptc_platforms_unixish_x86.h"
++
++extern "C" {
++
++static void
++invoke_copy_to_stack(PRUint32 paramCount, nsXPTCVariant* s, PRUint32* d)
++{
++    for(PRUint32 i = paramCount; i >0; i--, d++, s++)
++    {
++        if(s->IsPtrData())
++        {
++            *((void**)d) = s->ptr;
++            continue;
++        }
++
++/* XXX: the following line is here (rather than as the default clause in
++ *      the following switch statement) so that the Sun native compiler
++ *      will generate the correct assembly code on the Solaris Intel
++ *      platform. See the comments in bug #28817 for more details.
++ */
++
++        *((void**)d) = s->val.p;
++
++        switch(s->type)
++        {
++        case nsXPTType::T_I64    : *((PRInt64*) d) = s->val.i64; d++;    break;
++        case nsXPTType::T_U64    : *((PRUint64*)d) = s->val.u64; d++;    break;
++        case nsXPTType::T_DOUBLE : *((double*)  d) = s->val.d;   d++;    break;
++        }
++    }
++}
++
++}
++
++#if defined(__USLC__)
++
++void (*USL_fn_copy) (unsigned int, nsXPTCVariant *, PRUint32 *) = invoke_copy_to_stack;
++
++/* On UnixWare 7, the vtbl entries have been widened to 12 bytes to 
++ * provide for object sizes greater than 32K
++ */
++asm XPTC_PUBLIC_API(nsresult)
++USL_invoke_by_index_body (nsISupports* that, PRUint32 methodIndex,
++                          PRUint32 paramCount, nsXPTCVariant* params)
++{
++%mem that, methodIndex, paramCount, params;
++	// capture all the params in registers before we adjust the
++	// stack pointer by an unknown value
++	pushl	%esi
++	pushl	%edi
++	pushl	%ebx
++	
++	movl	paramCount,%ebx	// paramCount
++	movl	that, %esi	// that ptr
++	movl	%ebx, %eax	// copy of paramCount
++	movl	params, %ecx	// params
++	shll	$3, %ebx	// 4 or 8 bytes each - waste space
++				//	instead of counting
++	movl	methodIndex,%edi // methodIndex
++
++	subl	%ebx, %esp	// room for arguments
++
++	push	%esp		// low addr of new param area
++	pushl	%ecx		// params
++	pushl	%eax		// paramCount
++	call0	invoke_copy_to_stack__FKUiP13nsXPTCVariantPUi
++
++	addl	$12, %esp	// readjust stack
++
++	movl	%edi, %edx		// methodIndex
++	movl	%esi, %ecx		// that ptr
++	shll	$2, %edx		// methodIndex * 4
++	movl	(%ecx), %eax		// vtbl addr
++	leal	12(%edx,%edx,2), %edx	// (methodIndex * 12) + 12 (skip 1st)
++	addl	%eax, %edx		// specific vtbl entry
++	addl	(%edx), %ecx		// add offset to that
++	pushl	%ecx		// push adjusted that ptr
++	call1	*8(%edx)	// call method
++
++	popl	%edx
++	addl	%ebx, %esp	// restore %esp
++	popl	%ebx		// restore regs
++	popl	%edi
++	popl	%esi
++	
++}
++#pragma asm full_optimization USL_invoke_by_index_body
++
++#endif /* defined(__USLC__) */
++
++XPTC_PUBLIC_API(nsresult)
++XPTC_InvokeByIndex(nsISupports* that, PRUint32 methodIndex,
++                   PRUint32 paramCount, nsXPTCVariant* params)
++{
++#ifdef __GNUC__            /* Gnu compiler. */
++  PRUint32 result;
++  // Each param takes at most 2, 4-byte words
++  // It doesn't matter if we push too many words, and calculating the exact
++  // ammount takes time.
++  PRUint32 n = paramCount << 3;
++  void (*fn_copy) (PRUint32, nsXPTCVariant*, PRUint32*) = invoke_copy_to_stack;
++  int temp1, temp2, temp3;
++ 
++ __asm__ __volatile__(
++    "subl  %8, %%esp\n\t" /* make room for params */
++    "pushl %%esp\n\t"
++    "pushl %7\n\t"
++    "pushl %6\n\t"
++    "call  *%0\n\t"       /* copy params */
++    "addl  $0xc, %%esp\n\t"
++    "movl  %4, %%ecx\n\t"
++#ifdef CFRONT_STYLE_THIS_ADJUST
++    "movl  (%%ecx), %%edx\n\t"
++    "movl  %5, %%eax\n\t"   /* function index */
++    "shl   $3, %%eax\n\t"   /* *= 8 */
++    "addl  $8, %%eax\n\t"   /* += 8 skip first entry */
++    "addl  %%eax, %%edx\n\t"
++    "movswl (%%edx), %%eax\n\t" /* 'this' offset */
++    "addl  %%eax, %%ecx\n\t"
++    "pushl %%ecx\n\t"
++    "addl  $4, %%edx\n\t"   /* += 4, method pointer */
++#else /* THUNK_BASED_THIS_ADJUST */
++    "pushl %%ecx\n\t"
++    "movl  (%%ecx), %%edx\n\t"
++    "movl  %5, %%eax\n\t"   /* function index */
++#if defined(__GXX_ABI_VERSION) && __GXX_ABI_VERSION >= 100 /* G++ V3 ABI */
++    "leal  (%%edx,%%eax,4), %%edx\n\t"
++#else /* not G++ V3 ABI  */
++    "leal  8(%%edx,%%eax,4), %%edx\n\t"
++#endif /* G++ V3 ABI */
++#endif
++    "call  *(%%edx)\n\t"    /* safe to not cleanup esp */
++    "addl  $4, %%esp\n\t"
++    "addl  %8, %%esp"
++    : "=a" (result),        /* %0 */
++      "=c" (temp1),         /* %1 */
++      "=d" (temp2),         /* %2 */
++      "=g" (temp3)          /* %3 */
++    : "g" (that),           /* %4 */
++      "g" (methodIndex),    /* %5 */
++      "1" (paramCount),     /* %6 */
++      "2" (params),         /* %7 */
++      "g" (n),              /* %8 */
++      "0" (fn_copy)         /* %3 */
++    : "memory"
++    );
++    
++  return result;
++
++#elif defined(__USLC__)
++
++  // Each param takes at most 2, 4-byte words
++  // It doesn't matter if we push too many words, and calculating the exact
++  // amount takes time.
++
++  return (USL_invoke_by_index_body(that, methodIndex, paramCount, params)); 
++
++      /* defined(__USLC__) */
++#else
++
++#error "can't find a compiler to use"
++#endif /* __GNUC__ */
++
++}    
+--- ./xpcom/reflect/xptcall/src/md/unix/xptcstubs_unixware7_x86.cpp.uw	2004-08-30 17:08:55.080000206 +0000
++++ ./xpcom/reflect/xptcall/src/md/unix/xptcstubs_unixware7_x86.cpp	2004-08-30 17:08:55.090000014 +0000
+@@ -0,0 +1,162 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: NPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Netscape Public License
++ * Version 1.1 (the "License"); you may not use this file except in
++ * compliance with the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/NPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is mozilla.org code.
++ *
++ * The Initial Developer of the Original Code is 
++ * Netscape Communications Corporation.
++ * Portions created by the Initial Developer are Copyright (C) 1999
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or 
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the NPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the NPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++/* Implement shared vtbl methods. */
++
++#include "xptcprivate.h"
++#include "xptc_platforms_unixish_x86.h"
++
++static nsresult
++PrepareAndDispatch(nsXPTCStubBase* self, uint32 methodIndex, PRUint32* args)
++{
++#define PARAM_BUFFER_COUNT     16
++
++    nsXPTCMiniVariant paramBuffer[PARAM_BUFFER_COUNT];
++    nsXPTCMiniVariant* dispatchParams = NULL;
++    nsIInterfaceInfo* iface_info = NULL;
++    const nsXPTMethodInfo* info;
++    PRUint8 paramCount;
++    PRUint8 i;
++    nsresult result = NS_ERROR_FAILURE;
++
++    NS_ASSERTION(self,"no self");
++
++    self->GetInterfaceInfo(&iface_info);
++    NS_ASSERTION(iface_info,"no interface info");
++
++    iface_info->GetMethodInfo(PRUint16(methodIndex), &info);
++    NS_ASSERTION(info,"no interface info");
++
++    paramCount = info->GetParamCount();
++
++    // setup variant array pointer
++    if(paramCount > PARAM_BUFFER_COUNT)
++        dispatchParams = new nsXPTCMiniVariant[paramCount];
++    else
++        dispatchParams = paramBuffer;
++    NS_ASSERTION(dispatchParams,"no place for params");
++
++    PRUint32* ap = args;
++    for(i = 0; i < paramCount; i++, ap++)
++    {
++        const nsXPTParamInfo& param = info->GetParam(i);
++        const nsXPTType& type = param.GetType();
++        nsXPTCMiniVariant* dp = &dispatchParams[i];
++
++        if(param.IsOut() || !type.IsArithmetic())
++        {
++            dp->val.p = (void*) *ap;
++            continue;
++        }
++        // else
++	    dp->val.p = (void*) *ap;
++        switch(type)
++        {
++        case nsXPTType::T_I64    : dp->val.i64 = *((PRInt64*) ap); ap++; break;
++        case nsXPTType::T_U64    : dp->val.u64 = *((PRUint64*)ap); ap++; break;
++        case nsXPTType::T_DOUBLE : dp->val.d   = *((double*)  ap); ap++; break;
++        }
++    }
++
++    result = self->CallMethod((PRUint16)methodIndex, info, dispatchParams);
++
++    NS_RELEASE(iface_info);
++
++    if(dispatchParams != paramBuffer)
++        delete [] dispatchParams;
++
++    return result;
++}
++
++#ifdef __GNUC__         /* Gnu Compiler. */
++#define STUB_ENTRY(n) \
++nsresult nsXPTCStubBase::Stub##n() \
++{ \
++  register nsresult (*method) (nsXPTCStubBase *, uint32, PRUint32 *) = PrepareAndDispatch; \
++  int temp0, temp1; \
++  register nsresult result; \
++  __asm__ __volatile__( \
++    "leal   0x0c(%%ebp), %%ecx\n\t"    /* args */ \
++    "pushl  %%ecx\n\t" \
++    "pushl  $"#n"\n\t"                 /* method index */ \
++    "movl   0x08(%%ebp), %%ecx\n\t"    /* this */ \
++    "pushl  %%ecx\n\t" \
++    "call   *%%edx\n\t"                /* PrepareAndDispatch */ \
++    "addl   $12, %%esp" \
++    : "=a" (result),    /* %0 */ \
++      "=&c" (temp0),    /* %1 */ \
++      "=d" (temp1)      /* %2 */ \
++    : "2" (method)      /* %2 */ \
++    : "memory" ); \
++    return result; \
++}
++
++#elif defined (__USLC__)     /* UnixWare Native C++ Compiler */
++
++asm nsresult USL_XTPC_stub_body(int n)
++{
++%con n;
++	leal	12(%ebp), %ecx		// addr of 1st arg ptr
++	movl	8(%ebp), %edx		// this
++	pushl	%ecx			// push addr 1st arg ptr
++	pushl	n
++			      		// method index
++	pushl	%edx			// push this
++	call1	PrepareAndDispatch__FP14nsXPTCStubBaseUiPUi
++	addl	$12, %esp
++}
++#pragma asm full_optimization USL_XTPC_stub_body
++
++#define STUB_ENTRY(n) \
++nsresult nsXPTCStubBase::Stub##n() \
++{ \
++  register nsresult (*method) (nsXPTCStubBase *, uint32, PRUint32 *) = PrepareAndDispatch; \
++  return (USL_XTPC_stub_body((n))); \
++}
++      /* defined (__USLC__) */
++#else
++#error "can't find a compiler to use"
++#endif /* __GNUC__ */
++
++#define SENTINEL_ENTRY(n) \
++nsresult nsXPTCStubBase::Sentinel##n() \
++{ \
++    NS_ASSERTION(0,"nsXPTCStubBase::Sentinel called"); \
++    return NS_ERROR_NOT_IMPLEMENTED; \
++}
++
++#include "xptcstubsdef.inc"
+--- ./xpcom/string/public/nsString.h.uw	2004-02-20 23:23:35.000000000 +0000
++++ ./xpcom/string/public/nsString.h	2004-08-30 17:08:55.090000042 +0000
+@@ -52,7 +52,7 @@
+ #include "nsReadableUtils.h"
+ #endif
+ 
+-#include NEW_H
++#include <new>
+ 
+   // enable support for the obsolete string API if not explicitly disabled
+ #ifndef MOZ_STRING_WITH_OBSOLETE_API
+--- ./xpinstall/packager/Makefile.in.uw	2004-04-01 23:30:55.000000000 +0000
++++ ./xpinstall/packager/Makefile.in	2004-08-30 17:08:55.090000136 +0000
+@@ -182,6 +182,10 @@
+ TAR_CREATE_FLAGS = -cvf
+ PLATFORM_EXCLUDE_LIST = ! -name "*.ico"
+ endif
++ifeq ($(OS_ARCH),UnixWare)
++STRIP         = /usr/ccs/bin/strip
++STRIP_FLAGS   =
++endif
+ 
+ $(SDK):
+ ifndef NO_GECKO_SDK
+--- ./content/xul/templates/src/nsTemplateMatch.h.uw	2002-08-19 03:50:15.000000000 +0000
++++ ./content/xul/templates/src/nsTemplateMatch.h	2004-08-30 17:08:55.450000176 +0000
+@@ -43,7 +43,7 @@
+ #include "nsFixedSizeAllocator.h"
+ #include "nsResourceSet.h"
+ #include "nsRuleNetwork.h"
+-#include NEW_H
++#include <new>
+ 
+ /**
+  * A "match" is a fully instantiated rule; that is, a complete and
+--- ./layout/base/src/nsIntervalSet.cpp.uw	2003-01-01 23:53:10.000000000 +0000
++++ ./layout/base/src/nsIntervalSet.cpp	2004-08-30 17:08:55.450000224 +0000
+@@ -37,7 +37,7 @@
+  * ***** END LICENSE BLOCK ***** */
+ 
+ #include "nsIntervalSet.h"
+-#include NEW_H
++#include <new>
+ 
+ nsIntervalSet::nsIntervalSet(IntervalSetAlloc aAlloc, IntervalSetFree aFree,
+                              void* aAllocatorClosure)
+--- ./layout/build/Makefile.in.uw	2004-04-09 04:45:29.000000000 +0000
++++ ./layout/build/Makefile.in	2004-08-30 17:08:55.460000010 +0000
+@@ -31,6 +31,10 @@
+ SHELL := ksh
+ endif
+ 
++ifeq ($(OS_ARCH),UnixWare)
++SHELL := ksh
++endif
++
+ BUILD_DATE = gbdate.h
+ BUILD_DATE_TS = gbdate.tstamp
+ 
+--- ./layout/html/style/src/nsChildIterator.h.uw	2003-09-27 04:18:22.000000000 +0000
++++ ./layout/html/style/src/nsChildIterator.h	2004-08-30 17:08:55.460000080 +0000
+@@ -41,6 +41,10 @@
+ #include "nsIDOMNodeList.h"
+ #include "nsIDOMNode.h"
+ 
++#ifdef index
++#undef index
++#endif
++
+ /**
+  * Helper class for iterating children during frame construction.
+  * This class should always be used in lieu of the straight content
+--- ./widget/src/gtk/Makefile.in.uw	2004-01-07 13:36:53.000000000 +0000
++++ ./widget/src/gtk/Makefile.in	2004-08-30 17:08:55.460000114 +0000
+@@ -98,6 +98,10 @@
+ 
+ DEFINES		+= -D_IMPL_NS_WIDGET -DUSE_XIM
+ 
++ifeq ($(OS_ARCH), UnixWare)
++DEFINES               += -DUNIXWARE
++endif
++
+ ifeq ($(OS_ARCH), SunOS)
+ ifndef GNU_CC
+ # When using Sun's WorkShop compiler, including
+--- ./widget/src/gtk/nsGtkEventHandler.cpp.uw	2004-03-06 15:00:37.000000000 +0000
++++ ./widget/src/gtk/nsGtkEventHandler.cpp	2004-08-30 17:08:55.460000164 +0000
+@@ -108,7 +108,7 @@
+   { NS_VK_CANCEL,     GDK_Cancel },
+   { NS_VK_BACK,       GDK_BackSpace },
+   { NS_VK_TAB,        GDK_Tab },
+-  { NS_VK_TAB,        GDK_ISO_Left_Tab },
++//  { NS_VK_TAB,        GDK_ISO_Left_Tab },
+   { NS_VK_CLEAR,      GDK_Clear },
+   { NS_VK_RETURN,     GDK_Return },
+   { NS_VK_SHIFT,      GDK_Shift_L },
+--- ./widget/src/gtk/nsKeyboardUtils.cpp.uw	2003-03-25 22:38:28.000000000 +0000
++++ ./widget/src/gtk/nsKeyboardUtils.cpp	2004-08-30 17:08:55.470000047 +0000
+@@ -18,7 +18,7 @@
+ 
+ #include <X11/Xlib.h>
+ #ifdef HAVE_X11_XKBLIB_H
+-#   if (defined (__digital__) && defined (__unix__)) || defined(_AIX) || defined(__hpux) || defined (__osf__)
++#   if (defined (__digital__) && defined (__unix__)) || defined(_AIX) || defined(__hpux) || defined (__osf__) || defined(UNIXWARE)
+ #   define explicit Explicit
+ #   include <X11/XKBlib.h>
+ #   undef explicit
+--- ./themes/classic/communicator/brand.css.uw	2002-09-24 19:40:12.000000000 +0000
++++ ./themes/classic/communicator/brand.css	2004-08-30 17:08:55.470000206 +0000
+@@ -34,10 +34,10 @@
+   -moz-box-pack: center;
+   margin: 1px 2px 1px 10px;
+   border: 2px solid;
+-  -moz-border-top-colors: ThreeDDarkShadow ThreeDHighlight;
+-  -moz-border-right-colors: ThreeDDarkShadow ThreeDShadow;
+-  -moz-border-bottom-colors: ThreeDDarkShadow ThreeDShadow;
+-  -moz-border-left-colors: ThreeDDarkShadow ThreeDHighlight;
++  -moz-border-top-colors: ThreeDHighlight ThreeDHighlight;
++  -moz-border-right-colors: ThreeDShadow ThreeDShadow;
++  -moz-border-bottom-colors: ThreeDShadow ThreeDShadow;
++  -moz-border-left-colors: ThreeDHighlight ThreeDHighlight;
+   -moz-border-radius: 0;
+   padding: 1px;
+   min-width: 0;
+--- ./xpfe/browser/resources/locale/en-US/region.properties.uw	2004-08-30 17:08:53.010000066 +0000
++++ ./xpfe/browser/resources/locale/en-US/region.properties	2004-08-30 17:08:55.480000018 +0000
+@@ -1,5 +1,5 @@
+ # navigator.properties
+-homePageDefault=file:///usr/share/doc/HTML/index.html
++homePageDefault=http://www.sco.com/
+ shopKeyword=keyword:shop [Product]
+ quoteKeyword=keyword:quote [Enter symbol here]
+ localKeyword=keyword:zip [Your zip code]
+@@ -11,8 +11,8 @@
+ #
+ # all.js
+ #
+-browser.startup.homepage=file:///usr/share/doc/HTML/index.html
+-browser.throbber.url=http://www.mozilla.org/
++browser.startup.homepage=http://www.sco.com/
++browser.throbber.url=http://www.sco.com/
+ browser.search.defaulturl=http://www.google.com/search?sourceid=mozilla&q=
+ general.useragent.contentlocale=US
+ 
+@@ -24,4 +24,4 @@
+ 
+ #config.js
+ #
+-startup.homepage_override_url=file:///usr/share/doc/HTML/index.html
++startup.homepage_override_url=http://www.sco.com/
+--- ./xpfe/global/resources/locale/en-US/brand.properties.uw	2001-08-10 21:28:03.000000000 +0000
++++ ./xpfe/global/resources/locale/en-US/brand.properties	2004-08-30 17:08:55.480000114 +0000
+@@ -1,3 +1,3 @@
+ brandShortName=Mozilla
+-vendorShortName=Mozilla
++vendorShortName=SCO
+ sidebarName=Sidebar
+--- ./xpfe/global/resources/locale/en-US/brand.dtd.uw	2004-02-04 14:24:13.000000000 +0000
++++ ./xpfe/global/resources/locale/en-US/brand.dtd	2004-08-30 17:08:55.490000029 +0000
+@@ -1,4 +1,4 @@
+ #expand <!ENTITY  lang.version          "__MOZILLA_LOCALE_VERSION__">
+ <!ENTITY  brandShortName        "Mozilla">
+-<!ENTITY  vendorShortName       "Mozilla">
++<!ENTITY  vendorShortName       "SCO">
+ <!ENTITY  sidebarName           "Sidebar">
+--- ./mailnews/base/src/nsMsgAccountManager.h.uw	2003-08-20 22:36:48.000000000 +0000
++++ ./mailnews/base/src/nsMsgAccountManager.h	2004-08-30 17:08:55.490000139 +0000
+@@ -39,6 +39,10 @@
+ #include "nsIUrlListener.h"
+ #include "nsCOMArray.h"
+ 
++#if defined(shutdown)
++#undef shutdown
++#endif
++
+ class nsMsgAccountManager
+ 	: public nsIMsgAccountManager,
+       public nsIObserver,
+@@ -175,7 +179,7 @@
+ 
+   // write out the server's cache through the given folder cache
+   static PRBool PR_CALLBACK writeFolderCache(nsHashKey *aKey, void *aData, void *closure);
+-  static PRBool PR_CALLBACK shutdown(nsHashKey *aKey, void *aData, void *closure);
++  static PRBool PR_CALLBACK (shutdown)(nsHashKey *aKey, void *aData, void *closure);
+   static PRBool PR_CALLBACK closeCachedConnections(nsHashKey *aKey, void *aData, void *closure);
+ 
+   static void getUniqueKey(const char* prefix,
+--- ./mailnews/base/src/nsMsgAccountManager.cpp.uw	2004-02-28 22:34:00.000000000 +0000
++++ ./mailnews/base/src/nsMsgAccountManager.cpp	2004-08-30 17:08:55.490000194 +0000
+@@ -82,6 +82,10 @@
+ #include "nsICategoryManager.h"
+ #include "nsISupportsPrimitives.h"
+ 
++#if defined(shutdown)
++#undef shutdown
++#endif
++
+ #define PREF_MAIL_ACCOUNTMANAGER_ACCOUNTS "mail.accountmanager.accounts"
+ #define PREF_MAIL_ACCOUNTMANAGER_DEFAULTACCOUNT "mail.accountmanager.defaultaccount"
+ #define PREF_MAIL_ACCOUNTMANAGER_LOCALFOLDERSSERVER "mail.accountmanager.localfoldersserver"
+@@ -1135,7 +1139,7 @@
+   return PR_TRUE;
+ }
+ 
+-PRBool nsMsgAccountManager::shutdown(nsHashKey *aKey, void *aData, void *closure)
++PRBool (nsMsgAccountManager::shutdown)(nsHashKey *aKey, void *aData, void *closure)
+ {
+   nsIMsgIncomingServer *server = (nsIMsgIncomingServer*)aData;
+ 
+--- ./configure.in.uw	2004-05-26 02:25:16.000000000 +0000
++++ ./configure.in	2004-08-30 17:08:55.500000102 +0000
+@@ -710,6 +710,16 @@
+     fi
+ fi
+ 
++if test "$OS_ARCH" = "OpenUNIX"; then
++    OS_ARCH=UnixWare
++fi
++if test "$OS_ARCH" = "UnixWare"; then
++    if test "$OS_RELEASE" = "5"; then
++      OS_RELEASE="7"
++      OS_TARGET=UnixWare
++    fi
++fi
++
+ if test -z "$OS_TARGET"; then
+     OS_TARGET=$OS_ARCH
+ fi
+@@ -867,6 +877,10 @@
+     HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
+     ;;
+ 
++*-*-sysv5*)
++    HOST_NSPR_MDCPUCFG='\"md/_unixware7.cfg\"'
++    ;;
++
+ *-linux*)
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX"
+     HOST_NSPR_MDCPUCFG='\"md/_linux.cfg\"'
+@@ -1507,11 +1521,16 @@
+     ;;
+ 
+ *-sco*) 
++    AC_DEFINE_UNQUOTED(MAXPATHLEN,1024)
++    AC_DEFINE_UNQUOTED(PATH_MAX,1024)
+     AC_DEFINE(NSCAP_DISABLE_TEST_DONTQUERY_CASES)
+     AC_DEFINE(NSCAP_DISABLE_DEBUG_PTR_TYPES)
+-    CXXFLAGS="$CXXFLAGS -I/usr/include/CC"
+     if test ! "$GNU_CC"; then
+        DSO_LDOPTS='-G -h $@'
++       CXXFLAGS="$CXXFLAGS -I/usr/include/CC"
++    else
++       CXXFLAGS="$CXXFLAGS -fPIC"
++       CFLAGS="$CFLAGS -fPIC"
+     fi
+     ;;
+ 
+@@ -1582,6 +1601,28 @@
+     esac
+     ;;
+ 
++*-*-sysv5*)
++    AC_DEFINE(SYSV5)
++    TARGET_NSPR_MDCPUCFG='\"md/_unixware7.cfg\"'
++    CFLAGS="${CFLAGS} -D_EFTSAFE"
++    CXXFLAGS="${CXXFLAGS} -D_EFTSAFE"
++    MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_PIC_FLAGS) $(DSO_LDOPTS) -o $@'
++    MKCSHLIB='$(CC) $(CFLAGS) $(DSO_PIC_FLAGS) $(DSO_LDOPTS) -o $@'
++    if test -z "$GNU_CC"; then
++      # For native C++ compiler - suppress specific pedantic warnings 
++      #  177 - variable "x" was declared but never referenced
++      #  816 - type qualifier on return type is meaningless
++      #  838 - omission of explicit type is nonstandard ("int" assumed)
++      _WARNINGS_CXXFLAGS="${_WARNINGS_CXXFLAGS} -Wf,--diag_suppress -Wf,177"
++      _WARNINGS_CXXFLAGS="${_WARNINGS_CXXFLAGS} -Wf,--diag_suppress -Wf,816"
++      _WARNINGS_CXXFLAGS="${_WARNINGS_CXXFLAGS} -Wf,--diag_suppress -Wf,838"
++
++      DSO_LDOPTS='-G -h $@'
++    else
++      DSO_LDOPTS='-shared -h $@'
++    fi
++    ;;
++
+ *-sysv4.2uw7*) 
+ 	NSPR_LIBS="-lnspr$NSPR_VERSION -lplc$NSPR_VERSION -lplds$NSPR_VERSION -L/usr/ccs/lib -lcrt"
+     ;;
+@@ -2020,20 +2061,20 @@
+     AC_DEFINE(NO_X11)
+ else
+     AC_DEFINE_UNQUOTED(FUNCPROTO,15)
+-	XLIBS="-lX11 $XLIBS"
++	XLIBS="-lX11 -lsocket -lnsl $XLIBS"
+ 	_SAVE_LDFLAGS="$LDFLAGS"
+ 	LDFLAGS="$XLDFLAGS $LDFLAGS"
+-	AC_CHECK_LIB(X11, XDrawLines, [X11_LIBS="-lX11"],
++	AC_CHECK_LIB(X11, XDrawLines, [X11_LIBS="-lX11 -lsocket -lnsl"],
+ 		[MISSING_X="$MISSING_X -lX11"], $XLIBS)
+-	AC_CHECK_LIB(Xext, XextAddDisplay, [XEXT_LIBS="-lXext"],
++	AC_CHECK_LIB(Xext, XextAddDisplay, [XEXT_LIBS="-lXext"],
+ 		[MISSING_X="$MISSING_X -lXext"], $XLIBS)
+    
+      
+-	AC_CHECK_LIB(Xt, XtFree, [ XT_LIBS="-lXt"], [
++	AC_CHECK_LIB(Xt, XtFree, [ XT_LIBS="-lXt"], [
+         unset ac_cv_lib_Xt_XtFree
+ 	    AC_CHECK_LIB(ICE, IceFlush, [XT_LIBS="-lICE $XT_LIBS"],, $XT_LIBS $XLIBS)
+ 	    AC_CHECK_LIB(SM, SmcCloseConnection, [XT_LIBS="-lSM $XT_LIBS"],, $XT_LIBS $XLIBS) 
+-        AC_CHECK_LIB(Xt, XtFree, [ XT_LIBS="-lXt $XT_LIBS"],
++        AC_CHECK_LIB(Xt, XtFree, [ XT_LIBS="-lXt $XT_LIBS"],
+ 		    [MISSING_X="$MISSING_X -lXt"], $X_PRE_LIBS $XT_LIBS $XLIBS)
+         ])
+ 
+@@ -2041,14 +2082,14 @@
+     # crashes in plugins linked against Motif - Bug #98892
+     case "${target_os}" in
+     aix*)
+-        XT_LIBS="-lXm $XT_LIBS"
++        XT_LIBS="-lXm $XT_LIBS"
+         ;;
+     esac
+ 
+     dnl ========================================================
+     dnl = Check for Xinerama
+     dnl ========================================================
+-    AC_CHECK_LIB(Xinerama, XineramaIsActive, [MOZ_XINERAMA_LIBS="-lXinerama"],,
++    AC_CHECK_LIB(Xinerama, XineramaIsActive, [MOZ_XINERAMA_LIBS="-lXinerama"],,
+         $XLIBS $XEXT_LIBS)
+     AC_CHECK_HEADER(X11/extensions/Xinerama.h)
+ 
+@@ -2066,7 +2107,7 @@
+     dnl ========================================================
+     dnl = Check for XIE
+     dnl ========================================================
+-    AC_CHECK_LIB(XIE, XieFloGeometry, [MOZ_XIE_LIBS="-lXIE"],,
++    AC_CHECK_LIB(XIE, XieFloGeometry, [MOZ_XIE_LIBS="-lXIE"],,
+         $XLIBS $XEXT_LIBS)
+     AC_CHECK_HEADER(X11/extensions/XIElib.h)
+ 
+@@ -2137,12 +2178,15 @@
+ 	echo 'int main() { return 0; }' | cat > conftest.c
+ 	${CC-cc} -pthread -o conftest conftest.c > conftest.out 2>&1
+ 	if test $? -eq 0; then
+-		if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++        if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthread`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 			ac_cv_have_dash_pthread=yes
+ 	        case "$target_os" in
+ 	        freebsd*)
+ # Freebsd doesn't use -pthread for compiles, it uses them for linking
+                 ;;
++	        sysv5*)
++# UnixWare doesn't use -pthread for compiles
++                ;;
+ 	        *)
+ 			    CFLAGS="$CFLAGS -pthread"
+ 			    CXXFLAGS="$CXXFLAGS -pthread"
+@@ -2162,7 +2206,7 @@
+     	echo 'int main() { return 0; }' | cat > conftest.c
+ 	    ${CC-cc} -pthreads -o conftest conftest.c > conftest.out 2>&1
+     	if test $? -eq 0; then
+-	    	if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" ; then
++            if test -z "`egrep -i '(unrecognize|unknown)' conftest.out | grep pthreads`" && test -z "`egrep -i '(error|incorrect)' conftest.out`" && test -z "`egrep '''-h''' conftest.out | grep ' valid only when building a shared object' conftest.out`" ; then
+ 			    ac_cv_have_dash_pthreads=yes
+ 			    CFLAGS="$CFLAGS -pthreads"
+ 			    CXXFLAGS="$CXXFLAGS -pthreads"
+@@ -2173,6 +2217,15 @@
+     fi
+ 
+ 	case "$target" in
++        *-*-sysv5*)
++                    if test ! "$GNU_CC"; then
++                            CFLAGS="$CFLAGS -Kpthread"
++                            CXXFLAGS="$CXXFLAGS -Kpthread"
++                            _PTHREAD_LDFLAGS=""
++                    else
++                            _PTHREAD_LDFLAGS="-pthread"
++                    fi
++                    ;;
+ 	    *-*-freebsd*)
+ 			AC_DEFINE(_REENTRANT)
+ 			AC_DEFINE(_THREAD_SAFE)
+@@ -3456,7 +3509,7 @@
+ 
+     _SAVE_LDFLAGS="$LDFLAGS"
+     LDFLAGS="$XLDFLAGS $LDFLAGS"
+-    AC_CHECK_LIB(Xp, XpGetPrinterList, [XPRINT_LIBS="-lXp"],
++    AC_CHECK_LIB(Xp, XpGetPrinterList, [XPRINT_LIBS="-lXp"],
+         MOZ_ENABLE_XPRINT=, $XEXT_LIBS $XLIBS)
+     LDFLAGS="$_SAVE_LDFLAGS"
+ 

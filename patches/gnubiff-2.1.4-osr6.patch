@@ -1,0 +1,40 @@
+--- ./Configure-OSR6.osr6	2005-06-27 15:47:31.445528010 -0700
++++ ./Configure-OSR6	2005-06-27 15:47:31.445528007 -0700
+@@ -0,0 +1,17 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++NM="/usr/ccs/bin/nm -p"
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT -Wall"
++  CXX="g++ -D_REENTRANT -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM
++rm -f mout-configure
++./configure --prefix=/usr --with-libintl-prefix=/usr/gnu \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.osr6	2005-06-27 13:18:35.000000000 -0700
++++ ./configure	2005-06-27 15:52:37.601048015 -0700
+@@ -3712,7 +3712,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lpopt  $LIBS"
++LIBS="-lpopt -L/usr/gnu/lib -lintl $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3768,7 +3768,7 @@
+ #define HAVE_LIBPOPT 1
+ _ACEOF
+ 
+-  LIBS="-lpopt $LIBS"
++  LIBS="-lpopt -L/usr/gnu/lib -lintl $LIBS"
+ 
+ else
+   { { echo "$as_me:$LINENO: error:

@@ -1,0 +1,139 @@
+*** ./Makefile.00	Mon Jul 16 02:17:27 2001
+--- ./Makefile	Sun Sep  4 11:58:02 2005
+***************
+*** 25,34 ****
+  #			 Johannes Overmann <overmann@iname.com>
+  #
+  
+! # bindir = where binaries get installed (default = /usr/local/bin)
+! # mandir = where the manual page gets installed (default = /usr/local/man/man1)
+  
+! prefix=/usr/local
+  bindir=${prefix}/bin
+  mandir = $(prefix)/man/man1
+  
+--- 25,35 ----
+  #			 Johannes Overmann <overmann@iname.com>
+  #
+  
+! # bindir = where binaries get installed (default = /usr/bin)
+! # mandir = where the manual page gets installed (default = /usr/man/man1)
+  
+! DESTDIR=
+! prefix=$(DESTDIR)/usr
+  bindir=${prefix}/bin
+  mandir = $(prefix)/man/man1
+  
+***************
+*** 40,51 ****
+  XSRC =	gmp3info.c
+  XOBJ =  mp3tech.o
+  RM = /bin/rm
+! INSTALL = /usr/bin/install -c
+  STRIP = strip
+  
+! LIBS = -lncurses
+! CC = gcc
+! CFLAGS = -g -O2 -Wall
+  
+  all: mp3info gmp3info doc
+  
+--- 41,52 ----
+  XSRC =	gmp3info.c
+  XOBJ =  mp3tech.o
+  RM = /bin/rm
+! INSTALL = /usr/gnu/bin/install -c
+  STRIP = strip
+  
+! LIBS = -lcurses
+! CC = cc
+! CFLAGS = -O2
+  
+  all: mp3info gmp3info doc
+  
+***************
+*** 55,61 ****
+  	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+  
+  gmp3info: $(XSRC) $(XOBJ) 
+! 	$(CC) $(XSRC) $(CFLAGS) -o $@ $(XOBJ) `gtk-config --cflags --libs`
+  
+  mp3info.txt: mp3info.1
+  	groff -t -e -mandoc -Tascii mp3info.1 | col -bx > mp3info.txt
+--- 56,62 ----
+  	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+  
+  gmp3info: $(XSRC) $(XOBJ) 
+! 	$(CC) $(XSRC) $(CFLAGS) -o $@ $(XOBJ) `gtk-1.2-config --cflags --libs`
+  
+  mp3info.txt: mp3info.1
+  	groff -t -e -mandoc -Tascii mp3info.1 | col -bx > mp3info.txt
+***************
+*** 70,78 ****
+--- 71,81 ----
+  
+  install: mp3info gmp3info
+  	$(STRIP) mp3info
++ 	[ -d $(bindir) ] || mkdir -p $(bindir)
+  	$(INSTALL) mp3info $(bindir)/mp3info
+  	$(STRIP) gmp3info
+  	$(INSTALL) gmp3info $(bindir)/gmp3info
++ 	[ -d $(mandir) ] || mkdir -p $(mandir)
+  	$(INSTALL) mp3info.1 $(mandir)/mp3info.1
+  
+  uninstall:
+*** ./Build-OSR6.00	Sun Sep  4 11:49:53 2005
+--- ./Build-OSR6	Sun Sep  4 11:49:39 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.00	Sun Sep  4 11:50:27 2005
+--- ./Install-OSR6	Sun Sep  4 11:50:18 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/mp3info
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./gmp3info.c.00	Mon Jul 16 02:17:16 2001
+--- ./gmp3info.c	Sun Sep  4 11:56:13 2005
+***************
+*** 484,494 ****
+  }
+  
+  void about_mp3info(void) {
+! 	quick_popup(VERSION,"MP3Info
+! 			An ID3 Tag Editor\n\n
+! 			Original author: Ricardo Cerqueira <rmc@plug.pt>
+! 			Current maintainer: Cedric Tefft <cedric@earthling.net>
+! 			GTK Version: Ricardo Cerqueira <rmc@plug.pt>\n\n
+  			Ricardo Cerqueira, Cedric Tefft   1999-2001\n\n");
+  }
+  
+--- 484,494 ----
+  }
+  
+  void about_mp3info(void) {
+! 	quick_popup(VERSION,"MP3Info\n \
+! 			An ID3 Tag Editor\n\n \
+! 			Original author: Ricardo Cerqueira <rmc@plug.pt> \n \
+! 			Current maintainer: Cedric Tefft <cedric@earthling.net>\n \
+! 			GTK Version: Ricardo Cerqueira <rmc@plug.pt>\n\n \
+  			Ricardo Cerqueira, Cedric Tefft   1999-2001\n\n");
+  }
+  

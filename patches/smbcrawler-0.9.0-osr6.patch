@@ -1,0 +1,43 @@
+--- ./configure.osr6	2005-06-04 12:39:56.000000000 -0700
++++ ./configure	2005-06-04 19:57:22.195515010 -0700
+@@ -1650,7 +1650,7 @@
+ host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
+ 
+ 
+-CFLAGS="-g -O2 -Wall -D_FILE_OFFSET_BITS=64"
++CFLAGS="-O2 -D_FILE_OFFSET_BITS=64"
+ 
+ # Find a good install program.  We prefer a C program (faster),
+ # so one script is as good as another.  But avoid the broken or
+--- ./smbcrawler.c.osr6	2005-06-04 12:39:27.000000000 -0700
++++ ./smbcrawler.c	2005-06-04 19:57:22.345515000 -0700
+@@ -10,12 +10,12 @@
+ #include <config.h>
+ #endif
+ 
+-static void auth_smbc_get_data( __attribute__ ((unused)) const char *server,
+-			       __attribute__ ((unused)) const char *share,
+-			       __attribute__ ((unused)) char *workgroup,
+-			       __attribute__ ((unused)) int wgmaxlen,
+-			       char *username, __attribute__ ((unused)) int unmaxlen,
+-			       char *password, __attribute__ ((unused)) int pwmaxlen)
++static void auth_smbc_get_data( const char *server,
++			       const char *share,
++			       char *workgroup,
++			       int wgmaxlen,
++			       char *username, int unmaxlen,
++			       char *password, int pwmaxlen)
+ {
+     char cred_file [1024];
+     FILE *fp;
+--- ./Makefile.in.osr6	2005-06-04 12:46:05.000000000 -0700
++++ ./Makefile.in	2005-06-04 19:57:53.693035002 -0700
+@@ -72,7 +72,7 @@
+ smbcrawler_SOURCES = smbcrawler.c
+ 
+ #  uncomment the following if smbcrawler requires the math library
+-smbcrawler_LDADD = -lsmbclient -lpopt
++smbcrawler_LDADD = -lsmbclient -lpopt -L/usr/gnu/lib -lintl
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+ CONFIG_HEADER = config.h

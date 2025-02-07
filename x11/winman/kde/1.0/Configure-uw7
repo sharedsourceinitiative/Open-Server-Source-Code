@@ -1,0 +1,7 @@
+#!/bin/sh
+
+CC="gcc -D_POSIX_SOURCE"
+export CC
+
+./configure  --with-qt-dir=/usr/local/qt --enable-shared --enable-static i486-pc-sysv5
+

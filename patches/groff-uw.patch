@@ -1,0 +1,16 @@
+--- ./src/xditview/Imakefile.in.uw	2005-05-13 20:36:38.680000055 +0000
++++ ./src/xditview/Imakefile.in	2005-05-13 20:38:20.620000011 +0000
+@@ -72,6 +72,13 @@
+ DEVDIR = $(top_builddir)/font
+ MKINSTALLDIRS = $(top_srcdir)/mkinstalldirs
+ 
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd    /usr/ucb/install
++
++INSTALL = /usr/ucb/install
++
+ ComplexProgramTarget_1(gxditview,$(LOCAL_LIBRARIES),$(MATHLIB))
+ NormalProgramTarget(xtotroff,$(OBJS2),$(DEPXLIB),$(XLIB), /**/)
+ 

@@ -1,0 +1,46 @@
+*** ./Install-OSR6.osr6	Sun Sep  4 15:15:58 2005
+--- ./Install-OSR6	Sun Sep  4 15:15:58 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rbbr
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ ruby install.rb install --prefix=$D 2>&1 | tee $MOUT
+*** ./Build-OSR6.osr6	Sun Sep  4 15:15:58 2005
+--- ./Build-OSR6	Sun Sep  4 15:16:12 2005
+***************
+*** 0 ****
+--- 1,27 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ [ -d data/rbbr/rd ] || mkdir -p data/rbbr/rd
++ cd data/rbbr
++ gzcat ../../../ruby-gnome2-api.tar.gz | tar xf -
++ mv ruby-gnome2-api/* rd
++ rm -rf ruby-gnome2-api
++ cd ../..
++ rm -f mout-config mout-setup
++ ruby install.rb config 2>&1 | tee mout-config
++ ruby install.rb setup 2>&1 | tee mout-setup

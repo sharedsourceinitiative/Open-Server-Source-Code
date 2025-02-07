@@ -1,0 +1,23 @@
+*** ./Configure-OSR6.00	Sun Mar 26 16:34:51 2006
+--- ./Configure-OSR6	Sun Mar 26 16:34:45 2006
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr --with-apxs=/usr/lib/apache/bin/apxs \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

@@ -1,0 +1,56 @@
+*** ./Build-OSR6.osr6	Sat Sep 10 11:28:36 2005
+--- ./Build-OSR6	Sat Sep 10 11:28:31 2005
+***************
+*** 0 ****
+--- 1,3 ----
++ #!/bin/sh
++ 
++ true
+*** ./Install-OSR6.osr6	Sat Sep 10 11:28:45 2005
+--- ./Install-OSR6	Sat Sep 10 11:29:05 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install 2>&1 | tee $MOUT
++ 
+*** ./Makefile.osr6	Sat Sep 10 04:58:59 2005
+--- ./Makefile	Sat Sep 10 11:32:24 2005
+***************
+*** 83,89 ****
+  	chmod 777 ${CACHEDIR}
+  	install -d $(SERVEDIR)
+  	chmod 777 ${SERVEDIR}
+! 	chmod a+rx ${LIBDIR}/gnump3d/
+  	chmod a+rx ${LIBDIR}/gnump3d/plugins
+  	chmod a+rx ${LIBDIR}/gnump3d/lang
+  	cp lib/gnump3d/*.pm ${LIBDIR}/gnump3d
+--- 83,89 ----
+  	chmod 777 ${CACHEDIR}
+  	install -d $(SERVEDIR)
+  	chmod 777 ${SERVEDIR}
+! 	chmod a+rx ${LIBDIR}/gnump3d
+  	chmod a+rx ${LIBDIR}/gnump3d/plugins
+  	chmod a+rx ${LIBDIR}/gnump3d/lang
+  	cp lib/gnump3d/*.pm ${LIBDIR}/gnump3d
+***************
+*** 102,108 ****
+  	cp man/gnump3d.conf.1 ${MANDIR}
+  	cp -R templates/* ${TEMPDIR}
+  	chmod -R a+r ${TEMPDIR}
+! 	chmod +rx ${TEMPDIR}/*/
+  	if [ -e ${CONFDIR}/gnump3d.conf ]; then cp ${CONFDIR}/gnump3d.conf ${CONFDIR}/gnump3d.conf-orig ; fi
+  	sed "s#PLUGINDIR#${LIBDIR}#g" etc/gnump3d.conf > ${CONFDIR}/gnump3d.conf
+  	cp etc/mime.types ${CONFDIR}
+--- 102,108 ----
+  	cp man/gnump3d.conf.1 ${MANDIR}
+  	cp -R templates/* ${TEMPDIR}
+  	chmod -R a+r ${TEMPDIR}
+! 	chmod +rx ${TEMPDIR}/*
+  	if [ -e ${CONFDIR}/gnump3d.conf ]; then cp ${CONFDIR}/gnump3d.conf ${CONFDIR}/gnump3d.conf-orig ; fi
+  	sed "s#PLUGINDIR#${LIBDIR}#g" etc/gnump3d.conf > ${CONFDIR}/gnump3d.conf
+  	cp etc/mime.types ${CONFDIR}

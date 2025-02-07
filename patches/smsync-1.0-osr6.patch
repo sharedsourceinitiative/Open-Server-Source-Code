@@ -1,0 +1,54 @@
+*** ./Makefile.in.osr6	Mon Sep 23 07:16:55 2002
+--- ./Makefile.in	Sun Jul 10 15:05:12 2005
+***************
+*** 75,81 ****
+  SUBDIRS = src
+  
+  smssyncdocdir = ${prefix}/doc/smssync
+! smssyncdoc_DATA =  	README 	COPYING 	AUTHORS 	ChangeLog 	INSTALL 	NEWS 	TODO
+  
+  
+  EXTRA_DIST = SMSsync.prj $(smssyncdoc_DATA)
+--- 75,81 ----
+  SUBDIRS = src
+  
+  smssyncdocdir = ${prefix}/doc/smssync
+! smssyncdoc_DATA =  	README 	COPYING 	ChangeLog 	INSTALL
+  
+  
+  EXTRA_DIST = SMSsync.prj $(smssyncdoc_DATA)
+***************
+*** 85,92 ****
+  CONFIG_CLEAN_FILES = 
+  DATA =  $(smssyncdoc_DATA)
+  
+! DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
+! Makefile.am Makefile.in NEWS TODO acconfig.h aclocal.m4 config.h.in \
+  configure configure.in install-sh missing mkinstalldirs
+  
+  
+--- 85,92 ----
+  CONFIG_CLEAN_FILES = 
+  DATA =  $(smssyncdoc_DATA)
+  
+! DIST_COMMON =  README ./stamp-h.in COPYING ChangeLog INSTALL \
+! Makefile.am Makefile.in acconfig.h aclocal.m4 config.h.in \
+  configure configure.in install-sh missing mkinstalldirs
+  
+  
+*** ./Install-OSR6.osr6	Sun Jul 10 15:06:38 2005
+--- ./Install-OSR6	Sun Jul 10 15:06:49 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/smsync
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

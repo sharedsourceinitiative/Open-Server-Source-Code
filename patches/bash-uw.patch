@@ -1,0 +1,32 @@
+--- ./doc/Makefile.in.00	2003-09-05 20:20:02.260000018 -0700
++++ ./doc/Makefile.in	2003-09-05 20:20:12.960000010 -0700
+@@ -150,7 +150,7 @@
+ 	$(MAKEINFO) --no-split -I$(TEXINPUTDIR) $(srcdir)/bashref.texi
+ 
+ bashref.html: bashref.texi $(HSUSER) $(RLUSER)
+-	$(TEXI2HTML) -menu -monolithic -I $(TEXINPUTDIR) $(srcdir)/bashref.texi
++	$(TEXI2HTML) -menu -split no -I $(TEXINPUTDIR) $(srcdir)/bashref.texi
+ 
+ new-bashref.dvi: $(srcdir)/new-bashref.texi $(HSUSER) $(RLUSER)
+ 	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2DVI) $(srcdir)/new-bashref.texi
+--- ./lib/readline/doc/Makefile.00	2003-09-05 20:20:02.260000030 -0700
++++ ./lib/readline/doc/Makefile	2003-09-05 20:20:19.400000006 -0700
+@@ -108,15 +108,15 @@
+ 	$(DVIPS) history.dvi
+ 
+ readline.html:	${RLSRC}
+-	$(TEXI2HTML) -menu -monolithic -I $(TEXINPUTDIR) $(srcdir)/rlman.texinfo
++	$(TEXI2HTML) -menu -split no -I $(TEXINPUTDIR) $(srcdir)/rlman.texinfo
+ 	sed -e 's:rlman.html:readline.html:' rlman.html > readline.html
+ 	$(RM) rlman.html
+ 
+ rluserman.html:	${RLSRC}
+-	$(TEXI2HTML) -menu -monolithic -I $(TEXINPUTDIR) $(srcdir)/rluserman.texinfo
++	$(TEXI2HTML) -menu -split no -I $(TEXINPUTDIR) $(srcdir)/rluserman.texinfo
+ 
+ history.html:	${HISTSRC}
+-	$(TEXI2HTML) -menu -monolithic -I $(TEXINPUTDIR) $(srcdir)/hist.texinfo
++	$(TEXI2HTML) -menu -split no -I $(TEXINPUTDIR) $(srcdir)/hist.texinfo
+ 	sed -e 's:hist.html:history.html:' hist.html > history.html
+ 	$(RM) hist.html
+ 

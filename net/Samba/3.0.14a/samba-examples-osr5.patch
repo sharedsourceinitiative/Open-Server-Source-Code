@@ -1,0 +1,412 @@
+--- ./VFS/samba-vscan-0.3.5/clamav/vscan-clamav.c.osr5	2004-03-01 13:56:06.000000000 -0800
++++ ./VFS/samba-vscan-0.3.5/clamav/vscan-clamav.c	2005-06-28 11:11:46.000000000 -0700
+@@ -198,11 +198,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -257,7 +255,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -289,7 +286,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+ #ifdef LIBCLAMAV
+ 	/* initialise lib clamav */
+--- ./VFS/samba-vscan-0.3.5/fprot/vscan-fprotd.c.osr5	2003-09-15 12:51:06.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/fprot/vscan-fprotd.c	2005-06-28 11:11:46.000000000 -0700
+@@ -179,11 +179,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -246,7 +244,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -278,7 +275,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/icap/vscan-icap.c.osr5	2003-09-15 12:51:07.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/icap/vscan-icap.c	2005-06-28 11:11:46.000000000 -0700
+@@ -178,11 +178,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -241,7 +239,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -273,7 +270,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/kaspersky/vscan-kavp.c.osr5	2003-09-15 12:51:07.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/kaspersky/vscan-kavp.c	2005-06-28 11:11:46.000000000 -0700
+@@ -178,11 +178,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -239,7 +237,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -271,7 +268,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+ 
+ /*	vscan_kavp_init(); 
+--- ./VFS/samba-vscan-0.3.5/mks/libmksd/libmksd.c.osr5	2003-07-14 06:09:18.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/mks/libmksd/libmksd.c	2005-06-28 11:11:46.000000000 -0700
+@@ -17,6 +17,15 @@
+ 
+ #include "libmksd.h"
+ 
++#ifndef _TIMESPEC
++#define _TIMESPEC
++typedef struct   timespec
++{
++        time_t          tv_sec;         /* seconds      */
++        long            tv_nsec;        /* nanoseconds  */
++} timestruc_t;
++#endif /* _TIMESPEC */
++
+ #define MAXTRIES 5
+ 
+ 
+--- ./VFS/samba-vscan-0.3.5/mks/vscan-mksd.c.osr5	2003-09-15 12:51:07.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/mks/vscan-mksd.c	2005-06-28 11:11:46.000000000 -0700
+@@ -165,11 +165,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -222,7 +220,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -254,7 +251,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/openantivirus/vscan-oav.c.osr5	2003-09-15 12:51:08.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/openantivirus/vscan-oav.c	2005-06-28 11:11:46.000000000 -0700
+@@ -176,11 +176,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -239,7 +237,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -271,7 +268,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/sophos/vscan-sophos.c.osr5	2003-09-15 12:51:08.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/sophos/vscan-sophos.c	2005-06-28 11:11:46.000000000 -0700
+@@ -170,11 +170,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -221,7 +219,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -253,7 +250,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/trend/vscan-trend.c.osr5	2003-09-15 12:51:08.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/trend/vscan-trend.c	2005-06-28 11:11:46.000000000 -0700
+@@ -172,11 +172,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-	 #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++	#if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-	 #endif
+ 	#endif
+         int retval;
+ 
+@@ -236,7 +234,6 @@
+ 	vscan_trend_init();
+ 
+ 
+-	#if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+ 	 #if (SMB_VFS_INTERFACE_VERSION >= 6)
+ 	  fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+ 	 #else
+@@ -268,7 +265,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/f-secure/vscan-fsav.c.osr5	2004-04-07 11:29:46.000000000 -0700
++++ ./VFS/samba-vscan-0.3.5/f-secure/vscan-fsav.c	2005-06-28 11:11:46.000000000 -0700
+@@ -217,11 +217,9 @@
+ 			PROTOTYPE_CONST char *user)
+ #endif
+ {
+-        #if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-         #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++        #if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-         #endif
+         #endif
+         int retval;
+ 
+@@ -289,7 +287,6 @@
+ 
+ 	vscan_syslog("INFO: connect to service %s by user %s", svc, user);
+ 
+-        #if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+          #if (SMB_VFS_INTERFACE_VERSION >= 6)
+           fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+          #else
+@@ -325,7 +322,6 @@
+ 		vscan_syslog
+ 		    ("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults",
+ 		     config_file);
+-	#endif
+ 
+ 	/* initialise lrufiles list */
+ 	DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/samba-vscan-0.3.5/nai/vscan-mcdaemon.c.osr5	2004-04-03 03:57:21.000000000 -0800
++++ ./VFS/samba-vscan-0.3.5/nai/vscan-mcdaemon.c	2005-06-28 11:11:46.000000000 -0700
+@@ -163,11 +163,9 @@
+ static int vscan_connect(struct connection_struct *conn, PROTOTYPE_CONST char *svc, PROTOTYPE_CONST char *user)
+ #endif
+ {
+-        #if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+-         #if !(SMB_VFS_INTERFACE_VERSION >= 6)
++        #if !(SMB_VFS_INTERFACE_VERSION >= 6)
+           pstring opts_str;
+           PROTOTYPE_CONST char *p;
+-         #endif
+         #endif
+         int retval;
+ 
+@@ -226,7 +224,6 @@
+ 	vscan_syslog("INFO: connect to service %s by user %s", 
+ 	       svc, user);
+ 
+-        #if (SAMBA_VERSION_MAJOR==2 && SAMBA_VERSION_RELEASE>=4) || SAMBA_VERSION_MAJOR==3
+          #if (SMB_VFS_INTERFACE_VERSION >= 6)
+           fstrcpy(config_file, lp_parm_const_string(SNUM(conn),VSCAN_MODULE_STR,"config-file",PARAMCONF));
+          #else
+@@ -258,7 +255,6 @@
+           retval = pm_process(config_file, do_section, do_parameter);
+           DEBUG(10, ("pm_process returned %d\n", retval));
+ 	  if (!retval) vscan_syslog("ERROR: could not parse configuration file '%s'. File not found or not read-able. Using compiled-in defaults", config_file);
+-	#endif
+ 
+         /* initialise lrufiles list */
+         DEBUG(5, ("init lrufiles list\n"));
+--- ./VFS/configure.in.osr5	2005-02-25 09:59:51.000000000 -0800
++++ ./VFS/configure.in	2005-06-28 11:11:46.000000000 -0700
+@@ -175,7 +175,7 @@
+ 
+ # these are the defaults, good for lots of systems
+ HOST_OS="$host_os"
+-LDSHFLAGS="-shared"
++LDSHFLAGS="-G"
+ SONAMEFLAG="#"
+ SHLD="\${CC}"
+ PICFLAGS=""
+--- ./VFS/autogen.sh.osr5	2005-02-25 09:59:51.000000000 -0800
++++ ./VFS/autogen.sh	2005-06-28 11:11:46.000000000 -0700
+@@ -49,8 +49,8 @@
+ 
+ rm -rf autom4te*.cache
+ 
+-echo "$0: running $AUTOHEADER"
+-$AUTOHEADER || exit 1
++#echo "$0: running $AUTOHEADER"
++#$AUTOHEADER || exit 1
+ 
+ echo "$0: running $AUTOCONF"
+ $AUTOCONF || exit 1
+--- ./VFS/skel_opaque.c.osr5	2005-02-25 09:59:51.000000000 -0800
++++ ./VFS/skel_opaque.c	2005-06-28 11:11:46.000000000 -0700
+@@ -83,7 +83,7 @@
+ 
+ static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+ {
+-	return vfswrap_seekdir(NULL, conn, dirp, offset);
++	vfswrap_seekdir(NULL, conn, dirp, offset);
+ }
+ 
+ static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+@@ -93,7 +93,7 @@
+ 
+ static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+ {
+-	return vfswrap_rewinddir(NULL, conn, dirp);
++	vfswrap_rewinddir(NULL, conn, dirp);
+ }
+ 
+ static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- ./VFS/skel_transparent.c.osr5	2005-02-25 09:59:51.000000000 -0800
++++ ./VFS/skel_transparent.c	2005-06-28 11:11:46.000000000 -0700
+@@ -82,7 +82,7 @@
+ 
+ static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+ {
+-	return SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
++	SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
+ }
+ 
+ static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+@@ -92,7 +92,7 @@
+ 
+ static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+ {
+-	return SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
++	SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
+ }
+ 
+ static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- ./pdb/Makefile.osr5	2005-02-25 09:59:51.000000000 -0800
++++ ./pdb/Makefile	2005-06-28 11:11:46.000000000 -0700
+@@ -15,10 +15,16 @@
+ 
+ default: $(PDB_OBJS)
+ 
++test.la: libtest.la
++	cp libtest.la test.la
++
++libtest.la: test.lo
++	$(LIBTOOL) --mode=link $(CC) -G -o $@ test.lo $(LDFLAGS)
++
+ # Pattern rules
+ 
+ %.la: %.lo
+-	$(LIBTOOL) --mode=link $(CC) -module -o $@ $< $(LDFLAGS) -rpath /usr/lib/samba/pdb/
++	$(LIBTOOL) --mode=link $(CC) -G -o $@ $< $(LDFLAGS)
+ 
+ %.lo: %.c
+ 	$(LIBTOOL) --mode=compile $(CC) $(CPPFLAGS) $(CFLAGS) -c $<

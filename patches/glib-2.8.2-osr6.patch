@@ -1,0 +1,329 @@
+*** ./configure.osr6	Mon Sep 26 09:23:37 2005
+--- ./configure	Fri Sep 30 21:15:15 2005
+***************
+*** 6733,6745 ****
+  	 || test "$gt_cv_func_ngettext_libc" != "yes" \
+           || test "$ac_cv_func_bind_textdomain_codeset" != "yes" ; then
+  
+!         echo "$as_me:$LINENO: checking for bindtextdomain in -lintl" >&5
+! echo $ECHO_N "checking for bindtextdomain in -lintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_bindtextdomain+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6733,6745 ----
+  	 || test "$gt_cv_func_ngettext_libc" != "yes" \
+           || test "$ac_cv_func_bind_textdomain_codeset" != "yes" ; then
+  
+!         echo "$as_me:$LINENO: checking for bindtextdomain in -lgnuintl" >&5
+! echo $ECHO_N "checking for bindtextdomain in -lgnuintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_bindtextdomain+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgnuintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6798,6810 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_bindtextdomain" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_bindtextdomain" >&6
+  if test $ac_cv_lib_intl_bindtextdomain = yes; then
+!   echo "$as_me:$LINENO: checking for ngettext in -lintl" >&5
+! echo $ECHO_N "checking for ngettext in -lintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6798,6810 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_bindtextdomain" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_bindtextdomain" >&6
+  if test $ac_cv_lib_intl_bindtextdomain = yes; then
+!   echo "$as_me:$LINENO: checking for ngettext in -lgnuintl" >&5
+! echo $ECHO_N "checking for ngettext in -lgnuintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgnuintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6863,6875 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_ngettext" >&6
+  if test $ac_cv_lib_intl_ngettext = yes; then
+!   echo "$as_me:$LINENO: checking for dgettext in -lintl" >&5
+! echo $ECHO_N "checking for dgettext in -lintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_dgettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6863,6875 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_ngettext" >&6
+  if test $ac_cv_lib_intl_ngettext = yes; then
+!   echo "$as_me:$LINENO: checking for dgettext in -lgnuintl" >&5
+! echo $ECHO_N "checking for dgettext in -lgnuintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_dgettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgnuintl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6941,6953 ****
+  echo $ECHO_N "checking if -liconv is needed to use gettext... $ECHO_C" >&6
+  	  echo "$as_me:$LINENO: result: " >&5
+  echo "${ECHO_T}" >&6
+!   	  echo "$as_me:$LINENO: checking for ngettext in -lintl" >&5
+! echo $ECHO_N "checking for ngettext in -lintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lintl -liconv $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6941,6953 ----
+  echo $ECHO_N "checking if -liconv is needed to use gettext... $ECHO_C" >&6
+  	  echo "$as_me:$LINENO: result: " >&5
+  echo "${ECHO_T}" >&6
+!   	  echo "$as_me:$LINENO: checking for ngettext in -lgnuintl" >&5
+! echo $ECHO_N "checking for ngettext in -lgnuintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgnuintl -liconv $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 7006,7018 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_ngettext" >&6
+  if test $ac_cv_lib_intl_ngettext = yes; then
+!   echo "$as_me:$LINENO: checking for dcgettext in -lintl" >&5
+! echo $ECHO_N "checking for dcgettext in -lintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_dcgettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lintl -liconv $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 7006,7018 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+  echo "${ECHO_T}$ac_cv_lib_intl_ngettext" >&6
+  if test $ac_cv_lib_intl_ngettext = yes; then
+!   echo "$as_me:$LINENO: checking for dcgettext in -lgnuintl" >&5
+! echo $ECHO_N "checking for dcgettext in -lgnuintl... $ECHO_C" >&6
+  if test "${ac_cv_lib_intl_dcgettext+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgnuintl -liconv $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 7090,7096 ****
+          #
+          if test "$gt_cv_func_dgettext_libintl" = "yes" ; then
+            glib_save_LIBS="$LIBS"
+!           LIBS="$LIBS -lintl $libintl_extra_libs"
+            unset ac_cv_func_bind_textdomain_codeset
+  
+  for ac_func in bind_textdomain_codeset
+--- 7090,7096 ----
+          #
+          if test "$gt_cv_func_dgettext_libintl" = "yes" ; then
+            glib_save_LIBS="$LIBS"
+!           LIBS="$LIBS -lgnuintl $libintl_extra_libs"
+            unset ac_cv_func_bind_textdomain_codeset
+  
+  for ac_func in bind_textdomain_codeset
+***************
+*** 7213,7219 ****
+        fi
+  
+        if test "$gt_cv_func_dgettext_libintl" = "yes"; then
+!         INTLLIBS="-lintl $libintl_extra_libs"
+        fi
+  
+        if test "$gt_cv_have_gettext" = "yes"; then
+--- 7213,7219 ----
+        fi
+  
+        if test "$gt_cv_func_dgettext_libintl" = "yes"; then
+!         INTLLIBS="-lgnuintl $libintl_extra_libs"
+        fi
+  
+        if test "$gt_cv_have_gettext" = "yes"; then
+***************
+*** 8226,8232 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 8226,8232 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 8234,8240 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 8234,8240 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 10865,10871 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 10865,10871 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 11542,11550 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 11542,11549 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 17969,17975 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 17968,17974 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 33958,33964 ****
+  		fi
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+  		;;
+! 	*-sysv5uw7*) # UnixWare 7
+  		# We are not using gcc with -pthread. Catched above.
+  		G_THREAD_CFLAGS="-Kthread"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+--- 33957,33963 ----
+  		fi
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+  		;;
+! 	*-sysv5*) # UnixWare 7
+  		# We are not using gcc with -pthread. Catched above.
+  		G_THREAD_CFLAGS="-Kthread"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+*** ./Configure-OSR6.osr6	Fri Sep 30 21:15:15 2005
+--- ./Configure-OSR6	Fri Sep 30 21:15:15 2005
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --sysconfdir=/etc \
++             --with-threads=posix \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Fri Sep 30 21:16:57 2005
+--- ./Install-OSR6	Fri Sep 30 21:17:10 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/glib
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

@@ -1,0 +1,64 @@
+
+This is a general Serpinski Gasket generator. It was originally written and 
+posted to alt.fractals by Cloister Bell (cloister@milton.u.washington.edu). 
+It was almost completely rewritten by Ron Record (rr@sco.com) in July of 1991.
+
+Usage includes :
+
+gasket [-MCRWiu][-S skipnum][-f file][-n numpts][-N numgen][-h high][-w wide]
+	where: -M indicates Monochrome
+	-C indicates cycle thru saved data files
+	-R indicates pick parameters at random
+	-W indicates write out parameters each run
+	-i indicates infinite mode
+	-r recalls saved parameters in $HOME/.gasket
+	-u displays this message
+	skipnum is the number of points to skip before drawing
+	numpts is the number of points per loop (no events processed)
+	numgen is the number of loops per gasket
+	high and wide indicate the height and width of the window
+
+So, some interesting invocations of gasket might include :
+
+	% gasket -R -N 3 -i
+	% gasket -C -N 4
+
+The first would produce random gaskets with only 3 loops of 10000 points each.
+It would keep on going forever. The second would cycle through all the stored
+data files in /usr/local/lib/gasket, exiting after the last entry in the
+directory is read and displayed. I sometimes use the "-S 20000" option to skip
+over the first 20000 points, thereby reducing the initial "noise".
+
+While running, you can control gasket by either the keyboard or mouse. The
+following commands are currently supported :
+
+Button 1 or 'c' or 'C' will clear the gasket window
+Button 2 or 'w' or 'W' will write out the parameters of the currently displayed
+	gasket to the file $(HOME)/.gasket. You can then recall this gasket by
+	running "gasket -r" or save it to /usr/local/lib/gasket.
+Button 3 or 'q' or 'Q' causes gasket to exit.
+
+The format of the data files is as follows :
+
+	number of vertices (integer)
+	coordinates of vertex #1 ( pair of integers)
+	coordinates of vertex #2 ( pair of integers)
+	:
+	:
+	coordinates of vertex #n ( pair of integers)
+	n by n matrix of 0's and 1's indicating which vertices are connected
+
+For example, the data file for the standard Serpenski gasket is :
+
+	3
+	250 33
+	500 466
+	0 466
+	1 1 1
+	1 1 1
+	1 1 1
+
+
+Ron Record
+rr@sco.com
+11-Jul-91

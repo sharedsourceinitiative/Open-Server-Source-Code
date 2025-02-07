@@ -1,0 +1,33 @@
+--- ./Makefile.in.00	2001-09-26 20:35:05.000000000 +0000
++++ ./Makefile.in	2003-09-11 02:50:28.180000018 +0000
+@@ -132,10 +132,9 @@
+ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+ 	cd $(top_builddir) && \
+ 	  CONFIG_HEADERS= CONFIG_LINKS= \
+-	  CONFIG_FILES=$@ $(SHELL) ./config.status
++	  CONFIG_FILES=$@
+ 
+ $(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+-	$(SHELL) ./config.status --recheck
+ $(srcdir)/configure:  $(srcdir)/configure.ac $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
+ 	cd $(srcdir) && $(AUTOCONF)
+ 
+@@ -150,8 +149,7 @@
+ 	@rm -f stamp-h stamp-hT
+ 	@echo timestamp > stamp-hT 2> /dev/null
+ 	cd $(top_builddir) \
+-	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
+-	     $(SHELL) ./config.status
++	  && CONFIG_FILES= CONFIG_HEADERS=config.h
+ 	@mv stamp-hT stamp-h
+ $(srcdir)/config.h.in:  $(srcdir)/./stamp-h.in
+ 	@if test ! -f $@; then \
+@@ -167,7 +165,7 @@
+ distclean-hdr:
+ 	-rm -f config.h
+ intl/Makefile: $(top_builddir)/config.status $(top_srcdir)/intl/Makefile.in
+-	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
++	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= CONFIG_LINKS=
+ uninstall-info-am:
+ 
+ # This directory's subdirectories are mostly independent; you can cd

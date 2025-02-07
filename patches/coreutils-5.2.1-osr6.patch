@@ -1,0 +1,454 @@
+*** ./src/dd.c.osr6	Wed Jan 21 14:27:02 2004
+--- ./src/dd.c	Fri Jul  1 00:46:03 2005
+***************
+*** 23,29 ****
+  #define SWAB_ALIGN_OFFSET 2
+  
+  #include <sys/types.h>
+! #include <signal.h>
+  #include <getopt.h>
+  
+  #include "system.h"
+--- 23,29 ----
+  #define SWAB_ALIGN_OFFSET 2
+  
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  #include <getopt.h>
+  
+  #include "system.h"
+*** ./src/ls.c.osr6	Fri Feb 20 12:54:02 2004
+--- ./src/ls.c	Fri Jul  1 00:46:03 2005
+***************
+*** 58,64 ****
+  #include <grp.h>
+  #include <pwd.h>
+  #include <getopt.h>
+! #include <signal.h>
+  
+  /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
+  #if HAVE_WCHAR_H
+--- 58,64 ----
+  #include <grp.h>
+  #include <pwd.h>
+  #include <getopt.h>
+! #include <sys/signal.h>
+  
+  /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
+  #if HAVE_WCHAR_H
+*** ./src/nohup.c.osr6	Thu Mar  4 00:41:15 2004
+--- ./src/nohup.c	Fri Jul  1 00:46:03 2005
+***************
+*** 20,26 ****
+  #include <config.h>
+  #include <stdio.h>
+  #include <sys/types.h>
+! #include <signal.h>
+  
+  #include "system.h"
+  
+--- 20,26 ----
+  #include <config.h>
+  #include <stdio.h>
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  
+  #include "system.h"
+  
+*** ./src/csplit.c.osr6	Wed Jan 21 14:27:02 2004
+--- ./src/csplit.c	Fri Jul  1 00:46:03 2005
+***************
+*** 23,29 ****
+  #include <stdio.h>
+  #include <getopt.h>
+  #include <sys/types.h>
+! #include <signal.h>
+  
+  #include "system.h"
+  
+--- 23,29 ----
+  #include <stdio.h>
+  #include <getopt.h>
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  
+  #include "system.h"
+  
+*** ./src/sort.c.osr6	Tue Feb 17 02:47:35 2004
+--- ./src/sort.c	Fri Jul  1 00:46:03 2005
+***************
+*** 25,31 ****
+  
+  #include <getopt.h>
+  #include <sys/types.h>
+! #include <signal.h>
+  #include <stdio.h>
+  #include "system.h"
+  #include "error.h"
+--- 25,31 ----
+  
+  #include <getopt.h>
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  #include <stdio.h>
+  #include "system.h"
+  #include "error.h"
+*** ./src/tee.c.osr6	Wed Jan 21 14:27:02 2004
+--- ./src/tee.c	Fri Jul  1 00:46:03 2005
+***************
+*** 20,26 ****
+  #include <config.h>
+  #include <stdio.h>
+  #include <sys/types.h>
+! #include <signal.h>
+  #include <getopt.h>
+  
+  #include "system.h"
+--- 20,26 ----
+  #include <config.h>
+  #include <stdio.h>
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  #include <getopt.h>
+  
+  #include "system.h"
+*** ./man/Makefile.in.osr6	Thu Mar 11 00:58:00 2004
+--- ./man/Makefile.in	Fri Jul  1 00:46:03 2005
+***************
+*** 600,615 ****
+  # That is necessary to avoid failures for programs that are also shell built-in
+  # functions like echo, false, printf, pwd.
+  .x.1:
+! 	@rm -f $@
+! 	@echo "Updating man page $@";		\
+! 	mkdir $t;				\
+! 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
+! 	$(PERL) -- $(srcdir)/help2man		\
+! 	    --info-page='$(PACKAGE) $*'		\
+! 	    --include=$(srcdir)/$*.x		\
+! 	    --output=$@ $t/$*$(EXEEXT)
+  	@chmod a-w $@
+- 	@rm -rf $t
+  
+  check-local: check-x-vs-1 check-programs-vs-x
+  
+--- 600,608 ----
+  # That is necessary to avoid failures for programs that are also shell built-in
+  # functions like echo, false, printf, pwd.
+  .x.1:
+! 	@touch $@
+! 	@echo "Updating man page $@"
+  	@chmod a-w $@
+  
+  check-local: check-x-vs-1 check-programs-vs-x
+  
+*** ./Configure-OSR6.osr6	Fri Jul  1 00:46:03 2005
+--- ./Configure-OSR6	Fri Jul  1 00:46:03 2005
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr/gnu --with-libintl-prefix=/usr/gnu --without-gnu-ld \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.00	2005-07-01 01:37:07.000000000 -0700
++++ Install-OSR6	2005-07-01 01:36:54.710000002 -0700
+@@ -0,0 +1,9 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/coreutils
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
+--- src/Makefile.in.osr6	2004-03-11 00:59:23.000000000 -0800
++++ src/Makefile.in	2005-07-01 01:30:33.160000043 -0700
+@@ -16,7 +16,7 @@
+ 
+ 
+ 
+-SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
++SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) sleep.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+ 
+ srcdir = @srcdir@
+ top_srcdir = @top_srcdir@
+@@ -46,15 +46,15 @@
+ 	ginstall$(EXEEXT) link$(EXEEXT) ln$(EXEEXT) dir$(EXEEXT) \
+ 	vdir$(EXEEXT) ls$(EXEEXT) mkdir$(EXEEXT) mkfifo$(EXEEXT) \
+ 	mknod$(EXEEXT) mv$(EXEEXT) nohup$(EXEEXT) readlink$(EXEEXT) \
+-	rm$(EXEEXT) rmdir$(EXEEXT) shred$(EXEEXT) stat$(EXEEXT) \
++	rm$(EXEEXT) rmdir$(EXEEXT) stat$(EXEEXT) \
+ 	sync$(EXEEXT) touch$(EXEEXT) unlink$(EXEEXT) cat$(EXEEXT) \
+-	cksum$(EXEEXT) comm$(EXEEXT) csplit$(EXEEXT) cut$(EXEEXT) \
+-	expand$(EXEEXT) fmt$(EXEEXT) fold$(EXEEXT) head$(EXEEXT) \
++	cksum$(EXEEXT) comm$(EXEEXT) cut$(EXEEXT) \
++	expand$(EXEEXT) head$(EXEEXT) \
+ 	join$(EXEEXT) md5sum$(EXEEXT) nl$(EXEEXT) od$(EXEEXT) \
+ 	paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) sha1sum$(EXEEXT) \
+-	sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) tac$(EXEEXT) \
++	split$(EXEEXT) sum$(EXEEXT) tac$(EXEEXT) \
+ 	tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) unexpand$(EXEEXT) \
+-	uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) date$(EXEEXT) \
++	wc$(EXEEXT) basename$(EXEEXT) date$(EXEEXT) \
+ 	dirname$(EXEEXT) echo$(EXEEXT) env$(EXEEXT) expr$(EXEEXT) \
+ 	factor$(EXEEXT) false$(EXEEXT) hostname$(EXEEXT) id$(EXEEXT) \
+ 	kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
+@@ -223,11 +223,6 @@
+ cp_LDADD = $(LDADD)
+ cp_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+ 	../lib/libfetish.a
+-csplit_SOURCES = csplit.c
+-csplit_OBJECTS = csplit.$(OBJEXT)
+-csplit_LDADD = $(LDADD)
+-csplit_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+-	../lib/libfetish.a
+ cut_SOURCES = cut.c
+ cut_OBJECTS = cut.$(OBJEXT)
+ cut_LDADD = $(LDADD)
+@@ -294,16 +289,6 @@
+ false_LDADD = $(LDADD)
+ false_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+ 	../lib/libfetish.a
+-fmt_SOURCES = fmt.c
+-fmt_OBJECTS = fmt.$(OBJEXT)
+-fmt_LDADD = $(LDADD)
+-fmt_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+-	../lib/libfetish.a
+-fold_SOURCES = fold.c
+-fold_OBJECTS = fold.$(OBJEXT)
+-fold_LDADD = $(LDADD)
+-fold_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+-	../lib/libfetish.a
+ am_ginstall_OBJECTS = install.$(OBJEXT) copy.$(OBJEXT) \
+ 	cp-hash.$(OBJEXT)
+ ginstall_OBJECTS = $(am_ginstall_OBJECTS)
+@@ -471,18 +456,12 @@
+ sha1sum_LDADD = $(LDADD)
+ sha1sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+ 	../lib/libfetish.a
+-shred_SOURCES = shred.c
+-shred_OBJECTS = shred.$(OBJEXT)
+-shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ sleep_SOURCES = sleep.c
+ sleep_OBJECTS = sleep.$(OBJEXT)
+ am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1)
+ sleep_DEPENDENCIES = $(am__DEPENDENCIES_3)
+-sort_SOURCES = sort.c
+-sort_OBJECTS = sort.$(OBJEXT)
+-sort_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ split_SOURCES = split.c
+ split_OBJECTS = split.$(OBJEXT)
+ split_LDADD = $(LDADD)
+@@ -564,11 +543,6 @@
+ unexpand_LDADD = $(LDADD)
+ unexpand_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+ 	../lib/libfetish.a
+-uniq_SOURCES = uniq.c
+-uniq_OBJECTS = uniq.$(OBJEXT)
+-uniq_LDADD = $(LDADD)
+-uniq_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+-	../lib/libfetish.a
+ unlink_SOURCES = unlink.c
+ unlink_OBJECTS = unlink.$(OBJEXT)
+ unlink_LDADD = $(LDADD)
+@@ -616,14 +590,13 @@
+ @AMDEP_TRUE@	./$(DEPDIR)/chroot.Po ./$(DEPDIR)/cksum.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/comm.Po ./$(DEPDIR)/copy.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/cp-hash.Po ./$(DEPDIR)/cp.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/csplit.Po ./$(DEPDIR)/cut.Po \
++@AMDEP_TRUE@	./$(DEPDIR)/cut.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/date.Po ./$(DEPDIR)/dd.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/df.Po ./$(DEPDIR)/dircolors.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/dirname.Po ./$(DEPDIR)/du.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/echo.Po ./$(DEPDIR)/env.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/expand.Po ./$(DEPDIR)/expr.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/factor.Po ./$(DEPDIR)/false.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/fmt.Po ./$(DEPDIR)/fold.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/head.Po ./$(DEPDIR)/hostid.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/hostname.Po ./$(DEPDIR)/id.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/install.Po ./$(DEPDIR)/join.Po \
+@@ -644,8 +617,8 @@
+ @AMDEP_TRUE@	./$(DEPDIR)/remove.Po ./$(DEPDIR)/rm.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/rmdir.Po ./$(DEPDIR)/seq.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/setuidgid.Po ./$(DEPDIR)/sha1sum.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/shred.Po ./$(DEPDIR)/sleep.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/sort.Po ./$(DEPDIR)/split.Po \
++@AMDEP_TRUE@	./$(DEPDIR)/sleep.Po \
++@AMDEP_TRUE@	./$(DEPDIR)/split.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stty.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/su.Po ./$(DEPDIR)/sum.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/sync.Po ./$(DEPDIR)/tac.Po \
+@@ -654,7 +627,7 @@
+ @AMDEP_TRUE@	./$(DEPDIR)/tr.Po ./$(DEPDIR)/true.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/tsort.Po ./$(DEPDIR)/tty.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/uname.Po ./$(DEPDIR)/unexpand.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/uniq.Po ./$(DEPDIR)/unlink.Po \
++@AMDEP_TRUE@	./$(DEPDIR)/unlink.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/uptime.Po ./$(DEPDIR)/users.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/wc.Po ./$(DEPDIR)/who.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/whoami.Po ./$(DEPDIR)/yes.Po
+@@ -664,31 +637,31 @@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
+ 	$(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
+-	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
++	cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
+ 	dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c \
+-	fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c \
++	$(ginstall_SOURCES) head.c hostid.c hostname.c \
+ 	id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) \
+ 	$(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) \
+ 	nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c \
+ 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
+-	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c \
+-	sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
++	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) sleep.c \
++	split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
+ 	tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c \
+-	unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) \
++	unexpand.c unlink.c uptime.c users.c $(vdir_SOURCES) \
+ 	wc.c who.c whoami.c yes.c
+ DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
+ 	$(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
+-	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
++	cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
+ 	dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c \
+-	fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c \
++	$(ginstall_SOURCES) head.c hostid.c hostname.c \
+ 	id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) \
+ 	$(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) \
+ 	nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c \
+ 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
+-	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c \
+-	sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
++	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) sleep.c \
++	split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
+ 	tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c \
+-	unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) \
++	unexpand.c unlink.c uptime.c users.c $(vdir_SOURCES) \
+ 	wc.c who.c whoami.c yes.c
+ HEADERS = $(noinst_HEADERS)
+ ETAGS = etags
+@@ -836,9 +809,7 @@
+ LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
+ dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+ ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+-shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+ vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+-sort_LDADD = $(LDADD) $(POW_LIB)
+ 
+ # for clock_gettime
+ date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+@@ -1023,9 +994,6 @@
+ cp$(EXEEXT): $(cp_OBJECTS) $(cp_DEPENDENCIES) 
+ 	@rm -f cp$(EXEEXT)
+ 	$(LINK) $(cp_LDFLAGS) $(cp_OBJECTS) $(cp_LDADD) $(LIBS)
+-csplit$(EXEEXT): $(csplit_OBJECTS) $(csplit_DEPENDENCIES) 
+-	@rm -f csplit$(EXEEXT)
+-	$(LINK) $(csplit_LDFLAGS) $(csplit_OBJECTS) $(csplit_LDADD) $(LIBS)
+ cut$(EXEEXT): $(cut_OBJECTS) $(cut_DEPENDENCIES) 
+ 	@rm -f cut$(EXEEXT)
+ 	$(LINK) $(cut_LDFLAGS) $(cut_OBJECTS) $(cut_LDADD) $(LIBS)
+@@ -1068,12 +1036,6 @@
+ false$(EXEEXT): $(false_OBJECTS) $(false_DEPENDENCIES) 
+ 	@rm -f false$(EXEEXT)
+ 	$(LINK) $(false_LDFLAGS) $(false_OBJECTS) $(false_LDADD) $(LIBS)
+-fmt$(EXEEXT): $(fmt_OBJECTS) $(fmt_DEPENDENCIES) 
+-	@rm -f fmt$(EXEEXT)
+-	$(LINK) $(fmt_LDFLAGS) $(fmt_OBJECTS) $(fmt_LDADD) $(LIBS)
+-fold$(EXEEXT): $(fold_OBJECTS) $(fold_DEPENDENCIES) 
+-	@rm -f fold$(EXEEXT)
+-	$(LINK) $(fold_LDFLAGS) $(fold_OBJECTS) $(fold_LDADD) $(LIBS)
+ ginstall$(EXEEXT): $(ginstall_OBJECTS) $(ginstall_DEPENDENCIES) 
+ 	@rm -f ginstall$(EXEEXT)
+ 	$(LINK) $(ginstall_LDFLAGS) $(ginstall_OBJECTS) $(ginstall_LDADD) $(LIBS)
+@@ -1176,15 +1138,9 @@
+ sha1sum$(EXEEXT): $(sha1sum_OBJECTS) $(sha1sum_DEPENDENCIES) 
+ 	@rm -f sha1sum$(EXEEXT)
+ 	$(LINK) $(sha1sum_LDFLAGS) $(sha1sum_OBJECTS) $(sha1sum_LDADD) $(LIBS)
+-shred$(EXEEXT): $(shred_OBJECTS) $(shred_DEPENDENCIES) 
+-	@rm -f shred$(EXEEXT)
+-	$(LINK) $(shred_LDFLAGS) $(shred_OBJECTS) $(shred_LDADD) $(LIBS)
+ sleep$(EXEEXT): $(sleep_OBJECTS) $(sleep_DEPENDENCIES) 
+ 	@rm -f sleep$(EXEEXT)
+ 	$(LINK) $(sleep_LDFLAGS) $(sleep_OBJECTS) $(sleep_LDADD) $(LIBS)
+-sort$(EXEEXT): $(sort_OBJECTS) $(sort_DEPENDENCIES) 
+-	@rm -f sort$(EXEEXT)
+-	$(LINK) $(sort_LDFLAGS) $(sort_OBJECTS) $(sort_LDADD) $(LIBS)
+ split$(EXEEXT): $(split_OBJECTS) $(split_DEPENDENCIES) 
+ 	@rm -f split$(EXEEXT)
+ 	$(LINK) $(split_LDFLAGS) $(split_OBJECTS) $(split_LDADD) $(LIBS)
+@@ -1236,9 +1192,6 @@
+ unexpand$(EXEEXT): $(unexpand_OBJECTS) $(unexpand_DEPENDENCIES) 
+ 	@rm -f unexpand$(EXEEXT)
+ 	$(LINK) $(unexpand_LDFLAGS) $(unexpand_OBJECTS) $(unexpand_LDADD) $(LIBS)
+-uniq$(EXEEXT): $(uniq_OBJECTS) $(uniq_DEPENDENCIES) 
+-	@rm -f uniq$(EXEEXT)
+-	$(LINK) $(uniq_LDFLAGS) $(uniq_OBJECTS) $(uniq_LDADD) $(LIBS)
+ unlink$(EXEEXT): $(unlink_OBJECTS) $(unlink_DEPENDENCIES) 
+ 	@rm -f unlink$(EXEEXT)
+ 	$(LINK) $(unlink_LDFLAGS) $(unlink_OBJECTS) $(unlink_LDADD) $(LIBS)
+@@ -1315,7 +1268,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/copy.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp-hash.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csplit.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cut.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/date.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dd.Po@am__quote@
+@@ -1329,8 +1281,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expr.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/factor.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/false.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fmt.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fold.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/head.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostid.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostname.Po@am__quote@
+@@ -1371,9 +1321,7 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seq.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setuidgid.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sort.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/split.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stty.Po@am__quote@
+@@ -1391,7 +1339,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tty.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uname.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unexpand.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uniq.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unlink.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uptime.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/users.Po@am__quote@
+--- config.hin.00	2004-03-11 00:59:16.000000000 -0800
++++ config.hin	2005-07-01 11:31:30.440000032 -0700
+@@ -1309,10 +1309,6 @@
+ /* Define to 1 if strerror_r returns char *. */
+ #undef STRERROR_R_CHAR_P
+ 
+-/* Define to be the nanoseconds member of struct stat's st_mtim, if it exists.
+-   */
+-#undef ST_MTIM_NSEC
+-
+ /* Define to 1 on System V Release 4. */
+ #undef SVR4
+ 

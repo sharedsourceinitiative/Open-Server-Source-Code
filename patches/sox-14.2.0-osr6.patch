@@ -1,0 +1,63 @@
+--- ./src/Makefile.in.00	2008-11-08 08:46:05.000000000 -0800
++++ ./src/Makefile.in	2008-11-21 12:07:30.890000116 -0800
+@@ -2139,11 +2139,11 @@
+ @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) $(CFLAGS) -c -o libsox_la-rabbit.lo `test -f 'rabbit.c' || echo '$(srcdir)/'`rabbit.c
+ 
+ libsox_la-rate.lo: rate.c
+-@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) $(CFLAGS) -MT libsox_la-rate.lo -MD -MP -MF $(DEPDIR)/libsox_la-rate.Tpo -c -o libsox_la-rate.lo `test -f 'rate.c' || echo '$(srcdir)/'`rate.c
++@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) -D_PRIV_T -MT libsox_la-rate.lo -MD -MP -MF $(DEPDIR)/libsox_la-rate.Tpo -c -o libsox_la-rate.lo `test -f 'rate.c' || echo '$(srcdir)/'`rate.c
+ @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libsox_la-rate.Tpo $(DEPDIR)/libsox_la-rate.Plo
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='rate.c' object='libsox_la-rate.lo' libtool=yes @AMDEPBACKSLASH@
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) $(CFLAGS) -c -o libsox_la-rate.lo `test -f 'rate.c' || echo '$(srcdir)/'`rate.c
++@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) -D_PRIV_T -c -o libsox_la-rate.lo `test -f 'rate.c' || echo '$(srcdir)/'`rate.c
+ 
+ libsox_la-remix.lo: remix.c
+ @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsox_la_CFLAGS) $(CFLAGS) -MT libsox_la-remix.lo -MD -MP -MF $(DEPDIR)/libsox_la-remix.Tpo -c -o libsox_la-remix.lo `test -f 'remix.c' || echo '$(srcdir)/'`remix.c
+--- ./Configure-OSR6.00	2008-11-21 12:07:30.900000017 -0800
++++ ./Configure-OSR6	2008-11-21 12:09:35.400000011 -0800
+@@ -0,0 +1,20 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2 -D_PRIV_T"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kinline -Kpthread -Kalloca"
++  CXX="CC -Kinline -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM M4 INSTALL
++rm -f mout-configure
++./configure --prefix=/usr --program-prefix="" \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2008-11-21 12:07:30.900000031 -0800
++++ ./Install-OSR6	2008-11-21 12:07:30.900000028 -0800
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/sox
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install prefix=$D/usr 2>&1 | tee $MOUT
++
+--- ./configure.00	2008-11-08 08:46:01.000000000 -0800
++++ ./configure	2008-11-21 12:07:31.790000094 -0800
+@@ -23507,7 +23507,7 @@
+ 
+ else
+ 
+-for ac_header in sun/audioio.h
++for ac_header in arts/audioio.h
+ do
+ as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then

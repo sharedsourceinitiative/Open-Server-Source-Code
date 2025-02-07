@@ -1,0 +1,127 @@
+*** ./srcunx/unx.mak.osr6	Fri Nov 26 21:51:26 2004
+--- ./srcunx/unx.mak	Thu Nov  6 10:56:49 2008
+***************
+*** 20,26 ****
+  # WARNING: Doesn't install pstotext
+  
+  prefix=
+! GSVIEW_ROOT=/usr/local
+  GSVIEW_BASE=$(prefix)$(GSVIEW_ROOT)
+  
+  
+--- 20,26 ----
+  # WARNING: Doesn't install pstotext
+  
+  prefix=
+! GSVIEW_ROOT=/usr
+  GSVIEW_BASE=$(prefix)$(GSVIEW_ROOT)
+  
+  
+***************
+*** 39,57 ****
+  GSVIEW_ETCPATH=$(prefix)/etc
+  
+  MAKE=make
+! CC=gcc
+  OBJ=o
+  INSTALL=install -m 644
+  INSTALL_EXE=install -m 755
+! #CDEBUG=
+  #LDEBUG=
+! CDEBUG=-g
+  LDEBUG=
+  
+! # Linux
+! XINCLUDE=
+  PFLAGS=-DMULTITHREAD
+! PLINK=-lpthread -lrt
+  
+  # SunOS 5.7
+  #XINCLUDE=-I/usr/openwin/share/lib
+--- 39,62 ----
+  GSVIEW_ETCPATH=$(prefix)/etc
+  
+  MAKE=make
+! CC=cc -Kpthread
+  OBJ=o
+  INSTALL=install -m 644
+  INSTALL_EXE=install -m 755
+! CDEBUG=
+  #LDEBUG=
+! #CDEBUG=-g
+  LDEBUG=
+  
+! # SCO
+! XINCLUDE=-I/usr/X11R6/include
+  PFLAGS=-DMULTITHREAD
+! PLINK=-L/usr/X11R6/lib
+! 
+! # Linux
+! #XINCLUDE=
+! #PFLAGS=-DMULTITHREAD
+! #PLINK=-lpthread -lrt
+  
+  # SunOS 5.7
+  #XINCLUDE=-I/usr/openwin/share/lib
+***************
+*** 77,83 ****
+  
+  # Other possible options are -Wtraditional
+  # Compiler flags for C and C++ files.
+! CFLAGS=-O -Wall -Wstrict-prototypes -Wmissing-declarations -Wmissing-prototypes -fno-builtin -fno-common -Wcast-qual -Wwrite-strings $(CDEBUG) -DX11 -DUNIX -DNONAG $(RPM_OPT_FLAGS) `gtk-config --cflags` $(XINCLUDE) $(PFLAGS)
+  
+  # Linker flags
+  LFLAGS=$(LDEBUG) $(PLINK) `gtk-config --libs`
+--- 82,88 ----
+  
+  # Other possible options are -Wtraditional
+  # Compiler flags for C and C++ files.
+! CFLAGS=-O $(CDEBUG) -DX11 -DUNIX -DNONAG $(RPM_OPT_FLAGS) `gtk-config --cflags` $(XINCLUDE) $(PFLAGS)
+  
+  # Linker flags
+  LFLAGS=$(LDEBUG) $(PLINK) `gtk-config --libs`
+***************
+*** 107,113 ****
+  RM=rm
+  
+  # if you have a strict ANSI compiler, add -D__STDC__
+! EPSDEF=-I$(SRC) -I/usr/openwin/include -DUNIX -DEPSTOOL -DHAVE_UNISTD_H
+  EPSLIBS=
+  EPSOBJ2=
+  
+--- 112,118 ----
+  RM=rm
+  
+  # if you have a strict ANSI compiler, add -D__STDC__
+! EPSDEF=-I$(SRC) -DUNIX -DEPSTOOL -DHAVE_UNISTD_H
+  EPSLIBS=
+  EPSOBJ2=
+  
+*** ./Build-OSR6.osr6	Thu Nov  6 10:53:30 2008
+--- ./Build-OSR6	Thu Nov  6 10:53:30 2008
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ cp srcunx/unx.mak Makefile
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Thu Nov  6 11:04:46 2008
+--- ./Install-OSR6	Thu Nov  6 11:05:13 2008
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gsview
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install prefix=$D 2>&1 | tee $MOUT
++ 

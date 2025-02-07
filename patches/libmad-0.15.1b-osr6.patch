@@ -1,0 +1,107 @@
+*** ./Install-OSR6.osr6	Mon May  5 19:12:01 2008
+--- ./Install-OSR6	Mon May  5 19:12:01 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/libmad
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.osr6	Thu Feb  5 01:34:07 2004
+--- ./configure	Mon May  5 19:12:01 2008
+***************
+*** 3595,3601 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3595,3601 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3603,3609 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3603,3609 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 6749,6755 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6749,6755 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7438,7446 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7438,7445 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 13598,13604 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 13597,13603 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2

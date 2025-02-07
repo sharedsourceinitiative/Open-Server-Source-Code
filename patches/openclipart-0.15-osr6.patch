@@ -1,0 +1,23 @@
+*** ./Build-OSR6.00	Fri Jul  8 20:03:34 2005
+--- ./Build-OSR6	Fri Jul  8 20:03:26 2005
+***************
+*** 0 ****
+--- 1,3 ----
++ #!/bin/sh
++ 
++ true
+*** ./Install-OSR6.00	Fri Jul  8 20:06:21 2005
+--- ./Install-OSR6	Fri Jul  8 20:06:18 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/openclipart
++ P=`pwd`
++ B=`basename $P`
++ 
++ rm -rf $D
++ mkdir -p $D/usr/share
++ 
++ cpiocopy ../$B $D/usr/share/openclipart

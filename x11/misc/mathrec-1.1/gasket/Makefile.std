@@ -1,0 +1,20 @@
+CC = cc  
+CFLAGS = 
+LIBS = -lm -lX11
+DESTBIN = /usr/bin/X11
+DESTLIB = /usr/bin/X11/lib/gasket
+
+gasket: gasket.o
+	$(CC) $(CFLAGS) -o gasket gasket.c $(LIBS)
+
+install: gasket
+	cp gasket $(DESTBIN)/gasket;
+	-mkdir -p $(DESTLIB)
+	cp lib/*.dat $(DESTLIB)
+
+clean:
+	rm -f gasket *.o
+
+uninstall:
+	cd $(DESTBIN); rm -f gasket
+	cd $(DESTLIB); rm -f *

@@ -1,0 +1,2953 @@
+*** ./Lib/distutils/util.py.osr6	Tue May 23 17:54:23 2006
+--- ./Lib/distutils/util.py	Wed May 16 15:34:21 2007
+***************
+*** 52,57 ****
+--- 52,60 ----
+          # i386, etc.
+          # XXX what about Alpha, SPARC, etc?
+          return  "%s-%s" % (osname, machine)
++     elif osname[:5] == "SCO_SV":
++         if release[0] >= "6":
++             osname = "unixware7"
+      elif osname[:5] == "sunos":
+          if release[0] >= "5":           # SunOS 5 == Solaris 2
+              osname = "solaris"
+*** ./Lib/plat-unixware7/regen.osr6	Tue Jul 31 04:47:55 2001
+--- ./Lib/plat-unixware7/regen	Wed May 16 15:34:21 2007
+***************
+*** 1,6 ****
+  #! /bin/sh
+! case `uname -sr` in
+  UnixWare*)	;;
+  *)	echo Probably not on a UnixWare system 1>&2
+  	exit 1;;
+  esac
+--- 1,7 ----
+  #! /bin/sh
+! case `uname -sv` in
+  UnixWare*)	;;
++ SCO_SV*6*)	;;
+  *)	echo Probably not on a UnixWare system 1>&2
+  	exit 1;;
+  esac
+*** ./Modules/socketmodule.c.osr6	Sat Mar 31 14:56:11 2007
+--- ./Modules/socketmodule.c	Wed May 16 15:34:21 2007
+***************
+*** 70,77 ****
+--- 70,86 ----
+  # pragma weak inet_aton
+  #endif
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  #include "structmember.h"
++ 
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
+  
+  #undef MAX
+  #define MAX(x, y) ((x) < (y) ? (y) : (x))
+*** ./Modules/_ssl.c.osr6	Mon Jul 10 22:04:09 2006
+--- ./Modules/_ssl.c	Wed May 16 15:34:21 2007
+***************
+*** 7,12 ****
+--- 7,13 ----
+  
+  */
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  enum py_ssl_error {
+  	/* these mirror ssl.h */
+*** ./Modules/_bsddb.c.osr6	Thu Jan  4 21:09:06 2007
+--- ./Modules/_bsddb.c	Wed May 16 15:34:21 2007
+***************
+*** 86,91 ****
+--- 86,92 ----
+  /* --------------------------------------------------------------------- */
+  
+  #include <stddef.h>   /* for offsetof() */
++ #include <sys/types.h>
+  #include <Python.h>
+  #include <db.h>
+  
+*** ./Modules/nismodule.c.osr6	Mon Feb 27 11:46:16 2006
+--- ./Modules/nismodule.c	Wed May 16 15:34:21 2007
+***************
+*** 10,19 ****
+  
+  /* NIS module implementation */
+  
+  #include "Python.h"
+  
+  #include <sys/time.h>
+- #include <sys/types.h>
+  #include <rpc/rpc.h>
+  #include <rpcsvc/yp_prot.h>
+  #include <rpcsvc/ypclnt.h>
+--- 10,19 ----
+  
+  /* NIS module implementation */
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  
+  #include <sys/time.h>
+  #include <rpc/rpc.h>
+  #include <rpcsvc/yp_prot.h>
+  #include <rpcsvc/ypclnt.h>
+*** ./Modules/posixmodule.c.osr6	Wed Apr  4 14:30:56 2007
+--- ./Modules/posixmodule.c	Wed May 16 15:34:21 2007
+***************
+*** 1298,1304 ****
+          PyStructSequence_SET_ITEM(v, 6, PyInt_FromLong(st->st_size));
+  #endif
+  
+! #if defined(HAVE_STAT_TV_NSEC)
+  	ansec = st->st_atim.tv_nsec;
+  	mnsec = st->st_mtim.tv_nsec;
+  	cnsec = st->st_ctim.tv_nsec;
+--- 1298,1304 ----
+          PyStructSequence_SET_ITEM(v, 6, PyInt_FromLong(st->st_size));
+  #endif
+  
+! #if defined(HAVE_STAT_TV_NSEC) && !defined(__USLC__)
+  	ansec = st->st_atim.tv_nsec;
+  	mnsec = st->st_mtim.tv_nsec;
+  	cnsec = st->st_ctim.tv_nsec;
+*** ./Modules/_cursesmodule.c.osr6	Tue Mar  6 15:46:26 2007
+--- ./Modules/_cursesmodule.c	Wed May 16 15:34:21 2007
+***************
+*** 2433,2439 ****
+      return NULL;
+    }
+  
+!   return PyString_FromString(unctrl(ch));
+  }
+  
+  static PyObject *
+--- 2433,2439 ----
+      return NULL;
+    }
+  
+!   return PyString_FromString((char *)unctrl(ch));
+  }
+  
+  static PyObject *
+*** ./configure.in.osr6	Mon Mar 12 06:50:51 2007
+--- ./configure.in	Wed May 16 15:34:21 2007
+***************
+*** 166,171 ****
+--- 166,178 ----
+  if test -z "$MACHDEP"
+  then
+  	ac_sys_system=`uname -s`
++ 	ac_sys_release=`uname -v`
++ 	if test "$ac_sys_system" = "SCO_SV"; then
++ 	    case $ac_sys_release in
++ 	    6*) ac_sys_system=UnixWare
++ 	        ;;
++ 	    esac
++ 	fi
+  	if test "$ac_sys_system" = "AIX" -o "$ac_sys_system" = "Monterey64" \
+  	-o "$ac_sys_system" = "UnixWare" -o "$ac_sys_system" = "OpenUNIX"; then
+  		ac_sys_release=`uname -v`
+***************
+*** 183,188 ****
+--- 190,196 ----
+  	darwin*) MACHDEP="darwin";;
+  	atheos*) MACHDEP="atheos";;
+          irix646) MACHDEP="irix6";;
++         unixware6) MACHDEP="sco_sv5";;
+  	'')	MACHDEP="unknown";;
+  	esac
+  fi
+***************
+*** 636,642 ****
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+  	  INSTSONAME="$LDLIBRARY".$SOVERSION
+            ;;
+!     Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*)
+  	  LDLIBRARY='libpython$(VERSION).so'
+  	  BLDLIBRARY='-L. -lpython$(VERSION)'
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+--- 644,650 ----
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+  	  INSTSONAME="$LDLIBRARY".$SOVERSION
+            ;;
+!     Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*|UnixWare*)
+  	  LDLIBRARY='libpython$(VERSION).so'
+  	  BLDLIBRARY='-L. -lpython$(VERSION)'
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+***************
+*** 835,841 ****
+  	BASECFLAGS="$BASECFLAGS -ieee -std"
+      	;;
+      SCO_SV*)
+! 	BASECFLAGS="$BASECFLAGS -belf -Ki486 -DSCO5"
+  	;;
+      esac
+      ;;
+--- 843,849 ----
+  	BASECFLAGS="$BASECFLAGS -ieee -std"
+      	;;
+      SCO_SV*)
+! 	BASECFLAGS="$BASECFLAGS -Ki486 -DSCO5"
+  	;;
+      esac
+      ;;
+***************
+*** 1526,1532 ****
+  	OpenUNIX*|UnixWare*)
+  		if test "$GCC" = "yes"
+  		then LDSHARED='$(CC) -shared'
+! 		else LDSHARED='$(CC) -G'
+  		fi;;
+  	SCO_SV*) LDSHARED='$(CC) -Wl,-G,-Bexport';;
+  	Monterey*) LDSHARED="cc -G -dy -Bdynamic -Bexport -L/usr/lib/ia64l64";;
+--- 1534,1540 ----
+  	OpenUNIX*|UnixWare*)
+  		if test "$GCC" = "yes"
+  		then LDSHARED='$(CC) -shared'
+! 		else LDSHARED='$(CC) -G -Wl,-Bexport'
+  		fi;;
+  	SCO_SV*) LDSHARED='$(CC) -Wl,-G,-Bexport';;
+  	Monterey*) LDSHARED="cc -G -dy -Bdynamic -Bexport -L/usr/lib/ia64l64";;
+***************
+*** 1564,1570 ****
+  	SCO_SV*)
+  		if test "$GCC" = "yes"
+  		then CCSHARED="-fPIC"
+! 		else CCSHARED="-Kpic -belf"
+  		fi;;
+  	Monterey*) CCSHARED="-G";;
+  	IRIX*/6*)  case $CC in
+--- 1572,1578 ----
+  	SCO_SV*)
+  		if test "$GCC" = "yes"
+  		then CCSHARED="-fPIC"
+! 		else CCSHARED="-Kpic"
+  		fi;;
+  	Monterey*) CCSHARED="-G";;
+  	IRIX*/6*)  case $CC in
+***************
+*** 2510,2515 ****
+--- 2518,2530 ----
+  AC_MSG_CHECKING(getaddrinfo bug)
+  AC_TRY_RUN([
+  #include <sys/types.h>
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
+  #include <netdb.h>
+  #include <string.h>
+  #include <sys/socket.h>
+***************
+*** 2605,2618 ****
+  buggygetaddrinfo=yes
+  ])
+  
+! if test "$buggygetaddrinfo" = "yes"; then
+  	if test "$ipv6" = "yes"; then
+  		echo 'Fatal: You must get working getaddrinfo() function.'
+  		echo '       or you can specify "--disable-ipv6"'.
+  		exit 1
+  	fi
+! else
+  	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
+  fi
+  AC_CHECK_FUNCS(getnameinfo)
+  
+--- 2620,2637 ----
+  buggygetaddrinfo=yes
+  ])
+  
+! if test "$ipv6" = "no"; then
+! 	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
+! else
+!     if test "$buggygetaddrinfo" = "yes"; then
+  	if test "$ipv6" = "yes"; then
+  		echo 'Fatal: You must get working getaddrinfo() function.'
+  		echo '       or you can specify "--disable-ipv6"'.
+  		exit 1
+  	fi
+!     else
+  	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
++     fi
+  fi
+  AC_CHECK_FUNCS(getnameinfo)
+  
+***************
+*** 2654,2659 ****
+--- 2673,2685 ----
+  AC_MSG_CHECKING(for addrinfo)
+  AC_CACHE_VAL(ac_cv_struct_addrinfo,
+  AC_TRY_COMPILE([
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
+  #		include <netdb.h>],
+  	[struct addrinfo a],
+  	ac_cv_struct_addrinfo=yes,
+--- Build-OSR6.osr6	2007-05-16 16:59:06.246793043 -0400
++++ Build-OSR6	2007-05-16 17:09:02.543814006 -0400
+@@ -0,0 +1,35 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++MOUT=mout
++CC="cc -Kpthread -Kalloca"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++CXX="CC -Kpthread -Kalloca"
++LDSHARED="$CC -G -Wl,-Bexport"
++LINKFORSHARED="-Wl,-Bexport"
++M4=/usr/gnu/bin/m4
++CCSHARED="-KPIC"
++POSIXLY_CORRECT=TRUE
++OPT="-g"
++export CC LDSHARED LINKFORSHARED CCSHARED POSIXLY_CORRECT OPT M4 INSTALL NM CXX
++
++CFLAGS="-g"
++LDFLAGS=""
++CPPFLAGS="-g"
++export CFLAGS LDFLAGS CPPFLAGS
++
++autoconf
++
++rm -f mout-configure
++./configure $* --prefix=/usr --disable-ipv6 --enable-shared --with-threads \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++
++# Enable zlib module if configure didn't detect it
++#sed -e "s/^#zlib/zlib/" Modules/Setup > /tmp/zlib$$
++#cp /tmp/zlib$$ Modules/Setup
++#rm -f /tmp/zlib$$
++
++[ "$1" ] && MOUT=mout-$1
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make $* 2>&1 | tee $MOUT
+--- Install-OSR6.osr6	2007-05-19 12:49:17.477966245 -0400
++++ Install-OSR6	2007-05-19 13:08:00.030455006 -0400
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/python
++
++LD_LIBRARY_PATH=`pwd`
++export LD_LIBRARY_PATH
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
+--- Python/marshal.c.00	2006-10-04 07:44:06.000000000 -0400
++++ Python/marshal.c	2007-05-16 16:24:19.933155007 -0400
+@@ -557,14 +557,14 @@
+ 				return NULL;
+ 			ob->ob_size = n;
+ 			for (i = 0; i < size; i++) {
+-				int digit = r_short(p);
+-				if (digit < 0) {
++				int mydigit = r_short(p);
++				if (mydigit < 0) {
+ 					Py_DECREF(ob);
+ 					PyErr_SetString(PyExc_ValueError,
+ 							"bad marshal data");
+ 					return NULL;
+ 				}
+-				ob->ob_digit[i] = digit;
++				ob->ob_digit[i] = mydigit;
+ 			}
+ 			return (PyObject *)ob;
+ 		}
+--- Modules/_ctypes/libffi/config.guess.00	2006-03-08 20:35:32.000000000 -0500
++++ Modules/_ctypes/libffi/config.guess	2007-05-16 16:46:27.561653010 -0400
+@@ -1,9 +1,10 @@
+ #! /bin/sh
+ # Attempt to guess a canonical system name.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+-#   2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
++#   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
++#   Inc.
+ 
+-timestamp='2004-11-12'
++timestamp='2007-03-06'
+ 
+ # This file is free software; you can redistribute it and/or modify it
+ # under the terms of the GNU General Public License as published by
+@@ -17,13 +18,15 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
++# 02110-1301, USA.
+ #
+ # As a special exception to the GNU General Public License, if you
+ # distribute this file as part of a program that contains a
+ # configuration script generated by Autoconf, you may include it under
+ # the same distribution terms that you use for the rest of that program.
+ 
++
+ # Originally written by Per Bothner <per@bothner.com>.
+ # Please send patches to <config-patches@gnu.org>.  Submit a context
+ # diff and a properly formatted ChangeLog entry.
+@@ -53,7 +56,7 @@
+ GNU config.guess ($timestamp)
+ 
+ Originally written by Per Bothner.
+-Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
++Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+ Free Software Foundation, Inc.
+ 
+ This is free software; see the source for copying conditions.  There is NO
+@@ -66,11 +69,11 @@
+ while test $# -gt 0 ; do
+   case $1 in
+     --time-stamp | --time* | -t )
+-       echo "$timestamp" ; exit 0 ;;
++       echo "$timestamp" ; exit ;;
+     --version | -v )
+-       echo "$version" ; exit 0 ;;
++       echo "$version" ; exit ;;
+     --help | --h* | -h )
+-       echo "$usage"; exit 0 ;;
++       echo "$usage"; exit ;;
+     -- )     # Stop option processing
+        shift; break ;;
+     - )	# Use stdin as input.
+@@ -104,7 +107,7 @@
+ trap "exitcode=\$?; (rm -f \$tmpfiles 2>/dev/null; rmdir \$tmp 2>/dev/null) && exit \$exitcode" 0 ;
+ trap "rm -f \$tmpfiles 2>/dev/null; rmdir \$tmp 2>/dev/null; exit 1" 1 2 13 15 ;
+ : ${TMPDIR=/tmp} ;
+- { tmp=`(umask 077 && mktemp -d -q "$TMPDIR/cgXXXXXX") 2>/dev/null` && test -n "$tmp" && test -d "$tmp" ; } ||
++ { tmp=`(umask 077 && mktemp -d "$TMPDIR/cgXXXXXX") 2>/dev/null` && test -n "$tmp" && test -d "$tmp" ; } ||
+  { test -n "$RANDOM" && tmp=$TMPDIR/cg$$-$RANDOM && (umask 077 && mkdir $tmp) ; } ||
+  { tmp=$TMPDIR/cg-$$ && (umask 077 && mkdir $tmp) && echo "Warning: creating insecure temp directory" >&2 ; } ||
+  { echo "$me: cannot create a temporary directory in $TMPDIR" >&2 ; exit 1 ; } ;
+@@ -123,7 +126,7 @@
+ 	;;
+  ,,*)   CC_FOR_BUILD=$CC ;;
+  ,*,*)  CC_FOR_BUILD=$HOST_CC ;;
+-esac ;'
++esac ; set_cc_for_build= ;'
+ 
+ # This is needed to find uname on a Pyramid OSx when run in the BSD universe.
+ # (ghazi@noc.rutgers.edu 1994-08-24)
+@@ -158,6 +161,7 @@
+ 	    arm*) machine=arm-unknown ;;
+ 	    sh3el) machine=shl-unknown ;;
+ 	    sh3eb) machine=sh-unknown ;;
++	    sh5el) machine=sh5le-unknown ;;
+ 	    *) machine=${UNAME_MACHINE_ARCH}-unknown ;;
+ 	esac
+ 	# The Operating System including object format, if it has switched
+@@ -196,55 +200,23 @@
+ 	# contains redundant information, the shorter form:
+ 	# CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM is used.
+ 	echo "${machine}-${os}${release}"
+-	exit 0 ;;
+-    amd64:OpenBSD:*:*)
+-	echo x86_64-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    amiga:OpenBSD:*:*)
+-	echo m68k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    cats:OpenBSD:*:*)
+-	echo arm-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    hp300:OpenBSD:*:*)
+-	echo m68k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    luna88k:OpenBSD:*:*)
+-    	echo m88k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    mac68k:OpenBSD:*:*)
+-	echo m68k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    macppc:OpenBSD:*:*)
+-	echo powerpc-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    mvme68k:OpenBSD:*:*)
+-	echo m68k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    mvme88k:OpenBSD:*:*)
+-	echo m88k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    mvmeppc:OpenBSD:*:*)
+-	echo powerpc-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    sgi:OpenBSD:*:*)
+-	echo mips64-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+-    sun3:OpenBSD:*:*)
+-	echo m68k-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:OpenBSD:*:*)
+-	echo ${UNAME_MACHINE}-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
++	UNAME_MACHINE_ARCH=`arch | sed 's/OpenBSD.//'`
++	echo ${UNAME_MACHINE_ARCH}-unknown-openbsd${UNAME_RELEASE}
++	exit ;;
+     *:ekkoBSD:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-ekkobsd${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
++    *:SolidBSD:*:*)
++	echo ${UNAME_MACHINE}-unknown-solidbsd${UNAME_RELEASE}
++	exit ;;
+     macppc:MirBSD:*:*)
+-	echo powerppc-unknown-mirbsd${UNAME_RELEASE}
+-	exit 0 ;;
++	echo powerpc-unknown-mirbsd${UNAME_RELEASE}
++	exit ;;
+     *:MirBSD:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-mirbsd${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     alpha:OSF1:*:*)
+ 	case $UNAME_RELEASE in
+ 	*4.0)
+@@ -297,40 +269,43 @@
+ 	# A Xn.n version is an unreleased experimental baselevel.
+ 	# 1.2 uses "1.2" for uname -r.
+ 	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[PVTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+-	exit 0 ;;
++	exit ;;
+     Alpha\ *:Windows_NT*:*)
+ 	# How do we know it's Interix rather than the generic POSIX subsystem?
+ 	# Should we change UNAME_MACHINE based on the output of uname instead
+ 	# of the specific Alpha model?
+ 	echo alpha-pc-interix
+-	exit 0 ;;
++	exit ;;
+     21064:Windows_NT:50:3)
+ 	echo alpha-dec-winnt3.5
+-	exit 0 ;;
++	exit ;;
+     Amiga*:UNIX_System_V:4.0:*)
+ 	echo m68k-unknown-sysv4
+-	exit 0;;
++	exit ;;
+     *:[Aa]miga[Oo][Ss]:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-amigaos
+-	exit 0 ;;
++	exit ;;
+     *:[Mm]orph[Oo][Ss]:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-morphos
+-	exit 0 ;;
++	exit ;;
+     *:OS/390:*:*)
+ 	echo i370-ibm-openedition
+-	exit 0 ;;
++	exit ;;
+     *:z/VM:*:*)
+ 	echo s390-ibm-zvmoe
+-	exit 0 ;;
++	exit ;;
+     *:OS400:*:*)
+         echo powerpc-ibm-os400
+-	exit 0 ;;
++	exit ;;
+     arm:RISC*:1.[012]*:*|arm:riscix:1.[012]*:*)
+ 	echo arm-acorn-riscix${UNAME_RELEASE}
+-	exit 0;;
++	exit ;;
++    arm:riscos:*:*|arm:RISCOS:*:*)
++	echo arm-unknown-riscos
++	exit ;;
+     SR2?01:HI-UX/MPP:*:* | SR8000:HI-UX/MPP:*:*)
+ 	echo hppa1.1-hitachi-hiuxmpp
+-	exit 0;;
++	exit ;;
+     Pyramid*:OSx*:*:* | MIS*:OSx*:*:* | MIS*:SMP_DC-OSx*:*:*)
+ 	# akee@wpdis03.wpafb.af.mil (Earle F. Ake) contributed MIS and NILE.
+ 	if test "`(/bin/universe) 2>/dev/null`" = att ; then
+@@ -338,32 +313,32 @@
+ 	else
+ 		echo pyramid-pyramid-bsd
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     NILE*:*:*:dcosx)
+ 	echo pyramid-pyramid-svr4
+-	exit 0 ;;
++	exit ;;
+     DRS?6000:unix:4.0:6*)
+ 	echo sparc-icl-nx6
+-	exit 0 ;;
++	exit ;;
+     DRS?6000:UNIX_SV:4.2*:7* | DRS?6000:isis:4.2*:7*)
+ 	case `/usr/bin/uname -p` in
+-	    sparc) echo sparc-icl-nx7 && exit 0 ;;
++	    sparc) echo sparc-icl-nx7; exit ;;
+ 	esac ;;
+     sun4H:SunOS:5.*:*)
+ 	echo sparc-hal-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+-	exit 0 ;;
++	exit ;;
+     sun4*:SunOS:5.*:* | tadpole*:SunOS:5.*:*)
+ 	echo sparc-sun-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+-	exit 0 ;;
++	exit ;;
+     i86pc:SunOS:5.*:*)
+ 	echo i386-pc-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+-	exit 0 ;;
++	exit ;;
+     sun4*:SunOS:6*:*)
+ 	# According to config.sub, this is the proper way to canonicalize
+ 	# SunOS6.  Hard to guess exactly what SunOS6 will be like, but
+ 	# it's likely to be more like Solaris than SunOS4.
+ 	echo sparc-sun-solaris3`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+-	exit 0 ;;
++	exit ;;
+     sun4*:SunOS:*:*)
+ 	case "`/usr/bin/arch -k`" in
+ 	    Series*|S4*)
+@@ -372,10 +347,10 @@
+ 	esac
+ 	# Japanese Language versions have a version number like `4.1.3-JL'.
+ 	echo sparc-sun-sunos`echo ${UNAME_RELEASE}|sed -e 's/-/_/'`
+-	exit 0 ;;
++	exit ;;
+     sun3*:SunOS:*:*)
+ 	echo m68k-sun-sunos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     sun*:*:4.2BSD:*)
+ 	UNAME_RELEASE=`(sed 1q /etc/motd | awk '{print substr($5,1,3)}') 2>/dev/null`
+ 	test "x${UNAME_RELEASE}" = "x" && UNAME_RELEASE=3
+@@ -387,10 +362,10 @@
+ 		echo sparc-sun-sunos${UNAME_RELEASE}
+ 		;;
+ 	esac
+-	exit 0 ;;
++	exit ;;
+     aushp:SunOS:*:*)
+ 	echo sparc-auspex-sunos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     # The situation for MiNT is a little confusing.  The machine name
+     # can be virtually everything (everything which is not
+     # "atarist" or "atariste" at least should have a processor
+@@ -401,40 +376,40 @@
+     # be no problem.
+     atarist[e]:*MiNT:*:* | atarist[e]:*mint:*:* | atarist[e]:*TOS:*:*)
+         echo m68k-atari-mint${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     atari*:*MiNT:*:* | atari*:*mint:*:* | atarist[e]:*TOS:*:*)
+ 	echo m68k-atari-mint${UNAME_RELEASE}
+-        exit 0 ;;
++        exit ;;
+     *falcon*:*MiNT:*:* | *falcon*:*mint:*:* | *falcon*:*TOS:*:*)
+         echo m68k-atari-mint${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     milan*:*MiNT:*:* | milan*:*mint:*:* | *milan*:*TOS:*:*)
+         echo m68k-milan-mint${UNAME_RELEASE}
+-        exit 0 ;;
++        exit ;;
+     hades*:*MiNT:*:* | hades*:*mint:*:* | *hades*:*TOS:*:*)
+         echo m68k-hades-mint${UNAME_RELEASE}
+-        exit 0 ;;
++        exit ;;
+     *:*MiNT:*:* | *:*mint:*:* | *:*TOS:*:*)
+         echo m68k-unknown-mint${UNAME_RELEASE}
+-        exit 0 ;;
++        exit ;;
+     m68k:machten:*:*)
+ 	echo m68k-apple-machten${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     powerpc:machten:*:*)
+ 	echo powerpc-apple-machten${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     RISC*:Mach:*:*)
+ 	echo mips-dec-mach_bsd4.3
+-	exit 0 ;;
++	exit ;;
+     RISC*:ULTRIX:*:*)
+ 	echo mips-dec-ultrix${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     VAX*:ULTRIX*:*:*)
+ 	echo vax-dec-ultrix${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     2020:CLIX:*:* | 2430:CLIX:*:*)
+ 	echo clipper-intergraph-clix${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     mips:*:*:UMIPS | mips:*:*:RISCos)
+ 	eval $set_cc_for_build
+ 	sed 's/^	//' << EOF >$dummy.c
+@@ -458,32 +433,33 @@
+ 	  exit (-1);
+ 	}
+ EOF
+-	$CC_FOR_BUILD -o $dummy $dummy.c \
+-	  && $dummy `echo "${UNAME_RELEASE}" | sed -n 's/\([0-9]*\).*/\1/p'` \
+-	  && exit 0
++	$CC_FOR_BUILD -o $dummy $dummy.c &&
++	  dummyarg=`echo "${UNAME_RELEASE}" | sed -n 's/\([0-9]*\).*/\1/p'` &&
++	  SYSTEM_NAME=`$dummy $dummyarg` &&
++	    { echo "$SYSTEM_NAME"; exit; }
+ 	echo mips-mips-riscos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     Motorola:PowerMAX_OS:*:*)
+ 	echo powerpc-motorola-powermax
+-	exit 0 ;;
++	exit ;;
+     Motorola:*:4.3:PL8-*)
+ 	echo powerpc-harris-powermax
+-	exit 0 ;;
++	exit ;;
+     Night_Hawk:*:*:PowerMAX_OS | Synergy:PowerMAX_OS:*:*)
+ 	echo powerpc-harris-powermax
+-	exit 0 ;;
++	exit ;;
+     Night_Hawk:Power_UNIX:*:*)
+ 	echo powerpc-harris-powerunix
+-	exit 0 ;;
++	exit ;;
+     m88k:CX/UX:7*:*)
+ 	echo m88k-harris-cxux7
+-	exit 0 ;;
++	exit ;;
+     m88k:*:4*:R4*)
+ 	echo m88k-motorola-sysv4
+-	exit 0 ;;
++	exit ;;
+     m88k:*:3*:R3*)
+ 	echo m88k-motorola-sysv3
+-	exit 0 ;;
++	exit ;;
+     AViiON:dgux:*:*)
+         # DG/UX returns AViiON for all architectures
+         UNAME_PROCESSOR=`/usr/bin/uname -p`
+@@ -499,29 +475,29 @@
+ 	else
+ 	    echo i586-dg-dgux${UNAME_RELEASE}
+ 	fi
+- 	exit 0 ;;
++ 	exit ;;
+     M88*:DolphinOS:*:*)	# DolphinOS (SVR3)
+ 	echo m88k-dolphin-sysv3
+-	exit 0 ;;
++	exit ;;
+     M88*:*:R3*:*)
+ 	# Delta 88k system running SVR3
+ 	echo m88k-motorola-sysv3
+-	exit 0 ;;
++	exit ;;
+     XD88*:*:*:*) # Tektronix XD88 system running UTekV (SVR3)
+ 	echo m88k-tektronix-sysv3
+-	exit 0 ;;
++	exit ;;
+     Tek43[0-9][0-9]:UTek:*:*) # Tektronix 4300 system running UTek (BSD)
+ 	echo m68k-tektronix-bsd
+-	exit 0 ;;
++	exit ;;
+     *:IRIX*:*:*)
+ 	echo mips-sgi-irix`echo ${UNAME_RELEASE}|sed -e 's/-/_/g'`
+-	exit 0 ;;
++	exit ;;
+     ????????:AIX?:[12].1:2)   # AIX 2.2.1 or AIX 2.1.1 is RT/PC AIX.
+-	echo romp-ibm-aix      # uname -m gives an 8 hex-code CPU id
+-	exit 0 ;;              # Note that: echo "'`uname -s`'" gives 'AIX '
++	echo romp-ibm-aix     # uname -m gives an 8 hex-code CPU id
++	exit ;;               # Note that: echo "'`uname -s`'" gives 'AIX '
+     i*86:AIX:*:*)
+ 	echo i386-ibm-aix
+-	exit 0 ;;
++	exit ;;
+     ia64:AIX:*:*)
+ 	if [ -x /usr/bin/oslevel ] ; then
+ 		IBM_REV=`/usr/bin/oslevel`
+@@ -529,7 +505,7 @@
+ 		IBM_REV=${UNAME_VERSION}.${UNAME_RELEASE}
+ 	fi
+ 	echo ${UNAME_MACHINE}-ibm-aix${IBM_REV}
+-	exit 0 ;;
++	exit ;;
+     *:AIX:2:3)
+ 	if grep bos325 /usr/include/stdio.h >/dev/null 2>&1; then
+ 		eval $set_cc_for_build
+@@ -544,14 +520,18 @@
+ 			exit(0);
+ 			}
+ EOF
+-		$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && exit 0
+-		echo rs6000-ibm-aix3.2.5
++		if $CC_FOR_BUILD -o $dummy $dummy.c && SYSTEM_NAME=`$dummy`
++		then
++			echo "$SYSTEM_NAME"
++		else
++			echo rs6000-ibm-aix3.2.5
++		fi
+ 	elif grep bos324 /usr/include/stdio.h >/dev/null 2>&1; then
+ 		echo rs6000-ibm-aix3.2.4
+ 	else
+ 		echo rs6000-ibm-aix3.2
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     *:AIX:*:[45])
+ 	IBM_CPU_ID=`/usr/sbin/lsdev -C -c processor -S available | sed 1q | awk '{ print $1 }'`
+ 	if /usr/sbin/lsattr -El ${IBM_CPU_ID} | grep ' POWER' >/dev/null 2>&1; then
+@@ -565,28 +545,28 @@
+ 		IBM_REV=${UNAME_VERSION}.${UNAME_RELEASE}
+ 	fi
+ 	echo ${IBM_ARCH}-ibm-aix${IBM_REV}
+-	exit 0 ;;
++	exit ;;
+     *:AIX:*:*)
+ 	echo rs6000-ibm-aix
+-	exit 0 ;;
++	exit ;;
+     ibmrt:4.4BSD:*|romp-ibm:BSD:*)
+ 	echo romp-ibm-bsd4.4
+-	exit 0 ;;
++	exit ;;
+     ibmrt:*BSD:*|romp-ibm:BSD:*)            # covers RT/PC BSD and
+ 	echo romp-ibm-bsd${UNAME_RELEASE}   # 4.3 with uname added to
+-	exit 0 ;;                           # report: romp-ibm BSD 4.3
++	exit ;;                             # report: romp-ibm BSD 4.3
+     *:BOSX:*:*)
+ 	echo rs6000-bull-bosx
+-	exit 0 ;;
++	exit ;;
+     DPX/2?00:B.O.S.:*:*)
+ 	echo m68k-bull-sysv3
+-	exit 0 ;;
++	exit ;;
+     9000/[34]??:4.3bsd:1.*:*)
+ 	echo m68k-hp-bsd
+-	exit 0 ;;
++	exit ;;
+     hp300:4.4BSD:*:* | 9000/[34]??:4.3bsd:2.*:*)
+ 	echo m68k-hp-bsd4.4
+-	exit 0 ;;
++	exit ;;
+     9000/[34678]??:HP-UX:*:*)
+ 	HPUX_REV=`echo ${UNAME_RELEASE}|sed -e 's/[^.]*.[0B]*//'`
+ 	case "${UNAME_MACHINE}" in
+@@ -648,9 +628,19 @@
+ 	esac
+ 	if [ ${HP_ARCH} = "hppa2.0w" ]
+ 	then
+-	    # avoid double evaluation of $set_cc_for_build
+-	    test -n "$CC_FOR_BUILD" || eval $set_cc_for_build
+-	    if echo __LP64__ | (CCOPTS= $CC_FOR_BUILD -E -) | grep __LP64__ >/dev/null
++	    eval $set_cc_for_build
++
++	    # hppa2.0w-hp-hpux* has a 64-bit kernel and a compiler generating
++	    # 32-bit code.  hppa64-hp-hpux* has the same kernel and a compiler
++	    # generating 64-bit code.  GNU and HP use different nomenclature:
++	    #
++	    # $ CC_FOR_BUILD=cc ./config.guess
++	    # => hppa2.0w-hp-hpux11.23
++	    # $ CC_FOR_BUILD="cc +DA2.0w" ./config.guess
++	    # => hppa64-hp-hpux11.23
++
++	    if echo __LP64__ | (CCOPTS= $CC_FOR_BUILD -E - 2>/dev/null) |
++		grep __LP64__ >/dev/null
+ 	    then
+ 		HP_ARCH="hppa2.0w"
+ 	    else
+@@ -658,11 +648,11 @@
+ 	    fi
+ 	fi
+ 	echo ${HP_ARCH}-hp-hpux${HPUX_REV}
+-	exit 0 ;;
++	exit ;;
+     ia64:HP-UX:*:*)
+ 	HPUX_REV=`echo ${UNAME_RELEASE}|sed -e 's/[^.]*.[0B]*//'`
+ 	echo ia64-hp-hpux${HPUX_REV}
+-	exit 0 ;;
++	exit ;;
+     3050*:HI-UX:*:*)
+ 	eval $set_cc_for_build
+ 	sed 's/^	//' << EOF >$dummy.c
+@@ -690,158 +680,182 @@
+ 	  exit (0);
+ 	}
+ EOF
+-	$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && exit 0
++	$CC_FOR_BUILD -o $dummy $dummy.c && SYSTEM_NAME=`$dummy` &&
++		{ echo "$SYSTEM_NAME"; exit; }
+ 	echo unknown-hitachi-hiuxwe2
+-	exit 0 ;;
++	exit ;;
+     9000/7??:4.3bsd:*:* | 9000/8?[79]:4.3bsd:*:* )
+ 	echo hppa1.1-hp-bsd
+-	exit 0 ;;
++	exit ;;
+     9000/8??:4.3bsd:*:*)
+ 	echo hppa1.0-hp-bsd
+-	exit 0 ;;
++	exit ;;
+     *9??*:MPE/iX:*:* | *3000*:MPE/iX:*:*)
+ 	echo hppa1.0-hp-mpeix
+-	exit 0 ;;
++	exit ;;
+     hp7??:OSF1:*:* | hp8?[79]:OSF1:*:* )
+ 	echo hppa1.1-hp-osf
+-	exit 0 ;;
++	exit ;;
+     hp8??:OSF1:*:*)
+ 	echo hppa1.0-hp-osf
+-	exit 0 ;;
++	exit ;;
+     i*86:OSF1:*:*)
+ 	if [ -x /usr/sbin/sysversion ] ; then
+ 	    echo ${UNAME_MACHINE}-unknown-osf1mk
+ 	else
+ 	    echo ${UNAME_MACHINE}-unknown-osf1
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     parisc*:Lites*:*:*)
+ 	echo hppa1.1-hp-lites
+-	exit 0 ;;
++	exit ;;
+     C1*:ConvexOS:*:* | convex:ConvexOS:C1*:*)
+ 	echo c1-convex-bsd
+-        exit 0 ;;
++        exit ;;
+     C2*:ConvexOS:*:* | convex:ConvexOS:C2*:*)
+ 	if getsysinfo -f scalar_acc
+ 	then echo c32-convex-bsd
+ 	else echo c2-convex-bsd
+ 	fi
+-        exit 0 ;;
++        exit ;;
+     C34*:ConvexOS:*:* | convex:ConvexOS:C34*:*)
+ 	echo c34-convex-bsd
+-        exit 0 ;;
++        exit ;;
+     C38*:ConvexOS:*:* | convex:ConvexOS:C38*:*)
+ 	echo c38-convex-bsd
+-        exit 0 ;;
++        exit ;;
+     C4*:ConvexOS:*:* | convex:ConvexOS:C4*:*)
+ 	echo c4-convex-bsd
+-        exit 0 ;;
++        exit ;;
+     CRAY*Y-MP:*:*:*)
+ 	echo ymp-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     CRAY*[A-Z]90:*:*:*)
+ 	echo ${UNAME_MACHINE}-cray-unicos${UNAME_RELEASE} \
+ 	| sed -e 's/CRAY.*\([A-Z]90\)/\1/' \
+ 	      -e y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/ \
+ 	      -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     CRAY*TS:*:*:*)
+ 	echo t90-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     CRAY*T3E:*:*:*)
+ 	echo alphaev5-cray-unicosmk${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     CRAY*SV1:*:*:*)
+ 	echo sv1-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     *:UNICOS/mp:*:*)
+ 	echo craynv-cray-unicosmp${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+-	exit 0 ;;
++	exit ;;
+     F30[01]:UNIX_System_V:*:* | F700:UNIX_System_V:*:*)
+ 	FUJITSU_PROC=`uname -m | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+         FUJITSU_SYS=`uname -p | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' | sed -e 's/\///'`
+         FUJITSU_REL=`echo ${UNAME_RELEASE} | sed -e 's/ /_/'`
+         echo "${FUJITSU_PROC}-fujitsu-${FUJITSU_SYS}${FUJITSU_REL}"
+-        exit 0 ;;
++        exit ;;
+     5000:UNIX_System_V:4.*:*)
+         FUJITSU_SYS=`uname -p | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' | sed -e 's/\///'`
+         FUJITSU_REL=`echo ${UNAME_RELEASE} | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' | sed -e 's/ /_/'`
+         echo "sparc-fujitsu-${FUJITSU_SYS}${FUJITSU_REL}"
+-	exit 0 ;;
++	exit ;;
+     i*86:BSD/386:*:* | i*86:BSD/OS:*:* | *:Ascend\ Embedded/OS:*:*)
+ 	echo ${UNAME_MACHINE}-pc-bsdi${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     sparc*:BSD/OS:*:*)
+ 	echo sparc-unknown-bsdi${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:BSD/OS:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-bsdi${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:FreeBSD:*:*)
+-	echo ${UNAME_MACHINE}-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
+-	exit 0 ;;
++	case ${UNAME_MACHINE} in
++	    pc98)
++		echo i386-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
++	    amd64)
++		echo x86_64-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
++	    *)
++		echo ${UNAME_MACHINE}-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
++	esac
++	exit ;;
+     i*:CYGWIN*:*)
+ 	echo ${UNAME_MACHINE}-pc-cygwin
+-	exit 0 ;;
+-    i*:MINGW*:*)
++	exit ;;
++    *:MINGW*:*)
+ 	echo ${UNAME_MACHINE}-pc-mingw32
+-	exit 0 ;;
++	exit ;;
++    i*:windows32*:*)
++    	# uname -m includes "-pc" on this system.
++    	echo ${UNAME_MACHINE}-mingw32
++	exit ;;
+     i*:PW*:*)
+ 	echo ${UNAME_MACHINE}-pc-pw32
+-	exit 0 ;;
+-    x86:Interix*:[34]*)
+-	echo i586-pc-interix${UNAME_RELEASE}|sed -e 's/\..*//'
+-	exit 0 ;;
++	exit ;;
++    *:Interix*:[3456]*)
++    	case ${UNAME_MACHINE} in
++	    x86) 
++		echo i586-pc-interix${UNAME_RELEASE}
++		exit ;;
++	    EM64T | authenticamd)
++		echo x86_64-unknown-interix${UNAME_RELEASE}
++		exit ;;
++	esac ;;
+     [345]86:Windows_95:* | [345]86:Windows_98:* | [345]86:Windows_NT:*)
+ 	echo i${UNAME_MACHINE}-pc-mks
+-	exit 0 ;;
++	exit ;;
+     i*:Windows_NT*:* | Pentium*:Windows_NT*:*)
+ 	# How do we know it's Interix rather than the generic POSIX subsystem?
+ 	# It also conflicts with pre-2.0 versions of AT&T UWIN. Should we
+ 	# UNAME_MACHINE based on the output of uname instead of i386?
+ 	echo i586-pc-interix
+-	exit 0 ;;
++	exit ;;
+     i*:UWIN*:*)
+ 	echo ${UNAME_MACHINE}-pc-uwin
+-	exit 0 ;;
++	exit ;;
++    amd64:CYGWIN*:*:* | x86_64:CYGWIN*:*:*)
++	echo x86_64-unknown-cygwin
++	exit ;;
+     p*:CYGWIN*:*)
+ 	echo powerpcle-unknown-cygwin
+-	exit 0 ;;
++	exit ;;
+     prep*:SunOS:5.*:*)
+ 	echo powerpcle-unknown-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+-	exit 0 ;;
++	exit ;;
+     *:GNU:*:*)
+ 	# the GNU system
+ 	echo `echo ${UNAME_MACHINE}|sed -e 's,[-/].*$,,'`-unknown-gnu`echo ${UNAME_RELEASE}|sed -e 's,/.*$,,'`
+-	exit 0 ;;
++	exit ;;
+     *:GNU/*:*:*)
+ 	# other systems with GNU libc and userland
+ 	echo ${UNAME_MACHINE}-unknown-`echo ${UNAME_SYSTEM} | sed 's,^[^/]*/,,' | tr '[A-Z]' '[a-z]'``echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`-gnu
+-	exit 0 ;;
++	exit ;;
+     i*86:Minix:*:*)
+ 	echo ${UNAME_MACHINE}-pc-minix
+-	exit 0 ;;
++	exit ;;
+     arm*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
++    avr32*:Linux:*:*)
++	echo ${UNAME_MACHINE}-unknown-linux-gnu
++	exit ;;
+     cris:Linux:*:*)
+ 	echo cris-axis-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     crisv32:Linux:*:*)
+ 	echo crisv32-axis-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     frv:Linux:*:*)
+     	echo frv-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     ia64:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     m32r*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     m68*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     mips:Linux:*:*)
+ 	eval $set_cc_for_build
+ 	sed 's/^	//' << EOF >$dummy.c
+@@ -858,8 +872,12 @@
+ 	#endif
+ 	#endif
+ EOF
+-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+-	test x"${CPU}" != x && echo "${CPU}-unknown-linux-gnu" && exit 0
++	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
++	    /^CPU/{
++		s: ::g
++		p
++	    }'`"
++	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
+ 	;;
+     mips64:Linux:*:*)
+ 	eval $set_cc_for_build
+@@ -877,15 +895,22 @@
+ 	#endif
+ 	#endif
+ EOF
+-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+-	test x"${CPU}" != x && echo "${CPU}-unknown-linux-gnu" && exit 0
++	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
++	    /^CPU/{
++		s: ::g
++		p
++	    }'`"
++	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
+ 	;;
++    or32:Linux:*:*)
++	echo or32-unknown-linux-gnu
++	exit ;;
+     ppc:Linux:*:*)
+ 	echo powerpc-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     ppc64:Linux:*:*)
+ 	echo powerpc64-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     alpha:Linux:*:*)
+ 	case `sed -n '/^cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
+ 	  EV5)   UNAME_MACHINE=alphaev5 ;;
+@@ -899,7 +924,7 @@
+ 	objdump --private-headers /bin/sh | grep ld.so.1 >/dev/null
+ 	if test "$?" = 0 ; then LIBC="libc1" ; else LIBC="" ; fi
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu${LIBC}
+-	exit 0 ;;
++	exit ;;
+     parisc:Linux:*:* | hppa:Linux:*:*)
+ 	# Look for CPU level
+ 	case `grep '^cpu[^a-z]*:' /proc/cpuinfo 2>/dev/null | cut -d' ' -f2` in
+@@ -907,25 +932,31 @@
+ 	  PA8*) echo hppa2.0-unknown-linux-gnu ;;
+ 	  *)    echo hppa-unknown-linux-gnu ;;
+ 	esac
+-	exit 0 ;;
++	exit ;;
+     parisc64:Linux:*:* | hppa64:Linux:*:*)
+ 	echo hppa64-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     s390:Linux:*:* | s390x:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-ibm-linux
+-	exit 0 ;;
++	exit ;;
+     sh64*:Linux:*:*)
+     	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     sh*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
+     sparc:Linux:*:* | sparc64:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
++    vax:Linux:*:*)
++	echo ${UNAME_MACHINE}-dec-linux-gnu
++	exit ;;
+     x86_64:Linux:*:*)
+ 	echo x86_64-unknown-linux-gnu
+-	exit 0 ;;
++	exit ;;
++    xtensa:Linux:*:*)
++    	echo xtensa-unknown-linux-gnu
++	exit ;;
+     i*86:Linux:*:*)
+ 	# The BFD linker knows what the default object file format is, so
+ 	# first see if it will tell us. cd to the root directory to prevent
+@@ -943,15 +974,15 @@
+ 		;;
+ 	  a.out-i386-linux)
+ 		echo "${UNAME_MACHINE}-pc-linux-gnuaout"
+-		exit 0 ;;
++		exit ;;
+ 	  coff-i386)
+ 		echo "${UNAME_MACHINE}-pc-linux-gnucoff"
+-		exit 0 ;;
++		exit ;;
+ 	  "")
+ 		# Either a pre-BFD a.out linker (linux-gnuoldld) or
+ 		# one that does not give us useful --help.
+ 		echo "${UNAME_MACHINE}-pc-linux-gnuoldld"
+-		exit 0 ;;
++		exit ;;
+ 	esac
+ 	# Determine whether the default compiler is a.out or elf
+ 	eval $set_cc_for_build
+@@ -968,7 +999,7 @@
+ 	LIBC=gnulibc1
+ 	# endif
+ 	#else
+-	#ifdef __INTEL_COMPILER
++	#if defined(__INTEL_COMPILER) || defined(__PGI) || defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+ 	LIBC=gnu
+ 	#else
+ 	LIBC=gnuaout
+@@ -978,16 +1009,23 @@
+ 	LIBC=dietlibc
+ 	#endif
+ EOF
+-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^LIBC=`
+-	test x"${LIBC}" != x && echo "${UNAME_MACHINE}-pc-linux-${LIBC}" && exit 0
+-	test x"${TENTATIVE}" != x && echo "${TENTATIVE}" && exit 0
++	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
++	    /^LIBC/{
++		s: ::g
++		p
++	    }'`"
++	test x"${LIBC}" != x && {
++		echo "${UNAME_MACHINE}-pc-linux-${LIBC}"
++		exit
++	}
++	test x"${TENTATIVE}" != x && { echo "${TENTATIVE}"; exit; }
+ 	;;
+     i*86:DYNIX/ptx:4*:*)
+ 	# ptx 4.0 does uname -s correctly, with DYNIX/ptx in there.
+ 	# earlier versions are messed up and put the nodename in both
+ 	# sysname and nodename.
+ 	echo i386-sequent-sysv4
+-	exit 0 ;;
++	exit ;;
+     i*86:UNIX_SV:4.2MP:2.*)
+         # Unixware is an offshoot of SVR4, but it has its own version
+         # number series starting with 2...
+@@ -995,27 +1033,27 @@
+ 	# I just have to hope.  -- rms.
+         # Use sysv4.2uw... so that sysv4* matches it.
+ 	echo ${UNAME_MACHINE}-pc-sysv4.2uw${UNAME_VERSION}
+-	exit 0 ;;
++	exit ;;
+     i*86:OS/2:*:*)
+ 	# If we were able to find `uname', then EMX Unix compatibility
+ 	# is probably installed.
+ 	echo ${UNAME_MACHINE}-pc-os2-emx
+-	exit 0 ;;
++	exit ;;
+     i*86:XTS-300:*:STOP)
+ 	echo ${UNAME_MACHINE}-unknown-stop
+-	exit 0 ;;
++	exit ;;
+     i*86:atheos:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-atheos
+-	exit 0 ;;
+-	i*86:syllable:*:*)
++	exit ;;
++    i*86:syllable:*:*)
+ 	echo ${UNAME_MACHINE}-pc-syllable
+-	exit 0 ;;
++	exit ;;
+     i*86:LynxOS:2.*:* | i*86:LynxOS:3.[01]*:* | i*86:LynxOS:4.0*:*)
+ 	echo i386-unknown-lynxos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     i*86:*DOS:*:*)
+ 	echo ${UNAME_MACHINE}-pc-msdosdjgpp
+-	exit 0 ;;
++	exit ;;
+     i*86:*:4.*:* | i*86:SYSTEM_V:4.*:*)
+ 	UNAME_REL=`echo ${UNAME_RELEASE} | sed 's/\/MP$//'`
+ 	if grep Novell /usr/include/link.h >/dev/null 2>/dev/null; then
+@@ -1023,15 +1061,16 @@
+ 	else
+ 		echo ${UNAME_MACHINE}-pc-sysv${UNAME_REL}
+ 	fi
+-	exit 0 ;;
+-    i*86:*:5:[78]*)
++	exit ;;
++    i*86:*:5:[678]*)
++    	# UnixWare 7.x, OpenUNIX and OpenServer 6.
+ 	case `/bin/uname -X | grep "^Machine"` in
+ 	    *486*)	     UNAME_MACHINE=i486 ;;
+ 	    *Pentium)	     UNAME_MACHINE=i586 ;;
+ 	    *Pent*|*Celeron) UNAME_MACHINE=i686 ;;
+ 	esac
+ 	echo ${UNAME_MACHINE}-unknown-sysv${UNAME_RELEASE}${UNAME_SYSTEM}${UNAME_VERSION}
+-	exit 0 ;;
++	exit ;;
+     i*86:*:3.2:*)
+ 	if test -f /usr/options/cb.name; then
+ 		UNAME_REL=`sed -n 's/.*Version //p' </usr/options/cb.name`
+@@ -1049,73 +1088,73 @@
+ 	else
+ 		echo ${UNAME_MACHINE}-pc-sysv32
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     pc:*:*:*)
+ 	# Left here for compatibility:
+         # uname -m prints for DJGPP always 'pc', but it prints nothing about
+         # the processor, so we play safe by assuming i386.
+ 	echo i386-pc-msdosdjgpp
+-        exit 0 ;;
++        exit ;;
+     Intel:Mach:3*:*)
+ 	echo i386-pc-mach3
+-	exit 0 ;;
++	exit ;;
+     paragon:*:*:*)
+ 	echo i860-intel-osf1
+-	exit 0 ;;
++	exit ;;
+     i860:*:4.*:*) # i860-SVR4
+ 	if grep Stardent /usr/include/sys/uadmin.h >/dev/null 2>&1 ; then
+ 	  echo i860-stardent-sysv${UNAME_RELEASE} # Stardent Vistra i860-SVR4
+ 	else # Add other i860-SVR4 vendors below as they are discovered.
+ 	  echo i860-unknown-sysv${UNAME_RELEASE}  # Unknown i860-SVR4
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     mini*:CTIX:SYS*5:*)
+ 	# "miniframe"
+ 	echo m68010-convergent-sysv
+-	exit 0 ;;
++	exit ;;
+     mc68k:UNIX:SYSTEM5:3.51m)
+ 	echo m68k-convergent-sysv
+-	exit 0 ;;
++	exit ;;
+     M680?0:D-NIX:5.3:*)
+ 	echo m68k-diab-dnix
+-	exit 0 ;;
++	exit ;;
+     M68*:*:R3V[5678]*:*)
+-	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
++	test -r /sysV68 && { echo 'm68k-motorola-sysv'; exit; } ;;
+     3[345]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 3[34]??/*:*:4.0:3.0 | 4400:*:4.0:3.0 | 4850:*:4.0:3.0 | SKA40:*:4.0:3.0 | SDS2:*:4.0:3.0 | SHG2:*:4.0:3.0 | S7501*:*:4.0:3.0)
+ 	OS_REL=''
+ 	test -r /etc/.relid \
+ 	&& OS_REL=.`sed -n 's/[^ ]* [^ ]* \([0-9][0-9]\).*/\1/p' < /etc/.relid`
+ 	/bin/uname -p 2>/dev/null | grep 86 >/dev/null \
+-	  && echo i486-ncr-sysv4.3${OS_REL} && exit 0
++	  && { echo i486-ncr-sysv4.3${OS_REL}; exit; }
+ 	/bin/uname -p 2>/dev/null | /bin/grep entium >/dev/null \
+-	  && echo i586-ncr-sysv4.3${OS_REL} && exit 0 ;;
++	  && { echo i586-ncr-sysv4.3${OS_REL}; exit; } ;;
+     3[34]??:*:4.0:* | 3[34]??,*:*:4.0:*)
+         /bin/uname -p 2>/dev/null | grep 86 >/dev/null \
+-          && echo i486-ncr-sysv4 && exit 0 ;;
++          && { echo i486-ncr-sysv4; exit; } ;;
+     m68*:LynxOS:2.*:* | m68*:LynxOS:3.0*:*)
+ 	echo m68k-unknown-lynxos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     mc68030:UNIX_System_V:4.*:*)
+ 	echo m68k-atari-sysv4
+-	exit 0 ;;
++	exit ;;
+     TSUNAMI:LynxOS:2.*:*)
+ 	echo sparc-unknown-lynxos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     rs6000:LynxOS:2.*:*)
+ 	echo rs6000-unknown-lynxos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     PowerPC:LynxOS:2.*:* | PowerPC:LynxOS:3.[01]*:* | PowerPC:LynxOS:4.0*:*)
+ 	echo powerpc-unknown-lynxos${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     SM[BE]S:UNIX_SV:*:*)
+ 	echo mips-dde-sysv${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     RM*:ReliantUNIX-*:*:*)
+ 	echo mips-sni-sysv4
+-	exit 0 ;;
++	exit ;;
+     RM*:SINIX-*:*:*)
+ 	echo mips-sni-sysv4
+-	exit 0 ;;
++	exit ;;
+     *:SINIX-*:*:*)
+ 	if uname -p 2>/dev/null >/dev/null ; then
+ 		UNAME_MACHINE=`(uname -p) 2>/dev/null`
+@@ -1123,69 +1162,81 @@
+ 	else
+ 		echo ns32k-sni-sysv
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     PENTIUM:*:4.0*:*) # Unisys `ClearPath HMP IX 4000' SVR4/MP effort
+                       # says <Richard.M.Bartel@ccMail.Census.GOV>
+         echo i586-unisys-sysv4
+-        exit 0 ;;
++        exit ;;
+     *:UNIX_System_V:4*:FTX*)
+ 	# From Gerald Hewes <hewes@openmarket.com>.
+ 	# How about differentiating between stratus architectures? -djm
+ 	echo hppa1.1-stratus-sysv4
+-	exit 0 ;;
++	exit ;;
+     *:*:*:FTX*)
+ 	# From seanf@swdc.stratus.com.
+ 	echo i860-stratus-sysv4
+-	exit 0 ;;
++	exit ;;
++    i*86:VOS:*:*)
++	# From Paul.Green@stratus.com.
++	echo ${UNAME_MACHINE}-stratus-vos
++	exit ;;
+     *:VOS:*:*)
+ 	# From Paul.Green@stratus.com.
+ 	echo hppa1.1-stratus-vos
+-	exit 0 ;;
++	exit ;;
+     mc68*:A/UX:*:*)
+ 	echo m68k-apple-aux${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     news*:NEWS-OS:6*:*)
+ 	echo mips-sony-newsos6
+-	exit 0 ;;
++	exit ;;
+     R[34]000:*System_V*:*:* | R4000:UNIX_SYSV:*:* | R*000:UNIX_SV:*:*)
+ 	if [ -d /usr/nec ]; then
+ 	        echo mips-nec-sysv${UNAME_RELEASE}
+ 	else
+ 	        echo mips-unknown-sysv${UNAME_RELEASE}
+ 	fi
+-        exit 0 ;;
++        exit ;;
+     BeBox:BeOS:*:*)	# BeOS running on hardware made by Be, PPC only.
+ 	echo powerpc-be-beos
+-	exit 0 ;;
++	exit ;;
+     BeMac:BeOS:*:*)	# BeOS running on Mac or Mac clone, PPC only.
+ 	echo powerpc-apple-beos
+-	exit 0 ;;
++	exit ;;
+     BePC:BeOS:*:*)	# BeOS running on Intel PC compatible.
+ 	echo i586-pc-beos
+-	exit 0 ;;
++	exit ;;
+     SX-4:SUPER-UX:*:*)
+ 	echo sx4-nec-superux${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     SX-5:SUPER-UX:*:*)
+ 	echo sx5-nec-superux${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     SX-6:SUPER-UX:*:*)
+ 	echo sx6-nec-superux${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
++    SX-7:SUPER-UX:*:*)
++	echo sx7-nec-superux${UNAME_RELEASE}
++	exit ;;
++    SX-8:SUPER-UX:*:*)
++	echo sx8-nec-superux${UNAME_RELEASE}
++	exit ;;
++    SX-8R:SUPER-UX:*:*)
++	echo sx8r-nec-superux${UNAME_RELEASE}
++	exit ;;
+     Power*:Rhapsody:*:*)
+ 	echo powerpc-apple-rhapsody${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:Rhapsody:*:*)
+ 	echo ${UNAME_MACHINE}-apple-rhapsody${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:Darwin:*:*)
+ 	UNAME_PROCESSOR=`uname -p` || UNAME_PROCESSOR=unknown
+ 	case $UNAME_PROCESSOR in
+-	    *86) UNAME_PROCESSOR=i686 ;;
+ 	    unknown) UNAME_PROCESSOR=powerpc ;;
+ 	esac
+ 	echo ${UNAME_PROCESSOR}-apple-darwin${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:procnto*:*:* | *:QNX:[0123456789]*:*)
+ 	UNAME_PROCESSOR=`uname -p`
+ 	if test "$UNAME_PROCESSOR" = "x86"; then
+@@ -1193,22 +1244,25 @@
+ 		UNAME_MACHINE=pc
+ 	fi
+ 	echo ${UNAME_PROCESSOR}-${UNAME_MACHINE}-nto-qnx${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:QNX:*:4*)
+ 	echo i386-pc-qnx
+-	exit 0 ;;
++	exit ;;
++    NSE-?:NONSTOP_KERNEL:*:*)
++	echo nse-tandem-nsk${UNAME_RELEASE}
++	exit ;;
+     NSR-?:NONSTOP_KERNEL:*:*)
+ 	echo nsr-tandem-nsk${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:NonStop-UX:*:*)
+ 	echo mips-compaq-nonstopux
+-	exit 0 ;;
++	exit ;;
+     BS2000:POSIX*:*:*)
+ 	echo bs2000-siemens-sysv
+-	exit 0 ;;
++	exit ;;
+     DS/*:UNIX_System_V:*:*)
+ 	echo ${UNAME_MACHINE}-${UNAME_SYSTEM}-${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:Plan9:*:*)
+ 	# "uname -m" is not consistent, so use $cputype instead. 386
+ 	# is converted to i386 for consistency with other x86
+@@ -1219,41 +1273,47 @@
+ 	    UNAME_MACHINE="$cputype"
+ 	fi
+ 	echo ${UNAME_MACHINE}-unknown-plan9
+-	exit 0 ;;
++	exit ;;
+     *:TOPS-10:*:*)
+ 	echo pdp10-unknown-tops10
+-	exit 0 ;;
++	exit ;;
+     *:TENEX:*:*)
+ 	echo pdp10-unknown-tenex
+-	exit 0 ;;
++	exit ;;
+     KS10:TOPS-20:*:* | KL10:TOPS-20:*:* | TYPE4:TOPS-20:*:*)
+ 	echo pdp10-dec-tops20
+-	exit 0 ;;
++	exit ;;
+     XKL-1:TOPS-20:*:* | TYPE5:TOPS-20:*:*)
+ 	echo pdp10-xkl-tops20
+-	exit 0 ;;
++	exit ;;
+     *:TOPS-20:*:*)
+ 	echo pdp10-unknown-tops20
+-	exit 0 ;;
++	exit ;;
+     *:ITS:*:*)
+ 	echo pdp10-unknown-its
+-	exit 0 ;;
++	exit ;;
+     SEI:*:*:SEIUX)
+         echo mips-sei-seiux${UNAME_RELEASE}
+-	exit 0 ;;
++	exit ;;
+     *:DragonFly:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-dragonfly`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
+-	exit 0 ;;
++	exit ;;
+     *:*VMS:*:*)
+     	UNAME_MACHINE=`(uname -p) 2>/dev/null`
+ 	case "${UNAME_MACHINE}" in
+-	    A*) echo alpha-dec-vms && exit 0 ;;
+-	    I*) echo ia64-dec-vms && exit 0 ;;
+-	    V*) echo vax-dec-vms && exit 0 ;;
++	    A*) echo alpha-dec-vms ; exit ;;
++	    I*) echo ia64-dec-vms ; exit ;;
++	    V*) echo vax-dec-vms ; exit ;;
+ 	esac ;;
+     *:XENIX:*:SysV)
+ 	echo i386-pc-xenix
+-	exit 0 ;;
++	exit ;;
++    i*86:skyos:*:*)
++	echo ${UNAME_MACHINE}-pc-skyos`echo ${UNAME_RELEASE}` | sed -e 's/ .*$//'
++	exit ;;
++    i*86:rdos:*:*)
++	echo ${UNAME_MACHINE}-pc-rdos
++	exit ;;
+ esac
+ 
+ #echo '(No uname command or uname output not recognized.)' 1>&2
+@@ -1285,7 +1345,7 @@
+ #endif
+ 
+ #if defined (__arm) && defined (__acorn) && defined (__unix)
+-  printf ("arm-acorn-riscix"); exit (0);
++  printf ("arm-acorn-riscix\n"); exit (0);
+ #endif
+ 
+ #if defined (hp300) && !defined (hpux)
+@@ -1374,11 +1434,12 @@
+ }
+ EOF
+ 
+-$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && $dummy && exit 0
++$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && SYSTEM_NAME=`$dummy` &&
++	{ echo "$SYSTEM_NAME"; exit; }
+ 
+ # Apollos put the system type in the environment.
+ 
+-test -d /usr/apollo && { echo ${ISP}-apollo-${SYSTYPE}; exit 0; }
++test -d /usr/apollo && { echo ${ISP}-apollo-${SYSTYPE}; exit; }
+ 
+ # Convex versions that predate uname can use getsysinfo(1)
+ 
+@@ -1387,22 +1448,22 @@
+     case `getsysinfo -f cpu_type` in
+     c1*)
+ 	echo c1-convex-bsd
+-	exit 0 ;;
++	exit ;;
+     c2*)
+ 	if getsysinfo -f scalar_acc
+ 	then echo c32-convex-bsd
+ 	else echo c2-convex-bsd
+ 	fi
+-	exit 0 ;;
++	exit ;;
+     c34*)
+ 	echo c34-convex-bsd
+-	exit 0 ;;
++	exit ;;
+     c38*)
+ 	echo c38-convex-bsd
+-	exit 0 ;;
++	exit ;;
+     c4*)
+ 	echo c4-convex-bsd
+-	exit 0 ;;
++	exit ;;
+     esac
+ fi
+ 
+@@ -1413,7 +1474,9 @@
+ the operating system you are using. It is advised that you
+ download the most up to date version of the config scripts from
+ 
+-    ftp://ftp.gnu.org/pub/gnu/config/
++  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.guess
++and
++  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.sub
+ 
+ If the version you run ($0) is already up to date, please
+ send the following data and any information you think might be
+--- Modules/_ctypes/libffi/config.sub.00	2006-03-08 20:35:32.000000000 -0500
++++ Modules/_ctypes/libffi/config.sub	2007-05-16 16:47:31.192067010 -0400
+@@ -1,9 +1,10 @@
+ #! /bin/sh
+ # Configuration validation subroutine script.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+-#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
++#   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
++#   Inc.
+ 
+-timestamp='2005-04-22'
++timestamp='2007-04-29'
+ 
+ # This file is (in principle) common to ALL GNU software.
+ # The presence of a machine in this file suggests that SOME GNU software
+@@ -21,14 +22,15 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program; if not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place - Suite 330,
+-# Boston, MA 02111-1307, USA.
+-
++# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
++# 02110-1301, USA.
++#
+ # As a special exception to the GNU General Public License, if you
+ # distribute this file as part of a program that contains a
+ # configuration script generated by Autoconf, you may include it under
+ # the same distribution terms that you use for the rest of that program.
+ 
++
+ # Please send patches to <config-patches@gnu.org>.  Submit a context
+ # diff and a properly formatted ChangeLog entry.
+ #
+@@ -83,11 +85,11 @@
+ while test $# -gt 0 ; do
+   case $1 in
+     --time-stamp | --time* | -t )
+-       echo "$timestamp" ; exit 0 ;;
++       echo "$timestamp" ; exit ;;
+     --version | -v )
+-       echo "$version" ; exit 0 ;;
++       echo "$version" ; exit ;;
+     --help | --h* | -h )
+-       echo "$usage"; exit 0 ;;
++       echo "$usage"; exit ;;
+     -- )     # Stop option processing
+        shift; break ;;
+     - )	# Use stdin as input.
+@@ -99,7 +101,7 @@
+     *local*)
+        # First pass through any local machine types.
+        echo $1
+-       exit 0;;
++       exit ;;
+ 
+     * )
+        break ;;
+@@ -118,8 +120,9 @@
+ # Here we must recognize all the valid KERNEL-OS combinations.
+ maybe_os=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\2/'`
+ case $maybe_os in
+-  nto-qnx* | linux-gnu* | linux-dietlibc | linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | \
+-  kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | storm-chaos* | os2-emx* | rtmk-nova*)
++  nto-qnx* | linux-gnu* | linux-dietlibc | linux-newlib* | linux-uclibc* | \
++  uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | \
++  storm-chaos* | os2-emx* | rtmk-nova*)
+     os=-$maybe_os
+     basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
+     ;;
+@@ -170,6 +173,10 @@
+ 	-hiux*)
+ 		os=-hiuxwe2
+ 		;;
++	-sco6)
++		os=-sco5v6
++		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
++		;;
+ 	-sco5)
+ 		os=-sco3.2v5
+ 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
+@@ -186,6 +193,10 @@
+ 		# Don't forget version if it is 3.2v4 or newer.
+ 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
+ 		;;
++	-sco5v6*)
++		# Don't forget version if it is 3.2v4 or newer.
++		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
++		;;
+ 	-sco*)
+ 		os=-sco3.2v2
+ 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
+@@ -230,15 +241,16 @@
+ 	| alpha | alphaev[4-8] | alphaev56 | alphaev6[78] | alphapca5[67] \
+ 	| alpha64 | alpha64ev[4-8] | alpha64ev56 | alpha64ev6[78] | alpha64pca5[67] \
+ 	| am33_2.0 \
+-	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr \
++	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr | avr32 \
+ 	| bfin \
+ 	| c4x | clipper \
+ 	| d10v | d30v | dlx | dsp16xx \
+-	| fr30 | frv \
++	| fido | fr30 | frv \
+ 	| h8300 | h8500 | hppa | hppa1.[01] | hppa2.0 | hppa2.0[nw] | hppa64 \
+ 	| i370 | i860 | i960 | ia64 \
+ 	| ip2k | iq2000 \
+-	| m32r | m32rle | m68000 | m68k | m88k | maxq | mcore \
++	| m32c | m32r | m32rle | m68000 | m68k | m88k \
++	| maxq | mb | microblaze | mcore | mep \
+ 	| mips | mipsbe | mipseb | mipsel | mipsle \
+ 	| mips16 \
+ 	| mips64 | mips64el \
+@@ -247,6 +259,7 @@
+ 	| mips64vr4100 | mips64vr4100el \
+ 	| mips64vr4300 | mips64vr4300el \
+ 	| mips64vr5000 | mips64vr5000el \
++	| mips64vr5900 | mips64vr5900el \
+ 	| mipsisa32 | mipsisa32el \
+ 	| mipsisa32r2 | mipsisa32r2el \
+ 	| mipsisa64 | mipsisa64el \
+@@ -255,21 +268,24 @@
+ 	| mipsisa64sr71k | mipsisa64sr71kel \
+ 	| mipstx39 | mipstx39el \
+ 	| mn10200 | mn10300 \
++	| mt \
+ 	| msp430 \
++	| nios | nios2 \
+ 	| ns16k | ns32k \
+-	| openrisc | or32 \
++	| or32 \
+ 	| pdp10 | pdp11 | pj | pjl \
+ 	| powerpc | powerpc64 | powerpc64le | powerpcle | ppcbe \
+ 	| pyramid \
+-	| sh | sh[1234] | sh[23]e | sh[34]eb | shbe | shle | sh[1234]le | sh3ele \
++	| score \
++	| sh | sh[1234] | sh[24]a | sh[23]e | sh[34]eb | sheb | shbe | shle | sh[1234]le | sh3ele \
+ 	| sh64 | sh64le \
+-	| sparc | sparc64 | sparc64b | sparc86x | sparclet | sparclite \
+-	| sparcv8 | sparcv9 | sparcv9b \
+-	| strongarm \
++	| sparc | sparc64 | sparc64b | sparc64v | sparc86x | sparclet | sparclite \
++	| sparcv8 | sparcv9 | sparcv9b | sparcv9v \
++	| spu | strongarm \
+ 	| tahoe | thumb | tic4x | tic80 | tron \
+ 	| v850 | v850e \
+ 	| we32k \
+-	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
++	| x86 | xc16x | xscale | xscalee[bl] | xstormy16 | xtensa \
+ 	| z8k)
+ 		basic_machine=$basic_machine-unknown
+ 		;;
+@@ -280,6 +296,9 @@
+ 		;;
+ 	m88110 | m680[12346]0 | m683?2 | m68360 | m5200 | v70 | w65 | z8k)
+ 		;;
++	ms1)
++		basic_machine=mt-unknown
++		;;
+ 
+ 	# We use `pc' rather than `unknown'
+ 	# because (1) that's what they normally are, and
+@@ -299,18 +318,18 @@
+ 	| alpha64-* | alpha64ev[4-8]-* | alpha64ev56-* | alpha64ev6[78]-* \
+ 	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
+ 	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
+-	| avr-* \
++	| avr-* | avr32-* \
+ 	| bfin-* | bs2000-* \
+ 	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* | c55x-* | c6x-* \
+ 	| clipper-* | craynv-* | cydra-* \
+ 	| d10v-* | d30v-* | dlx-* \
+ 	| elxsi-* \
+-	| f30[01]-* | f700-* | fr30-* | frv-* | fx80-* \
++	| f30[01]-* | f700-* | fido-* | fr30-* | frv-* | fx80-* \
+ 	| h8300-* | h8500-* \
+ 	| hppa-* | hppa1.[01]-* | hppa2.0-* | hppa2.0[nw]-* | hppa64-* \
+ 	| i*86-* | i860-* | i960-* | ia64-* \
+ 	| ip2k-* | iq2000-* \
+-	| m32r-* | m32rle-* \
++	| m32c-* | m32r-* | m32rle-* \
+ 	| m68000-* | m680[012346]0-* | m68360-* | m683?2-* | m68k-* \
+ 	| m88110-* | m88k-* | maxq-* | mcore-* \
+ 	| mips-* | mipsbe-* | mipseb-* | mipsel-* | mipsle-* \
+@@ -321,6 +340,7 @@
+ 	| mips64vr4100-* | mips64vr4100el-* \
+ 	| mips64vr4300-* | mips64vr4300el-* \
+ 	| mips64vr5000-* | mips64vr5000el-* \
++	| mips64vr5900-* | mips64vr5900el-* \
+ 	| mipsisa32-* | mipsisa32el-* \
+ 	| mipsisa32r2-* | mipsisa32r2el-* \
+ 	| mipsisa64-* | mipsisa64el-* \
+@@ -329,24 +349,26 @@
+ 	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
+ 	| mipstx39-* | mipstx39el-* \
+ 	| mmix-* \
++	| mt-* \
+ 	| msp430-* \
++	| nios-* | nios2-* \
+ 	| none-* | np1-* | ns16k-* | ns32k-* \
+ 	| orion-* \
+ 	| pdp10-* | pdp11-* | pj-* | pjl-* | pn-* | power-* \
+ 	| powerpc-* | powerpc64-* | powerpc64le-* | powerpcle-* | ppcbe-* \
+ 	| pyramid-* \
+ 	| romp-* | rs6000-* \
+-	| sh-* | sh[1234]-* | sh[23]e-* | sh[34]eb-* | shbe-* \
++	| sh-* | sh[1234]-* | sh[24]a-* | sh[23]e-* | sh[34]eb-* | sheb-* | shbe-* \
+ 	| shle-* | sh[1234]le-* | sh3ele-* | sh64-* | sh64le-* \
+-	| sparc-* | sparc64-* | sparc64b-* | sparc86x-* | sparclet-* \
++	| sparc-* | sparc64-* | sparc64b-* | sparc64v-* | sparc86x-* | sparclet-* \
+ 	| sparclite-* \
+-	| sparcv8-* | sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
++	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | strongarm-* | sv1-* | sx?-* \
+ 	| tahoe-* | thumb-* \
+ 	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
+ 	| tron-* \
+ 	| v850-* | v850e-* | vax-* \
+ 	| we32k-* \
+-	| x86-* | x86_64-* | xps100-* | xscale-* | xscalee[bl]-* \
++	| x86-* | x86_64-* | xc16x-* | xps100-* | xscale-* | xscalee[bl]-* \
+ 	| xstormy16-* | xtensa-* \
+ 	| ymp-* \
+ 	| z8k-*)
+@@ -661,6 +683,10 @@
+ 		basic_machine=i386-pc
+ 		os=-mingw32
+ 		;;
++	mingw32ce)
++		basic_machine=arm-unknown
++		os=-mingw32ce
++		;;
+ 	miniframe)
+ 		basic_machine=m68000-convergent
+ 		;;
+@@ -686,6 +712,9 @@
+ 		basic_machine=i386-pc
+ 		os=-msdos
+ 		;;
++	ms1-*)
++		basic_machine=`echo $basic_machine | sed -e 's/ms1-/mt-/'`
++		;;
+ 	mvs)
+ 		basic_machine=i370-ibm
+ 		os=-mvs
+@@ -761,9 +790,8 @@
+ 		basic_machine=hppa1.1-oki
+ 		os=-proelf
+ 		;;
+-	or32 | or32-*)
++	openrisc | openrisc-*)
+ 		basic_machine=or32-unknown
+-		os=-coff
+ 		;;
+ 	os400)
+ 		basic_machine=powerpc-ibm
+@@ -794,6 +822,12 @@
+ 	pc532 | pc532-*)
+ 		basic_machine=ns32k-pc532
+ 		;;
++	pc98)
++		basic_machine=i386-pc
++		;;
++	pc98-*)
++		basic_machine=i386-`echo $basic_machine | sed 's/^[^-]*-//'`
++		;;
+ 	pentium | p5 | k5 | k6 | nexgen | viac3)
+ 		basic_machine=i586-pc
+ 		;;
+@@ -850,6 +884,10 @@
+ 		basic_machine=i586-unknown
+ 		os=-pw32
+ 		;;
++	rdos)
++		basic_machine=i386-pc
++		os=-rdos
++		;;
+ 	rom68k)
+ 		basic_machine=m68k-rom68k
+ 		os=-coff
+@@ -876,6 +914,10 @@
+ 	sb1el)
+ 		basic_machine=mipsisa64sb1el-unknown
+ 		;;
++	sde)
++		basic_machine=mipsisa32-sde
++		os=-elf
++		;;
+ 	sei)
+ 		basic_machine=mips-sei
+ 		os=-seiux
+@@ -887,6 +929,9 @@
+ 		basic_machine=sh-hitachi
+ 		os=-hms
+ 		;;
++	sh5el)
++		basic_machine=sh5le-unknown
++		;;
+ 	sh64)
+ 		basic_machine=sh64-unknown
+ 		;;
+@@ -1089,13 +1134,10 @@
+ 	we32k)
+ 		basic_machine=we32k-att
+ 		;;
+-	sh3 | sh4 | sh[34]eb | sh[1234]le | sh[23]ele)
++	sh[1234] | sh[24]a | sh[34]eb | sh[1234]le | sh[23]ele)
+ 		basic_machine=sh-unknown
+ 		;;
+-	sh64)
+-		basic_machine=sh64-unknown
+-		;;
+-	sparc | sparcv8 | sparcv9 | sparcv9b)
++	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v)
+ 		basic_machine=sparc-sun
+ 		;;
+ 	cydra)
+@@ -1168,20 +1210,23 @@
+ 	      | -aos* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+-	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* | -openbsd* \
++	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
++	      | -openbsd* | -solidbsd* \
+ 	      | -ekkobsd* | -kfreebsd* | -freebsd* | -riscix* | -lynxos* \
+ 	      | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
+ 	      | -ptx* | -coff* | -ecoff* | -winnt* | -domain* | -vsta* \
+ 	      | -udi* | -eabi* | -lites* | -ieee* | -go32* | -aux* \
+ 	      | -chorusos* | -chorusrdb* \
+ 	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
+-	      | -mingw32* | -linux-gnu* | -linux-uclibc* | -uxpv* | -beos* | -mpeix* | -udk* \
++	      | -mingw32* | -linux-gnu* | -linux-newlib* | -linux-uclibc* \
++	      | -uxpv* | -beos* | -mpeix* | -udk* \
+ 	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
+ 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
+ 	      | -storm-chaos* | -tops10* | -tenex* | -tops20* | -its* \
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+-	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly*)
++	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+@@ -1199,7 +1244,7 @@
+ 		os=`echo $os | sed -e 's|nto|nto-qnx|'`
+ 		;;
+ 	-sim | -es1800* | -hms* | -xray | -os68k* | -none* | -v88r* \
+-	      | -windows* | -osx | -abug | -netware* | -os9* | -beos* \
++	      | -windows* | -osx | -abug | -netware* | -os9* | -beos* | -haiku* \
+ 	      | -macos* | -mpw* | -magic* | -mmixware* | -mon960* | -lnews*)
+ 		;;
+ 	-mac*)
+@@ -1333,6 +1378,12 @@
+ # system, and we'll never get to this point.
+ 
+ case $basic_machine in
++        score-*)
++		os=-elf
++		;;
++        spu-*)
++		os=-elf
++		;;
+ 	*-acorn)
+ 		os=-riscix1.2
+ 		;;
+@@ -1342,9 +1393,9 @@
+ 	arm*-semi)
+ 		os=-aout
+ 		;;
+-    c4x-* | tic4x-*)
+-        os=-coff
+-        ;;
++        c4x-* | tic4x-*)
++        	os=-coff
++		;;
+ 	# This must come before the *-dec entry.
+ 	pdp10-*)
+ 		os=-tops20
+@@ -1370,6 +1421,9 @@
+ 	m68*-cisco)
+ 		os=-aout
+ 		;;
++        mep-*)
++		os=-elf
++		;;
+ 	mips*-cisco)
+ 		os=-elf
+ 		;;
+@@ -1388,6 +1442,9 @@
+ 	*-be)
+ 		os=-beos
+ 		;;
++	*-haiku)
++		os=-haiku
++		;;
+ 	*-ibm)
+ 		os=-aix
+ 		;;
+@@ -1559,7 +1616,7 @@
+ esac
+ 
+ echo $basic_machine$os
+-exit 0
++exit
+ 
+ # Local variables:
+ # eval: (add-hook 'write-file-hooks 'time-stamp)
+--- Modules/_ctypes/libffi/configure.00	2006-08-14 12:17:41.000000000 -0400
++++ Modules/_ctypes/libffi/configure	2007-05-16 17:17:17.988134224 -0400
+@@ -3482,6 +3482,7 @@
+ i*86-*-gnu*) TARGET=X86; TARGETDIR=x86;;
+ i*86-*-solaris2.1[0-9]*) TARGET=X86_64; TARGETDIR=x86;;
+ i*86-*-solaris*) TARGET=X86; TARGETDIR=x86;;
++i*86-*-sysv5*) TARGET=X86; TARGETDIR=x86;;
+ i*86-*-beos*) TARGET=X86; TARGETDIR=x86;;
+ i*86-*-freebsd* | i*86-*-kfreebsd*-gnu) TARGET=X86; TARGETDIR=x86;;
+ i*86-*-netbsdelf* | i*86-*-knetbsd*-gnu) TARGET=X86; TARGETDIR=x86;;
+--- Modules/_ctypes/libffi/src/x86/ffitarget.h.00	2006-05-25 15:59:56.000000000 -0400
++++ Modules/_ctypes/libffi/src/x86/ffitarget.h	2007-05-16 17:25:31.980934009 -0400
+@@ -28,6 +28,10 @@
+ 
+ /* ---- System specific configurations ----------------------------------- */
+ 
++#if defined(__USLC__) && !defined(__i386__)
++#define __i386__
++#endif
++
+ #if defined (X86_64) && defined (__i386__)
+ #undef X86_64
+ #define X86
+--- Modules/_ctypes/libffi/include/ffi.h.in.osr6	2006-03-14 15:52:24.000000000 -0500
++++ Modules/_ctypes/libffi/include/ffi.h.in	2007-05-23 13:04:13.294916017 -0400
+@@ -67,6 +67,12 @@
+ #include <stddef.h>
+ #include <limits.h>
+ 
++#ifdef __USLC__
++#ifndef LLONG_MAX
++#define LLONG_MAX       0x7fffffffffffffff /* max. "signed long long" */
++#endif
++#endif
++
+ /* LONG_LONG_MAX is not always defined (not if STRICT_ANSI, for example).
+    But we can find it either under the correct ANSI name, or under GNU
+    C's internal name.  */
+@@ -218,7 +224,7 @@
+   ffi_cif   *cif;
+   void     (*fun)(ffi_cif*,void*,void**,void*);
+   void      *user_data;
+-} ffi_closure __attribute__((aligned (8)));
++} ffi_closure;
+ 
+ ffi_status
+ ffi_prep_closure (ffi_closure*,
+--- Modules/_ctypes/libffi/include/ffi_common.h.00	2006-03-08 20:35:32.000000000 -0500
++++ Modules/_ctypes/libffi/include/ffi_common.h	2007-05-16 17:35:02.833734009 -0400
+@@ -74,14 +74,14 @@
+ } extended_cif;
+ 
+ /* Terse sized type definitions.  */
+-typedef unsigned int UINT8  __attribute__((__mode__(__QI__)));
+-typedef signed int   SINT8  __attribute__((__mode__(__QI__)));
+-typedef unsigned int UINT16 __attribute__((__mode__(__HI__)));
+-typedef signed int   SINT16 __attribute__((__mode__(__HI__)));
+-typedef unsigned int UINT32 __attribute__((__mode__(__SI__)));
+-typedef signed int   SINT32 __attribute__((__mode__(__SI__)));
+-typedef unsigned int UINT64 __attribute__((__mode__(__DI__)));
+-typedef signed int   SINT64 __attribute__((__mode__(__DI__)));
++typedef unsigned int UINT8;
++typedef signed int   SINT8;
++typedef unsigned int UINT16;
++typedef signed int   SINT16;
++typedef unsigned int UINT32;
++typedef signed int   SINT32;
++typedef unsigned int UINT64;
++typedef signed int   SINT64;
+ 
+ typedef float FLOAT32;
+ 
+--- Modules/_ctypes/libffi/fficonfig.h.in.00	2006-05-25 15:59:56.000000000 -0400
++++ Modules/_ctypes/libffi/fficonfig.h.in	2007-05-16 17:32:53.061574011 -0400
+@@ -136,7 +136,7 @@
+ #ifdef LIBFFI_ASM
+ #define FFI_HIDDEN(name) .hidden name
+ #else
+-#define FFI_HIDDEN __attribute__ ((visibility ("hidden")))
++#define FFI_HIDDEN
+ #endif
+ #else
+ #ifdef LIBFFI_ASM
+--- Modules/_ctypes/libffi/src/x86/ffi.c.osr6	2006-04-15 16:23:54.000000000 -0400
++++ Modules/_ctypes/libffi/src/x86/ffi.c	2007-05-23 13:22:47.220676013 -0400
+@@ -241,12 +241,9 @@
+ 
+ static void ffi_prep_incoming_args_SYSV (char *stack, void **ret,
+ 					 void** args, ffi_cif* cif);
+-void FFI_HIDDEN ffi_closure_SYSV (ffi_closure *)
+-     __attribute__ ((regparm(1)));
+-unsigned int FFI_HIDDEN ffi_closure_SYSV_inner (ffi_closure *, void **, void *)
+-     __attribute__ ((regparm(1)));
+-void FFI_HIDDEN ffi_closure_raw_SYSV (ffi_raw_closure *)
+-     __attribute__ ((regparm(1)));
++void FFI_HIDDEN ffi_closure_SYSV (ffi_closure *);
++unsigned int FFI_HIDDEN ffi_closure_SYSV_inner (ffi_closure *, void **, void *);
++void FFI_HIDDEN ffi_closure_raw_SYSV (ffi_raw_closure *);
+ 
+ /* This function is jumped to by the trampoline */
+ 
+@@ -321,7 +318,7 @@
+ /* How to make a trampoline.  Derived from gcc/config/i386/i386.c. */
+ 
+ #define FFI_INIT_TRAMPOLINE(TRAMP,FUN,CTX) \
+-({ unsigned char *__tramp = (unsigned char*)(TRAMP); \
++{ unsigned char *__tramp = (unsigned char*)(TRAMP); \
+    unsigned int  __fun = (unsigned int)(FUN); \
+    unsigned int  __ctx = (unsigned int)(CTX); \
+    unsigned int  __dis = __fun - ((unsigned int) __tramp + FFI_TRAMPOLINE_SIZE); \
+@@ -329,7 +326,7 @@
+    *(unsigned int*)  &__tramp[1] = __ctx; /* movl __ctx, %eax */ \
+    *(unsigned char *)  &__tramp[5] = 0xe9; \
+    *(unsigned int*)  &__tramp[6] = __dis; /* jmp __fun  */ \
+- })
++ }
+ 
+ 
+ /* the cif must already be prep'ed */
+--- Modules/pyexpat.c.00	2006-07-06 01:13:22.000000000 -0400
++++ Modules/pyexpat.c	2007-05-16 18:02:41.955814092 -0400
+@@ -1571,7 +1571,7 @@
+                elaborate system of handlers and state could remove the
+                C handler more effectively. */
+             if (handlernum == CharacterData && self->in_callback)
+-                c_handler = noop_character_data_handler;
++                c_handler = (xmlhandler)noop_character_data_handler;
+             v = NULL;
+         }
+         else if (v != NULL) {
+--- Modules/_ctypes/callproc.c.osr6	2006-08-14 07:17:48.000000000 -0400
++++ Modules/_ctypes/callproc.c	2007-05-23 14:49:42.845156047 -0400
+@@ -636,6 +636,7 @@
+ 				"No ffi_type for result");
+ 		return -1;
+ 	}
++	atypes = (ffi_type **)alloca(sizeof(ffi_type *) * argcount);
+ 	
+ 	cc = FFI_DEFAULT_ABI;
+ #if defined(MS_WIN32) && !defined(_WIN32_WCE)
+@@ -969,7 +970,7 @@
+ 	}
+ 
+ 	rtype = GetType(restype);
+-	resbuf = alloca(max(rtype->size, sizeof(ffi_arg)));
++	resbuf = (void *)alloca(max(rtype->size, sizeof(ffi_arg)));
+ 
+ 	avalues = (void **)alloca(sizeof(void *) * argcount);
+ 	atypes = (ffi_type **)alloca(sizeof(ffi_type *) * argcount);
+--- Modules/_ctypes/ctypes.h.00	2007-05-19 12:30:21.299259036 -0400
++++ Modules/_ctypes/ctypes.h	2007-05-19 12:32:36.522261015 -0400
+@@ -74,7 +74,7 @@
+ 	PyObject *callable;
+ 	SETFUNC setfunc;
+ 	ffi_type *restype;
+-	ffi_type *atypes[0];
++	ffi_type **atypes;
+ } ffi_info;
+ 
+ typedef struct {
+--- Modules/_ctypes/callbacks.c.00	2007-05-23 13:44:07.775236000 -0400
++++ Modules/_ctypes/callbacks.c	2007-05-23 13:53:04.348836019 -0400
+@@ -279,6 +279,7 @@
+ 		goto error;
+ 	}
+ 
++	p->atypes = (ffi_type **)alloca(sizeof(ffi_type *) * nArgs);
+ 	for (i = 0; i < nArgs; ++i) {
+ 		PyObject *cnv = PySequence_GetItem(converters, i);
+ 		if (cnv == NULL)
+--- Lib/ctypes/util.py.osr6	2007-01-17 14:53:24.000000000 -0500
++++ Lib/ctypes/util.py	2007-05-22 15:06:47.513318010 -0400
+@@ -4,151 +4,58 @@
+ import sys, os
+ 
+ # find_library(name) returns the pathname of a library, or None.
+-if os.name == "nt":
+-    def find_library(name):
+-        # See MSDN for the REAL search order.
+-        for directory in os.environ['PATH'].split(os.pathsep):
+-            fname = os.path.join(directory, name)
+-            if os.path.exists(fname):
+-                return fname
+-            if fname.lower().endswith(".dll"):
+-                continue
+-            fname = fname + ".dll"
+-            if os.path.exists(fname):
+-                return fname
+-        return None
++# find functions, using hardcoded paths for SCO, written by
++# Ronald Joe Record <rr@sco.com> 22-May-2007
+ 
+-if os.name == "ce":
+-    # search path according to MSDN:
+-    # - absolute path specified by filename
+-    # - The .exe launch directory
+-    # - the Windows directory
+-    # - ROM dll files (where are they?)
+-    # - OEM specified search path: HKLM\Loader\SystemPath
+-    def find_library(name):
+-        return name
+-
+-if os.name == "posix" and sys.platform == "darwin":
+-    from ctypes.macholib.dyld import dyld_find as _dyld_find
+-    def find_library(name):
+-        possible = ['lib%s.dylib' % name,
+-                    '%s.dylib' % name,
+-                    '%s.framework/%s' % (name, name)]
+-        for name in possible:
+-            try:
+-                return _dyld_find(name)
+-            except ValueError:
+-                continue
+-        return None
++import re, tempfile, errno
+ 
+-elif os.name == "posix":
+-    # Andreas Degert's find functions, using gcc, /sbin/ldconfig, objdump
+-    import re, tempfile, errno
+-
+-    def _findLib_gcc(name):
+-        expr = r'[^\(\)\s]*lib%s\.[^\(\)\s]*' % re.escape(name)
+-        fdout, ccout = tempfile.mkstemp()
+-        os.close(fdout)
+-        cmd = 'if type gcc >/dev/null 2>&1; then CC=gcc; else CC=cc; fi;' \
+-              '$CC -Wl,-t -o ' + ccout + ' 2>&1 -l' + name
+-        try:
+-            f = os.popen(cmd)
+-            trace = f.read()
+-            f.close()
+-        finally:
+-            try:
+-                os.unlink(ccout)
+-            except OSError, e:
+-                if e.errno != errno.ENOENT:
+-                    raise
+-        res = re.search(expr, trace)
+-        if not res:
+-            return None
+-        return res.group(0)
+-
+-    def _get_soname(f):
+-        # assuming GNU binutils / ELF
+-        if not f:
+-            return None
+-        cmd = "objdump -p -j .dynamic 2>/dev/null " + f
+-        res = re.search(r'\sSONAME\s+([^\s]+)', os.popen(cmd).read())
+-        if not res:
+-            return None
+-        return res.group(1)
+-
+-    if (sys.platform.startswith("freebsd")
+-        or sys.platform.startswith("openbsd")
+-        or sys.platform.startswith("dragonfly")):
+-
+-        def _num_version(libname):
+-            # "libxyz.so.MAJOR.MINOR" => [ MAJOR, MINOR ]
+-            parts = libname.split(".")
+-            nums = []
+-            try:
+-                while parts:
+-                    nums.insert(0, int(parts.pop()))
+-            except ValueError:
+-                pass
+-            return nums or [ sys.maxint ]
+-
+-        def find_library(name):
+-            ename = re.escape(name)
+-            expr = r':-l%s\.\S+ => \S*/(lib%s\.\S+)' % (ename, ename)
+-            res = re.findall(expr,
+-                             os.popen('/sbin/ldconfig -r 2>/dev/null').read())
+-            if not res:
+-                return _get_soname(_findLib_gcc(name))
+-            res.sort(cmp= lambda x,y: cmp(_num_version(x), _num_version(y)))
+-            return res[-1]
+-
+-    else:
+-
+-        def _findLib_ldconfig(name):
+-            # XXX assuming GLIBC's ldconfig (with option -p)
+-            expr = r'/[^\(\)\s]*lib%s\.[^\(\)\s]*' % re.escape(name)
+-            res = re.search(expr,
+-                            os.popen('/sbin/ldconfig -p 2>/dev/null').read())
+-            if not res:
+-                # Hm, this works only for libs needed by the python executable.
+-                cmd = 'ldd %s 2>/dev/null' % sys.executable
+-                res = re.search(expr, os.popen(cmd).read())
+-                if not res:
+-                    return None
+-            return res.group(0)
++def _get_soname(f):
++    if not f:
++        return None
++    cmd = "dump -Lv 2>/dev/null " + f
++    res = re.search(r'\sSONAME\s+([^\s]+)', os.popen(cmd).read())
++    if not res:
++        return f
++    return res.group(1)
++
++def _findLib_sco(name):
++    libname = "lib" + name
++    for directory in ('/usr/lib', '/usr/ccs/lib', '/usr/X11R6/lib'):
++        fname = os.path.join(directory, libname)
++        if os.path.exists(fname):
++            return fname
++        fname = fname + ".so"
++        if os.path.exists(fname):
++            return fname
++        fname = fname + ".1"
++        if os.path.exists(fname):
++            return fname
++
++    # This works only for libs needed by the python executable.
++    expr = r'/[^\(\)\s]*lib%s\.[^\(\)\s]*' % re.escape(name)
++    cmd = 'ldd %s 2>/dev/null' % sys.executable
++    res = re.search(expr, os.popen(cmd).read())
++    if not res:
++        return None
++    return res.group(0)
+ 
+-        def find_library(name):
+-            return _get_soname(_findLib_ldconfig(name) or _findLib_gcc(name))
++def find_library(name):
++    return _get_soname(_findLib_sco(name))
+ 
+ ################################################################
+ # test code
+ 
+ def test():
+     from ctypes import cdll
+-    if os.name == "nt":
+-        print cdll.msvcrt
+-        print cdll.load("msvcrt")
+-        print find_library("msvcrt")
+-
+-    if os.name == "posix":
+-        # find and load_version
+-        print find_library("m")
+-        print find_library("c")
+-        print find_library("bz2")
+-
+-        # getattr
+-##        print cdll.m
+-##        print cdll.bz2
+-
+-        # load
+-        if sys.platform == "darwin":
+-            print cdll.LoadLibrary("libm.dylib")
+-            print cdll.LoadLibrary("libcrypto.dylib")
+-            print cdll.LoadLibrary("libSystem.dylib")
+-            print cdll.LoadLibrary("System.framework/System")
+-        else:
+-            print cdll.LoadLibrary("libm.so")
+-            print cdll.LoadLibrary("libcrypt.so")
+-            print find_library("crypt")
++
++    # find and load_version
++    print find_library("m")
++    print find_library("c")
++    print find_library("bz2")
++
++    print cdll.LoadLibrary("libm.so")
++    print cdll.LoadLibrary("libcrypt.so")
++    print find_library("crypt")
+ 
+ if __name__ == "__main__":
+     test()
+--- Modules/Setup.osr6	2007-05-22 15:24:35.619120050 -0400
++++ Modules/Setup	2007-05-22 16:00:12.513200025 -0400
+@@ -0,0 +1,492 @@
++# -*- makefile -*-
++# The file Setup is used by the makesetup script to construct the files
++# Makefile and config.c, from Makefile.pre and config.c.in,
++# respectively.  The file Setup itself is initially copied from
++# Setup.dist; once it exists it will not be overwritten, so you can edit
++# Setup to your heart's content.  Note that Makefile.pre is created
++# from Makefile.pre.in by the toplevel configure script.
++
++# (VPATH notes: Setup and Makefile.pre are in the build directory, as
++# are Makefile and config.c; the *.in and *.dist files are in the source
++# directory.)
++
++# Each line in this file describes one or more optional modules.
++# Modules enabled here will not be compiled by the setup.py script,
++# so the file can be used to override setup.py's behavior.
++
++# Lines have the following structure:
++#
++# <module> ... [<sourcefile> ...] [<cpparg> ...] [<library> ...]
++#
++# <sourcefile> is anything ending in .c (.C, .cc, .c++ are C++ files)
++# <cpparg> is anything starting with -I, -D, -U or -C
++# <library> is anything ending in .a or beginning with -l or -L
++# <module> is anything else but should be a valid Python
++# identifier (letters, digits, underscores, beginning with non-digit)
++#
++# (As the makesetup script changes, it may recognize some other
++# arguments as well, e.g. *.so and *.sl as libraries.  See the big
++# case statement in the makesetup script.)
++#
++# Lines can also have the form
++#
++# <name> = <value>
++#
++# which defines a Make variable definition inserted into Makefile.in
++#
++# Finally, if a line contains just the word "*shared*" (without the
++# quotes but with the stars), then the following modules will not be
++# built statically.  The build process works like this:
++#
++# 1. Build all modules that are declared as static in Modules/Setup,
++#    combine them into libpythonxy.a, combine that into python.
++# 2. Build all modules that are listed as shared in Modules/Setup.
++# 3. Invoke setup.py. That builds all modules that
++#    a) are not builtin, and
++#    b) are not listed in Modules/Setup, and
++#    c) can be build on the target
++#
++# Therefore, modules declared to be shared will not be
++# included in the config.c file, nor in the list of objects to be
++# added to the library archive, and their linker options won't be
++# added to the linker options. Rules to create their .o files and
++# their shared libraries will still be added to the Makefile, and
++# their names will be collected in the Make variable SHAREDMODS.  This
++# is used to build modules as shared libraries.  (They can be
++# installed using "make sharedinstall", which is implied by the
++# toplevel "make install" target.)  (For compatibility,
++# *noconfig* has the same effect as *shared*.)
++#
++# In addition, *static* explicitly declares the following modules to
++# be static.  Lines containing "*static*" and "*shared*" may thus
++# alternate throughout this file.
++
++# NOTE: As a standard policy, as many modules as can be supported by a
++# platform should be present.  The distribution comes with all modules
++# enabled that are supported by most platforms and don't require you
++# to ftp sources from elsewhere.
++
++
++# Some special rules to define PYTHONPATH.
++# Edit the definitions below to indicate which options you are using.
++# Don't add any whitespace or comments!
++
++# Directories where library files get installed.
++# DESTLIB is for Python modules; MACHDESTLIB for shared libraries.
++DESTLIB=$(LIBDEST)
++MACHDESTLIB=$(BINLIBDEST)
++
++# NOTE: all the paths are now relative to the prefix that is computed
++# at run time!
++
++# Standard path -- don't edit.
++# No leading colon since this is the first entry.
++# Empty since this is now just the runtime prefix.
++DESTPATH=
++
++# Site specific path components -- should begin with : if non-empty
++SITEPATH=
++
++# Standard path components for test modules
++TESTPATH=
++
++# Path components for machine- or system-dependent modules and shared libraries
++MACHDEPPATH=:plat-$(MACHDEP)
++EXTRAMACHDEPPATH=
++
++# Path component for the Tkinter-related modules
++# The TKPATH variable is always enabled, to save you the effort.
++TKPATH=:lib-tk
++
++COREPYTHONPATH=$(DESTPATH)$(SITEPATH)$(TESTPATH)$(MACHDEPPATH)$(EXTRAMACHDEPPATH)$(TKPATH)
++PYTHONPATH=$(COREPYTHONPATH)
++
++
++# The modules listed here can't be built as shared libraries for
++# various reasons; therefore they are listed here instead of in the
++# normal order.
++
++# This only contains the minimal set of modules required to run the 
++# setup.py script in the root of the Python source tree.
++
++posix posixmodule.c		# posix (UNIX) system calls
++errno errnomodule.c		# posix (UNIX) errno values
++pwd pwdmodule.c			# this is needed to find out the user's home dir
++				# if $HOME is not set
++_sre _sre.c			# Fredrik Lundh's new regular expressions
++_codecs _codecsmodule.c		# access to the builtin codecs and codec registry
++
++# The zipimport module is always imported at startup. Having it as a
++# builtin module avoids some bootstrapping problems and reduces overhead.
++zipimport zipimport.c
++
++# The rest of the modules listed in this file are all commented out by
++# default.  Usually they can be detected and built as dynamically
++# loaded modules by the new setup.py script added in Python 2.1.  If
++# you're on a platform that doesn't support dynamic loading, want to 
++# compile modules statically into the Python binary, or need to 
++# specify some odd set of compiler switches, you can uncomment the 
++# appropriate lines below.
++
++# ======================================================================
++
++# The Python symtable module depends on .h files that setup.py doesn't track
++_symtable symtablemodule.c
++
++# The SGI specific GL module:
++
++GLHACK=-Dclear=__GLclear
++#gl glmodule.c cgensupport.c -I$(srcdir) $(GLHACK) -lgl -lX11
++
++# Pure module.  Cannot be linked dynamically.
++# -DWITH_QUANTIFY, -DWITH_PURIFY, or -DWITH_ALL_PURE
++#WHICH_PURE_PRODUCTS=-DWITH_ALL_PURE
++#PURE_INCLS=-I/usr/local/include
++#PURE_STUBLIBS=-L/usr/local/lib -lpurify_stubs -lquantify_stubs
++#pure puremodule.c $(WHICH_PURE_PRODUCTS) $(PURE_INCLS) $(PURE_STUBLIBS)
++
++# Uncommenting the following line tells makesetup that all following
++# modules are to be built as shared libraries (see above for more
++# detail; also note that *static* reverses this effect):
++
++*shared*
++
++# GNU readline.  Unlike previous Python incarnations, GNU readline is
++# now incorporated in an optional module, configured in the Setup file
++# instead of by a configure script switch.  You may have to insert a
++# -L option pointing to the directory where libreadline.* lives,
++# and you may have to change -ltermcap to -ltermlib or perhaps remove
++# it, depending on your system -- see the GNU readline instructions.
++# It's okay for this to be a shared library, too.
++
++readline readline.c -lreadline -ltermcap
++
++
++# Modules that should always be present (non UNIX dependent):
++
++array arraymodule.c	# array objects
++cmath cmathmodule.c -lm # complex math library functions
++math mathmodule.c -lm # math library functions, e.g. sin()
++_struct _struct.c	# binary structure packing/unpacking
++time timemodule.c -lm # time operations and variables
++operator operator.c	# operator.add() and similar goodies
++_weakref _weakref.c	# basic weak reference support
++_testcapi _testcapimodule.c    # Python C API test module
++_random _randommodule.c	# Random number generator
++collections collectionsmodule.c # Container types
++itertools itertoolsmodule.c	# Functions creating iterators for efficient looping 
++strop stropmodule.c		# String manipulations
++
++#unicodedata unicodedata.c    # static Unicode character database
++
++# access to ISO C locale support
++_locale _localemodule.c  -lgnuintl
++
++
++# Modules with some UNIX dependencies -- on by default:
++# (If you have a really backward UNIX, select and socket may not be
++# supported...)
++
++fcntl fcntlmodule.c	# fcntl(2) and ioctl(2)
++spwd spwdmodule.c		# spwd(3) 
++grp grpmodule.c		# grp(3)
++select selectmodule.c	# select(2); not on ancient System V
++
++# Memory-mapped files (also works on Win32).
++mmap mmapmodule.c
++
++# CSV file helper
++_csv _csv.c
++
++# Socket module helper for socket(2)
++_socket socketmodule.c
++
++# Socket module helper for SSL support; you must comment out the other
++# socket line above, and possibly edit the SSL variable:
++SSL=/usr
++_ssl _ssl.c \
++	-DUSE_SSL -I$(SSL)/include/openssl \
++	-lssl -lcrypto
++
++# The crypt module is now disabled by default because it breaks builds
++# on many systems (where -lcrypt is needed), e.g. Linux (I believe).
++#
++# First, look at Setup.config; configure may have set this for you.
++
++crypt cryptmodule.c -lcrypt	# crypt(3); needs -lcrypt on some systems
++
++
++# Some more UNIX dependent modules -- off by default, since these
++# are not supported by all UNIX systems:
++
++nis nismodule.c -lnsl	# Sun yellow pages -- not everywhere
++termios termios.c	# Steen Lumholt's termios module
++resource resource.c	# Jeremy Hylton's rlimit interface
++
++
++# Multimedia modules -- off by default.
++# These don't work for 64-bit platforms!!!
++# #993173 says audioop works on 64-bit platforms, though.
++# These represent audio samples or images as strings:
++
++#audioop audioop.c	# Operations on audio samples
++imageop imageop.c	# Operations on images
++rgbimg rgbimgmodule.c	# Read SGI RGB image files (but coded portably)
++
++
++# Note that the _md5 and _sha modules are normally only built if the
++# system does not have the OpenSSL libs containing an optimized version.
++
++# The _md5 module implements the RSA Data Security, Inc. MD5
++# Message-Digest Algorithm, described in RFC 1321.  The necessary files
++# md5.c and md5.h are included here.
++
++#_md5 md5module.c md5.c
++
++
++# The _sha module implements the SHA checksum algorithm.
++# (NIST's Secure Hash Algorithm.)
++#_sha shamodule.c
++
++
++# SGI IRIX specific modules -- off by default.
++
++# These module work on any SGI machine:
++
++# *** gl must be enabled higher up in this file ***
++#fm fmmodule.c $(GLHACK) -lfm -lgl		# Font Manager
++#sgi sgimodule.c			# sgi.nap() and a few more
++
++# This module requires the header file
++# /usr/people/4Dgifts/iristools/include/izoom.h:
++#imgfile imgfile.c -limage -lgutil -lgl -lm	# Image Processing Utilities
++
++
++# These modules require the Multimedia Development Option (I think):
++
++#al almodule.c -laudio			# Audio Library
++#cd cdmodule.c -lcdaudio -lds -lmediad	# CD Audio Library
++#cl clmodule.c -lcl -lawareaudio	# Compression Library
++#sv svmodule.c yuvconvert.c -lsvideo -lXext -lX11	# Starter Video
++
++
++# The FORMS library, by Mark Overmars, implements user interface
++# components such as dialogs and buttons using SGI's GL and FM
++# libraries.  You must ftp the FORMS library separately from
++# ftp://ftp.cs.ruu.nl/pub/SGI/FORMS.  It was tested with FORMS 2.2a.
++# NOTE: if you want to be able to use FORMS and curses simultaneously
++# (or both link them statically into the same binary), you must
++# compile all of FORMS with the cc option "-Dclear=__GLclear".
++
++# The FORMS variable must point to the FORMS subdirectory of the forms
++# toplevel directory:
++
++#FORMS=/ufs/guido/src/forms/FORMS
++#fl flmodule.c -I$(FORMS) $(GLHACK) $(FORMS)/libforms.a -lfm -lgl
++
++
++# SunOS specific modules -- off by default:
++
++#sunaudiodev sunaudiodev.c
++
++
++# A Linux specific module -- off by default; this may also work on 
++# some *BSDs.
++
++#linuxaudiodev linuxaudiodev.c
++
++
++# George Neville-Neil's timing module:
++
++timing timingmodule.c
++
++
++# The _tkinter module.
++#
++# The command for _tkinter is long and site specific.  Please
++# uncomment and/or edit those parts as indicated.  If you don't have a
++# specific extension (e.g. Tix or BLT), leave the corresponding line
++# commented out.  (Leave the trailing backslashes in!  If you
++# experience strange errors, you may want to join all uncommented
++# lines and remove the backslashes -- the backslash interpretation is
++# done by the shell's "read" command and it may not be implemented on
++# every system.
++
++# *** Always uncomment this (leave the leading underscore in!):
++_tkinter _tkinter.c tkappinit.c -DWITH_APPINIT \
++	-L/usr/gnu/lib \
++	-I/usr/gnu/include \
++	-ltk8.4 -ltcl8.4 \
++	-L/usr/X11R6/lib \
++	-lX11
++# *** Uncomment and edit to reflect where your Tcl/Tk libraries are:
++#	-L/usr/local/lib \
++# *** Uncomment and edit to reflect where your Tcl/Tk headers are:
++#	-I/usr/local/include \
++# *** Uncomment and edit to reflect where your X11 header files are:
++#	-I/usr/X11R6/include \
++# *** Or uncomment this for Solaris:
++#	-I/usr/openwin/include \
++# *** Uncomment and edit for Tix extension only:
++#	-DWITH_TIX -ltix8.1.8.2 \
++# *** Uncomment and edit for BLT extension only:
++#	-DWITH_BLT -I/usr/local/blt/blt8.0-unoff/include -lBLT8.0 \
++# *** Uncomment and edit for PIL (TkImaging) extension only:
++#     (See http://www.pythonware.com/products/pil/ for more info)
++#	-DWITH_PIL -I../Extensions/Imaging/libImaging  tkImaging.c \
++# *** Uncomment and edit for TOGL extension only:
++#	-DWITH_TOGL togl.c \
++# *** Uncomment and edit to reflect your Tcl/Tk versions:
++#	-ltk8.2 -ltcl8.2 \
++# *** Uncomment and edit to reflect where your X11 libraries are:
++#	-L/usr/X11R6/lib \
++# *** Or uncomment this for Solaris:
++#	-L/usr/openwin/lib \
++# *** Uncomment these for TOGL extension only:
++#	-lGL -lGLU -lXext -lXmu \
++# *** Uncomment for AIX:
++#	-lld \
++# *** Always uncomment this; X11 libraries to link with:
++#	-lX11
++
++# Lance Ellinghaus's syslog module
++syslog syslogmodule.c		# syslog daemon interface
++
++
++# Curses support, requring the System V version of curses, often
++# provided by the ncurses library.  e.g. on Linux, link with -lncurses
++# instead of -lcurses).
++#
++# First, look at Setup.config; configure may have set this for you.
++
++_curses _cursesmodule.c -lcurses -ltermcap
++# Wrapper for the panel library that's part of ncurses and SYSV curses.
++_curses_panel _curses_panel.c -lpanel -lcurses 
++
++
++# Generic (SunOS / SVR4) dynamic loading module.
++# This is not needed for dynamic loading of Python modules --
++# it is a highly experimental and dangerous device for calling
++# *arbitrary* C functions in *arbitrary* shared libraries:
++
++#dl dlmodule.c
++
++
++# Modules that provide persistent dictionary-like semantics.  You will
++# probably want to arrange for at least one of them to be available on
++# your machine, though none are defined by default because of library
++# dependencies.  The Python module anydbm.py provides an
++# implementation independent wrapper for these; dumbdbm.py provides
++# similar functionality (but slower of course) implemented in Python.
++
++# The standard Unix dbm module has been moved to Setup.config so that
++# it will be compiled as a shared library by default.  Compiling it as
++# a built-in module causes conflicts with the pybsddb3 module since it
++# creates a static dependency on an out-of-date version of db.so.
++#
++# First, look at Setup.config; configure may have set this for you.
++
++#dbm dbmmodule.c 	# dbm(3) may require -lndbm or similar
++
++# Anthony Baxter's gdbm module.  GNU dbm(3) will require -lgdbm:
++#
++# First, look at Setup.config; configure may have set this for you.
++
++gdbm gdbmmodule.c -lgdbm
++
++
++# Sleepycat Berkeley DB interface.
++#
++# This requires the Sleepycat DB code, see http://www.sleepycat.com/
++# The earliest supported version of that library is 3.0, the latest
++# supported version is 4.0 (4.1 is specifically not supported, as that
++# changes the semantics of transactional databases). A list of available
++# releases can be found at
++#
++# http://www.sleepycat.com/update/index.html
++#
++# Edit the variables DB and DBLIBVERto point to the db top directory
++# and the subdirectory of PORT where you built it.
++#DB=/usr/local/BerkeleyDB.4.0
++DBLIBVER=4.3
++#DBINC=$(DB)/include
++#DBLIB=$(DB)/lib
++_bsddb _bsddb.c -ldb-$(DBLIBVER)
++
++# Historical Berkeley DB 1.85
++#
++# This module is deprecated; the 1.85 version of the Berkeley DB library has
++# bugs that can cause data corruption. If you can, use later versions of the
++# library instead, available from <http://www.sleepycat.com/>.
++
++#DB=/depot/sundry/src/berkeley-db/db.1.85
++#DBPORT=$(DB)/PORT/irix.5.3
++#bsddb185 bsddbmodule.c -I$(DBPORT)/include -I$(DBPORT) $(DBPORT)/libdb.a
++
++
++
++# Helper module for various ascii-encoders
++binascii binascii.c
++
++# Fred Drake's interface to the Python parser
++parser parsermodule.c
++
++# cStringIO and cPickle
++cStringIO cStringIO.c
++cPickle cPickle.c
++
++
++# Lee Busby's SIGFPE modules.
++# The library to link fpectl with is platform specific.
++# Choose *one* of the options below for fpectl:
++
++# For SGI IRIX (tested on 5.3):
++#fpectl fpectlmodule.c -lfpe
++
++# For Solaris with SunPro compiler (tested on Solaris 2.5 with SunPro C 4.2):
++# (Without the compiler you don't have -lsunmath.)
++#fpectl fpectlmodule.c -R/opt/SUNWspro/lib -lsunmath -lm
++
++# For other systems: see instructions in fpectlmodule.c.
++#fpectl fpectlmodule.c ...
++
++# Test module for fpectl.  No extra libraries needed.
++#fpetest fpetestmodule.c
++
++# Andrew Kuchling's zlib module.
++# This require zlib 1.1.3 (or later).
++# See http://www.gzip.org/zlib/
++zlib zlibmodule.c -lz
++
++# Interface to the Expat XML parser
++#
++# Expat was written by James Clark and is now maintained by a group of
++# developers on SourceForge; see www.libexpat.org for more
++# information.  The pyexpat module was written by Paul Prescod after a
++# prototype by Jack Jansen.  Source of Expat 1.95.2 is included in
++# Modules/expat/.  Usage of a system shared libexpat.so/expat.dll is
++# not advised.
++#
++# More information on Expat can be found at www.libexpat.org.
++#
++#EXPAT_DIR=/usr/local/src/expat-1.95.2
++#pyexpat pyexpat.c -DHAVE_EXPAT_H -I$(EXPAT_DIR)/lib -L$(EXPAT_DIR) -lexpat
++
++
++# Hye-Shik Chang's CJKCodecs
++
++# multibytecodec is required for all the other CJK codec modules
++_multibytecodec cjkcodecs/multibytecodec.c
++
++_codecs_cn cjkcodecs/_codecs_cn.c
++_codecs_hk cjkcodecs/_codecs_hk.c
++_codecs_iso2022 cjkcodecs/_codecs_iso2022.c
++_codecs_jp cjkcodecs/_codecs_jp.c
++_codecs_kr cjkcodecs/_codecs_kr.c
++_codecs_tw cjkcodecs/_codecs_tw.c
++
++# Example -- included for reference only:
++# xx xxmodule.c
++
++# Another example -- the 'xxsubtype' module shows C-level subtyping in action
++xxsubtype xxsubtype.c
+--- pyconfig.h.in.00	2006-10-27 03:06:59.000000000 -0400
++++ pyconfig.h.in	2007-06-01 16:00:59.430655035 -0400
+@@ -931,7 +931,7 @@
+ #undef _POSIX_C_SOURCE
+ 
+ /* Define if you have POSIX threads, and your system does not define that. */
+-#undef _POSIX_THREADS
++#define _POSIX_THREADS 1
+ 
+ /* Define to force use of thread-safe errno, h_errno, and other functions */
+ #undef _REENTRANT

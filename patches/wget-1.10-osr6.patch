@@ -1,0 +1,33 @@
+--- ./configure.osr6	2005-06-07 15:40:03.000000000 -0700
++++ ./configure	2005-06-10 20:25:51.850256008 -0700
+@@ -27072,7 +27072,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl  $LIBS"
++LIBS="-L/usr/gnu/lib -lintl  $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -27132,7 +27132,7 @@
+ echo "${ECHO_T}$ac_cv_lib_intl_gettext" >&6
+ if test $ac_cv_lib_intl_gettext = yes; then
+ 
+-                LIBS="-lintl $LIBS"
++                LIBS="-L/usr/gnu/lib -lintl $LIBS"
+ 
+ cat >>confdefs.h <<\_ACEOF
+ #define HAVE_GETTEXT 1
+--- ./Configure-OSR6.osr6	2005-06-10 20:25:52.010256004 -0700
++++ ./Configure-OSR6	2005-06-10 20:26:25.837536011 -0700
+@@ -0,0 +1,10 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/gnu --disable-nls \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

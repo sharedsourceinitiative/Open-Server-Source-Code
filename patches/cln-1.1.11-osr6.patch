@@ -1,0 +1,188 @@
+*** ./src/float/misc/cl_F_decode.cc.osr6	Mon Aug 28 15:08:14 2000
+--- ./src/float/misc/cl_F_decode.cc	Sun May 14 09:56:45 2006
+***************
+*** 51,56 ****
+--- 51,57 ----
+  	       );
+  }
+  
++ #ifndef __USLC__
+  inline const decoded_float decode_float (const cl_DF& x)
+  {
+  	// x entpacken:
+***************
+*** 79,84 ****
+--- 80,86 ----
+  	       );
+  #endif
+  }
++ #endif
+  
+  inline const decoded_float decode_float (const cl_LF& x)
+  {
+*** ./configure.osr6	Tue Nov 22 14:27:57 2005
+--- ./configure	Sun May 14 09:28:14 2006
+***************
+*** 2379,2384 ****
+--- 2379,2385 ----
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
++    '#include <stdlib.h>' \
+     'extern "C" void std::exit (int) throw (); using std::exit;' \
+     'extern "C" void std::exit (int); using std::exit;' \
+     'extern "C" void exit (int) throw ();' \
+***************
+*** 2977,2982 ****
+--- 2978,2984 ----
+  fi
+  for ac_declaration in \
+     '' \
++    '#include <stdlib.h>' \
+     'extern "C" void std::exit (int) throw (); using std::exit;' \
+     'extern "C" void std::exit (int); using std::exit;' \
+     'extern "C" void exit (int) throw ();' \
+***************
+*** 4198,4204 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 4200,4206 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5* | sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 4206,4212 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 4208,4214 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 6832,6838 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6834,6840 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7492,7515 ****
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+!       no_undefined_flag='${wl}-z ${wl}text'
+!       if test "$GCC" = yes; then
+! 	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       else
+! 	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       fi
+!       runpath_var='LD_RUN_PATH'
+!       hardcode_shlibpath_var=no
+!       ;;
+! 
+!     sysv5*)
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7494,7505 ----
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!     sysv5* | unixware7*)
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+!       archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 10716,10723 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+!     archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+      case $cc_basename in
+--- 10706,10715 ----
+  	;;
+      esac
+      ;;
+!   sysv5* | unixware7*)
+!        archive_cmds_CXX='$CC -G ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+!        archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+!        archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+      case $cc_basename in
+*** ./Build-OSR6.osr6	Sun May 14 10:03:12 2006
+--- ./Build-OSR6	Sun May 14 10:03:32 2006
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ if [ -x configure ]
++ then
++     ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ else
++     [ -f Makefile.PL ] && perl Makefile.PL 2>&1 | tee mout-configure
++ fi
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT

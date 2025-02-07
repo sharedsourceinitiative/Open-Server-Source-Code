@@ -1,0 +1,189 @@
+" ==================================================================
+" File:         $HOME/.vimrc.forall  (sourced by ~USER/.vimrc)
+" Last update:  Wed Mar 29 19:35:19 MET DST 2000
+" Purpose:      *Personal* Setup file for the editor Vim (Vi IMproved)
+"               It contains everything which I use *personally*.
+"
+"  Everyone else in my vimrc.forall (yes, - BIG! ;-) which is available as
+"  http://www.math.fu-berlin.de/~guckes/vim/vimrc.forall    (uncompressed)
+"  http://www.math.fu-berlin.de/~guckes/vim/vimrc.forall.gz (compressed)
+"
+" Author:       Sven Guckes guckes@vim.org (guckes@math.fu-berlin.de)
+"               <URL:http://www.math.fu-berlin.de/~guckes/sven/>
+" ==================================================================
+
+" ======================================
+" Loading general setup files first
+" ======================================
+
+" The PCs at math.fu-berlin.de run WindowsNT-4 and
+" the home directory is mounted on drive Z: -
+" so when you start up Vim on one of those machines
+" 
+" if has("dos16") || has("dos32") || has("gui_win32")
+" naaah.  I don't use that DOS version. ;-)
+" 
+  if has("gui_win32")
+    " Source the setup file for all users:
+    source Z:\\.vimrc.forall
+    " About 42 lines fit nicely on that screen:
+    set lines=42
+  else
+    " I guess we're on unix then...
+    " Source the setup file for all users:
+    source ~guckes/.vimrc.forall
+  endif
+
+" ===================
+" Settings of Options
+" ===================
+
+"     list and listchars
+  set list
+  set listchars=tab:»·,trail:·
+" set listchars=tab:¯ú,trail:ú
+" TN3270 does not show high-bit characters:
+" set listchars=tab:>.,trail:o
+
+"    Turn on HighLightSearching:
+" se hls
+" sometimes I need this, sometimes I dont...
+
+"     wildmenu!  yay!  :-)
+  set wildmenu
+
+" ==============
+" Autocommands
+" ==============
+
+" When editing HTML files (aka webpages)
+" expand the "keywords" by characters "colon" and "slash"
+" so you can expand URL prefixes as "words", eg
+" http://www.math.fu-berlin.de/~guckes/vim/  ;-)
+  au  BufRead *.htm,*.html se isk+=:,/,~
+
+" Silly test message to check the filepattern for message files:
+" au BufRead .followup,.article,.letter,mutt* echo "Editing Messages\!"
+
+" au BufCreate * set term=vt220
+" au BufCreate * set term=ansi
+" map ''' :set term=vt220<cr>:set term=ansi<cr>
+
+" setting initial position after reading a file into a buffer:
+" au BufReadPost * normal 2G10|
+
+" ==============
+" Abbreviations
+" ==============
+
+" ABbreviations
+" personal addresses:
+  ab MYUSERNAME guckes
+  ab MYDOMAIN   math.fu-berlin.de
+  ab MYMAIL     guckes@math.fu-berlin.de
+" ab MYHOMEPAGE http://www.guckes.net/
+  ab MYHOMEPAGE http://www.math.fu-berlin.de/~guckes/
+
+" ab MLpine     nancyboys@kens.com (Nancys Boys)
+" ab MLpine     nancyboys@control-risks.de
+
+" A frequently used URL for my trip to the USA:
+  iab HPC http://www.math.fu-berlin.de/~guckes/california/
+
+" a pseudo "From_" line for files in "mailbox" format:
+  iab Mfrom From guckes@math.fu-berlin.de Thu Apr 06 12:07:00 1967
+" I somtimes needs tis to fix broken headers in "mailbox" files.
+
+" ==============
+" Colorization
+" ==============
+
+"    Normal text:    Use white on black.
+" hi normal ctermfg=white ctermbg=black   guifg=white guibg=black
+" Oops - this overrides the colors for the status line - DANG!
+
+  hi normal       term=NONE
+  hi statusline   term=NONE cterm=NONE ctermfg=yellow ctermbg=red
+  hi statuslineNC term=NONE cterm=NONE ctermfg=black  ctermbg=white
+  hi nontext      term=NONE cterm=NONE ctermfg=blue   ctermbg=black
+
+"    Search matches: Use white on red.
+  hi search  ctermfg=white ctermbg=red     guifg=white guibg=red
+
+"    Comments: cyan on white does not look good on a black background..
+  hi comment ctermbg=black ctermfg=cyan
+
+" ==============
+" Mappings
+" ==============
+
+" Attribution Fixing: from "Last, First" to "First Last":
+  map ,ATT gg}jWdWWPX
+
+" ============================================================
+" Options() - used to display some important option values
+" within the status line (see below at "set statusline".
+" ============================================================
+" 
+" Statusline without colors and display of options -
+" but with percentage at end:
+" set statusline=Vim-%{Version()} [%02n]\ %(%M%R%H%)\ %F\ %=<%l,%c%V>\ %P
+"
+" Damien WYART <wyart@iie.cnam.fr> [000329]:
+" set statusline=%<%f%=\ [%1*%M%*%n%R%H]\ \ %-25(%3l,%c%03V\ \ %P\ (%L)%)%12o'%03b'
+" hi  User1 term=inverse,bold cterm=inverse,bold ctermfg=red
+
+fu! Options()
+"           let opt="Opt:"
+            let opt=""
+  " autoindent
+" if &ai|   let opt=opt." ai"   |else|let opt=opt." noai"   |endif
+  if &ai|   let opt=opt." ai"   |endif
+  "  expandtab
+" if &et|   let opt=opt." et"   |else|let opt=opt." noet"   |endif
+  if &et|   let opt=opt." et"   |endif
+  "  hlsearch
+" if &hls|  let opt=opt." hls"  |else|let opt=opt." noet"   |endif
+  if &hls|  let opt=opt." hls"  |endif
+  "  paste
+" if &paste|let opt=opt." paste"|else|let opt=opt." nopaste"|endif
+  if &paste|let opt=opt." paste"|endif
+  "  shiftwidth
+  if &shiftwidth!=8|let opt=opt." sw=".&shiftwidth|endif
+  "  textwidth - show always!
+                    let opt=opt." tw=".&tw
+"   let opt=opt."\[".&lines.",".&columns."\]"
+  return opt
+endf
+
+" ============================================================
+" Colorizing that status lines!  Whee!  :-)
+" ============================================================
+" 
+" Statusline without colors and display of options -
+" but with percentage at end:
+" set statusline=Vim-%{Version()} [%02n]\ %(%M%R%H%)\ %F\ %=<%l,%c%V>\ %P
+
+  set   statusline=Vim-%{Version()}\ %{getcwd()}\ \ %1*[%02n]%*\ %(%M%R%H%)\ %2*%F%*\ %=%{Options()}\ %3*<%l,%c%V>%*
+" Text between "%{" and "%}" is being evaluated and thus suited for functions.
+" Here I will use the function "Options()" as defined below to show the
+" values of some (local) options..
+" The strings "%N*" unto "%*" correspond to the highlight group "UserN":
+"       User1: color for buffer number
+  hi    User1 cterm=NONE    ctermfg=red    ctermbg=white  guifg=red    guibg=white
+"       User2: color for filename
+  hi    User2 cterm=NONE    ctermfg=green  ctermbg=white  guifg=green  guibg=white
+"       User3: color for position
+  hi    User3 cterm=NONE    ctermbg=blue   ctermbg=white  guifg=blue   guibg=white
+
+fu! Version()
+	return version
+endf
+
+" The last line is allowed to be a "modeline" with my setup.
+" It gives vim commands for setting variable values that are
+" specific for editing this file.  Used mostly for setting
+" the textwidth (tw) and the "shiftwidth" (sw).
+" Note that the colon within the value of "comments"
+" needs to be escaped with a backslash!  (Thanks, Thomas!)
+"       vim:tw=70 et sw=4 comments=\:\"

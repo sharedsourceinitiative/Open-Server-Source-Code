@@ -1,0 +1,25 @@
+#
+#	Imakefile for lds, by Ron Record
+#
+#		 BINDIR = /usr/local/bin
+#         MANDIR = /usr/local/man/man1
+   LDS_INST_DIR = $(DESTDIR)/usr/local/mathrec/lds
+      MANSUFFIX = 1
+#	Uncomment the following line if your Mips libm.a has a broken acos
+#       MIPSLIB = ../libXrr/libMips.a
+        DEPLIBS = $(DEPXLIB)
+LOCAL_LIBRARIES = ../libXrr/libXrr.a $(XLIB)
+  SYS_LIBRARIES = $(MIPSLIB) -lm
+       INCLUDES = -I. -I../libXrr -I$(TOP)/lib -I/usr/include/X11
+           SRCS = lds.c graf.c init.c key.c parseargs.c gen.c \
+                  file.c main.c
+           OBJS = lds.o graf.o init.o key.o parseargs.o gen.o \
+                  file.o main.o
+
+ComplexProgramTarget(lds)
+
+install:: install.man
+	@if [ ! -d $(LDS_INST_DIR) ]; then mkdir -p $(LDS_INST_DIR); fi
+	@cd ./params; set -x; for file in *; do \
+		$(INSTALL) -c $(INSTBINFLAGS) $$file $(LDS_INST_DIR); \
+	done

@@ -1,0 +1,129 @@
+<HTML>
+<!-- $ Last Modified: $Date: $: -->
+
+<HEAD>
+<TITLE>
+Tcl7.6 (Skunkware97)</TITLE>
+<LINK REV="made" HREF="mailto:hops@sco.com">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFF0" TEXT="#000000">
+
+<CENTER>
+<H1>
+Tcl7.6 (Skunkware97)
+</H1>
+</CENTER>
+
+<P>
+These packages contain binary run-times (for SCO OpenServer and SCO UnixWare)
+and the sources and documentation for <STRONG>Tcl</STRONG>, a simple
+embeddable and extensible scripting command language.
+</P>
+
+<P>
+The version here corresponds to release 7.6p2, patch level 2 for Tcl 7.6
+released January 1997.
+This is actually the first official patch release for Tcl 7.6:
+patch level 1 was only released for the Macintosh.
+
+<H2>Summary of changes in Tcl 7.6 </H2>
+
+Tcl 7.6 is a relatively minor release
+with bug fixes and a few new features, mostly to improve portability.
+Tcl 7.6 should be backwards compatible with Tcl 7.5 scripts.
+</P>
+
+<OL>
+<LI> New file manipulation commands.  There are new options to the
+    "file" command for copying files ("file copy"), deleting files and
+    directories ("file delete"), creating directories ("file mkdir"),
+    and renaming files ("file rename").
+
+<LI> The package loader has been modified to look for packages not only
+    in the auto_path directories but also in their immediate descendants.
+    This makes it much easier to install and uninstall packages.  There
+    is now a new variable, tcl_pkgPath, which contains directories in
+    which packages are normally installed, and these directories are
+    automatically included in auto_path.
+</OL>
+
+Tcl 7.6 (on Unix) contains only one incompatible change:
+
+<OL>
+<LI> The C interfaces to channel drivers have been revised to eliminate
+    the use of Tcl_File handles in the interfaces.  Instead, there are
+    new interface procedures channelReadyProc, watchChannelProc, and
+    getFileProc.  This change does not affect Tcl scripts; it will only
+    affect you if you have written a custom channel driver.
+</OL>
+
+<A NAME="tclInfo">
+<H2>Info resources</H2>
+<UL>
+
+<LI> Tcl Web Home Page:<A HREF="http://www.sunlabs.com/research/tcl">
+              http://www.sunlabs.com/research/tcl</A> or 
+         <A HREF="http://sunscript.sun.com">
+                http://sunscript.sun.com</A> <BR>
+        FTP Access from <A HREF="ftp://ftp.sunlabs.com/pub/tcl">
+            ftp://ftp.sunlabs.com/pub/tcl</A>
+
+<P>
+<LI>     Network news group <A HREF="news:comp.lang.tcl">comp.lang.tcl</A>
+    intended for the exchange of information about Tcl, Tk, and
+    related applications.
+
+<P>
+<LI> Tcl contributed archive <A HREF="ftp://ftp.neosoft.com/pub/tcl">
+      ftp.neosoft.com/pub/tcl</A>
+
+<P>
+<LI> Other Web Pages: <BR>
+    <UL>
+    <LI>FAQ Launcher:  <A HREF="http://www.teraform.com/~lvirden/tcl-faq/">
+                      http://www.teraform.com/~lvirden/tcl-faq/</A> <BR>
+
+      <LI> Tcl Web Links: <A HREF="http://www.sco.com/Technology/tcl/Tcl.html">
+              http://www.sco.com/Technology/tcl/Tcl.html</A> <BR>
+
+      <LI>  Online man pages (in HTML):
+                <A HREF="http://www.elf.org/tcltk-man-html/contents.htm">
+                  http://www.elf.org/tcltk-man-html/contents.htm</A>
+    </UL>
+
+
+<P>
+<LI> <STRONG>Books</STRONG>
+<UL>
+<P>
+<LI> Tcl and the Tk Toolkit, by John Ousterhout, <BR>
+      Addison-Wesley, 1994, ISBN 0-201-63337-X <BR>
+</P>
+
+<P>
+<LI> Practical Programming in Tcl and Tk, by Brent Welch,<BR>
+     Prentice-Hall, 1995, ISBN 0-13-182007-9<BR>
+</P>
+
+<P>
+<LI> Exploring Expect, by Don Libes,<BR>
+     O'Reilly and Associates, 1995, ISBN 1-56592-090-2 <BR>
+
+<P>
+<LI> The Visual TCL Handbook By David Young <BR>
+     Prentice-Hall (PTR/PH), August 1996 ISBN: 0-13-461674-X <BR>
+
+<P>
+<LI> Graphical Applications with Tcl and Tk By Eric F. Johnson. <BR>
+     M&T Books, 1996 ISBN 1-55851-471-6 <BR>
+</P>
+</UL>
+</UL>
+                                                             
+
+<!---------------------------------------------------------------->
+<HR>
+Skunkware 97
+</BODY>
+</HTML>

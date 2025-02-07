@@ -1,0 +1,47 @@
+--- configure.00	2004-10-08 22:42:13.000000000 +0000
++++ configure	2004-10-08 22:53:27.490000057 +0000
+@@ -2046,7 +2046,7 @@
+ # Otherwise an old cache value of `no' led to `EXEEXT = no' in a Makefile.
+ ac_cv_exeext=
+ # b.out is created by i960 compilers.
+-for ac_file in a_out.exe a.exe conftest.exe a.out conftest a.* conftest.* b.out
++for ac_file in a_out.exe a.exe conftest.exe *a.out conftest a.* conftest.* b.out
+ do
+   test -f "$ac_file" || continue
+   case $ac_file in
+@@ -2055,7 +2055,7 @@
+     conftest.$ac_ext )
+         # This is the source file.
+         ;;
+-    [ab].out )
++    i386[ab].out|[ab].out )
+         # We found the default executable, but exeext='' is most
+         # certainly right.
+         break;;
+@@ -6915,10 +6915,14 @@
+ esac
+ 
+ 
++save_ac_includes_default="$ac_includes_default"
++ac_includes_default="$ac_includes_default
++#ifdef HAVE_NETINET_IN_H
++#include <netinet/in.h>
++#endif"
+ 
+ 
+-
+-for ac_header in shadow.h netinet/ip.h netinet/tcp.h netinet/in_systm.h netinet/in_ip.h
++for ac_header in shadow.h netinet/in.h netinet/ip.h netinet/tcp.h netinet/in_systm.h netinet/in_ip.h
+ do
+ as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ if eval "test \"\${$as_ac_Header+set}\" = set"; then
+@@ -7058,8 +7062,7 @@
+ fi
+ 
+ done
+-
+-
++ac_includes_default="$save_ac_includes_default"
+ 
+ 
+ 

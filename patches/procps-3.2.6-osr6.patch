@@ -1,0 +1,302 @@
+*** ./proc/sysinfo.c.00	Sun Mar 13 20:31:27 2005
+--- ./proc/sysinfo.c	Thu Feb  2 15:49:55 2006
+***************
+*** 17,22 ****
+--- 17,23 ----
+  
+  #include <unistd.h>
+  #include <fcntl.h>
++ #include <dirent.h>
+  #include "version.h"
+  #include "sysinfo.h" /* include self to verify prototypes */
+  
+***************
+*** 181,187 ****
+  
+  #define NOTE_NOT_FOUND 42
+  
+! //extern char** environ;
+  
+  /* for ELF executables, notes are pushed before environment and args */
+  static unsigned long find_elf_note(unsigned long findme){
+--- 182,188 ----
+  
+  #define NOTE_NOT_FOUND 42
+  
+! extern char** environ;
+  
+  /* for ELF executables, notes are pushed before environment and args */
+  static unsigned long find_elf_note(unsigned long findme){
+*** ./ps/global.c.00	Sat Oct 29 16:43:34 2005
+--- ./ps/global.c	Thu Feb  2 16:36:30 2006
+***************
+*** 13,22 ****
+--- 13,24 ----
+  #include <stdio.h>
+  #include <unistd.h>
+  #include <sys/ioctl.h>
++ #include <sys/mkdev.h>
+  #include <sys/types.h>
+  #include <pwd.h>
+  #include <grp.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+                       
+*** ./Makefile.00	Sat Oct 29 23:27:04 2005
+--- ./Makefile	Thu Feb  2 16:29:48 2006
+***************
+*** 24,30 ****
+  ############ vars
+  
+  # so you can disable them or choose alternates
+! ldconfig := ldconfig
+  ln_f     := ln -f
+  ln_sf    := ln -sf
+  install  := install -D --owner 0 --group 0
+--- 24,30 ----
+  ############ vars
+  
+  # so you can disable them or choose alternates
+! ldconfig := true
+  ln_f     := ln -f
+  ln_sf    := ln -sf
+  install  := install -D --owner 0 --group 0
+***************
+*** 36,44 ****
+  bin                      := $(DESTDIR)/bin/
+  sbin                     := $(DESTDIR)/sbin/
+  usr/proc/bin             := $(DESTDIR)/usr/bin/
+! man1                     := $(DESTDIR)/usr/share/man/man1/
+! man5                     := $(DESTDIR)/usr/share/man/man5/
+! man8                     := $(DESTDIR)/usr/share/man/man8/
+  lib                      := $(DESTDIR)/$(lib64)/
+  usr/lib                  := $(DESTDIR)/usr/$(lib64)/
+  usr/include              := $(DESTDIR)/usr/include/
+--- 36,44 ----
+  bin                      := $(DESTDIR)/bin/
+  sbin                     := $(DESTDIR)/sbin/
+  usr/proc/bin             := $(DESTDIR)/usr/bin/
+! man1                     := $(DESTDIR)/usr/man/man1/
+! man5                     := $(DESTDIR)/usr/man/man5/
+! man8                     := $(DESTDIR)/usr/man/man8/
+  lib                      := $(DESTDIR)/$(lib64)/
+  usr/lib                  := $(DESTDIR)/usr/$(lib64)/
+  usr/include              := $(DESTDIR)/usr/include/
+***************
+*** 46,73 ****
+  #SKIP     := $(bin)kill $(man1)kill.1
+  
+  BINFILES := $(usr/bin)uptime $(usr/bin)tload $(usr/bin)free $(usr/bin)w \
+!             $(usr/bin)top $(usr/bin)vmstat $(usr/bin)watch $(usr/bin)skill \
+              $(usr/bin)snice $(bin)kill $(sbin)sysctl $(usr/bin)pmap \
+!             $(usr/proc/bin)pgrep $(usr/proc/bin)pkill $(usr/bin)slabtop \
+              $(usr/proc/bin)pwdx
+  
+  MANFILES := $(man1)uptime.1 $(man1)tload.1 $(man1)free.1 $(man1)w.1 \
+!             $(man1)top.1 $(man1)watch.1 $(man1)skill.1 $(man1)kill.1 \
+              $(man1)snice.1 $(man1)pgrep.1 $(man1)pkill.1 $(man1)pmap.1 \
+!             $(man5)sysctl.conf.5 $(man8)vmstat.8 $(man8)sysctl.8 \
+!             $(man1)slabtop.1 $(man1)pwdx.1
+  
+  TARFILES := AUTHORS BUGS NEWS README TODO COPYING COPYING.LIB \
+              Makefile procps.lsm procps.spec v t README.top CodingStyle \
+              sysctl.conf minimal.c $(notdir $(MANFILES)) dummy.c \
+!             uptime.c tload.c free.c w.c top.c vmstat.c watch.c skill.c \
+!             sysctl.c pgrep.c top.h pmap.c slabtop.c pwdx.c
+  
+  # Stuff (tests, temporary hacks, etc.) left out of the standard tarball
+  # plus the top-level Makefile to make it work stand-alone.
+  _TARFILES := Makefile
+  
+! CURSES := -lncurses
+  
+  # This seems about right for the dynamic library stuff.
+  # Something like this is probably needed to make the SE Linux
+--- 46,73 ----
+  #SKIP     := $(bin)kill $(man1)kill.1
+  
+  BINFILES := $(usr/bin)uptime $(usr/bin)tload $(usr/bin)free $(usr/bin)w \
+!             $(usr/bin)skill \
+              $(usr/bin)snice $(bin)kill $(sbin)sysctl $(usr/bin)pmap \
+!             $(usr/proc/bin)pgrep $(usr/proc/bin)pkill \
+              $(usr/proc/bin)pwdx
+  
+  MANFILES := $(man1)uptime.1 $(man1)tload.1 $(man1)free.1 $(man1)w.1 \
+!             $(man1)skill.1 $(man1)kill.1 \
+              $(man1)snice.1 $(man1)pgrep.1 $(man1)pkill.1 $(man1)pmap.1 \
+!             $(man5)sysctl.conf.5 $(man8)sysctl.8 \
+!             $(man1)pwdx.1
+  
+  TARFILES := AUTHORS BUGS NEWS README TODO COPYING COPYING.LIB \
+              Makefile procps.lsm procps.spec v t README.top CodingStyle \
+              sysctl.conf minimal.c $(notdir $(MANFILES)) dummy.c \
+!             uptime.c tload.c free.c w.c skill.c \
+!             sysctl.c pgrep.c pmap.c pwdx.c
+  
+  # Stuff (tests, temporary hacks, etc.) left out of the standard tarball
+  # plus the top-level Makefile to make it work stand-alone.
+  _TARFILES := Makefile
+  
+! CURSES := -lcurses -lgetopt
+  
+  # This seems about right for the dynamic library stuff.
+  # Something like this is probably needed to make the SE Linux
+***************
+*** 80,88 ****
+  #LIBTYPE := -DSTATICLIB
+  #endif
+  
+  # Preprocessor flags.
+! PKG_CPPFLAGS := -D_GNU_SOURCE -I proc
+! CPPFLAGS     := -I/usr/include/ncurses
+  ALL_CPPFLAGS := $(PKG_CPPFLAGS) $(CPPFLAGS)
+  
+  # Left out -Wconversion due to noise in glibc headers.
+--- 80,92 ----
+  #LIBTYPE := -DSTATICLIB
+  #endif
+  
++ # Compiler
++ CC=gcc
++ CXX=g++
++ 
+  # Preprocessor flags.
+! PKG_CPPFLAGS := -DPATH_MAX=1024 -D_GNU_SOURCE -I proc
+! CPPFLAGS     :=
+  ALL_CPPFLAGS := $(PKG_CPPFLAGS) $(CPPFLAGS)
+  
+  # Left out -Wconversion due to noise in glibc headers.
+***************
+*** 155,161 ****
+  
+  ############ misc.
+  
+! # free.c pmap.c sysctl.c uptime.c vmstat.c watch.c pgrep.c skill.c tload.c top.c w.c
+  # utmp.c oldtop.c tmp-junk.c minimal.c
+  
+  .SUFFIXES:
+--- 159,165 ----
+  
+  ############ misc.
+  
+! # free.c pmap.c sysctl.c uptime.c pgrep.c skill.c tload.c w.c
+  # utmp.c oldtop.c tmp-junk.c minimal.c
+  
+  .SUFFIXES:
+*** ./w.c.00	Sat Oct 29 16:43:14 2005
+--- ./w.c	Thu Feb  2 16:05:25 2006
+***************
+*** 43,48 ****
+--- 43,52 ----
+  /* Uh... same thing as UT_NAMESIZE */
+  #define USERSZ (sizeof u->ut_user)
+  
++ #ifndef UT_NAMESIZE
++ #define UT_NAMESIZE USERSZ
++ #endif
++ 
+  
+  /* This routine is careful since some programs leave utmp strings
+   * unprintable.  Always outputs at least 16 chars padded with spaces
+***************
+*** 194,201 ****
+      strncpy(uname, u->ut_user, USERSZ);		/* force NUL term for printf */
+      if (formtype) {
+  	printf("%-9.8s%-9.8s", uname, u->ut_line);
+- 	if (from)
+- 	    print_host(u->ut_host, sizeof u->ut_host);
+  	print_logintime(u->ut_time, stdout);
+  	if (*u->ut_line == ':')			/* idle unknown for xdm logins */
+  	    printf(" ?xdm? ");
+--- 198,203 ----
+***************
+*** 209,216 ****
+  	    printf("   ?   ");
+      } else {
+  	printf("%-9.8s%-9.8s", u->ut_user, u->ut_line);
+- 	if (from)
+- 	    print_host(u->ut_host, sizeof u->ut_host);
+  	if (*u->ut_line == ':')			/* idle unknown for xdm logins */
+  	    printf(" ?xdm? ");
+  	else
+--- 211,216 ----
+*** ./watch.c.00	Sat Oct 29 16:44:53 2005
+--- ./watch.c	Thu Feb  2 16:26:11 2006
+***************
+*** 15,21 ****
+  #include <ctype.h>
+  #include <getopt.h>
+  #include <signal.h>
+! #include <ncurses.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+--- 15,21 ----
+  #include <ctype.h>
+  #include <getopt.h>
+  #include <signal.h>
+! #include <curses.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+*** ./minimal.c.00	Sat Oct 29 16:45:17 2005
+--- ./minimal.c	Thu Feb  2 16:35:11 2006
+***************
+*** 35,40 ****
+--- 35,49 ----
+  )
+  
+  ///////////////////////////////////////////////////////
++ #ifdef _SCO_DS
++ #include <sys/mkdev.h>
++ #define _STRUCTURED_PROC 1
++ #include <sys/procfs.h>
++ #define NO_TTY_VALUE DEV_ENCODE(-1,-1)
++ #define HZ 1    // only bother with seconds
++ #endif
++ 
++ ///////////////////////////////////////////////////////
+  #ifdef __sun__
+  #include <sys/mkdev.h>
+  #define _STRUCTURED_PROC 1
+***************
+*** 308,314 ****
+    if(bsd_c_option) show_args = 0;
+  }
+  
+! #ifdef __sun__
+  /* return 1 if it works, or 0 for failure */
+  static int stat2proc(int pid) {
+      struct psinfo p;  //   /proc/*/psinfo, struct psinfo, psinfo_t
+--- 317,323 ----
+    if(bsd_c_option) show_args = 0;
+  }
+  
+! #if defined(__sun__) || defined(_SCO_DS)
+  /* return 1 if it works, or 0 for failure */
+  static int stat2proc(int pid) {
+      struct psinfo p;  //   /proc/*/psinfo, struct psinfo, psinfo_t
+*** ./Build-OSR6.00	Thu Feb  2 16:38:03 2006
+--- ./Build-OSR6	Thu Feb  2 16:37:53 2006
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.00	Thu Feb  2 16:39:46 2006
+--- ./Install-OSR6	Thu Feb  2 16:39:03 2006
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install DESTDIR=/u/tmp/procps 2>&1 | tee $MOUT

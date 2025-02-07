@@ -1,0 +1,45 @@
+*** ./Install-OSR6.osr6	Thu Oct 30 08:50:58 2008
+--- ./Install-OSR6	Thu Oct 30 08:50:58 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/lzma
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Thu Oct 30 08:50:58 2008
+--- ./Configure-OSR6	Thu Oct 30 08:53:45 2008
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ # Use utime() rather than utimes() since the declaration of utimes()
++ # in OSR6 sys/time.h is out of scope and utimes() calls utime() anyway
++ ac_cv_func_utimes=no
++ export CC CXX CFLAGS NM M4 INSTALL ac_cv_func_utimes
++ rm -f mout-configure
++ ./configure --prefix=/usr --mandir=/usr/man \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

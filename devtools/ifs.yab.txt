@@ -1,0 +1,183 @@
+#!/usr/local/bin/yabasic -fg white -bg black
+print "Animated Fractal ported by Hermang Mansilla"
+print "this program uses a timing routine so is sensitive"
+print "to the speed of your computer, edit variable TreshHold"
+print "to change the effect and speed"
+print "original C code by Boris Van Schooten" 
+ThresHold=4.5  : rem tested on Pentium 166 MMX
+Frames2Skip=8
+WINXSIZE=640
+WINYSIZE=480
+input "Press Any Key to Continue", dummy$
+goto Main
+
+label Initialize
+myiter=0
+PrevTime=0
+skip=0
+NRIFSPAR=5
+dim rot(NRIFSPAR), parscale(NRIFSPAR), movex(NRIFSPAR), movey(NRIFSPAR)
+for i=1 to NRIFSPAR
+read rot(i),parscale(i),movex(i),movey(i)
+next i
+data 0, 0.3, 0.5, 0.5
+data 0, 0.3, -0.5, 0.5
+data 0, 0.3, 0.5, -0.5
+data 0, 0.3, -0.5, -0.5
+data 0, 0.3, 0, -0.5
+MAXPT=16384
+dim ptsX(MAXPT,2),ptsY(MAXPT,2)
+Dim Stack(MAXPT)
+phase=0.0
+thispt=1
+sp=1
+myflag=1
+return : rem Initialize
+
+
+
+label PushStack
+Stack(sp)=xpos
+sp=sp+1
+Stack(sp)=ypos
+sp=sp+1
+Stack(sp)=angle
+sp=sp+1
+Stack(sp)=scale
+sp=sp+1
+Stack(sp)=iterleft
+sp=sp+1
+Stack(sp)=a
+sp=sp+1
+return : rem PushStack
+
+label PopStack
+sp=sp-1
+a=Stack(sp)
+sp=sp-1
+iterleft=Stack(sp)
+sp=sp-1
+scale=Stack(sp)
+sp=sp-1
+angle=Stack(sp)
+sp=sp-1
+ypos=Stack(sp)
+sp=sp-1
+xpos=Stack(sp)
+return : rem PopStack
+
+label doIfs
+if iterleft>0 then 
+	sinang=sin(angle)
+        cosang=cos(angle)
+	for a=1 to NRIFSPAR 
+	pscale=parscale(a)
+	pmovex=movex(a)*scale
+	pmovey=movey(a)*scale
+	gosub PushStack
+	xpos=xpos+cosang*pmovex+sinang*pmovey
+	ypos=ypos+sinang*pmovex-cosang*pmovey
+	angle=angle+rot(a)
+	scale=scale*pscale
+	iterleft=iterleft-1
+	gosub doIfs
+	gosub PopStack
+	next a
+else
+ 	if thispt>MAXPT then  goto salida fi
+	ptsX(thispt,myflag)=xpos
+	ptsY(thispt,myflag)=ypos
+rem  dot ptsX(thispt,myflag),ptsY(thispt,myflag)
+	thispt=thispt+1
+fi
+label salida
+return
+
+label DrawPoints
+for p=1 to thispt
+dot ptsX(p,myflag),ptsY(p,myflag)
+myflag=1-myflag
+clear rect ptsX(p,myflag),ptsY(p,myflag) to ptsX(p,myflag),ptsY(p,myflag)
+myflag=1-myflag
+next p
+return
+
+label SlideIfsPar
+rem	 slide ifs parameters 
+	rot(1)=rot(1)+0.005
+	rot(2)=rot(2)+0.015
+	rot(3)=rot(3)-0.00555
+	rot(4)=rot(4)-0.01555
+	rot(5)=rot(5)-0.005555
+
+	parscale(1) = 0.2+0.3*(1+sin(phase*0.01))
+	parscale(2) = 0.2+0.3*(1+sin(phase*0.021))
+	parscale(3) = 0.2+0.3*(1+sin(phase*0.0311))
+	parscale(4) = 0.2+0.3*(1+sin(phase*0.04111))
+	parscale(5) = 0.2+0.3*(1+sin(phase*0.051111))
+
+	movex(1) = 0.5*(sin(phase*0.03))
+	movex(2) = 0.5*(sin(phase*0.043))
+	movex(3) = 0.5*(sin(phase*0.0533))
+	movex(4) = 0.5*(sin(phase*0.06333))
+	movex(5) = 0.5*(sin(phase*0.073333))
+
+	movey(1) = 0.5*(sin(phase*0.05))
+	movey(2) = 0.5*(sin(phase*0.042))
+	movey(3) = 0.5*(sin(phase*0.0322))
+	movey(4) = 0.5*(sin(phase*0.02222))
+	movey(5) = 0.5*(sin(phase*0.012222))
+
+	phase=phase+0.12
+return :rem SlideIfsPar
+
+
+label Main
+GOSUB Initialize
+clear screen
+open window WINXSIZE, WINYSIZE
+label KeepRunning
+k$=inkey$(0)
+thispt=1
+xpos=WINXSIZE/2
+ypos=WINYSIZE/2
+angle=0
+scale=WINYSIZE/2
+iterleft=6
+  gosub CheckElapsed
+
+rem if skip=0 then 
+rem Frames2Skip=Frames2Skip - 1
+rem fi
+
+if  mod(myiter,Frames2Skip)=0 then
+  gosub PushStack
+  gosub doIfs
+  gosub PopStack
+
+ gosub DrawPoints
+ myflag=1-myflag
+fi
+      
+  myiter=myiter+1
+rem  print myiter," ",skip," ",Frames2Skip
+
+gosub SlideIfsPar
+
+if k$<>"q" then goto KeepRunning fi
+close window
+end
+
+
+label CheckElapsed
+t$=time$
+totalelapsed=val(mid$(t$,10,5))
+if totalelapsed>PrevTime then
+elapsed=totalelapsed-PrevTime
+fi
+PrevTime=totalelapsed
+if elapsed>ThresHold then
+skip=1
+else skip=0
+fi
+return

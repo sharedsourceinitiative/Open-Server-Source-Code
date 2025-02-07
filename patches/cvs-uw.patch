@@ -1,0 +1,13 @@
+--- ./src/buffer.c.00	2002-12-06 19:47:58.000000000 +0000
++++ ./src/buffer.c	2003-09-09 02:46:21.320000044 +0000
+@@ -12,6 +12,10 @@
+ # include <sys/socket.h>
+ #endif
+ 
++#ifdef shutdown
++#undef shutdown
++#endif
++
+ /* OS/2 doesn't have EIO.  FIXME: this whole notion of turning
+    a different error into EIO strikes me as pretty dubious.  */
+ #if !defined (EIO)

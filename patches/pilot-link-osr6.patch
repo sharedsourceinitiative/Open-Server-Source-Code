@@ -1,0 +1,230 @@
+--- ./src/pilot-treofoto.c.osr6	2004-12-20 14:36:33.000000000 -0800
++++ ./src/pilot-treofoto.c	2005-06-13 10:15:32.734472001 -0700
+@@ -85,7 +85,7 @@
+ 
+ 		if (req_uid && uid == req_uid) {
+ 			memcpy(&req_uid, Pbuf, 4);	/* get next req_uid for image 'block' */
+-			write(fd, Pbuf + 4, size - 4);	/* The rest is just jpeg data */
++			write(fd, (char *)Pbuf + 4, size - 4);	/* The rest is just jpeg data */
+ 		}
+ 	}
+ 
+--- ./src/install-expenses.c.osr6	2004-12-20 14:36:32.000000000 -0800
++++ ./src/install-expenses.c	2005-06-13 10:50:33.286392000 -0700
+@@ -201,19 +201,19 @@
+ 		*(b++) 	= theExpense.currency;
+ 		*(b++) 	= 0x00;
+ 
+-		strcpy(b, theExpense.amount);
++		strcpy((char *)b, theExpense.amount);
+ 		b += strlen(theExpense.amount) + 1;
+ 
+-		strcpy(b, theExpense.vendor);
++		strcpy((char *)b, theExpense.vendor);
+ 		b += strlen(theExpense.vendor) + 1;
+ 
+-		strcpy(b, theExpense.city);
++		strcpy((char *)b, theExpense.city);
+ 		b += strlen(theExpense.city) + 1;
+ 
+-		strcpy(b, theExpense.attendees);
++		strcpy((char *)b, theExpense.attendees);
+ 		b += strlen(theExpense.attendees) + 1;
+ 
+-		strcpy(b, theExpense.note);
++		strcpy((char *)b, theExpense.note);
+ 		b += strlen(theExpense.note) + 1;
+ 
+ 		size = b - buf;
+--- ./src/memos.c.osr6	2004-12-20 14:36:33.000000000 -0800
++++ ./src/memos.c	2005-06-13 10:54:35.916952000 -0700
+@@ -297,7 +297,7 @@
+ 			return 1;
+ 		}
+ 
+-		pi_file_get_app_info(pif, (void *) &ptr, &len);
++		pi_file_get_app_info(pif, (void *) &ptr, (size_t *)(&len));
+ 		pi_buffer_append(appblock, ptr, len);
+ 	}
+ 
+@@ -332,7 +332,7 @@
+ 				break;
+ 		} else {
+ 			if (pi_file_read_record
+-			    (pif, index, (void *) &ptr, &len, &attr, &category,
++			    (pif, index, (void *) &ptr, (size_t *)(&len), &attr, &category,
+ 			     0) < 0)
+ 				break;
+ 			memcpy(buffer->data, ptr, len);
+--- ./libpisock/connect.c.osr6	2004-12-20 12:54:28.000000000 -0800
++++ ./libpisock/connect.c	2005-06-13 10:15:32.754472009 -0700
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <sys/types.h>
+-#include <ifaddrs.h>
+ #include <unistd.h>
+ #include <sys/stat.h>
+ 
+--- ./libpisock/versamail.c.osr6	2004-10-23 22:21:03.000000000 -0700
++++ ./libpisock/versamail.c	2005-06-13 10:15:33.724392012 -0700
+@@ -82,8 +82,8 @@
+ 
+ #define GET_STR_INTO(attrib) {                  \
+     if (get_byte(buffer)) {                     \
+-      attrib = strdup(buffer);                  \
+-      SHUFFLE_BUFFER(strlen(buffer));           \
++      attrib = strdup((const char *)buffer);                  \
++      SHUFFLE_BUFFER(strlen((const char *)buffer));           \
+     } else {                                    \
+       attrib = NULL;                            \
+     };                                          \
+@@ -93,8 +93,8 @@
+ 
+ #define PUT_STR_FROM(attrib) {                  \
+     if (attrib) {                               \
+-      strcpy(buffer, attrib);                   \
+-      SHUFFLE_BUFFER(strlen(buffer));           \
++      strcpy((char *)buffer, (const char *)attrib);                   \
++      SHUFFLE_BUFFER(strlen((const char *)buffer));           \
+     } else                                      \
+       set_byte(buffer, 0);                      \
+     buffer++;                                   \
+@@ -104,7 +104,7 @@
+ 
+ #define ADD_LENGTH(str, destlen) {              \
+     if (str) {                                  \
+-      destlen += 1+strlen(str);                 \
++      destlen += 1+strlen((const char *)str);                 \
+     } else {                                    \
+       destlen++;                                \
+     };                                          \
+--- ./Configure-OSR6.osr6	2005-06-13 10:15:33.914312010 -0700
++++ ./Configure-OSR6	2005-06-13 10:55:05.924552000 -0700
+@@ -0,0 +1,15 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++NM="/usr/ccs/bin/nm -p"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS NM
++rm -f mout-configure
++./configure --prefix=/usr --program-prefix="" \
++            --without-java \
++            --without-python \
++            --without-tcl \
++            --with-perl=/usr/bin/perl \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.osr6	2005-01-16 19:20:18.000000000 -0800
++++ ./configure	2005-06-13 10:15:34.034312001 -0700
+@@ -3961,7 +3961,11 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv5*)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
++
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -6873,7 +6877,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7563,9 +7567,8 @@
+       no_undefined_flag=' -z text'
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec=
+       hardcode_shlibpath_var=no
+       runpath_var='LD_RUN_PATH'
+@@ -10729,8 +10732,16 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+-    archive_cmds_need_lc_CXX=no
++  sysv5* | unixware7*)
++      no_undefined_flag_CXX=' -z text'
++      # $CC -shared without GNU ld will not create a library from C++
++      # object files and a static libstdc++, better avoid it by now
++      archive_cmds_CXX='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_CXX='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      hardcode_libdir_flag_spec_CXX=
++      hardcode_shlibpath_var_CXX=no
++      archive_cmds_need_lc_CXX=no
++      runpath_var='LD_RUN_PATH'
+     ;;
+   tandem*)
+     case $cc_basename in
+@@ -13750,7 +13761,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_F77=no
+ 	cat <<EOF 1>&2
+@@ -14420,9 +14431,8 @@
+       no_undefined_flag_F77=' -z text'
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds_F77='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_F77='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec_F77=
+       hardcode_shlibpath_var_F77=no
+       runpath_var='LD_RUN_PATH'
+@@ -16088,7 +16098,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_GCJ=no
+ 	cat <<EOF 1>&2
+@@ -16778,9 +16788,8 @@
+       no_undefined_flag_GCJ=' -z text'
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds_GCJ='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds_GCJ='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec_GCJ=
+       hardcode_shlibpath_var_GCJ=no
+       runpath_var='LD_RUN_PATH'
+--- Install-OSR6.osr6	2005-07-06 11:36:53.420000003 -0700
++++ Install-OSR6	2005-07-06 11:37:11.630000003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/pilotlink
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

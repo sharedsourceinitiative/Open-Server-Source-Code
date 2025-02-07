@@ -1,0 +1,426 @@
+*** ./include/getopt.h.osr6	Fri Mar 21 07:35:08 2003
+--- ./include/getopt.h	Tue Mar 13 10:43:23 2007
+***************
+*** 76,82 ****
+  
+  struct option
+  {
+! #if defined (__STDC__) && __STDC__
+    const char *name;
+  #else
+    char *name;
+--- 76,82 ----
+  
+  struct option
+  {
+! #if defined (__STDC__)
+    const char *name;
+  #else
+    char *name;
+***************
+*** 94,100 ****
+  #define required_argument       1
+  #define optional_argument       2
+  
+! #if defined (__STDC__) && __STDC__
+  extern int getopt(int argc, char *const *argv, const char *shortopts);
+  extern int getopt_long (int argc, char *const *argv, const char *shortopts,
+                          const struct option *longopts, int *longind);
+--- 94,100 ----
+  #define required_argument       1
+  #define optional_argument       2
+  
+! #if defined (__STDC__)
+  extern int getopt(int argc, char *const *argv, const char *shortopts);
+  extern int getopt_long (int argc, char *const *argv, const char *shortopts,
+                          const struct option *longopts, int *longind);
+*** ./platforms/sco/Makefile.in.osr6	Tue Mar 13 10:53:08 2007
+--- ./platforms/sco/Makefile.in	Tue Mar 13 10:55:31 2007
+***************
+*** 0 ****
+--- 1,78 ----
++ # Makefile template
++ #
++ # This file is used as a template to create the
++ # Makfile for the SCO specific installation.
++ #
++ 
++ # Default variables
++ @VARIABLES@
++ # TOP source directory.
++ topdir = @topdir@
++ top_builddir = $(topdir)
++ 
++ # Include the default make targets: to be put before the all-targets: rule.
++ @TARGETS@
++ 
++ all-targets: Makefile
++ 
++ install: install-exec install-@USB_DRIVER@
++ 
++ install-:
++ 
++ install-exec:
++ 	@rm -f /etc/rc0.d/K21apcupsd
++ 	@rm -f /etc/rc1.d/S89apcupsd
++ 	@rm -f /etc/rc2.d/S89apcupsd
++ 	@rm -f /etc/init.d/apcupsd
++ 	@$(INSTALL_PROGRAM) -m 744 apcupsd /etc/init.d/apcupsd ;
++ 	@ln -f -s /etc/init.d/apcupsd /etc/rc0.d/K21apcupsd
++ 	@ln -f -s /etc/init.d/apcupsd /etc/rc1.d/S89apcupsd
++ 	@ln -f -s /etc/init.d/apcupsd /etc/rc2.d/S89apcupsd
++ 
++ 	@echo "================================================="
++ 	@echo 
++ 	@echo "apcupsd script installation for SCO $(DISTVER) complete."
++ 	@echo "You should now edit $(sysconfdir)/apcupsd.conf  to correspond"
++ 	@echo "to your setup then start the apcupsd daemon with:"
++ 	@echo 
++ 	@echo "/etc/init.d/apcupsd start"
++ 	@echo 
++ 	@echo "Thereafter when you reboot, it will be stopped and started"
++ 	@echo "automatically."
++ 	@echo 
++ 	@echo "================================================="
++ 
++ install-usb:
++ 	@echo
++ 	@echo "Configuring ugen driver to match APC UPSes..."
++ 	@echo
++ 	-add_drv -f -i '"usbif51d,class3"' ugen || \
++ 	  update_drv -a -i '"usbif51d,class3"' ugen
++ 	@echo
++ 	@echo "NOTE:"
++ 	@echo "   \"(usbif51d,class3) already in use\" and"
++ 	@echo "   \"Driver (ugen) is already installed\""
++ 	@echo "   errors may be safely ignored."
++ 	@echo
++ 	@echo "================================================="
++ 	@echo "Driver configured. You must PERFORM A RECONFIGURE"
++ 	@echo "BOOT \"reboot -- -r\" before running Apcupsd."
++ 	@echo "================================================="
++ 
++ uninstall:
++ 	@echo "Removing symlinks..."
++ 	@rm -f /etc/rc0.d/K21apcupsd
++ 	@rm -f /etc/rc1.d/S89apcupsd
++ 	@rm -f /etc/rc2.d/S89apcupsd
++ 	@echo "Removing boot script..."
++ 	@rm -f /etc/init.d/apcupsd
++ 	@echo "Removing ugen binding (errors are safe to ignore)..."
++ 	-update_drv -d -i '"usbif51d,class3"' ugen > /dev/null
++ 	@echo 
++ 	@echo "apcupsd has been disabled."
++ 
++ clean:
++ 
++ distclean:
++ 	@rm -f apccontrol.sh apcupsd Makefile rc0.sco
++ 	@rm -rf CVS
+*** ./platforms/sco/apccontrol.in.osr6	Tue Mar 13 10:53:08 2007
+--- ./platforms/sco/apccontrol.in	Tue Mar 13 10:56:35 2007
+***************
+*** 0 ****
+--- 1,122 ----
++ #!@SCRIPTSHELL@
++ #
++ #  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
++ #
++ # @configure_input@
++ #
++ #  Apccontrol for SCO provided by Ron Record <rr@sco.com>
++ #
++ # These variables are needed for set up the autoconf other variables.
++ #
++ prefix=@prefix@
++ exec_prefix=@exec_prefix@
++ 
++ APCPID=@PIDDIR@/apcupsd.pid
++ APCUPSD=@sbindir@/apcupsd
++ SHUTDOWN=@SHUTDOWN@
++ SCRIPTSHELL=@SCRIPTSHELL@
++ SCRIPTDIR=@sysconfdir@
++ POWERFAILDIR=@PWRFAILDIR@
++ 
++ #
++ # This piece is to substitute the default behaviour with your own script,
++ # perl, or C program.
++ # You can customize every single command creating an executable file (may be a
++ # script or a compiled program) and calling it the same as the $1 parameter
++ # passed by apcupsd to this script.
++ #
++ # After executing your script, apccontrol continues with the default action.
++ # If you do not want apccontrol to continue, exit your script with exit 
++ # code 99. E.g. "exit 99".
++ #
++ # WARNING: the apccontrol file will be overwritten every time you update your
++ # apcupsd, doing `make install'. Your own customized scripts will _not_ be
++ # overwritten. If you wish to make changes to this file (discouraged), you
++ # should change apccontrol.sh.in and then rerun the configure process.
++ #
++ if [ -f ${SCRIPTDIR}/${1} -a -x ${SCRIPTDIR}/${1} ]
++ then
++    ${SCRIPTDIR}/${1} ${2} ${3} ${4}
++    # exit code 99 means he does not want us to do default action
++    if [ $? = 99 ] ; then
++       exit 0
++    fi
++ fi
++ 
++ case "$1" in
++    killpower)
++       sleep 10
++       ${APCUPSD} --killpower
++    ;;
++    commfailure)
++       printf "Communications with UPS lost." | wall -a
++    ;;
++    commok)
++       printf "Communciations with UPS restored." | wall -a
++    ;;
++    powerout)
++       printf "Warning power loss detected." | wall -a
++    ;;
++    onbattery)
++       printf "Power failure. Running on UPS batteries." | wall -a
++    ;;
++    offbattery)
++    ;;
++    mainsback)
++       printf "Power has returned..." | wall -a
++    ;;
++    failing)
++       printf "UPS battery power exhaused. Doing shutdown.\n" | wall -a
++    ;;
++    timeout)
++       printf "UPS battery runtime limit exceeded. Doing shutdown.\n" | wall -a
++    ;;
++    loadlimit)
++       printf "UPS battery discharge limit reached. Doing shutdown.\n" | wall -a
++    ;;
++    runlimit)
++       printf "UPS battery runtime percent reached. Doing shutdown.\n" | wall -a
++    ;;
++    doreboot)
++       printf "Beginning Reboot Sequence" | wall -a
++       ${SHUTDOWN} -y -g0 -i6 "apcupsd initiated reboot"
++    ;;
++    doshutdown)
++       printf "Beginning Shutdown Sequence" | wall -a
++       ${SHUTDOWN} -y -g0 -i0 "apcupsd initiated shutdown"
++    ;;
++    annoyme)
++       printf "Power problems please logoff." | wall -a
++    ;;
++    emergency)
++       printf "Emergency Shutdown. Possible UPS battery failure." | wall -a
++    ;;
++    changeme)
++       printf "Emergency! UPS batteries have failed\nChange them NOW" | wall -a
++    ;;
++    remotedown)
++       printf "Remote Shutdown.\nBeginning Shutdown Sequence." | wall -a
++    ;;
++    restartme)
++       echo -n "Restarting APCUPSD Power Management: "
++       THEPID=`cat ${APCPID}`
++       kill ${THEPID}
++       rm -f ${APCPID}
++       rm -f ${PWRFAILDIR}/powerfail
++       `${APCUPSD}`
++       echo "apcupsd"
++    ;;
++    startselftest)
++    ;;
++    endselftest)
++    ;;
++    battdetach)
++    ;;
++    battattach)
++    ;;
++    *) echo "Usage: ${0##*/} command"
++       echo "	   warning: this script is intended to be launched by"
++       echo "	   apcupsd and should never be launched by users."
++       exit 1
++    ;;
++ esac
+*** ./platforms/sco/apcupsd.in.osr6	Tue Mar 13 10:53:08 2007
+--- ./platforms/sco/apcupsd.in	Tue May 28 06:33:01 2002
+***************
+*** 0 ****
+--- 1,52 ----
++ #! /bin/sh
++ #
++ # apcupsd      This shell script takes care of starting and stopping
++ #	       the apcupsd UPS monitoring daemon.
++ #
++ # chkconfig: 2345 20 99
++ # description: apcupsd monitors power and takes action if necessary
++ #
++ #  Update October 7th, 2001 - CPE
++ #
++ APCPID=@PIDDIR@/apcupsd.pid
++ DISTVER="@DISTVER@"
++ POWERFAILDIR=@PWRFAILDIR@
++ LOCKDIR=@LOCKDIR@
++ SBINDIR=@sbindir@
++ 
++ return=" Done."
++ 
++ 
++ case "$1" in
++     start)
++ 	rm -f ${POWERFAILDIR}/powerfail
++ 	echo "Starting apcupsd power management ...\c"
++ 	${SBINDIR}/apcupsd || return="	Failed."
++ 	touch ${LOCKDIR}/apcupsd
++ 	echo "$return"
++     ;;
++     stop)
++ 	echo "Stopping apcupsd power management ...\c"
++ 	if [ -f ${APCPID} ]; then
++ 		THEPID=`cat ${APCPID}`
++ 		kill ${THEPID} || return=" Failed."
++ 		rm -f ${APCPID}
++ 	else
++ 		return=" Failed."
++ 	fi
++ 	rm -f ${LOCKDIR}/apcupsd
++ 	echo "$return"
++     ;;
++     restart)
++        $0 stop
++        $0 start
++     ;;
++     status)
++        ${SBINDIR}/apcaccess status
++     ;;
++     *)
++     echo "Usage: $0 {start|stop|restart|status}"
++     exit 1
++ esac
++ 
++ exit 0
+*** ./platforms/sco/rc0.sco.in.osr6	Tue Mar 13 10:53:08 2007
+--- ./platforms/sco/rc0.sco.in	Tue May 28 06:33:01 2002
+***************
+*** 0 ****
+--- 1,12 ----
++ #see if this is a powerfail situation
++ if [ -f @PWRFAILDIR@/powerfail ]; then
++         echo 
++         echo "APCUPSD will power off the UPS"
++         echo
++         @sysconfdir@/apccontrol killpower
++         echo
++         echo "Please ensure that the UPS has powered off before rebooting"
++         echo "Otherwise, the UPS may cut the power during the reboot!!!"
++         echo
++         exit 0
++ fi
+*** ./src/Makefile.in.osr6	Tue Feb  6 14:58:18 2007
+--- ./src/Makefile.in	Tue Mar 13 10:44:44 2007
+***************
+*** 32,41 ****
+  #
+  
+  apcupsd: $(dobjs) $(gobjs) $(WINAPC) $(APCLIBS) $(APCDRVLIBS) $(INTLLIBS) 
+! 	$(LD) $(LDFLAGS) $(dobjs) $(gobjs) $(APCDRVLIBS) $(DRVLIBS) $(LIBS) @LIBUSB@ -o apcupsd
+  
+  apctest: $(tobjs) $(gobjs) $(APCLIBS) $(APCDRVLIBS) $(INTLLIBS) 
+! 	$(LD) $(LDFLAGS) $(tobjs) $(gobjs) $(APCDRVLIBS) $(DRVLIBS) $(LIBS) @LIBUSB@ -o apctest
+  
+  devicedbg: $(xobjs) $(APCLIBS) $(INTLLIBS) 
+  	$(LD) $(LDFLAGS) $(xobjs) $(LIBS) -o devicedbg
+--- 32,41 ----
+  #
+  
+  apcupsd: $(dobjs) $(gobjs) $(WINAPC) $(APCLIBS) $(APCDRVLIBS) $(INTLLIBS) 
+! 	$(LD) $(LDFLAGS) $(dobjs) $(gobjs) $(APCDRVLIBS) $(DRVLIBS) /usr/lib/libgetopt.a $(LIBS) @LIBUSB@ -o apcupsd
+  
+  apctest: $(tobjs) $(gobjs) $(APCLIBS) $(APCDRVLIBS) $(INTLLIBS) 
+! 	$(LD) $(LDFLAGS) $(tobjs) $(gobjs) $(APCDRVLIBS) $(DRVLIBS) /usr/lib/libgetopt.a $(LIBS) @LIBUSB@ -o apctest
+  
+  devicedbg: $(xobjs) $(APCLIBS) $(INTLLIBS) 
+  	$(LD) $(LDFLAGS) $(xobjs) $(LIBS) -o devicedbg
+*** ./configure.osr6	Sat Feb 10 08:59:48 2007
+--- ./configure	Tue Mar 13 10:52:21 2007
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.59.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.59.
+  #
+***************
+*** 6961,6966 ****
+--- 6961,6968 ----
+  
+  #undef getopt_long
+  
++ #include <getopt.h>
++ 
+  /* Override any gcc2 internal prototype to avoid an error.  */
+  #ifdef __cplusplus
+  extern "C"
+***************
+*** 16711,16716 ****
+--- 16713,16721 ----
+  if test "x$DISTNAME" != "x"
+  then
+     echo "distname set to $DISTNAME"
++ elif test $HAVE_UNAME=yes -a x`uname -s` = xSCO_SV
++ then
++    DISTNAME=sco
+  elif test $HAVE_UNAME=yes -a x`uname -s` = xOSF1
+  then
+     DISTNAME=alpha
+***************
+*** 16946,16951 ****
+--- 16951,16971 ----
+        platforms/slackware/apcupsd \
+        platforms/slackware/rc6.patch"
+     ;;
++ sco)
++    DISTVER=OpenServer
++    SERIALDEV=/dev/tty1a
++    PWRFAILDIR=/etc
++    PIDDIR=/var/run
++    LOCKDIR=/var/spool/locks
++    LOGDIR=${sysconfdir}
++    APCUPSD_MAIL=/usr/bin/mailx
++    PTHREAD_CFLAGS="-D_POSIX_PTHREAD_SEMANTICS"
++    DFILES="\
++       platforms/sco/Makefile \
++       platforms/sco/apcupsd \
++       platforms/sco/rc0.sco \
++       platforms/sco/apccontrol"
++    ;;
+  sun)
+     DISTVER=Solaris
+     SERIALDEV=/dev/ttya
+*** ./Configure-OSR6.osr6	Tue Mar 13 10:43:56 2007
+--- ./Configure-OSR6	Tue Mar 13 10:43:23 2007
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CXXFLAGS="-O2"
++ DEFINES="-DARCH_IS_BIG_ENDIAN=0 -D__GNU_LIBRARY__ -D__STDC__=0"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ CC="cc -Kpthread -Kalloca $DEFINES"
++ CXX="CC -Kpthread -Kalloca $DEFINES"
++ ac_cv_func_getopt_long=yes
++ export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL ac_cv_func_getopt_long
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

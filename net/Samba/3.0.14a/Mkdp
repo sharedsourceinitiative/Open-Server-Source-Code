@@ -1,0 +1,14 @@
+#!/bin/sh
+
+T=/usr/src/sco/samba
+S=$T/samba-3.0.14a/source
+P=samba-pass_check-debug.patch
+cd $S
+rm -f $T/$P
+touch $T/$P
+
+find . -name \*\.debug | while read i
+do
+    F=`echo $i | sed -e "s/\.debug//"`
+    [ -f $F ] && diff -u $F.debug $F >> $T/$P
+done

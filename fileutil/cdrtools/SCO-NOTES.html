@@ -1,0 +1,658 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (X11; I; SCO_SV 3.2 i386) [Netscape]">
+   <title>SCO Notes for CDRTOOLS
+</title>
+</head>
+<body bgcolor="#FFFFFF">
+<font face="Arial,Helvetica">
+
+<a name="top">
+<table cellpadding=12 width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+CDRTOOLS = cdrecord + cdda2wav + mkisofs 
+</font></td>
+</table>
+</a>
+
+<center>
+<p>Document last updated : 07/19/1999</p>
+<p>Prepared by Michael Brinke-Engel <a href="mailto:mikebren@sco.com">(mikebren@sco.com)</a>
+and Ronald Joe Record <a href="mailto:rr@sco.com">(rr@sco.com)</a></p>
+</center>
+<p><!-- ------------------------------------------------ --><hr width="97%"></p>
+<a name="toc"><h1>Table of contents</h1></a>
+<a href="#Intro"><h3>Introduction</h3></a>
+<a href="#cdrtools">What are the CDRTOOLS?</a><br>
+<a href="#sco_stat">What is available for SCO Operating Systems?</a><br>
+<p>
+<a href="#Configuration"><h3>Configuration</h3></a>
+<a href="#configwriter">CD-Writer Configuration</a><br>
+<a href="#atapiwriter">ATAPI - Writers</a><br>
+<a href="#necessaryptf">Necessary Patches</a><br>
+<a href="#limitations">Known limitations</a><br>
+<a href="#devicesetting">How to access the cdwriter?</a><br>
+<a href="#defaults">Default values and /etc/default/cdrecord</a><br>
+<p>
+<a href="#Usage"><h3>Usage</h3></a>
+<a href="#sample">To backup data to your CD Recorder</a><br>
+<a href="#drvlist" name="toc_drvlist">Supported drives for cdrtools</a><br>
+<p>
+<a href="#Building"><h3>Building</h3></a>
+<a href="#environment">Compilation platforms</a><br>
+<a href="#changes"">Source code changes</a><br>
+<p>
+<a href="#Links"><h3>Related Links</h3></a>
+<p>
+
+<table width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+<a name="Intro">Introduction</a></font></td>
+</tr>
+</table>
+
+
+<p>
+<h3>What are the CDRTOOLS ?</h3>
+<p>
+The CDRTOOLS are a set of programs which allow the creation of CD images <b>(mkisofs)</b>, 
+extraction of digital audio from audio CD's <b>(cdda2wav)</b> and burning of any kind of data to
+recordable / rewritable CD's <b>(cdrecord)</b>, known to work with a wide variety of 
+todays available CD-Writers / CD-Rewritables on allmost 20 different operating systems.
+<p>
+<table width="80%">
+
+<tr>
+<th align=left>Program</th>
+<th align=left>Author </th>
+<th align=left>Copyright</th>
+</tr>
+
+<tr>
+<td><a href="http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/cdrecord.html">cdrecord</a></td>
+<td>J&ouml;rg Schilling <a href="mailto: schilling@fokus.gmd.de">(schilling@fokus.gmd.de)</td>
+<td>&copy J&ouml;rg Schilling </td>
+</tr>
+
+<tr>
+<td><a href="http://www.escape.de/users/colossus/cdda2wav.html">cdda2wav</a></td>
+<td>Heiko Ei&szlig;feldt <a href="mailto: heiko@colossus.escape.de">(heiko@colossus.escape.de)</td>
+<td>&copy Heiko Ei&szlig;feldt </td>
+</tr>
+
+<tr>
+<td>mkisofs</td>
+<td>Eric Youngdale <a href="mailto: ericy@gnu.ai.mit.edu">(ericy@gnu.ai.mit.edu)</td>
+<td>&copy Yggdrasil Computing, Incorporated</td>
+</tr>
+
+</table>
+<br>
+<br>
+<br>
+<br>
+<a name="support_status">
+<h3>Status of CDRTOOLS for SCO Operating Systems </h3>
+</a>
+<p>
+The latest available binary distribution for both SCO OpenServer 
+and UnixWare are the compiled binaries from the "cdrecord-1.8a23.tar.gz" 
+source package consisting of:
+<p>
+<ul>
+<li>cdrecord 1.8a22</li>
+<li>cdda2wav 1.0</li>
+<li>mkisofs 1.12b5</li>
+</ul>
+<p>
+For change history please see the AN-1.8a* files at 
+<a href="ftp://ftp.fokus.gmd.de/pub/unix/cdrtools/alpha">J&ouml;rg Schilling's FTP site</a>
+</p>
+
+<center>
+
+<table cellspacing=3 cellpadding=3 width="80%" >
+
+<tr bgcolor="#FFCC00">
+<th><font color="#003399">Platform</font></th>
+<th><font color="#003399">SCSI Writer</font></th>
+<th><font color="#003399">ATAPI Writer</font></th>
+</tr>
+
+<tr>
+<td><font color="#003399">SCO OpenServer 5.0.0</font></td>
+<td><font color="#003399">unsupported (no SCSIUSERCMD2)</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">SCO OpenServer 5.0.2</font></td>
+<td><font color="#003399">unsupported (no SCSIUSERCMD2)</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">SCO OpenServer 5.0.4</font></td>
+<td><font color="#003399">fully working</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">SCO OpenServer 5.0.5</font></td>
+<td><font color="#003399">fully working</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">SCO UnixWare 2.1.3</font></td>
+<td><font color="#003399">fully working, PTF needed</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">UnixWare 7.0.1</font></td>
+<td><font color="#003399">fully working, PTF needed</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">UnixWare 7.1</font></td>
+<td><font color="#003399">fully working</font></td>
+<td align=center><font color="#003399">-</font></td>
+</tr>
+
+</table>
+
+</center>
+
+<p>
+<table width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+<a name="Configuration">Configuration</a></font></td>
+</tr>
+</table>
+</p>
+
+<dt>
+<a name="configwriter">
+<h3>CD-Writer Configuration</h3>
+</a>
+</dt>
+<p>
+While on UnixWare your cdwriter will be autodetected/autoconfigured, you need
+to manually configure your cdwriter on SCO OpenServer, if you have not already 
+used the cdwriter to install your OS.
+<p>
+To add the cdwriter as an additional device on SCO OpenServer you need to run
+the <b>mkdev cdrom</b> command to add the device just the same way you
+would normally add any additional cd-rom. 
+<p>
+<a name="atapiwriter">
+<h3>ATAPI - Writers</h3>
+</a>
+<p>
+ATAPI writers are currently unsupported as we need some enhancements
+in the IDE drivers necessary to handle the SENSE data from the ATAPI 
+writers the same way as with SCSI writers.
+<p>
+<a name="necessaryptf">
+<h3>Necessary Patches for UnixWare 2.1.X / UnixWare 7.0.X</h3>
+</a>
+<p>
+If you want to use cdrecord/cdda2wav on SCO UnixWare 2.1.X / UnixWare 7.0.X 
+you need to install one of the following PTF's depending on your installed
+scsi controller which controls your writer:
+</p>
+
+<center>
+<table cellspacing=3 cellpadding=3 width="60%" >
+
+<tr bgcolor="#FFCC00">
+<th><font color="#003399">Driver</font></th>
+<th><font color="#003399">PTF required</font></th>
+</tr>
+
+<tr>
+<td><font color="#003399">c8xx</font></td>
+<td><font color="#003399">ptf7047</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">qlc1020</font></td>
+<td><font color="#003399">ptf7048 - only UnixWare 7.0.1</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">adsl</font></td>
+<td><font color="#003399">ptf7049</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">adsb</font></td>
+<td><font color="#003399">ptf7062</font></td>
+</tr>
+
+<tr>
+<td><font color="#003399">dak</font></td>
+<td><font color="#003399">ptf7063</font></td>
+</tr>
+</font>
+</table>
+
+<br>
+</center>
+<p>
+These PTF's are necessary to overcome the limit of 512 bytes per logical
+block in any scsi passthrough command on these controllers. Please make
+sure that you don't override these PTF's with any vendor supplied hba unless
+you know that the 512 byte limit is also fixed with the new vendor supplied
+driver.
+<p>
+The PTF's are freely available via anonymous ftp to ftp.sco.com in
+<A HREF="ftp://ftp.sco.com/SLS/">ftp://ftp.sco.com/SLS/</A>.
+<p>
+The above controllers are known to have this limitation, but - this
+does not imply that there is no other hba showing the same limitation.
+<p>
+!!! These PTF's are not necessary when using UnixWare 7.1 !!!
+
+<p>
+<p>
+<a name="limitations">
+<h3>Known limitations</h3>
+</a>
+<p>
+Although cdrecord allows the creation of multisession CD-R's, accessing 
+multisession CD's is not fully supported on both platforms, UnixWare 
+and OpenServer. You will only be able to access the first session.
+<p>
+<p>
+<a name="devicesetting">
+<h3>How to address the cdwriter</h3>
+</a>
+<p>
+The standard LINUX (or Solaris) device addressing method does not work on 
+UnixWare &amp; OpenServer as we don't have a generic scsi driver. 
+That's also the reason why the -scanbus option of cdrecord does not work. 
+The current implementation of the -scanbus option of cdrecord is bound to 
+the existence of the /dev/scg driver.
+<p>
+As OpenServer and UnixWare don't have this /dev/scg generic scsi driver, 
+we use the cdrom target drivers (Srom on OpenServer and SC01 on UnixWare) 
+to access the CD-Writers devices (all cdwriters are in general enhanced 
+cd-rom devices).
+<p>
+This therefore changes the idea of specifying the device parameters from
+<pre>
+        dev=bus, id, lun                     (Linux, Solaris etc.)
+</pre>
+to be
+<pre>
+        dev=number-of-cd-device, id, lun     (OpenServer, UnixWare)
+</pre>
+<p>
+These target drivers (Srom, SC01) allow cd-rom devices to be opened. These
+devices are:
+<BR>
+On OpenServer:
+<pre>
+        /dev/rcd0, /etc/rcd1 ... (enumeration starts with 0)
+</pre>
+and on UnixWare:
+<pre>
+        /dev/rcdrom/cdrom1, /dev/rcdrom/cdrom2 .... (enumeration starts with 1)
+
+</pre>
+<p>
+This gives us the following two methods to access the cdwriters:
+<p>
+<table cellspacing=3 cellpadding=3 width="50%" >
+<tr bgcolor="#FFCC00">
+<th><font color="#003399">Method 1</font></th>
+</tr>
+</table>
+<pre>
+     cdrecord dev=X,Y,Z ... with
+
+     X = the number of the cdrom device 
+
+         For OpenServer this is:
+                    
+          0   for /dev/rcd0, 
+          1   for /dev/rcd1 etc.
+
+         For UnixWare this is:
+
+          1   for /dev/rcdrom/cdrom1,
+          2   for /dev/rcdrom/cdrom2 etc.
+
+     Y = the scsi id 
+
+           due to the fact of using the special device node for 
+           the scsi passthru, it does not matter at all what id 
+           we give to cdrecord, as only the number of the cdrom 
+           device is used to open the device node 
+
+           Remember, we don't have a generic scsi driver interface!
+
+
+     Z = the lun     
+
+           Again, the same applies to the lun as to the id!
+	   
+	   
+     Example for OpenServer:
+
+    	# cdrecord dev=0,6,0 ...
+
+     will use the first cd-rom device as the writer with ID 6, Lun 0
+
+     and for UnixWare:
+
+        # cdrecord dev=1,4,0 ...
+
+     will use the first cd-rom device as the writer with ID 4, Lun 0
+    	   
+</pre>
+<p>
+<table cellspacing=3 cellpadding=3 width="50%" >
+<tr bgcolor="#FFCC00">
+<th><font color="#003399">Method 2</font></th>
+</tr>
+</table>
+<p>
+<pre>
+     cdrecord dev=dev_node:Y,Z ... with
+
+     dev_node = the special device node of the cdrom device 
+
+         For OpenServer this is:
+                    
+          /dev/rcd0, 
+          /dev/rcd1 etc.
+
+         For UnixWare this is:
+
+          /dev/rcdrom/cdrom1,
+          /dev/rcdrom/cdrom2 etc.
+
+     Y = the scsi id 
+
+           due to the fact of using the special device node for 
+           the scsi passthru, it does not matter at all what id 
+           we give to cdrecord, as only the device node is used
+	   to do the open
+
+           Remember, we don't have a generic scsi driver interface!
+
+
+     Z = the lun     
+
+           Again, the same applies to the lun as to the id!
+
+
+     Example for OpenServer:
+
+    	# cdrecord dev=/dev/rcd1:6,0 ...
+
+     will use the /dev/rcd1 device as the writer
+
+     and for UnixWare:
+
+        # cdrecord dev=/dev/rcdrom/cdrom1:4,0 ...
+
+     will use the /dev/rcdrom/cdrom1 device as the writer 
+
+</pre>
+Either of the two methods can be used to specify the device on the command
+line and in the <b>/etc/default/cdrecord</b> file.
+<br>
+<br>
+<br>
+<a name="defaults">
+<h3>Default values and /etc/default/cdrecord</h3>
+</a>
+<p>
+Default values can be set for the following options in /etc/default/cdrecord.
+</p>
+<font color="#003399"><b>CDR_DEVICE</b></font><br>
+<p>
+This may either hold a device identifier that is suitable to the open call
+of the SCSI transport library or a label in the file /etc/default/cdrecord
+that identifies a specific drive on the system.
+</p>
+<font color="#003399"><b>CDR_SPEED</b></font>
+<p>
+Sets the default speed value for writing (see also -speed option).
+</p>
+<font color="#003399"><b>CDR_FIFOSIZE</b></font>
+<p>
+Sets the default size of the FIFO (see also fs=# option).
+</p>
+<font color="#003399"><b>IDENTIFIER</b></font>
+<p>
+Any other label is an identifier for a specific drive on the system.
+Such an identifier may not contain the characters ',', '/', '@' or ':'.
+Each line that follows a label contains a TAB separated list of items.
+Currently, three items are recognized: the SCSI ID of the drive, the default
+speed that should be used for this drive and the default FIFO size that
+should be used for this drive. The values for speed and fifosize may be
+set to -1 to tell cdrecord to use the global defaults. Typical lines on
+OpenServer may look like this:
+</p>
+<pre>
+	teac1=0,5,0	4	8m
+	teac2=1,6,0	-1	-1
+</pre>
+<p>
+This tells cdrecord that a drive named teac1 is configured as device
+0 (/dev/rcd0) , target 5, lun 0 and should be used with speed
+4 and a FIFO size of 8 MB. A second drive, named teac2, may be found as device 1 (/dev/rcd1),
+target 6, lun 0 and uses the default speed and the default FIFO size.
+</p>
+<p>
+Example /etc/default/cdrecord 
+<br>
+<br>
+<pre>
+# ------------------------------------------------------
+# default device and speed and fifo size
+# ------------------------------------------------------
+
+CDR_DEVICE=/dev/rcd1:4,0
+CDR_SPEED=6
+CDR_FIFOSIZE=8m
+
+# ------------------------------------------------------
+# Identifier for TEAC CDR56S
+# ------------------------------------------------------
+
+teac=1,4,0	6	8m
+
+# ------------------------------------------------------
+# Identifier for Yamaha CDRW4416S
+# ------------------------------------------------------
+
+cdrw=2,6,0	4	8m
+
+</pre>
+
+<table width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+<a name="Usage">Usage</a></font></td>
+</tr>
+</table>
+
+<p>
+<a name="sample">
+<h3>To backup data to your CD Recorder</h3>
+</a>
+<ol>
+<li>
+Load the CDRTOOLS applications from the Open License Software Supplement
+(SkunkWare) CD or the downloaded package from the <a href="http://www.sco.com/olss/">Skunkware
+web site</a>.</li>
+</p>
+<p>
+<li>You must first create an image that will be burned to the CDR/CDRW.</li>
+Make ISO File System listed below takes everything in and below your
+working directory and creates the image file /tmp/outfile. You can take
+a look at the mkisofs options to see what these actually do, but they work.
+<pre>
+   <b>mkisofs -L -l -v -r -o /tmp/outfile .</b>
+</pre>
+note you will have one additional file called rr_moved which is an empty
+directory. The -r keeps anything from being written into that directory.
+</p>
+<p>
+<li>
+To record to the CDR/CDRW run cdrecord like this:</li>
+<pre>
+   <b>cdrecord -v </b>dev=/dev/rcdrom/cdrom2:5,0 <b>/tmp/outfile speed=4</b>
+</pre>
+To know what device address your writer needs, see the above 
+<a href="#devicesetting">"How to address the cdwriter"</a>
+</p>
+<li>
+To mount your newly created CD in the writer you will neet a mount point</li>
+<pre>
+   mkdir /cdrw
+</pre>
+The CDR/CDRW requires the -r command (and the -F cdfs option on UnixWare).
+<pre>
+   <b>mount -r -F cdfs /dev/cdrom/cdrom2 /cdrw</b>
+</pre>
+</ol>
+<br>
+<br>
+<br>
+<a name="drvlist"><h3>Supported drives for cdrtools</h3></a>
+As J&ouml;rg Schillings list of supported drives is quite impressive, 
+you might look it up directly 
+<a href="http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/cdwriters-1.8.html">here</a>
+<p>
+We have tested these drives on SCO platforms:
+<p>
+<ul>
+<li>Matsushita CW-7502</li>
+<li>Philips CDD-2600</li>
+<li>Plextor PX-R412Ci</li>
+<li>Plextor PX-R820Ti</li>
+<li>Ricoh MP6200S</li>
+<li>Teac CD-R50S</li>
+<li>Teac CD-R55S</li>
+<li>Teac CD-R56S</li>
+<li>YAMAHA CDRW4416S</li>
+<li>YAMAHA CRW2260</li>
+</ul>
+<br>
+<br>
+
+<p>
+<table width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+<a name="Building">Porting and Build Notes</a></font></td>
+</tr>
+</table>
+</p>
+
+<p>
+<a name="environment"><h3>Compilation platforms</h3></a>
+</p>
+OpenServer
+<ul>
+<li>SCO OpenServer 5.0.5 Enterprise</li>
+<li>SCO OpenServer 5.0.5 Development System</li>
+<li>Release Supplement RS505A</li>
+<li>J&ouml;rg Schilling's smake for OpenServer</li>
+</ul>
+
+UnixWare
+<ul>
+<li>SCO UnixWare 2.1.3 Application Server</li>
+<li>SCO UnixWare 2.1 Development System</li>
+<li>PTF7049E new adsl driver (see "Necessary Patches")</li>
+<li>J&ouml;rg Schilling's smake for UnixWare</li>
+</ul>
+<br>
+<br>
+<a name="changes"><h3>Source code changes</h3></a>
+<p>
+All below changes are necessary for the current version (1.8a23) on UnixWare 
+as J&ouml;rg has not yet fully incorporated all SCO changes to compile the standard 
+distribution out of the box.
+</p>
+J&ouml;rg wants to check another way of implementing the necessary changes 
+to compile on UnixWare in order to avoid special handling of cdrecord 
+common source (see issue 1).
+<p>
+<ol>
+<li>trouble with #defines on SCO UnixWare 2.1.X / UnixWare 7:</li>
+<p>
+<dl>
+<dt>
+./libscg/scg/scgcmd.h</dt>
+<pre>
+&lt;=      line 254:
+        #ifndef UNIXWARE
+        #define SC_PARITY
+        #endif
+        
+        line 402:
+        #ifndef UNIXWARE
+        #define scb  u_scb.Scb
+        #endif
+</pre>
+
+<dt>
+./libscg/scsitransp.c</dt>
+<pre>
+        &lt;=      global replacement ?
+        scb -> u_scb.Scb
+</pre>
+<dt>
+./cdrecord/scsi_cdr.c</dt>
+<pre>
+        &lt;=      global replacement ?
+        scb -> u_scb.Scb
+</pre>
+</dl>
+
+<p>
+<li>
+New autoconf file:</li>
+<p>
+./conf/config.guess &lt;= modified (-> UnixWare 7)
+<p>
+</ul>
+</dl>
+
+<p>
+<table width="100%">
+<tr bgcolor="#003399">
+<td align=center><font size="+4" color="#FFCC00">
+<a name="Links">Related Links</a></font></td>
+</tr>
+</table>
+<p>
+You can find lots of interesting links related to CD and Recording on 
+<a href="http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/cdr.html">J&ouml;rg Schillings Webserver </a>
+<p>
+<table width="100%">
+<tr bgcolor="#FFCC00">
+<td align=center><font size="+4" color="#003399">
+End of Document</font></td>
+</tr>
+</table>
+</p>
+
+</font>
+</body>
+</html>

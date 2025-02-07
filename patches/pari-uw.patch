@@ -1,0 +1,99 @@
+--- ./src/kernel/ix86/l0asm.c.uw	2002-04-06 12:50:48.000000000 +0000
++++ ./src/kernel/ix86/l0asm.c	2003-11-10 19:00:10.820000038 +0000
+@@ -36,7 +36,7 @@
+    global variable `hiremainder'. */
+ 
+ /* This should ideally be determined at configure time. */
+-#if defined(__EMX__) || defined(__DJGCC__) || defined(__GO32__) || (defined(linux) && !defined(__ELF__)) || defined(__386BSD__) || defined(__NetBSD__) || (defined(__FreeBSD__) && !defined(__ELF__)) || defined(NeXT) || defined(__CYGWIN32__) || defined(__MINGW32__)
++#if defined(__EMX__) || defined(__DJGCC__) || defined(__GO32__) || (defined(linux) && !defined(__ELF__)) || defined(__386BSD__) || defined(__NetBSD__) || (defined(__FreeBSD__) && !defined(__ELF__)) || defined(NeXT) || defined(__CYGWIN32__) || defined(__MINGW32__) || defined(__USLC__)
+ #  define ASM_UNDERSCORE
+ #endif
+ 
+--- ./src/kernel/ix86/level0.h.uw	2000-11-03 21:00:25.000000000 +0000
++++ ./src/kernel/ix86/level0.h	2003-11-10 19:00:10.820000057 +0000
+@@ -65,7 +65,7 @@
+ 
+ /* Different assemblers have different syntax for the "shldl" and "shrdl"
+    instructions. */
+-#if defined(__EMX__) || defined(__DJGCC__) || defined(__GO32__) || (defined(linux) && !defined(__ELF__)) || defined(__386BSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(NeXT) || defined(__CYGWIN32__) || defined(__MINGW32__) || defined(COHERENT)
++#if defined(__EMX__) || defined(__DJGCC__) || defined(__GO32__) || (defined(linux) && !defined(__ELF__)) || defined(__386BSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(NeXT) || defined(__CYGWIN32__) || defined(__MINGW32__) || defined(COHERENT) || defined(__USLC__)
+ #  define SHCL "%%cl,"
+ #else
+ #  define SHCL
+--- ./src/modules/elliptic.c.uw	2002-09-12 01:02:58.000000000 +0000
++++ ./src/modules/elliptic.c	2003-11-10 19:02:27.030000025 +0000
+@@ -2919,7 +2919,7 @@
+ }
+ 
+ static GEN
+-_round(GEN x, long *e)
++_my_round(GEN x, long *e)
+ {
+   GEN y = grndtoi(x,e);
+   if (*e > -5 && bit_accuracy(gprecision(x)) < gexpo(y) - 10)
+@@ -2934,9 +2934,9 @@
+ {
+   GEN p = cgetg(3,t_VEC);
+   long e;
+-  p[1] = lmul2n(_round(gmul2n((GEN)q[1],2), &e),-2);
++  p[1] = lmul2n(_my_round(gmul2n((GEN)q[1],2), &e),-2);
+   if (e > -5) return NULL;
+-  p[2] = lmul2n(_round(gmul2n((GEN)q[2],3), &e),-3);
++  p[2] = lmul2n(_my_round(gmul2n((GEN)q[2],3), &e),-3);
+   if (e > -5) return NULL;
+   return (gcmp0(gimag(p)) && oncurve(E,p)
+       && lg(powell(E,p,stoi(n))) == 2
+--- ./Configure.uw	2003-04-03 19:11:02.000000000 +0000
++++ ./Configure	2003-11-10 19:00:10.820000112 +0000
+@@ -290,7 +290,7 @@
+ ==========================================================================
+ I know of the following Operating Systems
+ EOM
+-  rep='os2 freebsd cygwin linux hpux aix osf1 solaris sunos nextstep concentrix irix';
++  rep='os2 freebsd cygwin linux hpux aix osf1 solaris sunos sysv5 nextstep concentrix irix';
+   . ./display
+   echo $n ..."Any of these apply ? $c"
+   dflt=$osname; . ./myread
+@@ -308,7 +308,10 @@
+   sparcv8_super) asmarch=$arch;         pretty=SuperSparc ;;
+   sparcv9)       asmarch=sparcv8_micro; pretty=UltraSparc ;;
+   m68k)          asmarch=$arch;         pretty="MC680x0, x>=2" ;;
+-  i?86)          asmarch=ix86 ;         pretty=$arch ;;
++  i?86)          asmarch=ix86 ;         pretty=$arch
++        case "$osname" in
++        sysv5)  asmarch=none  ;;
++        esac ;;
+   hppa)          asmarch=none ;         pretty=HP
+         case "$osname-`uname -r`" in
+         hpux-?.09.*)  asmarch=none  ;;
+@@ -872,6 +875,7 @@
+     osf1-*)       OPTFLAGS='-O4 -migrate -ifo -Olimit 9999';;
+     sunos-*)      OPTFLAGS=-fast; PRFFLAGS='-pg -Bstatic';;
+     solaris-*)    OPTFLAGS=-fast; PRFFLAGS=-xpg;;
++    sysv5-*)      OPTFLAGS=-O2;;
+     concentrix-*) OPTFLAGS=-Ogi;;
+     *)            OPTFLAGS=-O;;
+   esac
+@@ -1006,7 +1010,7 @@
+ #    aix-*)  DLSUFFIX=a  ;; dynamic linking does not work!
+     sunos-*) sodest=$VersionMajor$VersionMinor.$patch
+              soname=$sodest;;
+-    *-alpha|solaris-*|linux-*|freebsd-*)
++    *-alpha|solaris-*|sysv5-*|linux-*|freebsd-*)
+       case $libpari_base in
+         pari) sodest=$version.$patch;; # released versions
+         *) sodest=$patch.0.0;; # unstable versions
+@@ -1050,11 +1054,12 @@
+          esac;;
+       sunos-*)    DLLDFLAGS="-assert nodefinitions" ;;
+       solaris-*)  DLLDFLAGS="-G -h \$(LIBPARI_SONAME)" ;;
++      sysv5-*)    DLLDFLAGS="-G -h \$(LIBPARI_SONAME)" ;;
+       *)          DLLD=;;
+     esac
+   fi
+   case "$osname" in 
+-    freebsd|linux|sunos|solaris) DLLDFLAGS="$DLLDFLAGS -lc -lm";;
++    freebsd|linux|sunos|sysv5|solaris) DLLDFLAGS="$DLLDFLAGS -lc -lm";;
+   esac
+ 
+   if test "$fastread" != yes; then

@@ -1,0 +1,31 @@
+*** ./Makefile.PL.osr6	Sun Jul  3 14:01:17 2005
+--- ./Makefile.PL	Tue Apr 11 15:33:13 2006
+***************
+*** 205,211 ****
+  $cflags .= " -DDBD_MYSQL_WITH_SSL" if $opt->{'ssl'};
+  $cflags .= " -DDBD_MYSQL_INSERT_ID_IS_GOOD" if $DBI::VERSION > 1.42;
+  $cflags .= " -DDBD_NO_CLIENT_FOUND_ROWS" if $opt->{'nofoundrows'};
+! $cflags .= " -g ";
+  my %o = ( 'NAME' => 'DBD::mysql',
+  	  'INC' => $cflags,
+  	  'dist'         => { 'SUFFIX'       => ".gz",
+--- 205,211 ----
+  $cflags .= " -DDBD_MYSQL_WITH_SSL" if $opt->{'ssl'};
+  $cflags .= " -DDBD_MYSQL_INSERT_ID_IS_GOOD" if $DBI::VERSION > 1.42;
+  $cflags .= " -DDBD_NO_CLIENT_FOUND_ROWS" if $opt->{'nofoundrows'};
+! $cflags .= " -O2 ";
+  my %o = ( 'NAME' => 'DBD::mysql',
+  	  'INC' => $cflags,
+  	  'dist'         => { 'SUFFIX'       => ".gz",
+*** ./Install-OSR6.osr6	Tue Apr 11 15:34:00 2006
+--- ./Install-OSR6	Tue Apr 11 15:34:24 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/DBDmysql
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

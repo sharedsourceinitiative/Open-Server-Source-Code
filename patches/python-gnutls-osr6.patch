@@ -1,0 +1,25 @@
+*** ./Build-OSR6.osr6	Mon Dec 10 10:36:32 2007
+--- ./Build-OSR6	Mon Dec 10 11:04:18 2007
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ #
++ rm -f mout
++ CXX="CC -Kpthread -Kalloca" \
++ CC="cc -Kpthread -Kalloca" \
++ python setup.py build 2>&1 | tee mout
++ 
+*** ./Install-OSR6.osr6	Mon Dec 10 10:36:32 2007
+--- ./Install-OSR6	Mon Dec 10 10:41:14 2007
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/pygnutls
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ rm -f mout-install
++ python setup.py install --root=$D 2>&1 | tee mout-install

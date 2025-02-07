@@ -1,0 +1,38 @@
+--- ./Configure-OSR6.00	2009-01-01 18:15:42.670000010 -0800
++++ ./Configure-OSR6	2009-01-01 18:16:15.740000011 -0800
+@@ -0,0 +1,21 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/local/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++PATH=/usr/local/bin:$PATH
++export CC CXX CFLAGS NM M4 INSTALL PATH
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2009-01-01 18:15:42.670000027 -0800
++++ ./Install-OSR6	2009-01-01 18:15:42.670000024 -0800
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/autoconf
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

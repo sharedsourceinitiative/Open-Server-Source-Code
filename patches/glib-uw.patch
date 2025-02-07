@@ -1,0 +1,35 @@
+--- ./ltconfig.00	2003-11-11 16:53:13.000000000 +0000
++++ ./ltconfig	2003-11-11 16:55:51.450000025 +0000
+@@ -1479,12 +1479,9 @@
+     ;;
+ 
+   sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linkopts'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linkopts~$rm $lib.exp'
++    no_undefined_flag=''
++    archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $linkopts'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linkopts'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -2063,7 +2060,15 @@
+   need_version=yes
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv5*)
++  version_type=linux
++  library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
++  soname_spec='${libname}${release}.so$major'
++  shlibpath_var=LD_LIBRARY_PATH
++  deplibs_check_method='pass_all'
++  ;;
++
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   version_type=linux
+   library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
+   soname_spec='${libname}${release}.so$major'

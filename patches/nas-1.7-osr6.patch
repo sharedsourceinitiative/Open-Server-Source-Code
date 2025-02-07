@@ -1,0 +1,121 @@
+*** ./config/Imakefile.osr6	Sun Nov 14 14:50:23 2004
+--- ./config/Imakefile	Sat Sep 17 23:46:44 2005
+***************
+*** 13,19 ****
+  HEADERS = NasConfig.h config.h
+  
+  config.h: 
+! 	sh -c "unset CFLAGS; ./configure"
+  
+  includes:: config.h
+  
+--- 13,19 ----
+  HEADERS = NasConfig.h config.h
+  
+  config.h: 
+! 	sh -c "unset CFLAGS; ./configure --prefix=/usr --host=i586-sco-sysv5 --target=i586-sco-sysv5 --build=i586-sco-sysv5"
+  
+  includes:: config.h
+  
+*** ./config/configure.osr6	Sat Sep 11 11:32:22 2004
+--- ./config/configure	Sat Sep 17 23:46:44 2005
+***************
+*** 2867,2873 ****
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv5uw[78]* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 2867,2873 ----
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 4940,4946 ****
+      fi
+      ;;
+  
+!   solaris* | sysv5*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+--- 4940,4946 ----
+      fi
+      ;;
+  
+!   solaris*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+***************
+*** 5390,5398 ****
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!     archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+! 		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+--- 5390,5397 ----
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!     archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+*** ./Build-OSR6.osr6	Sat Sep 17 23:46:44 2005
+--- ./Build-OSR6	Sat Sep 17 23:46:44 2005
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ 
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca -DUSL"
++   CXX="CC -Kpthread -Kalloca -DUSL"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ xmkmf
++ make World CC="${CC}" CXX="${CXX}" MAKE=/usr/gnu/bin/make 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Sat Sep 17 23:52:09 2005
+--- ./Install-OSR6	Sat Sep 17 23:54:28 2005
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/nas
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install MAKE=/usr/gnu/bin/make DESTDIR=$D 2>&1 | tee $MOUT
++ make install.man MAKE=/usr/gnu/bin/make DESTDIR=$D 2>&1 | tee $MOUT-man
++ make install.sdk MAKE=/usr/gnu/bin/make DESTDIR=$D 2>&1 | tee $MOUT-sdk
++ 

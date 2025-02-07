@@ -1,0 +1,17 @@
+*** ./Install-OSR6.osr6	Wed Aug 17 18:21:15 2005
+--- ./Install-OSR6	Wed Aug 17 18:21:28 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/t1lib
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

@@ -1,0 +1,11 @@
+--- ./src/Makefile.00	2003-09-07 17:39:30.000000000 +0000
++++ ./src/Makefile	2003-09-07 17:39:50.030000003 +0000
+@@ -8,7 +8,7 @@
+ CPP = $(CC) -E
+ 
+ DEFS = -DHAVE_NCURSES -DLOCALE 
+-LIBS = -lncurses
++LIBS = -lcurses -ltermcap
+ 
+ CFLAGS = $(RPM_OPT_FLAGS) -Wall -Wstrict-prototypes -fomit-frame-pointer -I/usr/include/ncurses
+ LDFLAGS = -s

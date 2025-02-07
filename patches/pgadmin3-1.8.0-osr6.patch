@@ -1,0 +1,147 @@
+*** ./pgadmin/frm/frmEditGrid.cpp.osr6	Fri Oct 19 03:34:32 2007
+--- ./pgadmin/frm/frmEditGrid.cpp	Mon Nov 19 17:49:18 2007
+***************
+*** 1806,1813 ****
+                      columns[i].attr->SetReadOnly(false);
+                      editor = new sqlGridBoolEditor();
+                      break;
+!                 case PGOID_TYPE_INT8:
+!                 case PGOID_TYPE_SERIAL8:
+                      SetNumberEditor(i, 20);
+                      break;
+                  case PGOID_TYPE_INT2:
+--- 1806,1813 ----
+                      columns[i].attr->SetReadOnly(false);
+                      editor = new sqlGridBoolEditor();
+                      break;
+!                 case (Oid)PGOID_TYPE_INT8:
+!                 case (Oid)PGOID_TYPE_SERIAL8:
+                      SetNumberEditor(i, 20);
+                      break;
+                  case PGOID_TYPE_INT2:
+*** ./pgadmin/include/dlg/dlgProperty.h.osr6	Mon Oct  1 11:27:33 2007
+--- ./pgadmin/include/dlg/dlgProperty.h	Mon Nov 19 17:45:42 2007
+***************
+*** 71,77 ****
+  	void AppendQuotedType(wxString &sql, const wxString &name);
+  	wxString qtDbString(const wxString &str);
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+      // ANSI spec 11.5 is quite brain dead about pointers of protected members: In order to access 
+      // them using the base class name, they can't be protected.
+      // apparently, only gcc 3.4 knows that; other compilers take protected as protected.
+--- 71,77 ----
+  	void AppendQuotedType(wxString &sql, const wxString &name);
+  	wxString qtDbString(const wxString &str);
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || defined(__USLC__)
+      // ANSI spec 11.5 is quite brain dead about pointers of protected members: In order to access 
+      // them using the base class name, they can't be protected.
+      // apparently, only gcc 3.4 knows that; other compilers take protected as protected.
+*** ./pgadmin/include/dlg/dlgClasses.h.osr6	Fri May 11 06:58:58 2007
+--- ./pgadmin/include/dlg/dlgClasses.h	Mon Nov 19 17:45:42 2007
+***************
+*** 148,154 ****
+      bool done, final;
+      wxArrayString environment;
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+  public:
+  #endif
+      void OnOK(wxCommandEvent& ev);
+--- 148,154 ----
+      bool done, final;
+      wxArrayString environment;
+  
+! #if __GNUC__ >= 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || defined(__USLC__)
+  public:
+  #endif
+      void OnOK(wxCommandEvent& ev);
+*** ./pgadmin/Makefile.in.osr6	Fri Oct 19 05:18:30 2007
+--- ./pgadmin/Makefile.in	Mon Nov 19 17:45:42 2007
+***************
+*** 1126,1136 ****
+  	$(srcdir)/ui/frmPassword.xrc $(srcdir)/ui/frmReport.xrc \
+  	$(srcdir)/ui/frmRestore.xrc $(srcdir)/ui/frmStatus.xrc
+  subdir = $(srcdir)/schema
+! @SUN_CC_FALSE@__CFLAGS = -Wall
+  
+  # Include all the sub-Makefiles
+  @SUN_CC_TRUE@__CFLAGS = ""
+! @SUN_CXX_FALSE@__CXXFLAGS = -Wall -Wno-non-virtual-dtor -fno-strict-aliasing
+  @SUN_CXX_TRUE@__CXXFLAGS = ""
+  @EDB_LIBPQ_FALSE@__EDB_LIBPQ = 
+  @EDB_LIBPQ_TRUE@__EDB_LIBPQ = -DEDB_LIBPQ
+--- 1126,1136 ----
+  	$(srcdir)/ui/frmPassword.xrc $(srcdir)/ui/frmReport.xrc \
+  	$(srcdir)/ui/frmRestore.xrc $(srcdir)/ui/frmStatus.xrc
+  subdir = $(srcdir)/schema
+! @SUN_CC_FALSE@__CFLAGS =
+  
+  # Include all the sub-Makefiles
+  @SUN_CC_TRUE@__CFLAGS = ""
+! @SUN_CXX_FALSE@__CXXFLAGS =
+  @SUN_CXX_TRUE@__CXXFLAGS = ""
+  @EDB_LIBPQ_FALSE@__EDB_LIBPQ = 
+  @EDB_LIBPQ_TRUE@__EDB_LIBPQ = -DEDB_LIBPQ
+*** ./xtra/pgagent/Makefile.in.osr6	Fri Oct 19 05:18:31 2007
+--- ./xtra/pgagent/Makefile.in	Mon Nov 19 17:45:42 2007
+***************
+*** 215,221 ****
+  		$(srcdir)/include/misc.h \
+  		$(srcdir)/include/pgAgent.h
+  
+! @SUN_CXX_FALSE@__CXXFLAGS = -Wall -Wno-non-virtual-dtor -fno-strict-aliasing
+  @SUN_CXX_TRUE@__CXXFLAGS = ""
+  @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" $(__CXXFLAGS) -I$(srcdir)/include
+  all: all-am
+--- 215,221 ----
+  		$(srcdir)/include/misc.h \
+  		$(srcdir)/include/pgAgent.h
+  
+! @SUN_CXX_FALSE@__CXXFLAGS = 
+  @SUN_CXX_TRUE@__CXXFLAGS = ""
+  @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" $(__CXXFLAGS) -I$(srcdir)/include
+  all: all-am
+*** ./Install-OSR6.osr6	Mon Nov 19 17:45:42 2007
+--- ./Install-OSR6	Mon Nov 19 17:45:42 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgadmin3
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Mon Nov 19 17:55:50 2007
+--- ./Configure-OSR6	Mon Nov 19 17:55:39 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

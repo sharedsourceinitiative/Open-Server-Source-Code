@@ -1,0 +1,248 @@
+*** ./checks/check-them.osr6	Thu Oct  9 20:01:06 2008
+--- ./checks/check-them	Sat Nov  8 08:58:36 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # Check GNU m4 against examples from the manual source.
+  # Copyright (C) 1992, 2006, 2007, 2008 Free Software Foundation, Inc.
+  #
+--- 1,4 ----
+! #!/bin/bash
+  # Check GNU m4 against examples from the manual source.
+  # Copyright (C) 1992, 2006, 2007, 2008 Free Software Foundation, Inc.
+  #
+*** ./checks/get-them.osr6	Wed Sep 24 19:29:55 2008
+--- ./checks/get-them	Sat Nov  8 08:58:36 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # -*- AWK -*-
+  # Extract all examples from the manual source.
+  # Copyright (C) 1992, 2005, 2006, 2007, 2008 Free Software Foundation,
+--- 1,4 ----
+! #!/bin/bash
+  # -*- AWK -*-
+  # Extract all examples from the manual source.
+  # Copyright (C) 1992, 2005, 2006, 2007, 2008 Free Software Foundation,
+*** ./lib/fpurge.c.osr6	Tue Aug  5 06:16:43 2008
+--- ./lib/fpurge.c	Sat Nov  8 08:58:36 2008
+***************
+*** 92,100 ****
+--- 92,106 ----
+    fp->_ungetc_count = 0;
+    return 0;
+  # elif defined _IOERR               /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw */
++ #if defined(__USLC__)
++   fp->__ptr = fp->__base;
++   if (fp->__ptr != NULL)
++     fp->__cnt = 0;
++ #else
+    fp->_ptr = fp->_base;
+    if (fp->_ptr != NULL)
+      fp->_cnt = 0;
++ #endif
+    return 0;
+  # elif defined __UCLIBC__           /* uClibc */
+  #  ifdef __STDIO_BUFFERS
+*** ./lib/freadahead.c.osr6	Fri Sep 12 19:45:53 2008
+--- ./lib/freadahead.c	Sat Nov  8 08:58:36 2008
+***************
+*** 49,57 ****
+--- 49,63 ----
+       (fp->_ungetc_count == 0 ? fp->_rcount : fp->_ungetc_count - fp->_rcount) */
+    return (fp->_rcount > 0 ? fp->_rcount : fp->_ungetc_count - fp->_rcount);
+  #elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw */
++ #if defined(__USLC__)
++   if ((fp_->__flag & _IOWRT) != 0)
++     return 0;
++   return fp_->__cnt;
++ #else
+    if ((fp_->_flag & _IOWRT) != 0)
+      return 0;
+    return fp_->_cnt;
++ #endif
+  #elif defined __UCLIBC__            /* uClibc */
+  # ifdef __STDIO_BUFFERS
+    if (fp->__modeflags & __FLAG_WRITING)
+*** ./lib/freading.c.osr6	Tue Aug  5 06:16:44 2008
+--- ./lib/freading.c	Sat Nov  8 08:58:36 2008
+***************
+*** 40,46 ****
+--- 40,50 ----
+  #elif defined __EMX__               /* emx+gcc */
+    return (fp->_flags & _IOREAD) != 0;
+  #elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw */
++ #if defined(__USLC__)
++   return (fp->__flag & _IOREAD) != 0;
++ #else
+    return (fp->_flag & _IOREAD) != 0;
++ #endif
+  #elif defined __UCLIBC__            /* uClibc */
+    return (fp->__modeflags & (__FLAG_READONLY | __FLAG_READING)) != 0;
+  #elif defined __QNX__               /* QNX */
+*** ./lib/closein.c.osr6	Sat Feb 23 09:29:37 2008
+--- ./lib/closein.c	Sat Nov  8 08:58:36 2008
+***************
+*** 80,85 ****
+--- 80,86 ----
+  {
+    bool fail = false;
+  
++ 
+    /* There is no need to flush stdin if we can determine quickly that stdin's
+       input buffer is empty; in this case we know that if stdin is seekable,
+       fseeko (stdin, 0, SEEK_CUR) == lseek (0, 0, SEEK_CUR).  */
+***************
+*** 87,94 ****
+      {
+        /* Only attempt flush if stdin is seekable, as fflush is entitled to
+  	 fail on non-seekable streams.  */
+        if (fseeko (stdin, 0, SEEK_CUR) == 0 && fflush (stdin) != 0)
+! 	fail = true;
+      }
+    if (close_stream (stdin) != 0)
+      fail = true;
+--- 88,97 ----
+      {
+        /* Only attempt flush if stdin is seekable, as fflush is entitled to
+  	 fail on non-seekable streams.  */
++       errno = 0;
+        if (fseeko (stdin, 0, SEEK_CUR) == 0 && fflush (stdin) != 0)
+!          if(errno != ESPIPE)
+!             fail = true;
+      }
+    if (close_stream (stdin) != 0)
+      fail = true;
+*** ./tests/test-frexpl.c.osr6	Thu Oct  9 20:04:58 2008
+--- ./tests/test-frexpl.c	Sat Nov  8 08:58:36 2008
+***************
+*** 59,65 ****
+--- 59,69 ----
+  
+  /* On HP-UX 10.20, negating 0.0L does not yield -0.0L.
+     So we use minus_zero instead.  */
++ #if defined(__USLC__)
++ long double minus_zero = -0.0L;
++ #else
+  long double minus_zero = -LDBL_MIN * LDBL_MIN;
++ #endif
+  
+  static long double
+  my_ldexp (long double x, int d)
+*** ./tests/test-isnanl.h.osr6	Thu Oct  9 20:04:59 2008
+--- ./tests/test-isnanl.h	Sat Nov  8 08:58:36 2008
+***************
+*** 35,41 ****
+--- 35,45 ----
+  
+  /* On HP-UX 10.20, negating 0.0L does not yield -0.0L.
+     So we use minus_zero instead.  */
++ #if defined(__USLC__)
++ long double minus_zero = -0.0L;
++ #else
+  long double minus_zero = -LDBL_MIN * LDBL_MIN;
++ #endif
+  
+  int
+  main ()
+*** ./tests/test-signbit.c.osr6	Thu Oct  9 20:05:00 2008
+--- ./tests/test-signbit.c	Sat Nov  8 08:58:36 2008
+***************
+*** 49,55 ****
+--- 49,59 ----
+  
+  /* On HP-UX 10.20, negating 0.0L does not yield -0.0L.
+     So we use minus_zerol instead.  */
++ #if defined(__USLC__)
++ long double minus_zerol = -0.0L;
++ #else
+  long double minus_zerol = -LDBL_MIN * LDBL_MIN;
++ #endif
+  
+  static void
+  test_signbitf ()
+*** ./tests/test-vasprintf-posix.c.osr6	Thu Oct  9 20:05:02 2008
+--- ./tests/test-vasprintf-posix.c	Sat Nov  8 08:58:36 2008
+***************
+*** 58,64 ****
+--- 58,68 ----
+  
+  /* On HP-UX 10.20, negating 0.0L does not yield -0.0L.
+     So we use minus_zerol instead.  */
++ #if defined(__USLC__)
++ long double minus_zerol = -0.0L;
++ #else
+  long double minus_zerol = -LDBL_MIN * LDBL_MIN;
++ #endif
+  
+  /* Representation of an 80-bit 'long double' as an initializer for a sequence
+     of 'unsigned int' words.  */
+*** ./configure.osr6	Fri Oct 10 20:14:50 2008
+--- ./configure	Sat Nov  8 08:58:36 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.63 for GNU M4 1.4.12.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.63 for GNU M4 1.4.12.
+  #
+***************
+*** 6966,6972 ****
+  # Prepare PATH_SEPARATOR.
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/sh" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+--- 6966,6972 ----
+  # Prepare PATH_SEPARATOR.
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/bash" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+*** ./Configure-OSR6.osr6	Sat Nov  8 08:58:36 2008
+--- ./Configure-OSR6	Sat Nov  8 09:11:57 2008
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -D_FILE_OFFSET_BITS=64"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --enable-largefile \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sat Nov  8 08:58:36 2008
+--- ./Install-OSR6	Sat Nov  8 08:58:36 2008
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/m4
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

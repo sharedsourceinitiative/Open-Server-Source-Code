@@ -1,0 +1,11 @@
+--- ./lib/Makefile.postuw	2003-09-08 22:59:11.000000000 +0000
++++ ./lib/Makefile	2003-09-08 23:00:24.580000025 +0000
+@@ -675,7 +675,7 @@
+ 
+ lib$(LIBNAME).so.$(SOXPMLIBREV): $(OBJS)
+ 	$(RM) $@~
+-	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $@ $(OBJS) $(REQUIREDLIBS))
++	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $(USRLIBDIR)/$@ $(OBJS) $(REQUIREDLIBS))
+ 	$(RM) $@
+ 	$(MV) $@~ $@
+ 	$(RM) lib$(LIBNAME).so

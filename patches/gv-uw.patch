@@ -1,0 +1,49 @@
+--- ./source/secscanf.c.uw	2004-01-13 21:43:57.470000069 +0000
++++ ./source/secscanf.c	2004-01-13 21:43:57.490000003 +0000
+@@ -45,7 +45,7 @@
+ static int	process_number(union scan_value *vp, const char **sp, char fmt);
+ static int	process_char_class(const char **, const char **, int);
+ 
+-#ifdef _SCO_DS
++#if defined(_SCO_DS) || defined(__USLC__)
+ /* cobbled together from glibc */
+ size_t
+ strnlen (const char *str, size_t maxlen)
+--- ./source/Imakefile.uw	2004-01-13 21:43:57.000000000 +0000
++++ ./source/Imakefile	2004-01-13 22:04:22.070000001 +0000
+@@ -213,7 +213,7 @@
+ #endif /* InstallProgram */
+ 
+ MANDIR=$(GV_MANDIR)
+-ComplexProgramTarget(gv)
++ComplexProgramTargetNoMan(gv)
+ InstallNonExec($(GV_SYSTEM_AD),$(GV_LIBDIR))
+ InstallNonExec($(GV_USER_AD),$(GV_LIBDIR))
+ InstallNonExec($(GV_CLASS_AD),$(GV_LIBDIR))
+--- ./config.Unix.uw	2004-01-13 21:43:57.480000044 +0000
++++ ./config.Unix	2004-01-13 21:43:57.490000034 +0000
+@@ -123,11 +123,13 @@
+ XCOMM --------------------------------------------------------------------
+ XCOMM --- Compiler flags.
+ XCOMM --------------------------------------------------------------------
+-CC          = gcc
++XCOMM CC          = gcc
+ XCOMM CCOPTIONS   = -ansi -pedantic -Wall
++CC          = /usr/bin/cc
++CCOPTIONS   = -O1 -Kpentium -Kthread
+ CDEBUGFLAGS =
+ LDPOSTLIB   =
+-CCOPTIONS   = -O2 -pipe
++XCOMM CCOPTIONS   = -O2 -pipe
+ 
+ XCOMM ####################################################################
+ XCOMM ##### Architecture specific settings
+@@ -153,7 +155,7 @@
+ XCOMM    CCOPTIONS   = -g
+ XCOMM For SCO + gcc
+ XCOMM    CC          = /usr/local/bin/gcc
+-CCOPTIONS   = -Wall -m486 -O3 -fomit-frame-pointer
++XCOMM    CCOPTIONS   = -Wall -m486 -O3 -fomit-frame-pointer
+ 
+ XCOMM --------------------------------------------------------------------
+ XCOMM  SCO's preprocessor doesn't seem to handle the INC_X11 etc. macros.

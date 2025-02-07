@@ -1,0 +1,84 @@
+--- ./input.c.uw	2003-09-10 01:04:21.860000006 +0000
++++ ./input.c	2003-09-10 01:04:21.970000006 +0000
+@@ -212,7 +212,11 @@
+     ret = stat(dir_from, &st);
+     if (ret != 0) {
+ 	fprintf(stderr, "%s: %s\n",
++#ifdef HAVE_STRERROR
++		__FUNCTION__, strerror(errno));
++#else
+ 		__FUNCTION__, sys_errlist[errno]);
++#endif
+ 	return PARSE_ABORT;
+     }
+     /* okay, it exist... do some more tests */
+--- ./wmconfig.h.uw	2003-09-10 01:04:21.760000027 +0000
++++ ./wmconfig.h	2003-09-10 01:04:21.980000001 +0000
+@@ -79,6 +79,8 @@
+ #include "package.h"
+ #include "parse.h"
+ 
++#define HAVE_STRERROR 1
++
+ #endif /* _WMCONFIG_H */
+ 	  
+ 	 
+--- ./Makefile.uw	2001-03-14 22:40:35.000000000 +0000
++++ ./Makefile	2003-09-10 01:04:21.980000033 +0000
+@@ -92,7 +92,7 @@
+ EXTRA_LIBS = 
+ 
+ INCLUDES =  $(EXTRA_INCLUDES)
+-WM_FILES = wmconfig.c input.c rootmenu.c afterstep_dir.c kde.c wmaker.c 		  package.c util.c afterstep.c fvwm95.c mwm.c debug.c fvwm2.c 		  icewm.c blackbox.c parse.c
++WM_FILES = wmconfig.c input.c rootmenu.c afterstep_dir.c kde.c wmaker.c 		  package.c util.c afterstep.c fvwm95.c mwm.c debug.c fvwm2.c 		  icewm.c blackbox.c parse.c unicode.c
+ 
+ 
+ wmconfig_SOURCES = $(WM_FILES) $(EXTRA_FILES)
+@@ -119,14 +119,14 @@
+ wmconfig_OBJECTS =  wmconfig.o input.o rootmenu.o \
+ afterstep_dir.o kde.o wmaker.o package.o util.o \
+ afterstep.o fvwm95.o mwm.o debug.o fvwm2.o icewm.o \
+-blackbox.o parse.o
++blackbox.o parse.o unicode.o
+ #wmconfig_DEPENDENCIES = 
+ wmconfig_DEPENDENCIES = 
+ wmconfig_LDFLAGS = 
+ CFLAGS = -g -O2
+ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+ CCLD = $(CC)
+-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
++LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ -lgetopt
+ man1dir = $(mandir)/man1
+ MANS = $(man_MANS)
+ 
+--- ./Makefile.in.uw	2001-03-14 22:40:32.000000000 +0000
++++ ./Makefile.in	2003-09-10 01:04:56.840000021 +0000
+@@ -92,12 +92,12 @@
+ @HAVE_GNOME_FALSE@EXTRA_LIBS = 
+ 
+ INCLUDES =  $(EXTRA_INCLUDES)
+-WM_FILES = wmconfig.c input.c rootmenu.c afterstep_dir.c kde.c wmaker.c 		  package.c util.c afterstep.c fvwm95.c mwm.c debug.c fvwm2.c 		  icewm.c blackbox.c parse.c
++WM_FILES = wmconfig.c input.c rootmenu.c afterstep_dir.c kde.c wmaker.c 		  package.c util.c afterstep.c fvwm95.c mwm.c debug.c fvwm2.c 		  icewm.c blackbox.c parse.c unicode.c
+ 
+ 
+ wmconfig_SOURCES = $(WM_FILES) $(EXTRA_FILES)
+ noinst_HEADERS = package.h parse.h prototypes.h wmconfig.h
+-wmconfig_LDADD = $(EXTRA_LIBS)
++wmconfig_LDADD = $(EXTRA_LIBS) -lgetopt
+ 
+ EXTRA_DIST = wmconfig.spec $(man_MANS) 		  $(filter-out misc/CVS, $(wildcard misc/*))
+ 
+@@ -115,11 +115,11 @@
+ @HAVE_GNOME_TRUE@wmconfig_OBJECTS =  wmconfig.o input.o rootmenu.o \
+ @HAVE_GNOME_TRUE@afterstep_dir.o kde.o wmaker.o package.o util.o \
+ @HAVE_GNOME_TRUE@afterstep.o fvwm95.o mwm.o debug.o fvwm2.o icewm.o \
+-@HAVE_GNOME_TRUE@blackbox.o parse.o input-gnome.o
++@HAVE_GNOME_TRUE@blackbox.o parse.o unicode.o input-gnome.o
+ @HAVE_GNOME_FALSE@wmconfig_OBJECTS =  wmconfig.o input.o rootmenu.o \
+ @HAVE_GNOME_FALSE@afterstep_dir.o kde.o wmaker.o package.o util.o \
+ @HAVE_GNOME_FALSE@afterstep.o fvwm95.o mwm.o debug.o fvwm2.o icewm.o \
+-@HAVE_GNOME_FALSE@blackbox.o parse.o
++@HAVE_GNOME_FALSE@blackbox.o parse.o unicode.o
+ @HAVE_GNOME_TRUE@wmconfig_DEPENDENCIES = 
+ @HAVE_GNOME_FALSE@wmconfig_DEPENDENCIES = 
+ wmconfig_LDFLAGS = 

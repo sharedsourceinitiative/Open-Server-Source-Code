@@ -1,0 +1,229 @@
+*** ./scintilla/src/Makefile.am.osr6	Mon Sep 25 13:15:17 2006
+--- ./scintilla/src/Makefile.am	Fri Nov 16 11:03:40 2007
+***************
+*** 1,5 ****
+  INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/scintilla/include
+! AM_CXXFLAGS = -W -Wall -DFOX
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+--- 1,5 ----
+  INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/scintilla/include
+! AM_CXXFLAGS = -DFOX
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+*** ./scintilla/src/Makefile.in.osr6	Fri Oct 13 14:06:28 2006
+--- ./scintilla/src/Makefile.in	Fri Nov 16 11:03:40 2007
+***************
+*** 253,259 ****
+  sysconfdir = @sysconfdir@
+  target_alias = @target_alias@
+  INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/scintilla/include
+! AM_CXXFLAGS = -W -Wall -DFOX $(am__append_1)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+  noinst_LTLIBRARIES = libscintilla.la $(am__append_2)
+--- 253,259 ----
+  sysconfdir = @sysconfdir@
+  target_alias = @target_alias@
+  INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/scintilla/include
+! AM_CXXFLAGS = -DFOX $(am__append_1)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+  noinst_LTLIBRARIES = libscintilla.la $(am__append_2)
+*** ./src/Makefile.am.osr6	Mon Sep 25 14:00:18 2006
+--- ./src/Makefile.am	Fri Nov 16 11:03:40 2007
+***************
+*** 4,10 ****
+  	-I$(top_srcdir)/scintilla/src \
+  	-I$(FOX_INCLUDE_DIR)
+  
+! AM_CXXFLAGS = -W -Wall -DFOX
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+--- 4,10 ----
+  	-I$(top_srcdir)/scintilla/src \
+  	-I$(FOX_INCLUDE_DIR)
+  
+! AM_CXXFLAGS = -DFOX
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+*** ./src/Makefile.in.osr6	Fri Oct 13 14:06:28 2006
+--- ./src/Makefile.in	Fri Nov 16 11:03:40 2007
+***************
+*** 221,227 ****
+  	-I$(top_srcdir)/scintilla/src \
+  	-I$(FOX_INCLUDE_DIR)
+  
+! AM_CXXFLAGS = -W -Wall -DFOX $(am__append_1)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+  lib_LTLIBRARIES = libfxscintilla.la $(am__append_2)
+--- 221,227 ----
+  	-I$(top_srcdir)/scintilla/src \
+  	-I$(FOX_INCLUDE_DIR)
+  
+! AM_CXXFLAGS = -DFOX $(am__append_1)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+  lib_LTLIBRARIES = libfxscintilla.la $(am__append_2)
+*** ./tests/Makefile.am.osr6	Mon Sep 25 14:00:18 2006
+--- ./tests/Makefile.am	Fri Nov 16 11:03:40 2007
+***************
+*** 13,19 ****
+  LDADD += -lFOX-1.6
+  endif
+  
+! AM_CXXFLAGS = $(PTHREAD_CFLAGS) -W -Wall -DFOX -DSCI_LEXER
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+--- 13,19 ----
+  LDADD += -lFOX-1.6
+  endif
+  
+! AM_CXXFLAGS = $(PTHREAD_CFLAGS) -DFOX -DSCI_LEXER
+  
+  ## Cygwin
+  if HAVE_CYGWIN
+*** ./tests/Makefile.in.osr6	Fri Oct 13 14:06:28 2006
+--- ./tests/Makefile.in	Fri Nov 16 11:03:40 2007
+***************
+*** 204,210 ****
+  INCLUDES = -I$(top_srcdir)/include -I$(FOX_INCLUDE_DIR)
+  LDADD = -L$(FOX_LIB_DIR) $(top_builddir)/src/libfxscintilla.la \
+  	$(am__append_1) $(am__append_2) $(am__append_3)
+! AM_CXXFLAGS = $(PTHREAD_CFLAGS) -W -Wall -DFOX -DSCI_LEXER \
+  	$(am__append_4)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+--- 204,210 ----
+  INCLUDES = -I$(top_srcdir)/include -I$(FOX_INCLUDE_DIR)
+  LDADD = -L$(FOX_LIB_DIR) $(top_builddir)/src/libfxscintilla.la \
+  	$(am__append_1) $(am__append_2) $(am__append_3)
+! AM_CXXFLAGS = $(PTHREAD_CFLAGS) -DFOX -DSCI_LEXER \
+  	$(am__append_4)
+  @HAVE_CYGWIN_TRUE@AM_LDFLAGS = -mwindows
+  @HAVE_MINGW32_TRUE@AM_LDFLAGS = -mwindows
+*** ./Install-OSR6.osr6	Fri Nov 16 11:03:40 2007
+--- ./Install-OSR6	Fri Nov 16 11:03:40 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/fxscintilla
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.osr6	Fri Oct 13 14:06:40 2006
+--- ./configure	Fri Nov 16 11:03:41 2007
+***************
+*** 7307,7336 ****
+        ;;
+  
+      sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX*)
+!       case `$LD -v 2>&1` in
+!         *\ [01].* | *\ 2.[0-9].* | *\ 2.1[0-5].*)
+! 	ld_shlibs=no
+! 	cat <<_LT_EOF 1>&2
+! 
+! *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
+! *** reliably create shared libraries on SCO systems.  Therefore, libtool
+! *** is disabling shared libraries support.  We urge you to upgrade GNU
+! *** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+! *** your PATH or compiler configuration so that the native linker is
+! *** used, and then restart.
+! 
+! _LT_EOF
+! 	;;
+! 	*)
+! 	  if $LD --help 2>&1 | grep ': supported targets:.* elf' > /dev/null; then
+! 	    hardcode_libdir_flag_spec='`test -z "$SCOABSPATH" && echo ${wl}-rpath,$libdir`'
+! 	    archive_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib'
+! 	    archive_expsym_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname,\${SCOABSPATH:+${install_libdir}/}$soname,-retain-symbols-file,$export_symbols -o $lib'
+! 	  else
+! 	    ld_shlibs=no
+! 	  fi
+! 	;;
+!       esac
+        ;;
+  
+      sunos4*)
+--- 7307,7314 ----
+        ;;
+  
+      sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX*)
+! 	    archive_cmds='$CC -G $libobjs $deplibs $compiler_flags ${wl}-h,${install_libdir}/}$soname -o $lib'
+! 	    archive_expsym_cmds='$CC -G $libobjs $deplibs $compiler_flags ${wl}-h,${install_libdir}/}$soname,${wl}-Bexport:$export_symbols -o $lib'
+        ;;
+  
+      sunos4*)
+***************
+*** 8000,8006 ****
+        fi
+        ;;
+  
+!     sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7*)
+        no_undefined_flag='${wl}-z,text'
+        archive_cmds_need_lc=no
+        hardcode_shlibpath_var=no
+--- 7978,7984 ----
+        fi
+        ;;
+  
+!     sysv4*uw2* | unixware7*)
+        no_undefined_flag='${wl}-z,text'
+        archive_cmds_need_lc=no
+        hardcode_shlibpath_var=no
+***************
+*** 11407,11413 ****
+  	;;
+      esac
+      ;;
+!   sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7* | sco3.2v5.0.[024]*)
+      no_undefined_flag_CXX='${wl}-z,text'
+      archive_cmds_need_lc_CXX=no
+      hardcode_shlibpath_var_CXX=no
+--- 11385,11391 ----
+  	;;
+      esac
+      ;;
+!   sysv4*uw2* | unixware7* | sco3.2v5.0.[024]*)
+      no_undefined_flag_CXX='${wl}-z,text'
+      archive_cmds_need_lc_CXX=no
+      hardcode_shlibpath_var_CXX=no
+*** ./Configure-OSR6.osr6	Fri Nov 16 11:03:41 2007
+--- ./Configure-OSR6	Fri Nov 16 11:03:41 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --enable-shared \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

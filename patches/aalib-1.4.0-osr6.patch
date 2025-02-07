@@ -1,0 +1,103 @@
+*** ./src/aaslang.c.osr6	Thu Apr 26 07:37:31 2001
+--- ./src/aaslang.c	Sat Jul  2 01:03:56 2005
+***************
+*** 80,86 ****
+  }
+  static void slang_print(aa_context * c, __AA_CONST char *text)
+  {
+!     SLsmg_write_string(text);
+  }
+  static void slang_flush(aa_context * c)
+  {
+--- 80,86 ----
+  }
+  static void slang_print(aa_context * c, __AA_CONST char *text)
+  {
+!     SLsmg_write_string((char *)text);
+  }
+  static void slang_flush(aa_context * c)
+  {
+*** ./src/aafire.c.osr6	Thu Apr 26 08:30:03 2001
+--- ./src/aafire.c	Sat Jul  2 01:06:37 2005
+***************
+*** 92,98 ****
+  {
+    register unsigned int i;
+    unsigned char *p;
+!   char *bitmap = aa_image (context);
+    i = 0;
+  #define END (bitmap + XSIZ * YSIZ)
+    for (p = bitmap; p <= (unsigned char *) (END); p += 1)
+--- 92,98 ----
+  {
+    register unsigned int i;
+    unsigned char *p;
+!   unsigned char *bitmap = aa_image (context);
+    i = 0;
+  #define END (bitmap + XSIZ * YSIZ)
+    for (p = bitmap; p <= (unsigned char *) (END); p += 1)
+***************
+*** 109,115 ****
+    unsigned int i, last1, i1, i2;
+    static int loop = 0, sloop = 0, height = 0;
+    register unsigned char *p;
+!   char *bitmap = aa_image (context);
+  
+    height++;
+    loop--;
+--- 109,115 ----
+    unsigned int i, last1, i1, i2;
+    static int loop = 0, sloop = 0, height = 0;
+    register unsigned char *p;
+!   unsigned char *bitmap = aa_image (context);
+  
+    height++;
+    loop--;
+***************
+*** 117,123 ****
+      loop = rand () % 3, sloop++;;
+    i1 = 1;
+    i2 = 4 * XSIZ + 1;
+!   for (p = (char *) bitmap + XSIZ * (YSIZ + 0);
+         p < ((unsigned char *) bitmap + XSIZ * (YSIZ + 1));
+         p++, i1 += 4, i2 -= 4)
+      {
+--- 117,123 ----
+      loop = rand () % 3, sloop++;;
+    i1 = 1;
+    i2 = 4 * XSIZ + 1;
+!   for (p = (unsigned char *) bitmap + XSIZ * (YSIZ + 0);
+         p < ((unsigned char *) bitmap + XSIZ * (YSIZ + 1));
+         p++, i1 += 4, i2 -= 4)
+      {
+***************
+*** 154,160 ****
+        exit (1);
+      }
+    initialize ();
+!   aa_resizehandler (context, (void *) aa_resize);
+    game ();
+    uninitialize ();
+    return 1;
+--- 154,160 ----
+        exit (1);
+      }
+    initialize ();
+!   aa_resizehandler (context, (void *)aa_resize);
+    game ();
+    uninitialize ();
+    return 1;
+*** ./Install-OSR6.osr6	Sat Jul  2 01:07:10 2005
+--- ./Install-OSR6	Sat Jul  2 01:07:23 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/aalib
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

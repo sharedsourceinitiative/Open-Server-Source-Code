@@ -1,0 +1,57 @@
+
+mkpkg - front-ends to assist in the creation of pkgadd installable packages.
+
+Written by Ronald Joe Record (rr@sco.com)
+
+
+The mkpkg front-end attempts to ease the pain of creating a package
+suitable for installation with the pkgadd tools. The easiest way to use
+these front-ends is to first create a gzip'd tar archive of the distribution
+files. That is, as root and with the proper permissions/ownership set on
+the files you want to package :
+
+# cd /
+# tar cfF - /tmp/filelist | gzip -9 > /home/ftp/pub/uw7/dist/foo-1.0-dist.tar.gz
+
+In the example command above, i am using /tmp/filelist as a file which contains
+a list of all the files you want to distribute and i'm creating the gzip'd
+tar archive foo-1.0-dist.tar.gz (for the example product foo, release 1.0).
+
+Note that the location of the distribution archive is important. In the
+example i have placed it in /home/ftp/pub/uw7/dist. By default, that's
+where the dist2pkg script looks for distribution archives. You can set
+this location by editing dist2pkg.
+
+Once the distribution file is in place, you can then run the dist2pkg script.
+This script front-ends the chkdist and mkpkg scripts. The first time you
+run dist2pkg you needn't provide any options. It will extract your archive,
+generate a prototype file based on the permissions and ownership you gave,
+and eventually run pkgmk and pkgtrans.
+
+Note that the mkpkg script (/usr/local/bin/mkpkg) invokes sed and replaces
+occurrences of "rr other" with "root sys". You may wish to edit mkpkg and
+change "rr other" to whatever uid/gid your files get created with.
+
+As you add additional packages, you may wish to invoke dist2pkg with the -z
+option. This instructs dist2pkg to only extract and package up new archives.
+That is, "dist2pkg -z" will not alter an existing package created from a
+previous invocation.
+
+There appears to be a bug in the packaging tools such that a symbolic link
+something like foo.so -> foo.so.1.0 doesn't get created properly. To help
+me find these types of symlinks, i run the chkproto command which spits out
+a list of prototype files that might have this problem. I hand edit those
+files changing any occurrence of a relative symlink to an absolute symlink.
+For instance, i might change the above to foo.so -> /usr/local/lib/foo.so.1.0
+
+After fixing the prototype file as described above, you can then recreate the
+package witht he appropriate symbolic links by first removing the previously
+created pkg file and running "dist2pkg -e -p -z". These options to dist2pkg
+instruct it to "not extract the distribution files" (-e), "don't create a
+prototype file" (-p), and "update packages only" (-z).
+
+Obviously, the mkpkg suite of tools is not production quality software.
+However, i found them quite useful in easing the pain of creating over
+100 pkgadd installable packages for Skunkware 7.
+
+If you have any questions or suggestions, e-mail rr@sco.com

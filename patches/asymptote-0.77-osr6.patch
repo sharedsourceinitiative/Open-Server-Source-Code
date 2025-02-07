@@ -1,0 +1,35 @@
+*** ./Makefile.in.00 Tue May 10 03:37:51 2005
+--- ./Makefile.in Tue May 17 21:05:00 2005
+***************
+*** 19,26 ****
+  NAME = asy
+  XNAME = x$(NAME)
+  
+! CXX = @CXX@ -Wall -ansi
+! CC = @CC@ -Wall -ansi
+  MAKEDEPEND = $(OPTS) -O0 -M -DDEPEND
+  BISON = bison
+  LEX = @LEX@
+--- 19,26 ----
+  NAME = asy
+  XNAME = x$(NAME)
+  
+! CXX = @CXX@
+! CC = @CC@
+  MAKEDEPEND = $(OPTS) -O0 -M -DDEPEND
+  BISON = bison
+  LEX = @LEX@
+*** ./Configure-OSR6.00 Tue May 17 22:03:10 2005
+--- ./Configure-OSR6 Tue May 17 22:03:05 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --prefix=/usr --disable-gc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

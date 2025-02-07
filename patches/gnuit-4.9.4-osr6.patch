@@ -1,0 +1,16 @@
+--- ./Install-OSR6.00	2008-12-09 13:35:15.470000027 -0800
++++ ./Install-OSR6	2008-12-09 13:36:44.140000011 -0800
+@@ -0,0 +1,13 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gnuit
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
++rm -f $D/usr/bin/git $D/usr/man/man1/git.1

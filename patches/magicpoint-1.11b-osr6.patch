@@ -1,0 +1,540 @@
+*** ./contrib/xwintoppm/Imakefile.osr6	Thu Feb 12 23:48:28 1998
+--- ./contrib/xwintoppm/Imakefile	Tue Jul 19 22:41:05 2005
+***************
+*** 8,13 ****
+--- 8,14 ----
+          DEPLIBS = $(DEPXMULIB) $(XTOOLLIBDEP) $(DEPXLIB)
+  LOCAL_LIBRARIES = $(XMULIB) $(XTOOLLIB) $(XLIB)
+  #endif
++            MAKE = /usr/gnu/bin/make
+             SRCS = xwintoppm.c dsimple.c list.c multiVis.c
+             OBJS = xwintoppm.o dsimple.o list.o multiVis.o
+  
+*** ./contrib/Imakefile.osr6	Thu Feb 12 23:48:21 1998
+--- ./contrib/Imakefile	Tue Jul 19 22:41:05 2005
+***************
+*** 2,7 ****
+--- 2,8 ----
+  #define PassCDebugFlags
+  
+  SUBDIRS=	xwintoppm
++ MAKE=           /usr/gnu/bin/make
+  
+  MakeSubdirs($(SUBDIRS))
+  
+*** ./image/png.c.osr6	Wed Apr 11 01:37:00 2001
+--- ./image/png.c	Tue Jul 19 22:41:05 2005
+***************
+*** 70,76 ****
+  	if (!(fp = fopen(fullname, "rb"))) return NULL;
+  	if (fread(header, 1, sizeof(header), fp) != sizeof(header)) return NULL;
+  
+! 	is_png = !png_sig_cmp(header, 0, sizeof(header));
+  	if (!is_png){
+  		if (verbose) fprintf(stderr, "pngLoad: this is not png file\n");
+  		return NULL;
+--- 70,76 ----
+  	if (!(fp = fopen(fullname, "rb"))) return NULL;
+  	if (fread(header, 1, sizeof(header), fp) != sizeof(header)) return NULL;
+  
+! 	is_png = !png_sig_cmp((png_bytep)header, 0, sizeof(header));
+  	if (!is_png){
+  		if (verbose) fprintf(stderr, "pngLoad: this is not png file\n");
+  		return NULL;
+*** ./image/send.c.osr6	Mon Dec 28 00:23:23 1998
+--- ./image/send.c	Tue Jul 19 22:41:05 2005
+***************
+*** 452,458 ****
+  
+        gcv.function= GXcopy;
+        ximageinfo->ximage= XCreateImage(disp, visual, 1, XYBitmap,
+! 				       0, data, image->width, image->height,
+  				       8, 0);
+        ximageinfo->depth= ddepth;
+        ximageinfo->foreground= *(index + 1);
+--- 452,458 ----
+  
+        gcv.function= GXcopy;
+        ximageinfo->ximage= XCreateImage(disp, visual, 1, XYBitmap,
+! 				       0, (char *)data, image->width, image->height,
+  				       8, 0);
+        ximageinfo->depth= ddepth;
+        ximageinfo->foreground= *(index + 1);
+*** ./image/window.c.osr6	Wed Jul 28 08:47:31 2004
+--- ./image/window.c	Tue Jul 19 22:41:05 2005
+***************
+*** 584,590 ****
+  
+      sprintf(def_geom, "%ux%u+0+0", image->width, image->height);
+      XGeometry(disp, scrn, user_geometry, def_geom, 0, 1, 1, 0, 0,
+! 	      &winx, &winy, &winwidth, &winheight);
+    }
+  
+    if (fullscreen) {
+--- 584,590 ----
+  
+      sprintf(def_geom, "%ux%u+0+0", image->width, image->height);
+      XGeometry(disp, scrn, user_geometry, def_geom, 0, 1, 1, 0, 0,
+! 	      (int *)&winx, (int *)&winy, (int *)&winwidth, (int *)&winheight);
+    }
+  
+    if (fullscreen) {
+*** ./sample/default.mgp.osr6	Fri Aug 10 09:40:54 2001
+--- ./sample/default.mgp	Tue Jul 19 22:41:05 2005
+***************
+*** 12,20 ****
+  %% into the "tfdir" directory above:
+  %%	ftp://ftp.mew.org/pub/mgp/ttf-jp.tar.gz
+  %%
+! %deffont "standard"   tfont "standard.ttf",   tmfont "kochi-mincho.ttf"
+! %deffont "thick"      tfont "thick.ttf",      tmfont "goth.ttf"
+! %deffont "typewriter" tfont "typewriter.ttf", tmfont "goth.ttf"
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%
+  %% Default settings per each line numbers.
+--- 12,20 ----
+  %% into the "tfdir" directory above:
+  %%	ftp://ftp.mew.org/pub/mgp/ttf-jp.tar.gz
+  %%
+! %deffont "standard"   tfont "/usr/X11R6/lib/X11/mgp/fonts/standard.ttf",   tmfont "/usr/X11R6/lib/X11/mgp/fonts/kochi-mincho.ttf"
+! %deffont "thick"      tfont "/usr/X11R6/lib/X11/mgp/fonts/thick.ttf",      tmfont "/usr/X11R6/lib/X11/mgp/fonts/goth.ttf"
+! %deffont "typewriter" tfont "/usr/X11R6/lib/X11/mgp/fonts/typewriter.ttf", tmfont "/usr/X11R6/lib/X11/mgp/fonts/goth.ttf"
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%
+  %% Default settings per each line numbers.
+*** ./Build-OSR6.osr6	Tue Jul 19 22:41:05 2005
+--- ./Build-OSR6	Tue Jul 19 22:41:18 2005
+***************
+*** 0 ****
+--- 1,27 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ MAKE=/usr/gnu/bin/make
++ YACC=/usr/bin/yacc
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 YACC MAKE
++ rm -f mout-configure
++ ./configure --prefix=/usr --enable-gif --enable-vflib --disable-xft2 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ xmkmf -a 2>&1 | tee mout-xmkmf
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./configure.osr6	Wed Aug  4 09:23:35 2004
+--- ./configure	Tue Jul 19 22:41:05 2005
+***************
+*** 4831,4837 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_mng_mng_initialize" >&5
+  echo "${ECHO_T}$ac_cv_lib_mng_mng_initialize" >&6
+  if test $ac_cv_lib_mng_mng_initialize = yes; then
+!   LIBS="$LIBS -Wl,-rpath,$i/lib -lmng"
+  			 cat >>confdefs.h <<\_ACEOF
+  #define MNG 1
+  _ACEOF
+--- 4831,4837 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_mng_mng_initialize" >&5
+  echo "${ECHO_T}$ac_cv_lib_mng_mng_initialize" >&6
+  if test $ac_cv_lib_mng_mng_initialize = yes; then
+!   LIBS="$LIBS -lmng"
+  			 cat >>confdefs.h <<\_ACEOF
+  #define MNG 1
+  _ACEOF
+*** ./Install-OSR6.osr6	Tue Jul 19 22:41:06 2005
+--- ./Install-OSR6	Tue Jul 19 22:41:06 2005
+***************
+*** 0 ****
+--- 1,17 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ MAKE=/usr/gnu/bin/make
++ DESTDIR=/u/tmp/magicpoint
++ DOC=$DESTDIR/usr/share/doc/packages/magicpoint
++ export DESTDIR MAKE
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $DESTDIR ] && rm -rf $DESTDIR
++ mkdir -p $DESTDIR
++ make install DESTDIR=/u/tmp/magicpoint 2>&1 | tee $MOUT
++ make install.man DESTDIR=/u/tmp/magicpoint 2>&1 | tee $MOUT-man
++ [ -d $DOC ] || mkdir -p $DOC
++ cp COPYRIGHT COPYRIGHT.jp FAQ README README.fonts README.fonts.jp README.lang \
++    README.m17n README.xft RELNOTES SYNTAX TODO.jp USAGE USAGE.jp $DOC
++ copy -r sample $DOC/sample
+*** ./Imakefile.in.osr6	Wed Jul  7 23:09:53 2004
+--- ./Imakefile.in	Tue Jul 19 22:41:06 2005
+***************
+*** 17,22 ****
+--- 17,23 ----
+  PERL=	@mgp_cv_path_perl@
+  YACC=	@YACC@
+  LEX=	@LEX@
++ MAKE=	/usr/gnu/bin/make
+  # NOTE: we must not define CC here, since imake may assume other CC to be used.
+  
+  OPTFLAGS=	@OPTFLAGS@
+***************
+*** 30,35 ****
+--- 31,39 ----
+  #define DefaultCDebugFlags	@DEBUGFLAGS@
+  #undef ServerCDebugFlags
+  #undef LibraryDebugFlags
++ #undef MakeCmd
++ #define MakeCmd /usr/gnu/bin/make
++ #define InstallCmd bsdinst
+  
+  AllTarget(mgp mgp2ps)
+  DependTarget()
+*** ./draw.c.osr6	Tue Sep  7 09:57:42 2004
+--- ./draw.c	Tue Jul 19 22:41:06 2005
+***************
+*** 1289,1295 ****
+  			}
+  		}
+  
+! 		q = draw_fragment(state, p, q - p, registry, charset16);
+  
+  		p = q;
+  	}
+--- 1289,1295 ----
+  			}
+  		}
+  
+! 		q = (u_char *)draw_fragment(state, p, q - p, registry, charset16);
+  
+  		p = q;
+  	}
+***************
+*** 1529,1535 ****
+  			draw_line_itemsize(state, tail->ascent, tail->descent, 0);
+  		}
+  	}
+! 	return p;
+  }
+  
+  static int
+--- 1529,1535 ----
+  			draw_line_itemsize(state, tail->ascent, tail->descent, 0);
+  		}
+  	}
+! 	return (char *)p;
+  }
+  
+  static int
+***************
+*** 2276,2288 ****
+  				XftDrawStringUtf8(xft_getdraw(target),
+  						&xft_forecolor, xft_font, 
+  						x, y - lineoff,
+! 						obj->data.xftfont.data,
+  						obj->data.xftfont.len);
+  			} else
+  				XftDrawString8(xft_getdraw(target),
+  						&xft_forecolor, xft_font, 
+  						x, y - lineoff,
+! 						obj->data.xftfont.data,
+  						obj->data.xftfont.len);
+  			break;
+  #endif
+--- 2276,2288 ----
+  				XftDrawStringUtf8(xft_getdraw(target),
+  						&xft_forecolor, xft_font, 
+  						x, y - lineoff,
+! 						(_Xconst FcChar8  *)(obj->data.xftfont.data),
+  						obj->data.xftfont.len);
+  			} else
+  				XftDrawString8(xft_getdraw(target),
+  						&xft_forecolor, xft_font, 
+  						x, y - lineoff,
+! 						(_Xconst FcChar8  *)(obj->data.xftfont.data),
+  						obj->data.xftfont.len);
+  			break;
+  #endif
+***************
+*** 3479,3485 ****
+  			-wa.border_width, -wa.border_width,
+  			&myxpos, &myypos, &junkwin);
+  		XGetGeometry(display, wa.root, &junkwin, &junk, &junk,
+! 			&rootxsiz, &rootysiz, &junk, &junk);
+  	     }
+  
+  		argv = (char **)malloc((cp->cta_argc + 1) * sizeof(char *));
+--- 3479,3486 ----
+  			-wa.border_width, -wa.border_width,
+  			&myxpos, &myypos, &junkwin);
+  		XGetGeometry(display, wa.root, &junkwin, &junk, &junk,
+! 			(unsigned int *)&rootxsiz, (unsigned int *)&rootysiz, 
+!             (unsigned int *)&junk, (unsigned int *)&junk);
+  	     }
+  
+  		argv = (char **)malloc((cp->cta_argc + 1) * sizeof(char *));
+***************
+*** 3489,3495 ****
+  		q = buf;
+  		*q = '\0';
+  
+! 		mode = XParseGeometry(p, &xloc, &yloc, &xsiz, &ysiz);
+  		if (mode == 0)
+  			goto fail;
+  		if ((mode & WidthValue) && (mode & HeightValue)) {
+--- 3490,3497 ----
+  		q = buf;
+  		*q = '\0';
+  
+! 		mode = XParseGeometry(p, &xloc, &yloc, 
+!                              (unsigned int *)&xsiz, (unsigned int *)&ysiz);
+  		if (mode == 0)
+  			goto fail;
+  		if ((mode & WidthValue) && (mode & HeightValue)) {
+***************
+*** 3593,3599 ****
+  		q = buf;
+  		*q = '\0';
+  
+! 		mode = XParseGeometry(p, &xloc, &yloc, &xsiz, &ysiz);
+  		if (mode == 0)
+  			goto fail;
+  		if ((mode & WidthValue) && (mode & HeightValue)) {
+--- 3595,3602 ----
+  		q = buf;
+  		*q = '\0';
+  
+! 		mode = XParseGeometry(p, &xloc, &yloc, 
+!                              (unsigned int *)&xsiz, (unsigned int *)&ysiz);
+  		if (mode == 0)
+  			goto fail;
+  		if ((mode & WidthValue) && (mode & HeightValue)) {
+***************
+*** 3675,3681 ****
+  
+  finish:
+  	XGetGeometry(display, window_id, &dumwin, 
+! 		&xloc, &yloc, &xsiz, &ysiz, &dumint, &dumint);
+  	state->linewidth = xsiz;
+  	xloc = set_position(state) + state->xoff 
+  		+ (state->tabxprefix ? state->tabxprefix : state->xprefix);
+--- 3678,3685 ----
+  
+  finish:
+  	XGetGeometry(display, window_id, &dumwin, 
+! 		&xloc, &yloc, (unsigned int *)&xsiz, (unsigned int *)&ysiz, 
+!         (unsigned int *)&dumint, (unsigned int *)&dumint);
+  	state->linewidth = xsiz;
+  	xloc = set_position(state) + state->xoff 
+  		+ (state->tabxprefix ? state->tabxprefix : state->xprefix);
+***************
+*** 4724,4730 ****
+  		}
+  		p16 = buf16; o16 = out16; 	
+  		ileft = len + strlen(prefix[i]); oleft = sizeof(out16);
+! 		if (iconv(icv[i], &p16, &ileft, &o16, &oleft) < 0) {
+  			perror("iconv");
+  			return NULL;
+  		}
+--- 4728,4734 ----
+  		}
+  		p16 = buf16; o16 = out16; 	
+  		ileft = len + strlen(prefix[i]); oleft = sizeof(out16);
+! 		if (iconv(icv[i], &p16, (size_t *)&ileft, &o16, (size_t *)&oleft) < 0) {
+  			perror("iconv");
+  			return NULL;
+  		}
+***************
+*** 4742,4752 ****
+  		}
+  
+  		draw_line_itemsize(state, xft_font->ascent, xft_font->descent, 0);
+! 		if (obj_new_xftfont(state, state->linewidth, 0, out16,
+  		    sizeof(out16) - oleft, fontname, registry,
+  		    char_size[caching], charset16, xft_font)) {
+  			state->linewidth += extents.xOff;
+! 			return p + len;
+  		} else
+  #endif
+  			return NULL; 
+--- 4746,4756 ----
+  		}
+  
+  		draw_line_itemsize(state, xft_font->ascent, xft_font->descent, 0);
+! 		if (obj_new_xftfont(state, state->linewidth, 0, (char *)out16,
+  		    sizeof(out16) - oleft, fontname, registry,
+  		    char_size[caching], charset16, xft_font)) {
+  			state->linewidth += extents.xOff;
+! 			return (char *)(p + len);
+  		} else
+  #endif
+  			return NULL; 
+***************
+*** 4764,4770 ****
+  		draw_line_end(state); 
+  	 	draw_line_start(state);
+  		state->linewidth = state->leftfillpos;
+! 		return p;
+  	}
+  
+  nofolding:
+--- 4768,4774 ----
+  		draw_line_end(state); 
+  	 	draw_line_start(state);
+  		state->linewidth = state->leftfillpos;
+! 		return (char *)p;
+  	}
+  
+  nofolding:
+***************
+*** 4775,4784 ****
+  	draw_line_itemsize(state, extents.y, extents.height - extents.y, 0);
+  #endif
+  
+! 	if (obj_new_xftfont(state, state->linewidth, state->charoff, p, len, fontname,
+  	    registry, char_size[caching], charset16, xft_font)) {
+  		state->linewidth += extents.xOff;
+! 		return p + len;
+  	} else
+  		return NULL; 
+  }
+--- 4779,4788 ----
+  	draw_line_itemsize(state, extents.y, extents.height - extents.y, 0);
+  #endif
+  
+! 	if (obj_new_xftfont(state, state->linewidth, state->charoff, (char *)p, len, fontname,
+  	    registry, char_size[caching], charset16, xft_font)) {
+  		state->linewidth += extents.xOff;
+! 		return (char *)(p + len);
+  	} else
+  		return NULL; 
+  }
+*** ./mgp.h.osr6	Tue Sep  7 09:57:42 2004
+--- ./mgp.h	Tue Jul 19 22:41:06 2005
+***************
+*** 94,100 ****
+  #include "freetype.h"
+  
+  #ifndef FREETYPEFONTDIR
+! #define FREETYPEFONTDIR	"/usr/local/share/fonts/ttf"
+  #endif
+  #endif /*FREETYPE*/
+  
+--- 94,100 ----
+  #include "freetype.h"
+  
+  #ifndef FREETYPEFONTDIR
+! #define FREETYPEFONTDIR	"/usr/X11R6/lib/X11/fonts/TTF"
+  #endif
+  #endif /*FREETYPE*/
+  
+*** ./print.c.osr6	Wed Jul 28 06:36:28 2004
+--- ./print.c	Tue Jul 19 22:41:06 2005
+***************
+*** 134,143 ****
+  	{ CTL_TFONT, ASCII, "timesi.ttf",	"Times-Italic" },
+  	{ CTL_TFONT, ASCII, "timesbd.ttf",	"Times-Bold" },
+  	{ CTL_TFONT, ASCII, "timesbi.ttf",	"Times-BoldItalic" },
+! 	{ CTL_TFONT, ASCII, "arial.ttf",	"Helvetica" },
+! 	{ CTL_TFONT, ASCII, "ariali.ttf",	"Helvetica-Oblique" },
+! 	{ CTL_TFONT, ASCII, "arialbd.ttf",	"Helvetica-Bold" },
+! 	{ CTL_TFONT, ASCII, "arialbi.ttf",	"Helvetica-BoldOblique" },
+  	{ CTL_TFONT, ASCII, "cour.ttf",		"Courier" },
+  	{ CTL_TFONT, ASCII, "couri.ttf",	"Courier-Oblique" },
+  	{ CTL_TFONT, ASCII, "courbd.ttf",	"Courier-Bold" },
+--- 134,143 ----
+  	{ CTL_TFONT, ASCII, "timesi.ttf",	"Times-Italic" },
+  	{ CTL_TFONT, ASCII, "timesbd.ttf",	"Times-Bold" },
+  	{ CTL_TFONT, ASCII, "timesbi.ttf",	"Times-BoldItalic" },
+! 	{ CTL_TFONT, ASCII, "Vera.ttf",	    "Helvetica" },
+! 	{ CTL_TFONT, ASCII, "VeraIt.ttf",	"Helvetica-Oblique" },
+! 	{ CTL_TFONT, ASCII, "VeraBd.ttf",	"Helvetica-Bold" },
+! 	{ CTL_TFONT, ASCII, "VeraBI.ttf",	"Helvetica-BoldOblique" },
+  	{ CTL_TFONT, ASCII, "cour.ttf",		"Courier" },
+  	{ CTL_TFONT, ASCII, "couri.ttf",	"Courier-Oblique" },
+  	{ CTL_TFONT, ASCII, "courbd.ttf",	"Courier-Bold" },
+*** ./parse.c.osr6	Wed Jul  7 23:09:54 2004
+--- ./parse.c	Tue Jul 19 22:41:07 2005
+***************
+*** 958,964 ****
+  	tmpstr[2]->ctc2_value2 = strdup("iso8859-1");
+  #ifdef FREETYPE
+  	tmpstr[3] = ctlalloc1(CTL_TFONT);
+! 	tmpstr[3]->ctc2_value1 = strdup(freetypefont0 ? freetypefont0 :"arial.ttf");
+  	tmpstr[3]->ctc2_value2 = strdup("iso8859-1");
+  #else
+  	tmpstr[3] = ctlalloc1(CTL_NOOP);	/* CTL_TFONT */
+--- 958,964 ----
+  	tmpstr[2]->ctc2_value2 = strdup("iso8859-1");
+  #ifdef FREETYPE
+  	tmpstr[3] = ctlalloc1(CTL_TFONT);
+! 	tmpstr[3]->ctc2_value1 = strdup(freetypefont0 ? freetypefont0 :"Vera.ttf");
+  	tmpstr[3]->ctc2_value2 = strdup("iso8859-1");
+  #else
+  	tmpstr[3] = ctlalloc1(CTL_NOOP);	/* CTL_TFONT */
+*** ./x11.c.osr6	Wed Jul  7 23:09:54 2004
+--- ./x11.c	Tue Jul 19 22:41:07 2005
+***************
+*** 141,147 ****
+  	window_x = window_y = -1;
+  	if (geometry) {
+  		mode = XParseGeometry(geometry, &xloc, &yloc,
+! 			&xsiz, &ysiz);
+  		if (mode == 0) {
+  			fprintf(stderr, "bad geometry string %s\n",
+  				geometry);
+--- 141,147 ----
+  	window_x = window_y = -1;
+  	if (geometry) {
+  		mode = XParseGeometry(geometry, &xloc, &yloc,
+! 			(unsigned int *)&xsiz, (unsigned int *)&ysiz);
+  		if (mode == 0) {
+  			fprintf(stderr, "bad geometry string %s\n",
+  				geometry);
+***************
+*** 430,436 ****
+  	if (!(mgp_flag & FL_PRIVATE)) return;
+  #endif
+  	if (clr->num){
+! 		XFreeColors(display, colormap, clr->colors, clr->num, 0);
+  		free(clr->colors);
+  		clr->colors = NULL;
+  		clr->num = 0;
+--- 430,437 ----
+  	if (!(mgp_flag & FL_PRIVATE)) return;
+  #endif
+  	if (clr->num){
+! 		XFreeColors(display, colormap, 
+!                    (unsigned long *)clr->colors, clr->num, 0);
+  		free(clr->colors);
+  		clr->colors = NULL;
+  		clr->num = 0;
+*** ./x11dummy.c.osr6	Fri Mar  3 18:37:48 2000
+--- ./x11dummy.c	Tue Jul 19 22:41:07 2005
+***************
+*** 142,148 ****
+  	if (!(mgp_flag & FL_PRIVATE)) return;
+  #endif
+  	if (clr->num){
+! 		XFreeColors(display, colormap, clr->colors, clr->num, 0);
+  		free(clr->colors);
+  		clr->colors = NULL;
+  		clr->num = 0;
+--- 142,149 ----
+  	if (!(mgp_flag & FL_PRIVATE)) return;
+  #endif
+  	if (clr->num){
+! 		XFreeColors(display, colormap, (unsigned long *)clr->colors, 
+!                     clr->num, 0);
+  		free(clr->colors);
+  		clr->colors = NULL;
+  		clr->num = 0;

@@ -1,0 +1,96 @@
+*** ./machine.h.00	Wed Oct 25 13:08:29 1995
+--- ./machine.h	Tue Mar 12 13:14:55 2002
+***************
+*** 26,32 ****
+      int    last_pid;
+      double load_avg[NUM_AVERAGES];
+      int    p_total;
+!     int    p_active;     /* number of procs considered "active" */
+      int    *procstates;
+      int    *cpustates;
+      int    *memory;
+--- 26,32 ----
+      int    last_pid;
+      double load_avg[NUM_AVERAGES];
+      int    p_total;
+!     int    p_pactive;     /* number of procs considered "active" */
+      int    *procstates;
+      int    *cpustates;
+      int    *memory;
+*** ./top.c.00	Wed Jul  1 12:41:03 1998
+--- ./top.c	Tue Mar 12 13:23:59 2002
+***************
+*** 586,592 ****
+  	    /* determine number of processes to actually display */
+  	    /* this number will be the smallest of:  active processes,
+  	       number user requested, number current screen accomodates */
+! 	    active_procs = system_info.p_active;
+  	    if (active_procs > topn)
+  	    {
+  		active_procs = topn;
+--- 586,592 ----
+  	    /* determine number of processes to actually display */
+  	    /* this number will be the smallest of:  active processes,
+  	       number user requested, number current screen accomodates */
+! 	    active_procs = system_info.p_pactive;
+  	    if (active_procs > topn)
+  	    {
+  		active_procs = topn;
+***************
+*** 868,874 ****
+  				    "Order to sort: ");
+  				if (readline(tempbuf2, sizeof(tempbuf2), No) > 0)
+  				{
+! 				  if ((i = string_index(tempbuf2, statics.order_names)) == -1)
+  					{
+  					  new_message(MT_standout,
+  					      " %s: unrecognized sorting order", tempbuf2);
+--- 868,896 ----
+  				    "Order to sort: ");
+  				if (readline(tempbuf2, sizeof(tempbuf2), No) > 0)
+  				{
+!                       /* show sort orders */
+!                       if (tempbuf2[0] == '?' )  
+!                       {
+!                         static char onbuf[100];
+!                         if (*onbuf == '\0')
+!                         {
+!                             char *s1 = onbuf,
+!                                  **sp = statics.order_names;
+!                             *s1='\0';
+!                             while(*sp)  
+!                             {
+!                                 sprintf(s1, "%s, ", *sp++);
+!                                 s1 += strlen(s1);
+!                                 if ( s1 - onbuf > 65 )
+!                                     break;
+!                             }
+!                             s1[0] = '\0';
+!                             if (s1-onbuf >=2) s1[-2] = '\0';
+!                         }
+! 			   new_message(MT_standout, " Sort Orders: %s ", onbuf);
+! 			   no_command = Yes;
+!                                   } 
+!                else if ((i = string_index(tempbuf2, statics.order_names)) == -1)
+  					{
+  					  new_message(MT_standout,
+  					      " %s: unrecognized sorting order", tempbuf2);
+*** ./commands.c.00	Wed Jul  1 12:30:08 1998
+--- ./commands.c	Tue Mar 12 13:26:27 2002
+***************
+*** 73,79 ****
+  n or #  - change number of processes to display\n", stdout);
+  #ifdef ORDER
+  	fputs("\
+! o       - specify sort order (size, res, cpu, time)\n", stdout);
+  #endif
+  	fputs("\
+  r       - renice a process\n\
+--- 73,79 ----
+  n or #  - change number of processes to display\n", stdout);
+  #ifdef ORDER
+  	fputs("\
+! o       - specify sort order (size, res, cpu, time, ? shows keys)\n", stdout);
+  #endif
+  	fputs("\
+  r       - renice a process\n\

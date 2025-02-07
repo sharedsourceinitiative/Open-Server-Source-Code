@@ -1,0 +1,152 @@
+*** ./lib/rtapelib.c.00	Sun Aug 12 00:57:15 2007
+--- ./lib/rtapelib.c	Tue Nov 11 16:42:55 2008
+***************
+*** 53,59 ****
+  # endif
+  #endif
+  
+! #include <signal.h>
+  
+  #if HAVE_NETDB_H
+  # include <netdb.h>
+--- 53,59 ----
+  # endif
+  #endif
+  
+! #include <sys/signal.h>
+  
+  #if HAVE_NETDB_H
+  # include <netdb.h>
+*** ./lib/argp-eexst.c.00	Sun Nov 18 02:46:56 2007
+--- ./lib/argp-eexst.c	Tue Nov 11 16:54:44 2008
+***************
+*** 20,26 ****
+--- 20,30 ----
+  # include <config.h>
+  #endif
+  
++ #if defined(__USLC__)
++ #define EX_USAGE 1
++ #else
+  #include <sysexits.h>
++ #endif
+  
+  #include "argp.h"
+  
+*** ./lib/argp-help.c.00	Sun Nov 18 02:46:56 2007
+--- ./lib/argp-help.c	Tue Nov 11 16:56:45 2008
+***************
+*** 29,34 ****
+--- 29,37 ----
+  #include <stddef.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #if defined(__USLC__)
++ #include <strings.h>
++ #endif
+  #include <assert.h>
+  #include <stdarg.h>
+  #include <ctype.h>
+*** ./src/buffer.c.00	Mon Feb  4 02:36:51 2008
+--- ./src/buffer.c	Tue Nov 11 16:42:55 2008
+***************
+*** 22,28 ****
+  #include <system.h>
+  #include <system-ioctl.h>
+  
+! #include <signal.h>
+  
+  #include <closeout.h>
+  #include <fnmatch.h>
+--- 22,28 ----
+  #include <system.h>
+  #include <system-ioctl.h>
+  
+! #include <sys/signal.h>
+  
+  #include <closeout.h>
+  #include <fnmatch.h>
+*** ./src/system.c.00	Mon Apr 14 05:03:13 2008
+--- ./src/system.c	Tue Nov 11 16:42:55 2008
+***************
+*** 20,26 ****
+  
+  #include "common.h"
+  #include <rmt.h>
+! #include <signal.h>
+  
+  #if MSDOS
+  
+--- 20,26 ----
+  
+  #include "common.h"
+  #include <rmt.h>
+! #include <sys/signal.h>
+  
+  #if MSDOS
+  
+*** ./src/tar.c.00	Mon Apr 14 05:03:13 2008
+--- ./src/tar.c	Tue Nov 11 16:42:55 2008
+***************
+*** 26,32 ****
+  #include <argp-namefrob.h>
+  #include <argp-fmtstream.h>
+  
+! #include <signal.h>
+  #if ! defined SIGCHLD && defined SIGCLD
+  # define SIGCHLD SIGCLD
+  #endif
+--- 26,32 ----
+  #include <argp-namefrob.h>
+  #include <argp-fmtstream.h>
+  
+! #include <sys/signal.h>
+  #if ! defined SIGCHLD && defined SIGCLD
+  # define SIGCHLD SIGCLD
+  #endif
+*** ./Configure-OSR6.00	Tue Nov 11 16:42:55 2008
+--- ./Configure-OSR6	Tue Nov 11 16:57:41 2008
+***************
+*** 0 ****
+--- 1,24 ----
++ #!/bin/sh
++ 
++ HOST=i586-sco-sysv5
++ 
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ rm -f config.status config.log
++ ./configure --host=$HOST \
++             --build=$HOST \
++             --prefix=/usr/local \
++             2>&1 | tee mout-configure
+*** ./Install-OSR6.00	Tue Nov 11 16:42:55 2008
+--- ./Install-OSR6	Tue Nov 11 16:42:55 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gnutar
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

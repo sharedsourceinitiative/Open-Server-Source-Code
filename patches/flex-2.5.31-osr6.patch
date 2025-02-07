@@ -1,0 +1,313 @@
+*** ./flexdef.h.osr6 Mon Mar 31 17:51:38 2003
+--- ./flexdef.h Sun May 22 14:27:28 2005
+***************
+*** 202,207 ****
+  #define JAM -1			/* to mark a missing DFA transition */
+  #define NO_TRANSITION NIL
+  #define UNIQUE -1		/* marks a symbol as an e.c. representative */
+  #define INFINITY -1		/* for x{5,} constructions */
+  
+  #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
+--- 202,210 ----
+  #define JAM -1			/* to mark a missing DFA transition */
+  #define NO_TRANSITION NIL
+  #define UNIQUE -1		/* marks a symbol as an e.c. representative */
++ #ifdef INFINITY
++ #undef INFINITY
++ #endif
+  #define INFINITY -1		/* for x{5,} constructions */
+  
+  #define INITIAL_MAX_CCLS 100	/* max number of unique character classes */
+*** ./configure.osr6 Tue Apr  1 08:32:25 2003
+--- ./configure Sun May 22 14:27:29 2005
+***************
+*** 2547,2553 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+      CFLAGS="-g"
+    fi
+--- 2547,2553 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+      CFLAGS="-O2"
+    fi
+***************
+*** 2549,2555 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 2549,2555 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 2555,2561 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS=
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+--- 2555,2561 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+***************
+*** 3681,3687 ****
+    rpathdirs=
+    ltrpathdirs=
+    names_already_handled=
+!   names_next_round='intl '
+    while test -n "$names_next_round"; do
+      names_this_round="$names_next_round"
+      names_next_round=
+--- 3681,3687 ----
+    rpathdirs=
+    ltrpathdirs=
+    names_already_handled=
+!   names_next_round='gnuintl '
+    while test -n "$names_next_round"; do
+      names_this_round="$names_next_round"
+      names_next_round=
+***************
+*** 4890,4896 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+      CFLAGS="-g"
+    fi
+--- 4890,4896 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+      CFLAGS="-O2"
+    fi
+***************
+*** 4892,4898 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 4892,4898 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 4898,4904 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS=
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+--- 4898,4904 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+***************
+*** 5388,5394 ****
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-g -O2"
+    else
+      CXXFLAGS="-g"
+    fi
+--- 5388,5394 ----
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-O2"
+    else
+      CXXFLAGS="-O2"
+    fi
+***************
+*** 5390,5396 ****
+    if test "$GXX" = yes; then
+      CXXFLAGS="-g -O2"
+    else
+!     CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+--- 5390,5396 ----
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  else
+    if test "$GXX" = yes; then
+***************
+*** 5396,5402 ****
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS=
+    fi
+  fi
+  for ac_declaration in \
+--- 5396,5402 ----
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  fi
+  for ac_declaration in \
+*** ./main.c.osr6 Mon Mar 31 17:51:38 2003
+--- ./main.c Sun May 22 16:38:19 2005
+***************
+*** 911,923 ****
+  	char   *arg;
+  	scanopt_t sopt;
+  
+! 	printstats = syntaxerror = trace = spprdflt = caseins = false;
+! 	lex_compat = posix_compat = C_plus_plus = backing_up_report =
+! 		ddebug = fulltbl = false;
+! 	fullspd = long_align = nowarn = yymore_used = continued_action =
+! 		false;
+! 	do_yylineno = yytext_is_array = in_rule = reject = do_stdinit =
+! 		false;
+  	yymore_really_used = reject_really_used = unspecified;
+  	interactive = csize = unspecified;
+  	do_yywrap = gen_line_dirs = usemecs = useecs = true;
+--- 911,937 ----
+  	char   *arg;
+  	scanopt_t sopt;
+  
+! 	printstats = false;
+! 	syntaxerror = false;
+! 	trace = false;
+! 	spprdflt = false;
+! 	caseins = false;
+! 	lex_compat = false;
+! 	posix_compat = false;
+! 	C_plus_plus = false;
+! 	backing_up_report = false;
+! 	ddebug = false;
+! 	fulltbl = false;
+! 	fullspd = false;
+! 	long_align = false;
+! 	nowarn = false;
+! 	yymore_used = false;
+! 	continued_action = false;
+! 	do_yylineno = yytext_is_array = in_rule = reject = do_stdinit = false;
+! 	yytext_is_array = false;
+! 	in_rule = false;
+! 	reject = false;
+! 	do_stdinit = false;
+  	yymore_really_used = reject_really_used = unspecified;
+  	interactive = csize = unspecified;
+  	do_yywrap = gen_line_dirs = usemecs = useecs = true;
+***************
+*** 926,933 ****
+  	did_outfilename = 0;
+  	prefix = "yy";
+  	yyclass = 0;
+! 	use_read = use_stdout = false;
+! 	tablesext = tablesverify = false;
+  	gentables = true;
+  	tablesfilename = tablesname = NULL;
+      ansi_func_defs = ansi_func_protos = true;
+--- 940,949 ----
+  	did_outfilename = 0;
+  	prefix = "yy";
+  	yyclass = 0;
+! 	use_read = false;
+! 	use_stdout = false;
+! 	tablesext = false;
+! 	tablesverify = false;
+  	gentables = true;
+  	tablesfilename = NULL;
+  	tablesname = NULL;
+***************
+*** 929,936 ****
+  	use_read = use_stdout = false;
+  	tablesext = tablesverify = false;
+  	gentables = true;
+! 	tablesfilename = tablesname = NULL;
+!     ansi_func_defs = ansi_func_protos = true;
+  
+  	sawcmpflag = false;
+  
+--- 945,954 ----
+  	tablesext = false;
+  	tablesverify = false;
+  	gentables = true;
+! 	tablesfilename = NULL;
+! 	tablesname = NULL;
+! 	ansi_func_defs = true;
+! 	ansi_func_protos = true;
+  
+  	sawcmpflag = false;
+  
+*** ./misc.c.osr6 Mon Mar 31 17:51:38 2003
+--- ./misc.c Sun May 22 16:39:54 2005
+***************
+*** 894,900 ****
+      if(sko_len > 0)
+          sko_peek(&do_copy);
+      sko_len = 0;
+!     sko_push(do_copy=true);
+  
+  
+  	/* Loop pulling lines either from the skelfile, if we're using
+--- 894,901 ----
+      if(sko_len > 0)
+          sko_peek(&do_copy);
+      sko_len = 0;
+!     do_copy=true;
+!     sko_push(do_copy);
+  
+  
+  	/* Loop pulling lines either from the skelfile, if we're using
+--- Install-OSR6.osr6	2005-07-03 18:04:46.290000003 -0700
++++ Install-OSR6	2005-07-03 18:11:37.260000011 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/flex
++prefix=$D/usr
++export prefix
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install prefix=$D/usr 2>&1 | tee $MOUT

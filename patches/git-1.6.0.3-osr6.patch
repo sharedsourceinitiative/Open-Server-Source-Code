@@ -1,0 +1,70 @@
+--- ./Install-OSR6.00	2008-12-09 16:42:35.940000014 -0800
++++ ./Install-OSR6	2008-12-09 16:42:35.940000007 -0800
+@@ -0,0 +1,36 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/v/tmp/git
++DESTDIR=$D
++DOC=$D/usr/share/doc/packages/git
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++[ -d $DOC ] || mkdir -p $DOC
++cp README COPYING $DOC
++
++H=`pwd`
++[ -d $D/usr/man ] || mkdir -p $D/usr/man
++cd $D/usr/share
++[ -d man ] && {
++  for i in man/*
++  do
++    [ -d $i ] && mv $i ../$i
++  done
++  rm -f man/*
++  rmdir man
++}
++cd ../man
++bzcat $H/../git-manpages-1.6.0.3.tar.bz2 | tar xf -
++cd $DOC
++bzcat $H/../git-htmldocs-1.6.0.3.tar.bz2 | tar xf -
++
++cd $D
++/usr/gnu/bin/find usr -type f -name .packlist -exec rm -f {} ';'
++/usr/gnu/bin/find usr -type f -name '*.bs' -empty -exec rm -f {} ';' 
++/usr/gnu/bin/find usr -type f -name perllocal.pod -exec rm -f {} ';'
++/usr/gnu/bin/find usr -print | xargs chown root:sys
+--- ./Makefile.00	2008-10-21 21:19:18.000000000 -0700
++++ ./Makefile	2008-12-09 16:42:35.940000062 -0800
+@@ -588,7 +588,7 @@
+ 	SHELL_PATH = /usr/local/bin/bash
+ 	NO_IPV6 = YesPlease
+ 	NO_HSTRERROR = YesPlease
+-	BASIC_CFLAGS += -Kthread
++	BASIC_CFLAGS += -Kpthread
+ 	BASIC_CFLAGS += -I/usr/local/include
+ 	BASIC_LDFLAGS += -L/usr/local/lib
+ 	INSTALL = ginstall
+@@ -602,7 +602,9 @@
+ 	endif
+ 	ifeq ($(uname_R),5)
+ 		CC = cc
+-		BASIC_CFLAGS += -Kthread
++		CFLAGS = -O2
++		BASIC_CFLAGS += -Kpthread
++		mandir = $(prefix)/man
+ 	endif
+ 	NEEDS_SOCKET = YesPlease
+ 	NEEDS_NSL = YesPlease
+@@ -611,8 +613,6 @@
+ 	SHELL_PATH = /usr/bin/bash
+ 	NO_IPV6 = YesPlease
+ 	NO_HSTRERROR = YesPlease
+-	BASIC_CFLAGS += -I/usr/local/include
+-	BASIC_LDFLAGS += -L/usr/local/lib
+ 	NO_STRCASESTR = YesPlease
+ 	NO_MEMMEM = YesPlease
+ 	INSTALL = ginstall

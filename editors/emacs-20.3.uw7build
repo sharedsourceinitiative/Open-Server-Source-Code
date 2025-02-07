@@ -1,0 +1,81 @@
+Build on Unixware7
+
+1) config.guess recognise uw7
+
+ To ./config.guess about line 689 Add
+
+   # SysVr5/Unixware7
+    i[34]86:*:5*:* | i[34]86:SYSTEM_V:5*:*)
+         if uname -a | grep SCO >/dev/null 2>/dev/null ; then 
+            (/bin/uname -s|egrep UnixWare >/dev/null) && UNAME_VER=uw${UNAME_VERSION}
+            if /bin/uname -X 2>/dev/null >/dev/null ; then
+		(/bin/uname -X|egrep i80486 >/dev/null) && UNAME_MACHINE=i486
+		(/bin/uname -X|egrep '^Machine.*Pentium' >/dev/null) \
+			&& UNAME_MACHINE=i586
+            fi
+		echo ${UNAME_MACHINE}-sco-sysv${UNAME_RELEASE}${UNAME_VER}
+        else 
+		echo ${UNAME_MACHINE}-unknown-sysv${UNAME_RELEASE}
+        fi
+        exit 0 ;; 
+
+    just before univel settings 
+        ( or use my new config.guess) so it recognises UW7.
+
+
+2) configure handle unixware7
+    
+  To ./configure
+    about line 1525 (after   *-sysv4.2uw* entry)    Add case mapping 
+        sysv5uw* to unixware7
+         *-sysv5uw* )              opsys=unixware7;  NON_GNU_CPP=/lib/cpp ;;
+    and again about 1573
+      *-sysv5uw* )                 opsys=unixware7 ;;
+
+
+3) file for platform defines
+
+  to ./src/s (unixware7)
+    cp unixware.h unixware7.h
+
+        (theoretically this could stay as unixware.h and have configure map
+        sysv5uw* to unixware as well but I don't knoe what other tweaks we may
+        yet wish to add for UW7 as opposed to unixware).    
+
+    and reset  SYSTEMTYPE
+    #undef SYSTEM_TYPE
+    #define SYSTEM_TYPE "SCO sysv5uw7"
+
+---------------- unixware7.h --------------
+    #include "usg5-4-2.h"
+
+    #undef SYSTEM_TYPE
+    #define SYSTEM_TYPE "SCO sysv5uw7"
+
+    #ifndef __GNUC__
+    #undef HAVE_ALLOCA
+    #define C_ALLOCA
+    #endif
+
+    #ifdef NEED_LIBW
+    #undef NEED_LIBW
+    #endif
+
+    #define	PENDING_OUTPUT_COUNT(FILE) ((FILE)->__ptr - (FILE)->__base)
+    ----------------
+
+
+4) do configuration
+   configure as
+    CC=cc ./configure --with-x11 --with-x-toolkit=athena
+
+    ( == CC=cc ./configure i386-sco-sysv5uw7 --with-x11 --with-x-toolkit=athena )
+
+
+
+
+
+modified files for return
+    config.guess
+    configure.in
+    src/s/unixware7.h

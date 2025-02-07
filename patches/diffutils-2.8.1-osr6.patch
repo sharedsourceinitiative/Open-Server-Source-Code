@@ -1,0 +1,58 @@
+*** ./src/Makefile.am.osr6 Fri Apr  5 12:37:31 2002
+--- ./src/Makefile.am Fri Jun  3 15:48:38 2005
+***************
+*** 26,32 ****
+  AM_CPPFLAGS = -I../lib -I$(top_srcdir)/lib
+  DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+  
+! LDADD = ../lib/libdiffutils.a @LIBINTL@
+  diff_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+  
+  cmp_SOURCES = cmp.c version.c
+--- 26,32 ----
+  AM_CPPFLAGS = -I../lib -I$(top_srcdir)/lib
+  DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+  
+! LDADD = ../lib/libdiffutils.a -L/usr/gnu/lib -lintl
+  diff_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+  
+  cmp_SOURCES = cmp.c version.c
+*** ./src/Makefile.in.osr6 Fri Apr  5 13:50:30 2002
+--- ./src/Makefile.in Fri Jun  3 15:48:59 2005
+***************
+*** 117,123 ****
+  AM_CPPFLAGS = -I../lib -I$(top_srcdir)/lib
+  DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+  
+! LDADD = ../lib/libdiffutils.a @LIBINTL@
+  diff_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+  
+  cmp_SOURCES = cmp.c version.c
+--- 117,123 ----
+  AM_CPPFLAGS = -I../lib -I$(top_srcdir)/lib
+  DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+  
+! LDADD = ../lib/libdiffutils.a -L/usr/gnu/lib -lintl
+  diff_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+  
+  cmp_SOURCES = cmp.c version.c
+*** ./Configure-OSR6.osr6 Fri Jun  3 15:48:10 2005
+--- ./Configure-OSR6 Fri Jun  3 15:48:10 2005
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS
++ 
++ #libtoolize -c -f
++ #aclocal -I m4
++ #automake -a -c -f
++ #autoconf -f
++ rm -f mout-configure
++ ./configure --prefix=/usr/gnu --with-libintl-prefix=/usr/gnu \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

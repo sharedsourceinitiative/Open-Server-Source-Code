@@ -1,0 +1,44 @@
+CD-Record-1.6.1
+---------------
+
+You can set the device name directly to be something like "/dev/rcd2" or just
+give the number of the /dev/rcd device to be attached to the predefined string
+/dev/rcd.
+
+[NOTE: You need to be root user to use cdrecord!]
+
+Method 1:
+---------
+
+
+[make sure you use a ":" between the device name instead of the "," as with
+method 2!]
+
+#cdrecord dev=/dev/rcd0:5,0 ...
+
+means use the special node "/dev/rcd0" and target 5, lun 0 as the cdrecorder.
+
+Setting CDR_DEVICE=/dev/rcd0:5,0 does the same.
+
+
+Method 2:
+---------
+
+#cdrecord dev=1,4,0 ...
+
+means use the special node "/dev/rcd1" and target 4, lun 0 as the cdrecorder.
+
+Setting CDR_DEVICE=1,4,0 does the same.
+
+Some restrictions apply to this OpenServer 5 port:
+--------------------------------------------------
+
+It does not use FIFO ring buffering, so according to the original author, you
+will not be able to record "on-the-fly" from a NFS mount, but anything with an
+image already cut or from a local disc will work up to 8 speed recording, which
+I can't test with my 4speed TEAC.
+
+Specifying the target, lun does have no real effect, as the Srom driver does
+not make use of it, just specify it for the rigth output and that cdrecord does
+not complain about hte missing target and lun!
+

@@ -1,0 +1,91 @@
+--- ./include/curses.h.in.uw	2003-11-10 21:10:33.730000010 +0000
++++ ./include/curses.h.in	2003-11-10 21:10:33.900000016 +0000
+@@ -80,8 +80,10 @@
+ typedef unsigned @cf_cv_typeof_chtype@ chtype;
+ 
+ #ifndef _SCO_DS
++#ifndef __USLC__
+ #include <features.h>
+ #endif
++#endif
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <unctrl.h>
+--- ./include/termcap.h.in.uw	2003-11-10 21:10:33.340000005 +0000
++++ ./include/termcap.h.in	2003-11-10 21:10:34.090000001 +0000
+@@ -47,8 +47,10 @@
+ #endif /* __cplusplus */
+ 
+ #ifndef _SCO_DS
++#ifndef __USLC__
+ #include <features.h>
+ #endif
++#endif
+ #include <termios.h>
+ #include <sys/types.h>
+ 
+--- ./ncurses/base/lib_screen.c.uw	2003-11-10 21:10:33.790000028 +0000
++++ ./ncurses/base/lib_screen.c	2003-11-10 21:10:34.160000001 +0000
+@@ -33,7 +33,7 @@
+  ****************************************************************************/
+ 
+ #include <curses.priv.h>
+-#ifdef _SCO_DS
++#if defined(_SCO_DS) || defined(__USLC__)
+ #include <sys/stat.h>
+ #endif
+ 
+--- ./ncurses/widechar/lib_get_wch.c.uw	2003-11-10 21:10:25.000000000 +0000
++++ ./ncurses/widechar/lib_get_wch.c	2003-11-10 21:31:48.270000010 +0000
+@@ -45,13 +45,14 @@
+ wget_wch(WINDOW *win, wint_t * result)
+ {
+     int code;
+-    char buffer[(MB_CUR_MAX * 9) + 1];	/* allow some redundant shifts */
++    char *buffer;	/* allow some redundant shifts */
+     int status;
+     mbstate_t state;
+     size_t count = 0;
+     unsigned long value;
+     wchar_t wch;
+ 
++    buffer = (char *)malloc((MB_CUR_MAX * 9) + 1);
+     T((T_CALLED("wget_wch(%p)"), win));
+     /*
+      * We can get a stream of single-byte characters and KEY_xxx codes from
+@@ -94,6 +95,7 @@
+ 	}
+     }
+     *result = value;
++    free(buffer);
+     T(("result %#lo", value));
+     returnCode(code);
+ }
+--- ./ncurses/widechar/lib_in_wch.c.uw	2003-11-10 21:10:24.000000000 +0000
++++ ./ncurses/widechar/lib_in_wch.c	2003-11-10 21:34:01.650000010 +0000
+@@ -52,7 +52,7 @@
+ 	&& wcval != 0) {
+ 	getyx(win, row, col);
+ 
+-	*wcval = win->_line[row].text[col];
++	wcval = &(win->_line[row].text[col]);
+     } else {
+ 	code = ERR;
+     }
+--- ./configure.uw	2003-11-10 21:10:31.310000068 +0000
++++ ./configure	2003-11-10 21:10:34.170000045 +0000
+@@ -2903,12 +2903,12 @@
+ 		fi
+ 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
+ 		;;
+-	sysv5uw7*|unix_sv*)
++	sysv5*|unix_sv*)
+ 		# tested with UnixWare 7.1.0 (gcc 2.95.2 and cc)
+ 		if test "$ac_cv_prog_gcc" != yes; then
+ 			CC_SHARED_OPTS='-KPIC'
+ 		fi
+-		MK_SHARED_LIB='$(LD) -d y -G -o $@'
++		MK_SHARED_LIB='$(CC) -G -o $@'
+ 		;;
+ 	*)
+ 		CC_SHARED_OPTS='unknown'

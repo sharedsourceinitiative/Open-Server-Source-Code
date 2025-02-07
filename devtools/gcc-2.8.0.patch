@@ -1,0 +1,19 @@
+*** gcc-2.8.0/toplev.c.jkj	Sat Jan 17 15:27:20 1998
+--- gcc-2.8.0/toplev.c	Fri Jan 16 19:32:11 1998
+***************
+*** 4155,4161 ****
+  
+  		      if (type == NO_DEBUG)
+  			{
+! 			  type = PREFERED_DEBUGGING_TYPE;
+  			  if (len > 1 && strncmp (str, "ggdb", len) == 0)
+  			    {
+  #ifdef DWARF2_DEBUGGING_INFO
+--- 4155,4161 ----
+  
+  		      if (type == NO_DEBUG)
+  			{
+! 			  type = DWARF_DEBUG;
+  			  if (len > 1 && strncmp (str, "ggdb", len) == 0)
+  			    {
+  #ifdef DWARF2_DEBUGGING_INFO

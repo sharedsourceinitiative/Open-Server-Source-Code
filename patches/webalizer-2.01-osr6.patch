@@ -1,0 +1,3087 @@
+*** ./lang/webalizer_lang.english.osr6	Thu Oct  5 22:27:48 2000
+--- ./lang/webalizer_lang.english	Sun Feb 12 12:00:57 2006
+***************
+*** 88,94 ****
+  char *msg_nomem_ts= "Can't allocate enough memory, Top Sites disabled!";
+  char *msg_nomem_tr= "Can't allocate enough memory, Top Referrers disabled!";
+  char *msg_nomem_tu= "Can't allocate enough memory, Top URLs disabled!";
+! char *msg_nomem_tc= "Can't allocate enough memory, Top Countries disabled!";
+  char *msg_nomem_ta= "Can't allocate enough memory, Top User Agents disabled!";
+  char *msg_nomem_tsr="Can't allocate enough memory, Top Search Strings disabled!";
+  char *msg_nomem_ti= "Can't allocate enough memory, Top Usernames disabled!";
+--- 88,94 ----
+  char *msg_nomem_ts= "Can't allocate enough memory, Top Sites disabled!";
+  char *msg_nomem_tr= "Can't allocate enough memory, Top Referrers disabled!";
+  char *msg_nomem_tu= "Can't allocate enough memory, Top URLs disabled!";
+! char *msg_nomem_tc= "Can't allocate enough memory, Top Locations disabled!";
+  char *msg_nomem_ta= "Can't allocate enough memory, Top User Agents disabled!";
+  char *msg_nomem_tsr="Can't allocate enough memory, Top Search Strings disabled!";
+  char *msg_nomem_ti= "Can't allocate enough memory, Top Usernames disabled!";
+***************
+*** 125,131 ****
+           "-p        = preserve state (incremental)"        ,
+           "-q        = supress informational messages"      ,
+           "-Q        = supress _ALL_ messages"              ,
+!          "-Y        = supress country graph"               ,
+           "-G        = supress hourly graph"                ,
+           "-H        = supress hourly stats"                ,
+           "-L        = supress color coded graph legends"   ,
+--- 125,131 ----
+           "-p        = preserve state (incremental)"        ,
+           "-q        = supress informational messages"      ,
+           "-Q        = supress _ALL_ messages"              ,
+!          "-Y        = supress location graph"              ,
+           "-G        = supress hourly graph"                ,
+           "-H        = supress hourly stats"                ,
+           "-L        = supress color coded graph legends"   ,
+***************
+*** 144,150 ****
+           "-P name   = Page type extension 'name'"          ,
+           "-I name   = Index alias 'name'"                  ,
+           "-A num    = Display num top agents"              ,
+!          "-C num    = Display num top countries"           ,
+           "-R num    = Display num top referrers"           ,
+           "-S num    = Display num top sites"               ,
+           "-U num    = Display num top URLs"                ,
+--- 144,150 ----
+           "-P name   = Page type extension 'name'"          ,
+           "-I name   = Index alias 'name'"                  ,
+           "-A num    = Display num top agents"              ,
+!          "-C num    = Display num top locations"           ,
+           "-R num    = Display num top referrers"           ,
+           "-S num    = Display num top sites"               ,
+           "-U num    = Display num top URLs"                ,
+***************
+*** 154,159 ****
+--- 154,161 ----
+           "-X        = Hide individual sites"               ,
+           "-D name   = Use DNS Cache file 'name'"           ,
+           "-N num    = Number of DNS processes (0=disable)" ,
++          "-w        = Disable GeoIP fearure"               ,
++          "-W name   = Use specific GeoIP database 'name'"  ,
+           NULL};
+  
+  /***********************************************************************/
+***************
+*** 199,205 ****
+  char *msg_h_url   = "URL";
+  char *msg_h_agent = "User Agent";
+  char *msg_h_ref   = "Referrer";
+! char *msg_h_ctry  = "Country";
+  char *msg_h_search= "Search String";
+  char *msg_h_uname = "Username";
+  
+--- 201,207 ----
+  char *msg_h_url   = "URL";
+  char *msg_h_agent = "User Agent";
+  char *msg_h_ref   = "Referrer";
+! char *msg_h_ctry  = "Location";
+  char *msg_h_search= "Search String";
+  char *msg_h_uname = "Username";
+  
+***************
+*** 209,215 ****
+  char *msg_hlnk_u  = "URLs";
+  char *msg_hlnk_s  = "Sites";
+  char *msg_hlnk_a  = "Agents";
+! char *msg_hlnk_c  = "Countries";
+  char *msg_hlnk_r  = "Referrers";
+  char *msg_hlnk_en = "Entry";
+  char *msg_hlnk_ex = "Exit";
+--- 211,217 ----
+  char *msg_hlnk_u  = "URLs";
+  char *msg_hlnk_s  = "Sites";
+  char *msg_hlnk_a  = "Agents";
+! char *msg_hlnk_c  = "Locations";
+  char *msg_hlnk_r  = "Referrers";
+  char *msg_hlnk_en = "Entry";
+  char *msg_hlnk_ex = "Exit";
+***************
+*** 241,247 ****
+  char *msg_htot_hs = "Hourly Statistics for";
+  
+  /* country pie chart */
+! char *msg_ctry_use= "Usage by Country for";
+  
+  /* top tables */
+  /* Formatted as "Top xxx of xxx Total something" */
+--- 243,249 ----
+  char *msg_htot_hs = "Hourly Statistics for";
+  
+  /* country pie chart */
+! char *msg_ctry_use= "Usage by Location for";
+  
+  /* top tables */
+  /* Formatted as "Top xxx of xxx Total something" */
+***************
+*** 251,257 ****
+  char *msg_top_u   = "Total URLs";
+  char *msg_top_r   = "Total Referrers";
+  char *msg_top_a   = "Total User Agents";
+! char *msg_top_c   = "Total Countries";
+  char *msg_top_en  = "Total Entry Pages";
+  char *msg_top_ex  = "Total Exit Pages";
+  char *msg_top_sr  = "Total Search Strings";
+--- 253,259 ----
+  char *msg_top_u   = "Total URLs";
+  char *msg_top_r   = "Total Referrers";
+  char *msg_top_a   = "Total User Agents";
+! char *msg_top_c   = "Total Locations";
+  char *msg_top_en  = "Total Entry Pages";
+  char *msg_top_ex  = "Total Exit Pages";
+  char *msg_top_sr  = "Total Search Strings";
+***************
+*** 325,348 ****
+  
+  struct  country_code ctry[] = {
+  { 0,                      "Unresolved/Unknown",               0,0,0 },
+! { IDX_3C('c','o','m'),    "US Commercial",                    0,0,0 },
+! { IDX_3C('e','d','u'),    "US Educational",                   0,0,0 },
+! { IDX_3C('g','o','v'),    "US Government",                    0,0,0 },
+  { IDX_3C('i','n','t'),    "International (int)",              0,0,0 },
+! { IDX_3C('m','i','l'),    "US Military",                      0,0,0 },
+! { IDX_3C('n','e','t'),    "Network",                          0,0,0 },
+! { IDX_3C('o','r','g'),    "Non-Profit Organization",          0,0,0 },
+  { IDX_4C('a','r','p','a'),"Old style Arpanet (arpa)",         0,0,0 },
+  { IDX_4C('n','a','t','o'),"Nato field (nato)",                0,0,0 },
+  { IDX_2C('a','d'),        "Andorra",                          0,0,0 },
+  { IDX_2C('a','e'),        "United Arab Emirates",             0,0,0 },
+  { IDX_2C('a','f'),        "Afghanistan",                      0,0,0 },
+! { IDX_2C('a','g'),        "Antigua and Barbuda",              0,0,0 },
+  { IDX_2C('a','i'),        "Anguilla",                         0,0,0 },
+  { IDX_2C('a','l'),        "Albania",                          0,0,0 },
+  { IDX_2C('a','m'),        "Armenia",                          0,0,0 },
+  { IDX_2C('a','n'),        "Netherlands Antilles",             0,0,0 },
+  { IDX_2C('a','o'),        "Angola",                           0,0,0 },
+  { IDX_2C('a','q'),        "Antarctica",                       0,0,0 },
+  { IDX_2C('a','r'),        "Argentina",                        0,0,0 },
+  { IDX_2C('a','s'),        "American Samoa",                   0,0,0 },
+--- 327,358 ----
+  
+  struct  country_code ctry[] = {
+  { 0,                      "Unresolved/Unknown",               0,0,0 },
+! { IDX_3C('b','i','z'),    "Business (biz)",                   0,0,0 },
+! { IDX_3C('c','o','m'),    "Commercial (com)",                 0,0,0 },
+! { IDX_3C('e','d','u'),    "Educational (edu)",                0,0,0 },
+! { IDX_3C('g','o','v'),    "US Government (gov)",              0,0,0 },
+  { IDX_3C('i','n','t'),    "International (int)",              0,0,0 },
+! { IDX_3C('m','i','l'),    "US Military (mil)",                0,0,0 },
+! { IDX_3C('n','e','t'),    "Network (net)",                    0,0,0 },
+! { IDX_3C('o','r','g'),    "Non-Profit Organization (org)",    0,0,0 },
+! { IDX_3C('p','r','o'),    "Professional firm (pro)",          0,0,0 },
+  { IDX_4C('a','r','p','a'),"Old style Arpanet (arpa)",         0,0,0 },
++ { IDX_4C('i','n','f','o'),"Information (info)",               0,0,0 },
++ { IDX_4C('n','a','m','e'),"Family name (name)",               0,0,0 },
+  { IDX_4C('n','a','t','o'),"Nato field (nato)",                0,0,0 },
++ { IDX_2C('a','1'),        "Anonymous Proxy",                  0,0,0 },
++ { IDX_2C('a','2'),        "Satellite Provider",               0,0,0 },
++ { IDX_2C('a','c'),        "Ascension Island",                 0,0,0 },
+  { IDX_2C('a','d'),        "Andorra",                          0,0,0 },
+  { IDX_2C('a','e'),        "United Arab Emirates",             0,0,0 },
+  { IDX_2C('a','f'),        "Afghanistan",                      0,0,0 },
+! { IDX_2C('a','g'),        "Antigua &amp; Barbuda",            0,0,0 },
+  { IDX_2C('a','i'),        "Anguilla",                         0,0,0 },
+  { IDX_2C('a','l'),        "Albania",                          0,0,0 },
+  { IDX_2C('a','m'),        "Armenia",                          0,0,0 },
+  { IDX_2C('a','n'),        "Netherlands Antilles",             0,0,0 },
+  { IDX_2C('a','o'),        "Angola",                           0,0,0 },
++ { IDX_2C('a','p'),        "Asia/Pacific Region",              0,0,0 },
+  { IDX_2C('a','q'),        "Antarctica",                       0,0,0 },
+  { IDX_2C('a','r'),        "Argentina",                        0,0,0 },
+  { IDX_2C('a','s'),        "American Samoa",                   0,0,0 },
+***************
+*** 350,356 ****
+  { IDX_2C('a','u'),        "Australia",                        0,0,0 },
+  { IDX_2C('a','w'),        "Aruba",                            0,0,0 },
+  { IDX_2C('a','z'),        "Azerbaijan",                       0,0,0 },
+! { IDX_2C('b','a'),        "Bosnia and Herzegovina",           0,0,0 },
+  { IDX_2C('b','b'),        "Barbados",                         0,0,0 },
+  { IDX_2C('b','d'),        "Bangladesh",                       0,0,0 },
+  { IDX_2C('b','e'),        "Belgium",                          0,0,0 },
+--- 360,366 ----
+  { IDX_2C('a','u'),        "Australia",                        0,0,0 },
+  { IDX_2C('a','w'),        "Aruba",                            0,0,0 },
+  { IDX_2C('a','z'),        "Azerbaijan",                       0,0,0 },
+! { IDX_2C('b','a'),        "Bosnia &amp; Herzegovina",         0,0,0 },
+  { IDX_2C('b','b'),        "Barbados",                         0,0,0 },
+  { IDX_2C('b','d'),        "Bangladesh",                       0,0,0 },
+  { IDX_2C('b','e'),        "Belgium",                          0,0,0 },
+***************
+*** 371,380 ****
+  { IDX_2C('b','z'),        "Belize",                           0,0,0 },
+  { IDX_2C('c','a'),        "Canada",                           0,0,0 },
+  { IDX_2C('c','c'),        "Cocos (Keeling) Islands",          0,0,0 },
+  { IDX_2C('c','f'),        "Central African Republic",         0,0,0 },
+! { IDX_2C('c','g'),        "Congo",                            0,0,0 },
+  { IDX_2C('c','h'),        "Switzerland",                      0,0,0 },
+! { IDX_2C('c','i'),        "Cote D'Ivoire (Ivory Coast)",      0,0,0 },
+  { IDX_2C('c','k'),        "Cook Islands",                     0,0,0 },
+  { IDX_2C('c','l'),        "Chile",                            0,0,0 },
+  { IDX_2C('c','m'),        "Cameroon",                         0,0,0 },
+--- 381,391 ----
+  { IDX_2C('b','z'),        "Belize",                           0,0,0 },
+  { IDX_2C('c','a'),        "Canada",                           0,0,0 },
+  { IDX_2C('c','c'),        "Cocos (Keeling) Islands",          0,0,0 },
++ { IDX_2C('c','d'), 	  "Congo, Democratic Rep. of the",    0,0,0 },
+  { IDX_2C('c','f'),        "Central African Republic",         0,0,0 },
+! { IDX_2C('c','g'), 	  "Congo, Republic of",		      0,0,0 },
+  { IDX_2C('c','h'),        "Switzerland",                      0,0,0 },
+! { IDX_2C('c','i'),        "Cote D'Ivoire",		      0,0,0 },
+  { IDX_2C('c','k'),        "Cook Islands",                     0,0,0 },
+  { IDX_2C('c','l'),        "Chile",                            0,0,0 },
+  { IDX_2C('c','m'),        "Cameroon",                         0,0,0 },
+***************
+*** 400,417 ****
+  { IDX_2C('e','r'),        "Eritrea",                          0,0,0 },
+  { IDX_2C('e','s'),        "Spain",                            0,0,0 },
+  { IDX_2C('e','t'),        "Ethiopia",                         0,0,0 },
+  { IDX_2C('f','i'),        "Finland",                          0,0,0 },
+  { IDX_2C('f','j'),        "Fiji",                             0,0,0 },
+  { IDX_2C('f','k'),        "Falkland Islands (Malvinas)",      0,0,0 },
+! { IDX_2C('f','m'),        "Micronesia",                       0,0,0 },
+! { IDX_2C('f','o'),        "Faroe Islands",                    0,0,0 },
+! { IDX_2C('f','r'),        "France",                           0,0,0 },
+  { IDX_2C('f','x'),        "France, Metropolitan",             0,0,0 },
+  { IDX_2C('g','a'),        "Gabon",                            0,0,0 },
+  { IDX_2C('g','b'),        "Great Britain (UK)",               0,0,0 },
+  { IDX_2C('g','d'),        "Grenada",                          0,0,0 },
+  { IDX_2C('g','e'),        "Georgia",                          0,0,0 },
+  { IDX_2C('g','f'),        "French Guiana",                    0,0,0 },
+  { IDX_2C('g','h'),        "Ghana",                            0,0,0 },
+  { IDX_2C('g','i'),        "Gibraltar",                        0,0,0 },
+  { IDX_2C('g','l'),        "Greenland",                        0,0,0 },
+--- 411,430 ----
+  { IDX_2C('e','r'),        "Eritrea",                          0,0,0 },
+  { IDX_2C('e','s'),        "Spain",                            0,0,0 },
+  { IDX_2C('e','t'),        "Ethiopia",                         0,0,0 },
++ { IDX_2C('e','u'),        "Europe Region",                    0,0,0 },
+  { IDX_2C('f','i'),        "Finland",                          0,0,0 },
+  { IDX_2C('f','j'),        "Fiji",                             0,0,0 },
+  { IDX_2C('f','k'),        "Falkland Islands (Malvinas)",      0,0,0 },
+! { IDX_2C('f','m'), 	  "Micronesia, Fed. State of",        0,0,0 },
+! { IDX_2C('f','o'), 	  "Faroe Islands",		      0,0,0 },
+! { IDX_2C('f','r'), 	  "France",			      0,0,0 },
+  { IDX_2C('f','x'),        "France, Metropolitan",             0,0,0 },
+  { IDX_2C('g','a'),        "Gabon",                            0,0,0 },
+  { IDX_2C('g','b'),        "Great Britain (UK)",               0,0,0 },
+  { IDX_2C('g','d'),        "Grenada",                          0,0,0 },
+  { IDX_2C('g','e'),        "Georgia",                          0,0,0 },
+  { IDX_2C('g','f'),        "French Guiana",                    0,0,0 },
++ { IDX_2C('g','g'), 	  "Guernsey",			      0,0,0 },
+  { IDX_2C('g','h'),        "Ghana",                            0,0,0 },
+  { IDX_2C('g','i'),        "Gibraltar",                        0,0,0 },
+  { IDX_2C('g','l'),        "Greenland",                        0,0,0 },
+***************
+*** 420,432 ****
+  { IDX_2C('g','p'),        "Guadeloupe",                       0,0,0 },
+  { IDX_2C('g','q'),        "Equatorial Guinea",                0,0,0 },
+  { IDX_2C('g','r'),        "Greece",                           0,0,0 },
+! { IDX_2C('g','s'),        "S. Georgia and S. Sandwich Isls.", 0,0,0 },
+  { IDX_2C('g','t'),        "Guatemala",                        0,0,0 },
+  { IDX_2C('g','u'),        "Guam",                             0,0,0 },
+  { IDX_2C('g','w'),        "Guinea-Bissau",                    0,0,0 },
+  { IDX_2C('g','y'),        "Guyana",                           0,0,0 },
+  { IDX_2C('h','k'),        "Hong Kong",                        0,0,0 },
+! { IDX_2C('h','m'),        "Heard and McDonald Islands",       0,0,0 },
+  { IDX_2C('h','n'),        "Honduras",                         0,0,0 },
+  { IDX_2C('h','r'),        "Croatia (Hrvatska)",               0,0,0 },
+  { IDX_2C('h','t'),        "Haiti",                            0,0,0 },
+--- 433,445 ----
+  { IDX_2C('g','p'),        "Guadeloupe",                       0,0,0 },
+  { IDX_2C('g','q'),        "Equatorial Guinea",                0,0,0 },
+  { IDX_2C('g','r'),        "Greece",                           0,0,0 },
+! { IDX_2C('g','s'),        "S.Georgia &amp; S.Sandwich Isls.", 0,0,0 },
+  { IDX_2C('g','t'),        "Guatemala",                        0,0,0 },
+  { IDX_2C('g','u'),        "Guam",                             0,0,0 },
+  { IDX_2C('g','w'),        "Guinea-Bissau",                    0,0,0 },
+  { IDX_2C('g','y'),        "Guyana",                           0,0,0 },
+  { IDX_2C('h','k'),        "Hong Kong",                        0,0,0 },
+! { IDX_2C('h','m'),        "Heard &amp; McDonald Islands",     0,0,0 },
+  { IDX_2C('h','n'),        "Honduras",                         0,0,0 },
+  { IDX_2C('h','r'),        "Croatia (Hrvatska)",               0,0,0 },
+  { IDX_2C('h','t'),        "Haiti",                            0,0,0 },
+***************
+*** 434,445 ****
+  { IDX_2C('i','d'),        "Indonesia",                        0,0,0 },
+  { IDX_2C('i','e'),        "Ireland",                          0,0,0 },
+  { IDX_2C('i','l'),        "Israel",                           0,0,0 },
+  { IDX_2C('i','n'),        "India",                            0,0,0 },
+! { IDX_2C('i','o'),        "British Indian Ocean Territory",   0,0,0 },
+  { IDX_2C('i','q'),        "Iraq",                             0,0,0 },
+  { IDX_2C('i','r'),        "Iran",                             0,0,0 },
+  { IDX_2C('i','s'),        "Iceland",                          0,0,0 },
+  { IDX_2C('i','t'),        "Italy",                            0,0,0 },
+  { IDX_2C('j','m'),        "Jamaica",                          0,0,0 },
+  { IDX_2C('j','o'),        "Jordan",                           0,0,0 },
+  { IDX_2C('j','p'),        "Japan",                            0,0,0 },
+--- 447,460 ----
+  { IDX_2C('i','d'),        "Indonesia",                        0,0,0 },
+  { IDX_2C('i','e'),        "Ireland",                          0,0,0 },
+  { IDX_2C('i','l'),        "Israel",                           0,0,0 },
++ { IDX_2C('i','m'), 	  "Isle of Man",		      0,0,0 },
+  { IDX_2C('i','n'),        "India",                            0,0,0 },
+! { IDX_2C('i','o'),        "British Indian Ocean Terr.",	      0,0,0 },
+  { IDX_2C('i','q'),        "Iraq",                             0,0,0 },
+  { IDX_2C('i','r'),        "Iran",                             0,0,0 },
+  { IDX_2C('i','s'),        "Iceland",                          0,0,0 },
+  { IDX_2C('i','t'),        "Italy",                            0,0,0 },
++ { IDX_2C('j','e'), 	  "Jersey",			      0,0,0 },
+  { IDX_2C('j','m'),        "Jamaica",                          0,0,0 },
+  { IDX_2C('j','o'),        "Jordan",                           0,0,0 },
+  { IDX_2C('j','p'),        "Japan",                            0,0,0 },
+***************
+*** 448,459 ****
+  { IDX_2C('k','h'),        "Cambodia",                         0,0,0 },
+  { IDX_2C('k','i'),        "Kiribati",                         0,0,0 },
+  { IDX_2C('k','m'),        "Comoros",                          0,0,0 },
+! { IDX_2C('k','n'),        "Saint Kitts and Nevis",            0,0,0 },
+  { IDX_2C('k','p'),        "Korea (North)",                    0,0,0 },
+  { IDX_2C('k','r'),        "Korea (South)",                    0,0,0 },
+  { IDX_2C('k','w'),        "Kuwait",                           0,0,0 },
+  { IDX_2C('k','y'),        "Cayman Islands",                   0,0,0 },
+  { IDX_2C('k','z'),        "Kazakhstan",                       0,0,0 },
+  { IDX_2C('l','a'),        "Laos",                             0,0,0 },
+  { IDX_2C('l','b'),        "Lebanon",                          0,0,0 },
+  { IDX_2C('l','c'),        "Saint Lucia",                      0,0,0 },
+--- 463,475 ----
+  { IDX_2C('k','h'),        "Cambodia",                         0,0,0 },
+  { IDX_2C('k','i'),        "Kiribati",                         0,0,0 },
+  { IDX_2C('k','m'),        "Comoros",                          0,0,0 },
+! { IDX_2C('k','n'),        "Saint Kitts &amp; Nevis",          0,0,0 },
+  { IDX_2C('k','p'),        "Korea (North)",                    0,0,0 },
+  { IDX_2C('k','r'),        "Korea (South)",                    0,0,0 },
+  { IDX_2C('k','w'),        "Kuwait",                           0,0,0 },
+  { IDX_2C('k','y'),        "Cayman Islands",                   0,0,0 },
+  { IDX_2C('k','z'),        "Kazakhstan",                       0,0,0 },
++ { IDX_2C('l','a'), 	  "Lao People's Dem. Rep.",	      0,0,0 },
+  { IDX_2C('l','a'),        "Laos",                             0,0,0 },
+  { IDX_2C('l','b'),        "Lebanon",                          0,0,0 },
+  { IDX_2C('l','c'),        "Saint Lucia",                      0,0,0 },
+***************
+*** 464,481 ****
+  { IDX_2C('l','t'),        "Lithuania",                        0,0,0 },
+  { IDX_2C('l','u'),        "Luxembourg",                       0,0,0 },
+  { IDX_2C('l','v'),        "Latvia",                           0,0,0 },
+! { IDX_2C('l','y'),        "Libya",                            0,0,0 },
+  { IDX_2C('m','a'),        "Morocco",                          0,0,0 },
+  { IDX_2C('m','c'),        "Monaco",                           0,0,0 },
+! { IDX_2C('m','d'),        "Moldova",                          0,0,0 },
+! { IDX_2C('m','g'),        "Madagascar",                       0,0,0 },
+! { IDX_2C('m','h'),        "Marshall Islands",                 0,0,0 },
+! { IDX_2C('m','k'),        "Macedonia",                        0,0,0 },
+! { IDX_2C('m','l'),        "Mali",                             0,0,0 },
+! { IDX_2C('m','m'),        "Myanmar",                          0,0,0 },
+! { IDX_2C('m','n'),        "Mongolia",                         0,0,0 },
+! { IDX_2C('m','o'),        "Macau",                            0,0,0 },
+! { IDX_2C('m','p'),        "Northern Mariana Islands",         0,0,0 },
+  { IDX_2C('m','q'),        "Martinique",                       0,0,0 },
+  { IDX_2C('m','r'),        "Mauritania",                       0,0,0 },
+  { IDX_2C('m','s'),        "Montserrat",                       0,0,0 },
+--- 480,497 ----
+  { IDX_2C('l','t'),        "Lithuania",                        0,0,0 },
+  { IDX_2C('l','u'),        "Luxembourg",                       0,0,0 },
+  { IDX_2C('l','v'),        "Latvia",                           0,0,0 },
+! { IDX_2C('l','y'), 	  "Libyan Arab Jamahiriya",	      0,0,0 },
+  { IDX_2C('m','a'),        "Morocco",                          0,0,0 },
+  { IDX_2C('m','c'),        "Monaco",                           0,0,0 },
+! { IDX_2C('m','d'), 	  "Moldova, Republic of",	      0,0,0 },
+! { IDX_2C('m','g'), 	  "Madagascar",			      0,0,0 },
+! { IDX_2C('m','h'), 	  "Marshall Islands",		      0,0,0 },
+! { IDX_2C('m','k'), 	  "Macedonia, Republic of",	      0,0,0 },
+! { IDX_2C('m','l'), 	  "Mali",			      0,0,0 },
+! { IDX_2C('m','m'), 	  "Burma (Myanmar)",		      0,0,0 },
+! { IDX_2C('m','n'), 	  "Mongolia",			      0,0,0 },
+! { IDX_2C('m','o'), 	  "Macau",			      0,0,0 },
+! { IDX_2C('m','p'), 	  "Northern Mariana Islands",	      0,0,0 },
+  { IDX_2C('m','q'),        "Martinique",                       0,0,0 },
+  { IDX_2C('m','r'),        "Mauritania",                       0,0,0 },
+  { IDX_2C('m','s'),        "Montserrat",                       0,0,0 },
+***************
+*** 498,504 ****
+  { IDX_2C('n','r'),        "Nauru",                            0,0,0 },
+  { IDX_2C('n','t'),        "Neutral Zone",                     0,0,0 },
+  { IDX_2C('n','u'),        "Niue",                             0,0,0 },
+! { IDX_2C('n','z'),        "New Zealand (Aotearoa)",           0,0,0 },
+  { IDX_2C('o','m'),        "Oman",                             0,0,0 },
+  { IDX_2C('p','a'),        "Panama",                           0,0,0 },
+  { IDX_2C('p','e'),        "Peru",                             0,0,0 },
+--- 514,520 ----
+  { IDX_2C('n','r'),        "Nauru",                            0,0,0 },
+  { IDX_2C('n','t'),        "Neutral Zone",                     0,0,0 },
+  { IDX_2C('n','u'),        "Niue",                             0,0,0 },
+! { IDX_2C('n','z'), 	  "New Zealand",		      0,0,0 },
+  { IDX_2C('o','m'),        "Oman",                             0,0,0 },
+  { IDX_2C('p','a'),        "Panama",                           0,0,0 },
+  { IDX_2C('p','e'),        "Peru",                             0,0,0 },
+***************
+*** 507,580 ****
+  { IDX_2C('p','h'),        "Philippines",                      0,0,0 },
+  { IDX_2C('p','k'),        "Pakistan",                         0,0,0 },
+  { IDX_2C('p','l'),        "Poland",                           0,0,0 },
+! { IDX_2C('p','m'),        "St. Pierre and Miquelon",          0,0,0 },
+! { IDX_2C('p','n'),        "Pitcairn",                         0,0,0 },
+! { IDX_2C('p','r'),        "Puerto Rico",                      0,0,0 },
+  { IDX_2C('p','t'),        "Portugal",                         0,0,0 },
+  { IDX_2C('p','w'),        "Palau",                            0,0,0 },
+  { IDX_2C('p','y'),        "Paraguay",                         0,0,0 },
+  { IDX_2C('q','a'),        "Qatar",                            0,0,0 },
+! { IDX_2C('r','e'),        "Reunion",                          0,0,0 },
+! { IDX_2C('r','o'),        "Romania",                          0,0,0 },
+! { IDX_2C('r','u'),        "Russian Federation",               0,0,0 },
+! { IDX_2C('r','w'),        "Rwanda",                           0,0,0 },
+  { IDX_2C('s','a'),        "Saudi Arabia",                     0,0,0 },
+! { IDX_2C('s','B'),        "Solomon Islands",                  0,0,0 },
+  { IDX_2C('s','c'),        "Seychelles",                       0,0,0 },
+  { IDX_2C('s','d'),        "Sudan",                            0,0,0 },
+  { IDX_2C('s','e'),        "Sweden",                           0,0,0 },
+  { IDX_2C('s','g'),        "Singapore",                        0,0,0 },
+  { IDX_2C('s','h'),        "St. Helena",                       0,0,0 },
+  { IDX_2C('s','i'),        "Slovenia",                         0,0,0 },
+! { IDX_2C('s','j'),        "Svalbard and Jan Mayen Islands",   0,0,0 },
+  { IDX_2C('s','k'),        "Slovak Republic",                  0,0,0 },
+  { IDX_2C('s','l'),        "Sierra Leone",                     0,0,0 },
+  { IDX_2C('s','m'),        "San Marino",                       0,0,0 },
+  { IDX_2C('s','n'),        "Senegal",                          0,0,0 },
+  { IDX_2C('s','o'),        "Somalia",                          0,0,0 },
+  { IDX_2C('s','r'),        "Suriname",                         0,0,0 },
+! { IDX_2C('s','t'),        "Sao Tome and Principe",            0,0,0 },
+  { IDX_2C('s','u'),        "USSR (former)",                    0,0,0 },
+  { IDX_2C('s','v'),        "El Salvador",                      0,0,0 },
+! { IDX_2C('s','y'),        "Syria",                            0,0,0 },
+  { IDX_2C('s','z'),        "Swaziland",                        0,0,0 },
+! { IDX_2C('t','c'),        "Turks and Caicos Islands",         0,0,0 },
+! { IDX_2C('t','d'),        "Chad",                             0,0,0 },
+! { IDX_2C('t','f'),        "French Southern Territories",      0,0,0 },
+! { IDX_2C('t','g'),        "Togo",                             0,0,0 },
+! { IDX_2C('t','h'),        "Thailand",                         0,0,0 },
+! { IDX_2C('t','j'),        "Tajikistan",                       0,0,0 },
+! { IDX_2C('t','k'),        "Tokelau",                          0,0,0 },
+! { IDX_2C('t','m'),        "Turkmenistan",                     0,0,0 },
+! { IDX_2C('t','n'),        "Tunisia",                          0,0,0 },
+! { IDX_2C('t','o'),        "Tonga",                            0,0,0 },
+! { IDX_2C('t','p'),        "East Timor",                       0,0,0 },
+! { IDX_2C('t','r'),        "Turkey",                           0,0,0 },
+! { IDX_2C('t','t'),        "Trinidad and Tobago",              0,0,0 },
+! { IDX_2C('t','v'),        "Tuvalu",                           0,0,0 },
+! { IDX_2C('t','w'),        "Taiwan",                           0,0,0 },
+! { IDX_2C('t','z'),        "Tanzania",                         0,0,0 },
+! { IDX_2C('u','a'),        "Ukraine",                          0,0,0 },
+! { IDX_2C('u','g'),        "Uganda",                           0,0,0 },
+! { IDX_2C('u','k'),        "United Kingdom",                   0,0,0 },
+! { IDX_2C('u','m'),        "US Minor Outlying Islands",        0,0,0 },
+! { IDX_2C('u','s'),        "United States",                    0,0,0 },
+! { IDX_2C('u','y'),        "Uruguay",                          0,0,0 },
+! { IDX_2C('u','z'),        "Uzbekistan",                       0,0,0 },
+! { IDX_2C('v','a'),        "Vatican City State (Holy See)",    0,0,0 },
+! { IDX_2C('v','c'),        "Saint Vincent and the Grenadines", 0,0,0 },
+  { IDX_2C('v','e'),        "Venezuela",                        0,0,0 },
+! { IDX_2C('v','g'),        "Virgin Islands (British)",         0,0,0 },
+! { IDX_2C('v','i'),        "Virgin Islands (U.S.)",            0,0,0 },
+! { IDX_2C('v','n'),        "Viet Nam",                         0,0,0 },
+  { IDX_2C('v','u'),        "Vanuatu",                          0,0,0 },
+! { IDX_2C('w','f'),        "Wallis and Futuna Islands",        0,0,0 },
+  { IDX_2C('w','s'),        "Samoa",                            0,0,0 },
+! { IDX_2C('y','e'),        "Yemen",                            0,0,0 },
+! { IDX_2C('y','t'),        "Mayotte",                          0,0,0 },
+! { IDX_2C('y','u'),        "Yugoslavia",                       0,0,0 },
+! { IDX_2C('z','a'),        "South Africa",                     0,0,0 },
+! { IDX_2C('z','m'),        "Zambia",                           0,0,0 },
+  { IDX_2C('z','r'),        "Zaire",                            0,0,0 },
+! { IDX_2C('z','w'),        "Zimbabwe",                         0,0,0 },
+  { 0              ,        NULL,                               0,0,0 }};
+--- 523,597 ----
+  { IDX_2C('p','h'),        "Philippines",                      0,0,0 },
+  { IDX_2C('p','k'),        "Pakistan",                         0,0,0 },
+  { IDX_2C('p','l'),        "Poland",                           0,0,0 },
+! { IDX_2C('p','m'),        "St. Pierre &amp; Miquelon",        0,0,0 },
+! { IDX_2C('p','n'), 	  "Pitcairn Island",		      0,0,0 },
+! { IDX_2C('p','r'), 	  "Puerto Rico",		      0,0,0 },
+! { IDX_2C('p','s'), 	  "Palestinian Territories",	      0,0,0 },
+  { IDX_2C('p','t'),        "Portugal",                         0,0,0 },
+  { IDX_2C('p','w'),        "Palau",                            0,0,0 },
+  { IDX_2C('p','y'),        "Paraguay",                         0,0,0 },
+  { IDX_2C('q','a'),        "Qatar",                            0,0,0 },
+! { IDX_2C('r','e'), 	  "Reunion Island",		      0,0,0 },
+! { IDX_2C('r','o'), 	  "Romania",			      0,0,0 },
+! { IDX_2C('r','u'), 	  "Russian Federation",		      0,0,0 },
+! { IDX_2C('r','w'), 	  "Rwanda",			      0,0,0 },
+  { IDX_2C('s','a'),        "Saudi Arabia",                     0,0,0 },
+! { IDX_2C('s','b'),        "Solomon Islands",                  0,0,0 },
+  { IDX_2C('s','c'),        "Seychelles",                       0,0,0 },
+  { IDX_2C('s','d'),        "Sudan",                            0,0,0 },
+  { IDX_2C('s','e'),        "Sweden",                           0,0,0 },
+  { IDX_2C('s','g'),        "Singapore",                        0,0,0 },
+  { IDX_2C('s','h'),        "St. Helena",                       0,0,0 },
+  { IDX_2C('s','i'),        "Slovenia",                         0,0,0 },
+! { IDX_2C('s','j'),        "Svalbard &amp; Jan Mayen Isls.",   0,0,0 },
+  { IDX_2C('s','k'),        "Slovak Republic",                  0,0,0 },
+  { IDX_2C('s','l'),        "Sierra Leone",                     0,0,0 },
+  { IDX_2C('s','m'),        "San Marino",                       0,0,0 },
+  { IDX_2C('s','n'),        "Senegal",                          0,0,0 },
+  { IDX_2C('s','o'),        "Somalia",                          0,0,0 },
+  { IDX_2C('s','r'),        "Suriname",                         0,0,0 },
+! { IDX_2C('s','t'),        "Sao Tome &amp; Principe",          0,0,0 },
+  { IDX_2C('s','u'),        "USSR (former)",                    0,0,0 },
+  { IDX_2C('s','v'),        "El Salvador",                      0,0,0 },
+! { IDX_2C('s','y'), 	  "Syrian Arab Republic",	      0,0,0 },
+  { IDX_2C('s','z'),        "Swaziland",                        0,0,0 },
+! { IDX_2C('t','c'), 	  "Turks &amp; Caicos Islands",	      0,0,0 },
+! { IDX_2C('t','d'), 	  "Chad",			      0,0,0 },
+! { IDX_2C('t','f'), 	  "French Southern Territories",      0,0,0 },
+! { IDX_2C('t','g'), 	  "Togo",			      0,0,0 },
+! { IDX_2C('t','h'), 	  "Thailand",			      0,0,0 },
+! { IDX_2C('t','j'), 	  "Tajikistan",			      0,0,0 },
+! { IDX_2C('t','k'), 	  "Tokelau",			      0,0,0 },
+! { IDX_2C('t','m'), 	  "Turkmenistan",		      0,0,0 },
+! { IDX_2C('t','n'), 	  "Tunisia",			      0,0,0 },
+! { IDX_2C('t','o'), 	  "Tonga",			      0,0,0 },
+! { IDX_2C('t','p'), 	  "East Timor",			      0,0,0 },
+! { IDX_2C('t','r'), 	  "Turkey",			      0,0,0 },
+! { IDX_2C('t','t'), 	  "Trinidad &amp; Tobago",	      0,0,0 },
+! { IDX_2C('t','v'), 	  "Tuvalu",			      0,0,0 },
+! { IDX_2C('t','w'), 	  "Taiwan",			      0,0,0 },
+! { IDX_2C('t','z'), 	  "Tanzania",			      0,0,0 },
+! { IDX_2C('u','a'), 	  "Ukraine",			      0,0,0 },
+! { IDX_2C('u','g'), 	  "Uganda",			      0,0,0 },
+! { IDX_2C('u','k'), 	  "United Kingdom",		      0,0,0 },
+! { IDX_2C('u','m'), 	  "US Minor Outlying Islands",	      0,0,0 },
+! { IDX_2C('u','s'), 	  "United States",		      0,0,0 },
+! { IDX_2C('u','y'), 	  "Uruguay",			      0,0,0 },
+! { IDX_2C('u','z'), 	  "Uzbekistan",			      0,0,0 },
+! { IDX_2C('v','a'),        "Holy See (Vatican City)",	      0,0,0 },
+! { IDX_2C('v','c'),        "Saint Vincent &amp; the Grenadines", 0,0,0 },
+  { IDX_2C('v','e'),        "Venezuela",                        0,0,0 },
+! { IDX_2C('v','g'),        "Virgin Islands (UK)",              0,0,0 },
+! { IDX_2C('v','i'), 	  "Virgin Islands (US)",	      0,0,0 },
+! { IDX_2C('v','n'), 	  "Vietnam",			      0,0,0 },
+  { IDX_2C('v','u'),        "Vanuatu",                          0,0,0 },
+! { IDX_2C('w','f'),        "Wallis &amp; Futuna Islands",      0,0,0 },
+  { IDX_2C('w','s'),        "Samoa",                            0,0,0 },
+! { IDX_2C('y','e'), 	  "Yemen",			      0,0,0 },
+! { IDX_2C('y','t'), 	  "Mayotte",			      0,0,0 },
+! { IDX_2C('y','u'), 	  "Yugoslavia",			      0,0,0 },
+! { IDX_2C('z','a'), 	  "South Africa",		      0,0,0 },
+! { IDX_2C('z','m'), 	  "Zambia",			      0,0,0 },
+  { IDX_2C('z','r'),        "Zaire",                            0,0,0 },
+! { IDX_2C('z','w'), 	  "Zimbabwe",			      0,0,0 },
+  { 0              ,        NULL,                               0,0,0 }};
+*** ./Install-OSR6.osr6	Sun Feb 12 12:00:39 2006
+--- ./Install-OSR6	Sun Feb 12 12:00:39 2006
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ DEST=/u/tmp/webalizer
++ 
++ [ -d $DEST ] && rm -rf $DEST
++ mkdir -p $DEST/usr/bin
++ mkdir -p $DEST/usr/man/man1
++ mkdir -p $DEST/etc
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT.prev
++ make install \
++      prefix=$DEST/usr ETCDIR=$DEST/etc \
++      2>&1 | tee $MOUT
+*** ./Makefile.in.osr6	Mon Oct 16 21:15:53 2000
+--- ./Makefile.in	Sun Feb 12 12:00:57 2006
+***************
+*** 23,29 ****
+  MANDIR = @mandir@/man1
+  ETCDIR = @ETCDIR@
+  CC     = @CC@
+! CFLAGS = @CFLAGS@
+  LIBS   = @LIBS@
+  DEFS   = -DETCDIR=\"@ETCDIR@\" @DEFS@ @OPTS@
+  LDFLAGS= @LDFLAGS@
+--- 23,29 ----
+  MANDIR = @mandir@/man1
+  ETCDIR = @ETCDIR@
+  CC     = @CC@
+! CFLAGS = @CFLAGS@ -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+  LIBS   = @LIBS@
+  DEFS   = -DETCDIR=\"@ETCDIR@\" @DEFS@ @OPTS@
+  LDFLAGS= @LDFLAGS@
+*** ./Makefile.std.osr6	Mon Oct 16 21:15:53 2000
+--- ./Makefile.std	Sun Feb 12 12:00:57 2006
+***************
+*** 24,30 ****
+  MANDIR = ${prefix}/man/man1
+  ETCDIR = /etc
+  CC     = gcc
+! CFLAGS = -Wall -O2
+  LIBS   = -lgd -lpng -lz -lm
+  LDFLAGS= -L/usr/local/lib
+  
+--- 24,30 ----
+  MANDIR = ${prefix}/man/man1
+  ETCDIR = /etc
+  CC     = gcc
+! CFLAGS = -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+  LIBS   = -lgd -lpng -lz -lm
+  LDFLAGS= -L/usr/local/lib
+  
+*** ./country-codes.txt.osr6	Thu Sep 28 20:49:25 2000
+--- ./country-codes.txt	Sun Feb 12 12:00:57 2006
+***************
+*** 1,7 ****
+  AD   Andorra
+  AE   United Arab Emirates
+  AF   Afghanistan
+! AG   Antigua and Barbuda
+  AI   Anguilla
+  AL   Albania
+  AM   Armenia
+--- 1,8 ----
++ AC   Ascension Island
+  AD   Andorra
+  AE   United Arab Emirates
+  AF   Afghanistan
+! AG   Antigua &amp; Barbuda
+  AI   Anguilla
+  AL   Albania
+  AM   Armenia
+***************
+*** 14,20 ****
+  AU   Australia
+  AW   Aruba
+  AZ   Azerbaijan
+! BA   Bosnia and Herzegovina
+  BB   Barbados
+  BD   Bangladesh
+  BE   Belgium
+--- 15,21 ----
+  AU   Australia
+  AW   Aruba
+  AZ   Azerbaijan
+! BA   Bosnia &amp; Herzegovina
+  BB   Barbados
+  BD   Bangladesh
+  BE   Belgium
+***************
+*** 35,44 ****
+  BZ   Belize
+  CA   Canada
+  CC   Cocos (Keeling) Islands
+  CF   Central African Republic
+! CG   Congo
+  CH   Switzerland
+! CI   Cote D'Ivoire (Ivory Coast)
+  CK   Cook Islands
+  CL   Chile
+  CM   Cameroon
+--- 36,46 ----
+  BZ   Belize
+  CA   Canada
+  CC   Cocos (Keeling) Islands
++ CD   Congo, Dem. Rep. of the
+  CF   Central African Republic
+! CG   Congo, Republic of
+  CH   Switzerland
+! CI   Cote D'Ivoire
+  CK   Cook Islands
+  CL   Chile
+  CM   Cameroon
+***************
+*** 67,73 ****
+  FI   Finland
+  FJ   Fiji
+  FK   Falkland Islands (Malvinas)
+! FM   Micronesia
+  FO   Faroe Islands
+  FR   France
+  FX   France, Metropolitan
+--- 69,75 ----
+  FI   Finland
+  FJ   Fiji
+  FK   Falkland Islands (Malvinas)
+! FM   Micronesia, Fed. State of
+  FO   Faroe Islands
+  FR   France
+  FX   France, Metropolitan
+***************
+*** 76,81 ****
+--- 78,84 ----
+  GD   Grenada
+  GE   Georgia
+  GF   French Guiana
++ GG   Guernsey
+  GH   Ghana
+  GI   Gibraltar
+  GL   Greenland
+***************
+*** 84,96 ****
+  GP   Guadeloupe
+  GQ   Equatorial Guinea
+  GR   Greece
+! GS   S. Georgia and S. Sandwich Isls.
+  GT   Guatemala
+  GU   Guam
+  GW   Guinea-Bissau
+  GY   Guyana
+  HK   Hong Kong
+! HM   Heard and McDonald Islands
+  HN   Honduras
+  HR   Croatia (Hrvatska)
+  HT   Haiti
+--- 87,99 ----
+  GP   Guadeloupe
+  GQ   Equatorial Guinea
+  GR   Greece
+! GS   S.Georgia &amp; S.Sandwich Isls.
+  GT   Guatemala
+  GU   Guam
+  GW   Guinea-Bissau
+  GY   Guyana
+  HK   Hong Kong
+! HM   Heard &amp; McDonald Islands
+  HN   Honduras
+  HR   Croatia (Hrvatska)
+  HT   Haiti
+***************
+*** 98,109 ****
+  ID   Indonesia
+  IE   Ireland
+  IL   Israel
+  IN   India
+! IO   British Indian Ocean Territory
+  IQ   Iraq
+  IR   Iran
+  IS   Iceland
+  IT   Italy
+  JM   Jamaica
+  JO   Jordan
+  JP   Japan
+--- 101,114 ----
+  ID   Indonesia
+  IE   Ireland
+  IL   Israel
++ IM   Isle of Man
+  IN   India
+! IO   British Indian Ocean Terr.
+  IQ   Iraq
+  IR   Iran
+  IS   Iceland
+  IT   Italy
++ JE   Jersey
+  JM   Jamaica
+  JO   Jordan
+  JP   Japan
+***************
+*** 112,123 ****
+  KH   Cambodia
+  KI   Kiribati
+  KM   Comoros
+! KN   Saint Kitts and Nevis
+  KP   Korea (North)
+  KR   Korea (South)
+  KW   Kuwait
+  KY   Cayman Islands
+  KZ   Kazakhstan
+  LA   Laos
+  LB   Lebanon
+  LC   Saint Lucia
+--- 117,129 ----
+  KH   Cambodia
+  KI   Kiribati
+  KM   Comoros
+! KN   Saint Kitts &amp; Nevis
+  KP   Korea (North)
+  KR   Korea (South)
+  KW   Kuwait
+  KY   Cayman Islands
+  KZ   Kazakhstan
++ LA   Lao People's Dem. Republic
+  LA   Laos
+  LB   Lebanon
+  LC   Saint Lucia
+***************
+*** 128,142 ****
+  LT   Lithuania
+  LU   Luxembourg
+  LV   Latvia
+! LY   Libya
+  MA   Morocco
+  MC   Monaco
+! MD   Moldova
+  MG   Madagascar
+  MH   Marshall Islands
+! MK   Macedonia
+  ML   Mali
+! MM   Myanmar
+  MN   Mongolia
+  MO   Macau
+  MP   Northern Mariana Islands
+--- 134,148 ----
+  LT   Lithuania
+  LU   Luxembourg
+  LV   Latvia
+! LY   Libyan Arab Jamahiriya
+  MA   Morocco
+  MC   Monaco
+! MD   Moldova, Republic of
+  MG   Madagascar
+  MH   Marshall Islands
+! MK   Macedonia, Republic of
+  ML   Mali
+! MM   Burma (Myanmar)
+  MN   Mongolia
+  MO   Macau
+  MP   Northern Mariana Islands
+***************
+*** 162,168 ****
+  NR   Nauru
+  NT   Neutral Zone
+  NU   Niue
+! NZ   New Zealand (Aotearoa)
+  OM   Oman
+  PA   Panama
+  PE   Peru
+--- 168,174 ----
+  NR   Nauru
+  NT   Neutral Zone
+  NU   Niue
+! NZ   New Zealand
+  OM   Oman
+  PA   Panama
+  PE   Peru
+***************
+*** 171,208 ****
+  PH   Philippines
+  PK   Pakistan
+  PL   Poland
+! PM   St. Pierre and Miquelon
+! PN   Pitcairn
+  PR   Puerto Rico
+  PT   Portugal
+  PW   Palau
+  PY   Paraguay
+  QA   Qatar
+! RE   Reunion
+  RO   Romania
+  RU   Russian Federation
+  RW   Rwanda
+  SA   Saudi Arabia
+! Sb   Solomon Islands
+  SC   Seychelles
+  SD   Sudan
+  SE   Sweden
+  SG   Singapore
+  SH   St. Helena
+  SI   Slovenia
+! SJ   Svalbard and Jan Mayen Islands
+  SK   Slovak Republic
+  SL   Sierra Leone
+  SM   San Marino
+  SN   Senegal
+  SO   Somalia
+  SR   Suriname
+! ST   Sao Tome and Principe
+  SU   USSR (former)
+  SV   El Salvador
+! SY   Syria
+  SZ   Swaziland
+! TC   Turks and Caicos Islands
+  TD   Chad
+  TF   French Southern Territories
+  TG   Togo
+--- 177,215 ----
+  PH   Philippines
+  PK   Pakistan
+  PL   Poland
+! PM   St. Pierre &amp; Miquelon
+! PN   Pitcairn Island
+  PR   Puerto Rico
++ PS   Palestinian Territories
+  PT   Portugal
+  PW   Palau
+  PY   Paraguay
+  QA   Qatar
+! RE   Reunion Island
+  RO   Romania
+  RU   Russian Federation
+  RW   Rwanda
+  SA   Saudi Arabia
+! SB   Solomon Islands
+  SC   Seychelles
+  SD   Sudan
+  SE   Sweden
+  SG   Singapore
+  SH   St. Helena
+  SI   Slovenia
+! SJ   Svalbard &amp; Jan Mayen Isls.
+  SK   Slovak Republic
+  SL   Sierra Leone
+  SM   San Marino
+  SN   Senegal
+  SO   Somalia
+  SR   Suriname
+! ST   Sao Tome &amp; Principe
+  SU   USSR (former)
+  SV   El Salvador
+! SY   Syrian Arab Republic
+  SZ   Swaziland
+! TC   Turks &amp; Caicos Islands
+  TD   Chad
+  TF   French Southern Territories
+  TG   Togo
+***************
+*** 214,220 ****
+  TO   Tonga
+  TP   East Timor
+  TR   Turkey
+! TT   Trinidad and Tobago
+  TV   Tuvalu
+  TW   Taiwan
+  TZ   Tanzania
+--- 221,227 ----
+  TO   Tonga
+  TP   East Timor
+  TR   Turkey
+! TT   Trinidad &amp; Tobago
+  TV   Tuvalu
+  TW   Taiwan
+  TZ   Tanzania
+***************
+*** 225,238 ****
+  US   United States
+  UY   Uruguay
+  UZ   Uzbekistan
+! VA   Vatican City State (Holy See)
+! VC   Saint Vincent and the Grenadines
+  VE   Venezuela
+! VG   Virgin Islands (British)
+! VI   Virgin Islands (U.S.)
+! VN   Viet Nam
+  VU   Vanuatu
+! WF   Wallis and Futuna Islands
+  WS   Samoa
+  YE   Yemen
+  YT   Mayotte
+--- 232,245 ----
+  US   United States
+  UY   Uruguay
+  UZ   Uzbekistan
+! VA   Holy See (Vatican City)
+! VC   Saint Vincent &amp; the Grenadines
+  VE   Venezuela
+! VG   Virgin Islands (UK)
+! VI   Virgin Islands (US)
+! VN   Vietnam
+  VU   Vanuatu
+! WF   Wallis &amp; Futuna Islands
+  WS   Samoa
+  YE   Yemen
+  YT   Mayotte
+***************
+*** 241,252 ****
+  ZM   Zambia
+  ZR   Zaire
+  ZW   Zimbabwe
+! COM   US Commercial
+! EDU   US Educational
+! GOV   US Government
+! INT   International
+! MIL   US Military
+! NET   Network
+! ORG   Non-Profit Organization
+! ARPA   Old style Arpanet
+! NATO   Nato field
+--- 248,267 ----
+  ZM   Zambia
+  ZR   Zaire
+  ZW   Zimbabwe
+! BIZ   Business (biz)
+! COM   Commercial (com)
+! EDU   Educational (edu)
+! GOV   US Government (gov)
+! INT   International (int)
+! MIL   US Military (mil)
+! NET   Network (net)
+! ORG   Non-Profit Organization (org)
+! PRO   Professional firm (pro)
+! ARPA   Old style Arpanet (arpa)
+! INFO   Information (info)
+! NAME   Family name (name)
+! NATO   Nato field (nato)
+! A1   Anonymous Proxy
+! A2   Satellite Provider
+! AP   Asia/Pacific Region
+! EU   Europe Region
+*** ./dns_resolv.h.osr6	Thu Sep 28 20:51:02 2000
+--- ./dns_resolv.h	Sun Feb 12 12:00:57 2006
+***************
+*** 33,39 ****
+  #define DNS_CHILD_RUNNING 0x2
+  
+  #define MAXCHILD          100         /* Maximum number of DNS children     */
+! #define DNS_CACHE_TTL     86400*3     /* TTL of an Entry in the DNS cache   */
+  
+  #endif  /* USE_DNS */
+  #endif  /* _DNS_RESOLV_H */
+--- 33,39 ----
+  #define DNS_CHILD_RUNNING 0x2
+  
+  #define MAXCHILD          100         /* Maximum number of DNS children     */
+! #define DNS_CACHE_TTL     86400*32    /* TTL of an Entry in the DNS cache   */
+  
+  #endif  /* USE_DNS */
+  #endif  /* _DNS_RESOLV_H */
+*** ./output.c.osr6	Sun Feb 12 12:04:24 2006
+--- ./output.c	Sun Feb 12 12:05:43 2006
+***************
+*** 2416,2428 ****
+     int  i,days_in_month;
+     int  lyear=0;
+     int	s_mth=0;
+!    double  gt_hit=0.0;
+!    double  gt_files=0.0;
+!    double  gt_pages=0.0;
+!    double  gt_xfer=0.0;
+!    double  gt_visits=0.0;
+     char    index_fname[256];
+     char    buffer[BUFSIZE];
+  
+     if (verbose>1) printf("%s\n",msg_gen_sum);
+  
+--- 2416,2430 ----
+     int  i,days_in_month;
+     int  lyear=0;
+     int	s_mth=0;
+!    u_int64_t  gt_hit=0;
+!    u_int64_t  gt_files=0;
+!    u_int64_t  gt_pages=0;
+!    u_int64_t  gt_xfer=0;
+!    u_int64_t  gt_visits=0;
+     char    index_fname[256];
+     char    buffer[BUFSIZE];
++    int	earliest_month = 0;	/* earliest month in the 1st 12 month summary */
++    int	earliest_year = 0;	/* earliest month in the 1st 12 year summary */
+  
+     if (verbose>1) printf("%s\n",msg_gen_sum);
+  
+***************
+*** 2497,2502 ****
+--- 2499,2506 ----
+     fprintf(out_fp,"<TH ALIGN=center BGCOLOR=\"%s\">"                      \
+            "<FONT SIZE=\"-1\">%s</FONT></TH></TR>\n",DKGREEN,msg_h_hits);
+     fprintf(out_fp,"<TR><TH HEIGHT=4></TH></TR>\n");
++ 
++    /* output up to the most recent 12 months */
+     for (i=0;i<12;i++)
+     {
+        if (--s_mth < 0) s_mth = 11;
+***************
+*** 2531,2555 ****
+        gt_pages += hist_page[s_mth];
+        gt_xfer  += hist_xfer[s_mth];
+        gt_visits+= hist_visit[s_mth];
+     }
+!    fprintf(out_fp,"<TR><TH HEIGHT=4></TH></TR>\n");
+!    fprintf(out_fp,"<TR><TH BGCOLOR=\"%s\" COLSPAN=6 ALIGN=left>"          \
+!           "<FONT SIZE=\"-1\">%s</FONT></TH>\n",GREY,msg_h_totals);
+!    fprintf(out_fp,"<TH BGCOLOR=\"%s\" ALIGN=right>"                       \
+!           "<FONT SIZE=\"-1\">%.0f</FONT></TH>\n",GREY,gt_xfer);
+!    fprintf(out_fp,"<TH BGCOLOR=\"%s\" ALIGN=right>"                       \
+!           "<FONT SIZE=\"-1\">%.0f</FONT></TH>\n",GREY,gt_visits);
+!    fprintf(out_fp,"<TH BGCOLOR=\"%s\" ALIGN=right>"                       \
+!           "<FONT SIZE=\"-1\">%.0f</FONT></TH>\n",GREY,gt_pages);
+!    fprintf(out_fp,"<TH BGCOLOR=\"%s\" ALIGN=right>"                       \
+!           "<FONT SIZE=\"-1\">%.0f</FONT></TH>\n",GREY,gt_files);
+!    fprintf(out_fp,"<TH BGCOLOR=\"%s\" ALIGN=right>"                       \
+!           "<FONT SIZE=\"-1\">%.0f</FONT></TH></TR>\n",GREY,gt_hit);
+!    fprintf(out_fp,"<TR><TH HEIGHT=4></TH></TR>\n");
+!    fprintf(out_fp,"</TABLE>\n");
+!    write_html_tail(out_fp);
+!    fclose(out_fp);
+!    return 0;
+  }
+  
+  /*********************************************/
+--- 2535,2730 ----
+        gt_pages += hist_page[s_mth];
+        gt_xfer  += hist_xfer[s_mth];
+        gt_visits+= hist_visit[s_mth];
++       /* remember the oldest month we processed */
++       earliest_month = hist_month[s_mth];
++       earliest_year = hist_year[s_mth];
+     }
+! 
+!    /* output HTML for any older months in the summary file */
+!    {
+!    	FILE *sumfile;		/* open history summary file */
+! 	char inbuf[BUFSIZ+1];	/* input buffer */
+! 	int summary_year;	/* year of summary as yyyy */
+! 	int summary_month;	/* month of summary as 2 digit number */
+! 	char summary_mname[BUFSIZ+1];	/* month of summary as 3 char name */
+! 	char summary_path[BUFSIZ+1];	/* usage_yyyymm.html file path */
+! 	u_int64_t summary_dhits;	/* daily average Hits for this month */
+! 	u_int64_t summary_dfiles;	/* daily average Files for this month */
+! 	u_int64_t summary_dpages;	/* daily average Pages for this month */
+! 	u_int64_t summary_dvisits;	/* daily average Visits for month */
+! 	u_int64_t summary_tsites;	/* total Sites for this month */
+! 	u_int64_t summary_tkbytes;	/* total KBytes for this month */
+! 	u_int64_t summary_tvisits;	/* total Visits for this month */
+! 	u_int64_t summary_tpages;	/* total Pages for this month */
+! 	u_int64_t summary_tfiles;	/* total Files for this month */
+! 	u_int64_t summary_thits;	/* total Hits for this month */
+! 
+! 	/* open the summary which is found in the history sub-directory */
+! 	sumfile = fopen("../history/summary","r");
+! 	if (sumfile != NULL) {
+! 
+! 	    /* process lines in summary file */
+! 	    while (fgets(inbuf, BUFSIZ, sumfile) != NULL) {
+! 
+! 		/* parse the summary line */
+! 		inbuf[BUFSIZ] = '\0';
+! 		if (sscanf(inbuf,
+! 			   "%4d %2d %3s %s "
+! 			   "%llu %llu %llu %llu %llu "
+! 			   "%llu %llu %llu %llu %llu\n",
+! 			   &summary_year, &summary_month, summary_mname,
+! 			   summary_path, &summary_dhits, &summary_dfiles,
+! 			   &summary_dpages, &summary_dvisits, &summary_tsites,
+! 			   &summary_tkbytes, &summary_tvisits, &summary_tpages,
+! 			   &summary_tfiles, &summary_thits) == 14) {
+! 
+! 		    /*
+! 		     * ignore this month if it is as or more recent than
+! 		     * the earliest month printed in the 12 month recent
+! 		     * months as procssed in the previous section of code
+! 		     */
+! 		    if (summary_year > earliest_year ||
+! 		        (summary_year == earliest_year &&
+! 			 summary_month >= earliest_month)) {
+! 			continue;
+! 		    }
+! 
+! 		    /* output the HTML for this summary month */
+! 		    fprintf(out_fp,
+! 			"<TR><TD NOWRAP><A HREF=\"%s\">"
+! 			"<FONT SIZE=\"-1\">%s %d</FONT></A></TD>\n",
+! 			summary_path, summary_mname, summary_year);
+! 
+! 		    fprintf(out_fp,
+! 			"<TD ALIGN=right><FONT SIZE=\"-1\">%llu</FONT></TD>\n",
+! 			summary_dhits);
+! 		    fprintf(out_fp,
+! 		        "<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_dfiles);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_dpages);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_dvisits);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tsites);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tkbytes);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tvisits);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tpages);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tfiles);
+! 		    fprintf(out_fp,
+! 			"<TD ALIGN=right><FONT SIZE=\"-1\">%llu</FONT></TD></TR>\n",
+! 			summary_thits);
+! 		    gt_hit   += summary_thits;
+! 		    gt_files += summary_tfiles;
+! 		    gt_pages += summary_tpages;
+! 		    gt_xfer  += summary_tkbytes;
+! 		    gt_visits+= summary_tvisits;
+! 		}
+! 	   }
+! 	   fclose(sumfile);
+! 	}
+!     }
+! 
+!    /* output the pre-history file */
+!    {
+!    	FILE *prehist;		/* open pre-history file */
+! 	char inbuf[BUFSIZ+1];	/* input buffer */
+! 	int summary_year;	/* year of summary as yyyy */
+! 	int summary_month;	/* month of summary as 2 digit number */
+! 	char summary_mname[BUFSIZ+1];	/* month of summary as 3 char name */
+! 	char summary_path[BUFSIZ+1];	/* usage_yyyymm.html file path */
+! 	u_int64_t summary_dhits;	/* daily average Hits for this month */
+! 	u_int64_t summary_dfiles;	/* daily average Files for this month */
+! 	u_int64_t summary_dpages;	/* daily average Pages for this month */
+! 	u_int64_t summary_dvisits;	/* daily average Visits for month */
+! 	u_int64_t summary_tsites;	/* total Sites for this month */
+! 	u_int64_t summary_tkbytes;	/* total KBytes for this month */
+! 	u_int64_t summary_tvisits;	/* total Visits for this month */
+! 	u_int64_t summary_tpages;	/* total Pages for this month */
+! 	u_int64_t summary_tfiles;	/* total Files for this month */
+! 	u_int64_t summary_thits;	/* total Hits for this month */
+! 
+! 	/* open the pre-history which is found in the history sub-directory */
+! 	prehist = fopen("../history/prehistory","r");
+! 	if (prehist != NULL) {
+! 
+! 	    /* there is just 1 line in the pre-history file - process it */
+! 	    if (fgets(inbuf, BUFSIZ, prehist) != NULL) {
+! 
+! 		/* parse the summary line */
+! 		inbuf[BUFSIZ] = '\0';
+! 		if (sscanf(inbuf,
+! 			   "%4d %2d %3s %s "
+! 			   "%llu %llu %llu %llu %llu "
+! 			   "%llu %llu %llu %llu %llu\n", 
+! 			   &summary_year, &summary_month, summary_mname,
+! 			   summary_path, &summary_dhits, &summary_dfiles,
+! 			   &summary_dpages, &summary_dvisits, &summary_tsites,
+! 			   &summary_tkbytes, &summary_tvisits, &summary_tpages,
+! 			   &summary_tfiles, &summary_thits) == 14) {
+! 
+! 		    fprintf(out_fp, "<TR><TH HEIGHT=4></TH></TR>\n");
+! 		    fprintf(out_fp,
+! 		        "<TR><TD COLSPAN=6 ALIGN=left NOWRAP>"
+! 			"<FONT SIZE=\"-1\"><B>Before %s %d</B></FONT></TD>\n",
+! 			summary_mname, summary_year);
+! 		    fprintf(out_fp,
+! 		        "<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tkbytes);
+! 		    fprintf(out_fp,
+! 		    	"<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tvisits);
+! 		    fprintf(out_fp,
+! 		        "<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tpages);
+! 		    fprintf(out_fp,
+! 		        "<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n",
+! 			summary_tfiles);
+! 		    fprintf(out_fp,
+! 		        "<TD ALIGN=right><FONT SIZE=\"-1\">%lld</FONT></TD>\n"
+! 			"</TR>\n",
+! 			summary_thits);
+! 		
+! 		    gt_hit   += summary_thits;
+! 		    gt_files += summary_tfiles;
+! 		    gt_pages += summary_tpages;
+! 		    gt_xfer  += summary_tkbytes;
+! 		    gt_visits+= summary_tvisits;
+! 		}
+! 	   }
+! 	   fclose(prehist);
+! 	}
+!     }
+! 
+!     fprintf(out_fp,"<TR><TH HEIGHT=4></TH></TR>\n");
+!     fprintf(out_fp,"<TR><TD BGCOLOR=\"%s\" COLSPAN=6 ALIGN=left>"          \
+! 	  "<FONT SIZE=\"-1\"><B>%s</B></FONT></TD>\n",GREY,msg_h_totals);
+!     fprintf(out_fp,"<TD BGCOLOR=\"%s\" ALIGN=right>"                       \
+! 	  "<FONT SIZE=\"-1\"><B>%lld</B></FONT></TD>\n",GREY,gt_xfer);
+!     fprintf(out_fp,"<TD BGCOLOR=\"%s\" ALIGN=right>"                       \
+! 	  "<FONT SIZE=\"-1\"><B>%lld</B></FONT></TD>\n",GREY,gt_visits);
+!     fprintf(out_fp,"<TD BGCOLOR=\"%s\" ALIGN=right>"                       \
+! 	  "<FONT SIZE=\"-1\"><B>%lld</B></FONT></TD>\n",GREY,gt_pages);
+!     fprintf(out_fp,"<TD BGCOLOR=\"%s\" ALIGN=right>"                       \
+! 	  "<FONT SIZE=\"-1\"><B>%lld</B></FONT></TD>\n",GREY,gt_files);
+!     fprintf(out_fp,"<TD BGCOLOR=\"%s\" ALIGN=right>"                       \
+! 	  "<FONT SIZE=\"-1\"><B>%lld</B></FONT></TD></TR>\n",GREY,gt_hit);
+!     fprintf(out_fp,"<TR><TH HEIGHT=4></TH></TR>\n");
+!     fprintf(out_fp,"</TABLE>\n");
+!     write_html_tail(out_fp);
+!     fclose(out_fp);
+!     return 0;
+  }
+  
+  /*********************************************/
+*** ./webalizer.c.osr6	Sun Feb 12 12:00:57 2006
+--- ./webalizer.c	Sun Feb 12 12:01:34 2006
+***************
+*** 172,201 ****
+          cur_day=0, cur_hour=0,                /* tracking variables       */
+          cur_min=0, cur_sec=0;
+  
+! u_long  cur_tstamp=0;                         /* Timestamp...             */
+! u_long  rec_tstamp=0;  
+! u_long  req_tstamp=0;
+! u_long  epoch;                                /* used for timestamp adj.  */
+  
+  int     check_dup=0;                          /* check for dup flag       */
+  int     gz_log=0;                             /* gziped log? (0=no)       */
+  
+  double  t_xfer=0.0;                           /* monthly total xfer value */
+! u_long  t_hit=0,t_file=0,t_site=0,            /* monthly total vars       */
+          t_url=0,t_ref=0,t_agent=0,
+          t_page=0, t_visit=0, t_user=0;
+  
+  double  tm_xfer[31];                          /* daily transfer totals    */
+  
+! u_long  tm_hit[31], tm_file[31],              /* daily total arrays       */
+          tm_site[31], tm_page[31],
+          tm_visit[31];
+  
+! u_long  dt_site;                              /* daily 'sites' total      */
+  
+! u_long  ht_hit=0, mh_hit=0;                   /* hourly hits totals       */
+  
+! u_long  th_hit[24], th_file[24],              /* hourly total arrays      */
+          th_page[24];
+  
+  double  th_xfer[24];
+--- 172,201 ----
+          cur_day=0, cur_hour=0,                /* tracking variables       */
+          cur_min=0, cur_sec=0;
+  
+! u_int64_t  cur_tstamp=0;                         /* Timestamp...             */
+! u_int64_t  rec_tstamp=0;  
+! u_int64_t  req_tstamp=0;
+! u_int64_t  epoch;                                /* used for timestamp adj.  */
+  
+  int     check_dup=0;                          /* check for dup flag       */
+  int     gz_log=0;                             /* gziped log? (0=no)       */
+  
+  double  t_xfer=0.0;                           /* monthly total xfer value */
+! u_int64_t  t_hit=0,t_file=0,t_site=0,            /* monthly total vars       */
+          t_url=0,t_ref=0,t_agent=0,
+          t_page=0, t_visit=0, t_user=0;
+  
+  double  tm_xfer[31];                          /* daily transfer totals    */
+  
+! u_int64_t  tm_hit[31], tm_file[31],              /* daily total arrays       */
+          tm_site[31], tm_page[31],
+          tm_visit[31];
+  
+! u_int64_t  dt_site;                              /* daily 'sites' total      */
+  
+! u_int64_t  ht_hit=0, mh_hit=0;                   /* hourly hits totals       */
+  
+! u_int64_t  th_hit[24], th_file[24],              /* hourly total arrays      */
+          th_page[24];
+  
+  double  th_xfer[24];
+***************
+*** 204,210 ****
+  
+  struct  utsname system_info;                  /* system info structure    */
+  
+! u_long  ul_bogus =0;                          /* Dummy counter for groups */
+  
+  struct  log_struct log_rec;                   /* expanded log storage     */
+  
+--- 204,210 ----
+  
+  struct  utsname system_info;                  /* system info structure    */
+  
+! u_int64_t  ul_bogus =0;                          /* Dummy counter for groups */
+  
+  struct  log_struct log_rec;                   /* expanded log storage     */
+  
+***************
+*** 258,266 ****
+     int    rec_year,rec_month=1,rec_day,rec_hour,rec_min,rec_sec;
+  
+     int    good_rec    =0;                /* 1 if we had a good record   */
+!    u_long total_rec   =0;                /* Total Records Processed     */
+!    u_long total_ignore=0;                /* Total Records Ignored       */
+!    u_long total_bad   =0;                /* Total Bad Records           */
+  
+     int    max_ctry;                      /* max countries defined       */
+  
+--- 258,266 ----
+     int    rec_year,rec_month=1,rec_day,rec_hour,rec_min,rec_sec;
+  
+     int    good_rec    =0;                /* 1 if we had a good record   */
+!    u_int64_t total_rec   =0;                /* Total Records Processed     */
+!    u_int64_t total_ignore=0;                /* Total Records Ignored       */
+!    u_int64_t total_bad   =0;                /* Total Bad Records           */
+  
+     int    max_ctry;                      /* max countries defined       */
+  
+***************
+*** 607,613 ****
+              total_bad++;                /* if a bad date, bump counter      */
+              if (verbose)
+              {
+!                fprintf(stderr,"%s: %s [%lu]",
+                   msg_bad_date,log_rec.datetime,total_rec);
+                 if (debug_mode) fprintf(stderr,":\n%s\n",tmp_buf);
+                 else fprintf(stderr,"\n");
+--- 607,613 ----
+              total_bad++;                /* if a bad date, bump counter      */
+              if (verbose)
+              {
+!                fprintf(stderr,"%s: %s [%lld]",
+                   msg_bad_date,log_rec.datetime,total_rec);
+                 if (debug_mode) fprintf(stderr,":\n%s\n",tmp_buf);
+                 else fprintf(stderr,"\n");
+***************
+*** 907,913 ****
+           /* if necessary, shrink referrer to fit storage */
+           if (strlen(log_rec.refer)>=MAXREFH)
+           {
+!             if (verbose) fprintf(stderr,"%s [%lu]\n",
+                  msg_big_ref,total_rec);
+              log_rec.refer[MAXREFH-1]='\0';
+           }
+--- 907,913 ----
+           /* if necessary, shrink referrer to fit storage */
+           if (strlen(log_rec.refer)>=MAXREFH)
+           {
+!             if (verbose) fprintf(stderr,"%s [%lld]\n",
+                  msg_big_ref,total_rec);
+              log_rec.refer[MAXREFH-1]='\0';
+           }
+***************
+*** 915,921 ****
+           /* if necessary, shrink URL to fit storage */
+           if (strlen(log_rec.url)>=MAXURLH)
+           {
+!             if (verbose) fprintf(stderr,"%s [%lu]\n",
+                  msg_big_req,total_rec);
+              log_rec.url[MAXURLH-1]='\0';
+           }
+--- 915,921 ----
+           /* if necessary, shrink URL to fit storage */
+           if (strlen(log_rec.url)>=MAXURLH)
+           {
+!             if (verbose) fprintf(stderr,"%s [%lld]\n",
+                  msg_big_req,total_rec);
+              log_rec.url[MAXURLH-1]='\0';
+           }
+***************
+*** 1147,1154 ****
+               (log_rec.resp_code==RC_PARTIALCONTENT))
+           {
+              /* URL hash table */
+!             if (put_unode(log_rec.url,OBJ_REG,(u_long)1,
+!                 log_rec.xfer_size,&t_url,(u_long)0,(u_long)0,um_htab))
+              {
+                 if (verbose)
+                 /* Error adding URL node, skipping ... */
+--- 1147,1154 ----
+               (log_rec.resp_code==RC_PARTIALCONTENT))
+           {
+              /* URL hash table */
+!             if (put_unode(log_rec.url,OBJ_REG,(u_int64_t)1,
+!                 log_rec.xfer_size,&t_url,(u_int64_t)0,(u_int64_t)0,um_htab))
+              {
+                 if (verbose)
+                 /* Error adding URL node, skipping ... */
+***************
+*** 1157,1163 ****
+  
+              /* ident (username) hash table */
+              if (put_inode(log_rec.ident,OBJ_REG,
+!                 1,(u_long)i,log_rec.xfer_size,&t_user,
+                  0,rec_tstamp,im_htab))
+              {
+                 if (verbose)
+--- 1157,1163 ----
+  
+              /* ident (username) hash table */
+              if (put_inode(log_rec.ident,OBJ_REG,
+!                 1,(u_int64_t)i,log_rec.xfer_size,&t_user,
+                  0,rec_tstamp,im_htab))
+              {
+                 if (verbose)
+***************
+*** 1170,1176 ****
+           if (ntop_refs)
+           {
+              if (log_rec.refer[0]!='\0')
+!              if (put_rnode(log_rec.refer,OBJ_REG,(u_long)1,&t_ref,rm_htab))
+               {
+                if (verbose)
+                fprintf(stderr,"%s %s\n", msg_nomem_r, log_rec.refer);
+--- 1170,1176 ----
+           if (ntop_refs)
+           {
+              if (log_rec.refer[0]!='\0')
+!              if (put_rnode(log_rec.refer,OBJ_REG,(u_int64_t)1,&t_ref,rm_htab))
+               {
+                if (verbose)
+                fprintf(stderr,"%s %s\n", msg_nomem_r, log_rec.refer);
+***************
+*** 1179,1185 ****
+  
+           /* hostname (site) hash table - daily */
+           if (put_hnode(log_rec.hostname,OBJ_REG,
+!              1,(u_long)i,log_rec.xfer_size,&dt_site,
+               0,rec_tstamp,"",sd_htab))
+           {
+              if (verbose)
+--- 1179,1185 ----
+  
+           /* hostname (site) hash table - daily */
+           if (put_hnode(log_rec.hostname,OBJ_REG,
+!              1,(u_int64_t)i,log_rec.xfer_size,&dt_site,
+               0,rec_tstamp,"",sd_htab))
+           {
+              if (verbose)
+***************
+*** 1189,1195 ****
+  
+           /* hostname (site) hash table - monthly */
+           if (put_hnode(log_rec.hostname,OBJ_REG,
+!              1,(u_long)i,log_rec.xfer_size,&t_site,
+               0,rec_tstamp,"",sm_htab))
+           {
+              if (verbose)
+--- 1189,1195 ----
+  
+           /* hostname (site) hash table - monthly */
+           if (put_hnode(log_rec.hostname,OBJ_REG,
+!              1,(u_int64_t)i,log_rec.xfer_size,&t_site,
+               0,rec_tstamp,"",sm_htab))
+           {
+              if (verbose)
+***************
+*** 1201,1207 ****
+           if (ntop_agents)
+           {
+              if (log_rec.agent[0]!='\0')
+!              if (put_anode(log_rec.agent,OBJ_REG,(u_long)1,&t_agent,am_htab))
+               {
+                if (verbose)
+                fprintf(stderr,"%s %s\n", msg_nomem_a, log_rec.agent);
+--- 1201,1207 ----
+           if (ntop_agents)
+           {
+              if (log_rec.agent[0]!='\0')
+!              if (put_anode(log_rec.agent,OBJ_REG,(u_int64_t)1,&t_agent,am_htab))
+               {
+                if (verbose)
+                fprintf(stderr,"%s %s\n", msg_nomem_a, log_rec.agent);
+***************
+*** 1242,1249 ****
+           /* URL Grouping */
+           if ( (cp1=isinglist(group_urls,log_rec.url))!=NULL)
+           {
+!             if (put_unode(cp1,OBJ_GRP,(u_long)1,log_rec.xfer_size,
+!                 &ul_bogus,(u_long)0,(u_long)0,um_htab))
+              {
+                 if (verbose)
+                 /* Error adding URL node, skipping ... */
+--- 1242,1249 ----
+           /* URL Grouping */
+           if ( (cp1=isinglist(group_urls,log_rec.url))!=NULL)
+           {
+!             if (put_unode(cp1,OBJ_GRP,(u_int64_t)1,log_rec.xfer_size,
+!                 &ul_bogus,(u_int64_t)0,(u_int64_t)0,um_htab))
+              {
+                 if (verbose)
+                 /* Error adding URL node, skipping ... */
+***************
+*** 1254,1260 ****
+           /* Site Grouping */
+           if ( (cp1=isinglist(group_sites,log_rec.hostname))!=NULL)
+           {
+!             if (put_hnode(cp1,OBJ_GRP,1,(u_long)(log_rec.resp_code==RC_OK)?1:0,
+                            log_rec.xfer_size,&ul_bogus,
+                            0,rec_tstamp,"",sm_htab))
+              {
+--- 1254,1260 ----
+           /* Site Grouping */
+           if ( (cp1=isinglist(group_sites,log_rec.hostname))!=NULL)
+           {
+!             if (put_hnode(cp1,OBJ_GRP,1,(u_int64_t)(log_rec.resp_code==RC_OK)?1:0,
+                            log_rec.xfer_size,&ul_bogus,
+                            0,rec_tstamp,"",sm_htab))
+              {
+***************
+*** 1272,1278 ****
+                 if (cp1 != NULL)
+                 {
+                    if (put_hnode(cp1,OBJ_GRP,1,
+!                       (u_long)(log_rec.resp_code==RC_OK)?1:0,
+                        log_rec.xfer_size,&ul_bogus,
+                        0,rec_tstamp,"",sm_htab))
+                    {
+--- 1272,1278 ----
+                 if (cp1 != NULL)
+                 {
+                    if (put_hnode(cp1,OBJ_GRP,1,
+!                       (u_int64_t)(log_rec.resp_code==RC_OK)?1:0,
+                        log_rec.xfer_size,&ul_bogus,
+                        0,rec_tstamp,"",sm_htab))
+                    {
+***************
+*** 1287,1293 ****
+           /* Referrer Grouping */
+           if ( (cp1=isinglist(group_refs,log_rec.refer))!=NULL)
+           {
+!             if (put_rnode(cp1,OBJ_GRP,(u_long)1,&ul_bogus,rm_htab))
+              {
+                 if (verbose)
+                 /* Error adding Referrer node, skipping ... */
+--- 1287,1293 ----
+           /* Referrer Grouping */
+           if ( (cp1=isinglist(group_refs,log_rec.refer))!=NULL)
+           {
+!             if (put_rnode(cp1,OBJ_GRP,(u_int64_t)1,&ul_bogus,rm_htab))
+              {
+                 if (verbose)
+                 /* Error adding Referrer node, skipping ... */
+***************
+*** 1298,1304 ****
+           /* User Agent Grouping */
+           if ( (cp1=isinglist(group_agents,log_rec.agent))!=NULL)
+           {
+!             if (put_anode(cp1,OBJ_GRP,(u_long)1,&ul_bogus,am_htab))
+              {
+                 if (verbose)
+                 /* Error adding User Agent node, skipping ... */
+--- 1298,1304 ----
+           /* User Agent Grouping */
+           if ( (cp1=isinglist(group_agents,log_rec.agent))!=NULL)
+           {
+!             if (put_anode(cp1,OBJ_GRP,(u_int64_t)1,&ul_bogus,am_htab))
+              {
+                 if (verbose)
+                 /* Error adding User Agent node, skipping ... */
+***************
+*** 1309,1315 ****
+           /* Ident (username) Grouping */
+           if ( (cp1=isinglist(group_users,log_rec.ident))!=NULL)
+           {
+!             if (put_inode(cp1,OBJ_GRP,1,(u_long)(log_rec.resp_code==RC_OK)?1:0,
+                            log_rec.xfer_size,&ul_bogus,
+                            0,rec_tstamp,im_htab))
+              {
+--- 1309,1315 ----
+           /* Ident (username) Grouping */
+           if ( (cp1=isinglist(group_users,log_rec.ident))!=NULL)
+           {
+!             if (put_inode(cp1,OBJ_GRP,1,(u_int64_t)(log_rec.resp_code==RC_OK)?1:0,
+                            log_rec.xfer_size,&ul_bogus,
+                            0,rec_tstamp,im_htab))
+              {
+***************
+*** 1340,1346 ****
+              total_bad++;
+              if (verbose)
+              {
+!                fprintf(stderr,"%s (%lu)",msg_bad_rec,total_rec);
+                 if (debug_mode) fprintf(stderr,":\n%s\n",tmp_buf);
+                 else fprintf(stderr,"\n");
+              }
+--- 1340,1346 ----
+              total_bad++;
+              if (verbose)
+              {
+!                fprintf(stderr,"%s (%lld)",msg_bad_rec,total_rec);
+                 if (debug_mode) fprintf(stderr,":\n%s\n",tmp_buf);
+                 else fprintf(stderr,"\n");
+              }
+***************
+*** 1383,1396 ****
+        end_time = times(&mytms);              /* display timing totals?   */
+        if (time_me || (verbose>1))
+        {
+!          printf("%lu %s ",total_rec, msg_records);
+           if (total_ignore)
+           {
+!             printf("(%lu %s",total_ignore,msg_ignored);
+!             if (total_bad) printf(", %lu %s) ",total_bad,msg_bad);
+                 else        printf(") ");
+           }
+!          else if (total_bad) printf("(%lu %s) ",total_bad,msg_bad);
+  
+           /* get processing time (end-start) */
+           temp_time = (float)(end_time-start_time)/CLK_TCK;
+--- 1383,1396 ----
+        end_time = times(&mytms);              /* display timing totals?   */
+        if (time_me || (verbose>1))
+        {
+!          printf("%lld %s ",total_rec, msg_records);
+           if (total_ignore)
+           {
+!             printf("(%lld %s",total_ignore,msg_ignored);
+!             if (total_bad) printf(", %lld %s) ",total_bad,msg_bad);
+                 else        printf(") ");
+           }
+!          else if (total_bad) printf("(%lld %s) ",total_bad,msg_bad);
+  
+           /* get processing time (end-start) */
+           temp_time = (float)(end_time-start_time)/CLK_TCK;
+***************
+*** 1807,1816 ****
+  /* CTRY_IDX - create unique # from domain    */
+  /*********************************************/
+  
+! u_long ctry_idx(char *str)
+  {
+     int i=strlen(str),j=0;
+!    u_long idx=0;
+     char *cp1=str+i;
+     for (;i>0;i--) { idx+=((*--cp1-'a'+1)<<j); j+=5; }
+     return idx;
+--- 1807,1816 ----
+  /* CTRY_IDX - create unique # from domain    */
+  /*********************************************/
+  
+! u_int64_t ctry_idx(char *str)
+  {
+     int i=strlen(str),j=0;
+!    u_int64_t idx=0;
+     char *cp1=str+i;
+     for (;i>0;i--) { idx+=((*--cp1-'a'+1)<<j); j+=5; }
+     return idx;
+***************
+*** 1909,1915 ****
+     cp1=cp2;
+     while (*cp1!=0) { if ((*cp1<32)||(*cp1==127)) *cp1='_'; cp1++; }
+  
+!    if (put_snode(cp2,(u_long)1,sr_htab))
+     {
+        if (verbose)
+        /* Error adding search string node, skipping .... */
+--- 1909,1915 ----
+     cp1=cp2;
+     while (*cp1!=0) { if ((*cp1<32)||(*cp1==127)) *cp1='_'; cp1++; }
+  
+!    if (put_snode(cp2,(u_int64_t)1,sr_htab))
+     {
+        if (verbose)
+        /* Error adding search string node, skipping .... */
+***************
+*** 1989,2002 ****
+  /*                                                               */
+  /*****************************************************************/
+  
+! u_long jdate( int day, int month, int year )
+  {
+!    u_long days;                      /* value returned */
+     int mtable[] = {0,31,59,90,120,151,181,212,243,273,304,334};
+  
+     /* First, calculate base number including leap and Centenial year stuff */
+  
+!    days=(((u_long)year*365)+day+mtable[month-1]+
+             ((year+4)/4) - ((year/100)-(year/400)));
+  
+     /* now adjust for leap year before March 1st */
+--- 1989,2002 ----
+  /*                                                               */
+  /*****************************************************************/
+  
+! u_int64_t jdate( int day, int month, int year )
+  {
+!    u_int64_t days;                      /* value returned */
+     int mtable[] = {0,31,59,90,120,151,181,212,243,273,304,334};
+  
+     /* First, calculate base number including leap and Centenial year stuff */
+  
+!    days=(((u_int64_t)year*365)+day+mtable[month-1]+
+             ((year+4)/4) - ((year/100)-(year/400)));
+  
+     /* now adjust for leap year before March 1st */
+*** ./webalizer.h.osr6	Sun Feb 12 12:01:24 2006
+--- ./webalizer.h	Sun Feb 12 12:05:27 2006
+***************
+*** 125,148 ****
+  #endif  /* INADDR_NONE */
+  #endif
+  
+  /* Response code structure */
+  struct response_code {     char    *desc;         /* response code struct  */
+!                          u_long    count; };
+  
+  /* Response URL structure */
+  struct response_url { char respurl[MAXURL];       /* resp url struct       */
+! 			u_long    count; };
+  struct response_url * respnotfound;
+  struct responsetmp_url { char respurl[MAXURL];    /* temp resp url struct  */
+! 			u_long    count; };
+  struct responsetmp_url * respnotfoundtmp;
+! u_long resp_counter;                              /* total 404 counter     */
+  
+  /* Country code structure */
+! struct	country_code { u_long idx;
+                           char *desc;
+!                        u_long count;
+!                        u_long files;
+                         double  xfer; };
+  
+  typedef struct country_code *CLISTPTR;
+--- 125,150 ----
+  #endif  /* INADDR_NONE */
+  #endif
+  
++ #include <sys/bitypes.h>
++ 
+  /* Response code structure */
+  struct response_code {     char    *desc;         /* response code struct  */
+!                          u_int64_t    count; };
+  
+  /* Response URL structure */
+  struct response_url { char respurl[MAXURL];       /* resp url struct       */
+! 			u_int64_t    count; };
+  struct response_url * respnotfound;
+  struct responsetmp_url { char respurl[MAXURL];    /* temp resp url struct  */
+! 			u_int64_t    count; };
+  struct responsetmp_url * respnotfoundtmp;
+! u_int64_t resp_counter;                              /* total 404 counter     */
+  
+  /* Country code structure */
+! struct	country_code { u_int64_t idx;
+                           char *desc;
+!                        u_int64_t count;
+!                        u_int64_t files;
+                         double  xfer; };
+  
+  typedef struct country_code *CLISTPTR;
+***************
+*** 152,158 ****
+                         char   datetime[29];        /* raw timestamp        */
+                         char   url[MAXURL];         /* raw request field    */
+                         int    resp_code;           /* response code        */
+!                        u_long xfer_size;           /* xfer size in bytes   */
+  #ifdef USE_DNS
+                         struct in_addr addr;        /* IP address structure */
+  #endif  /* USE_DNS */
+--- 154,160 ----
+                         char   datetime[29];        /* raw timestamp        */
+                         char   url[MAXURL];         /* raw request field    */
+                         int    resp_code;           /* response code        */
+!                        u_int64_t xfer_size;           /* xfer size in bytes   */
+  #ifdef USE_DNS
+                         struct in_addr addr;        /* IP address structure */
+  #endif  /* USE_DNS */
+***************
+*** 231,238 ****
+  extern int     dump_header  ;                 /* Dump header as first rec */
+  extern char    *dump_path   ;                 /* Path for dump files      */
+  
+! extern u_long  cur_tstamp;                    /* Current timestamp        */
+! extern u_long  epoch;                         /* used for timestamp adj.  */
+  extern int     check_dup;                     /* check for dups flag      */
+  
+  extern int     cur_year,cur_month,            /* year/month/day/hour      */
+--- 233,240 ----
+  extern int     dump_header  ;                 /* Dump header as first rec */
+  extern char    *dump_path   ;                 /* Path for dump files      */
+  
+! extern u_int64_t  cur_tstamp;                    /* Current timestamp        */
+! extern u_int64_t  epoch;                         /* used for timestamp adj.  */
+  extern int     check_dup;                     /* check for dups flag      */
+  
+  extern int     cur_year,cur_month,            /* year/month/day/hour      */
+***************
+*** 240,260 ****
+                 cur_min, cur_sec;
+  
+  extern double  t_xfer;                        /* monthly total xfer value */
+! extern u_long  t_hit, t_file, t_site,         /* monthly total vars       */
+                 t_url, t_ref,  t_agent,
+                 t_page,t_visit,t_user;
+  
+  extern double  tm_xfer[31];                   /* daily transfer totals    */
+  
+! extern u_long  tm_hit[31], tm_file[31],       /* daily total arrays       */
+                 tm_site[31],tm_page[31],
+                 tm_visit[31];
+  
+! extern u_long  dt_site;                       /* daily 'sites' total      */
+  
+! extern u_long  ht_hit,mh_hit;                 /* hourly hits totals       */
+  
+! extern u_long  th_hit[24], th_file[24],       /* hourly total arrays      */
+                 th_page[24];
+  
+  extern double  th_xfer[24];
+--- 242,262 ----
+                 cur_min, cur_sec;
+  
+  extern double  t_xfer;                        /* monthly total xfer value */
+! extern u_int64_t  t_hit, t_file, t_site,         /* monthly total vars       */
+                 t_url, t_ref,  t_agent,
+                 t_page,t_visit,t_user;
+  
+  extern double  tm_xfer[31];                   /* daily transfer totals    */
+  
+! extern u_int64_t  tm_hit[31], tm_file[31],       /* daily total arrays       */
+                 tm_site[31],tm_page[31],
+                 tm_visit[31];
+  
+! extern u_int64_t  dt_site;                       /* daily 'sites' total      */
+  
+! extern u_int64_t  ht_hit,mh_hit;                 /* hourly hits totals       */
+  
+! extern u_int64_t  th_hit[24], th_file[24],       /* hourly total arrays      */
+                 th_page[24];
+  
+  extern double  th_xfer[24];
+***************
+*** 267,275 ****
+  /* define our externally visable functions */
+  
+  extern char   *cur_time();
+! extern u_long ctry_idx(char *);
+  extern void   init_counters();
+  extern int    ispage(char *);
+! extern u_long jdate(int,int,int);
+  
+  #endif  /* _WEBALIZER_H */
+--- 269,277 ----
+  /* define our externally visable functions */
+  
+  extern char   *cur_time();
+! extern u_int64_t ctry_idx(char *);
+  extern void   init_counters();
+  extern int    ispage(char *);
+! extern u_int64_t jdate(int,int,int);
+  
+  #endif  /* _WEBALIZER_H */
+*** ./dns_resolv.c.osr6	Sat Feb 11 07:02:58 2006
+--- ./dns_resolv.c	Sun Feb 12 12:01:34 2006
+***************
+*** 178,184 ****
+     int       i;
+     int       save_verbose=verbose;
+  
+!    u_long    listEntries = 0;
+  
+     struct sigaction sigPipeAction;
+     struct stat dbStat;
+--- 178,184 ----
+     int       i;
+     int       save_verbose=verbose;
+  
+!    u_int64_t    listEntries = 0;
+  
+     struct sigaction sigPipeAction;
+     struct stat dbStat;
+***************
+*** 339,345 ****
+     if (time_me || (verbose>1))
+     {
+        if (verbose<2 && time_me) printf("DNS: ");
+!       printf("%lu %s ",listEntries, msg_addresses);
+  
+        /* get processing time (end-start) */
+        temp_time = (float)(end_time-start_time)/CLK_TCK;
+--- 339,345 ----
+     if (time_me || (verbose>1))
+     {
+        if (verbose<2 && time_me) printf("DNS: ");
+!       printf("%lld %s ",listEntries, msg_addresses);
+  
+        /* get processing time (end-start) */
+        temp_time = (float)(end_time-start_time)/CLK_TCK;
+*** ./graphs.c.osr6	Sat Feb 11 07:03:04 2006
+--- ./graphs.c	Sun Feb 12 12:01:34 2006
+***************
+*** 71,77 ****
+  FILE		*out;                      /* output file for PNG */
+  char		maxvaltxt[32];             /* graph values        */
+  float		percent;                   /* percent storage     */
+! u_long		julday;                    /* julday value        */
+  
+  struct pie_data { int x; int y;            /* line x,y            */
+                    int mx; int my; };       /* midpoint x,y        */
+--- 71,77 ----
+  FILE		*out;                      /* output file for PNG */
+  char		maxvaltxt[32];             /* graph values        */
+  float		percent;                   /* percent storage     */
+! u_int64_t		julday;                    /* julday value        */
+  
+  struct pie_data { int x; int y;            /* line x,y            */
+                    int mx; int my; };       /* midpoint x,y        */
+***************
+*** 88,106 ****
+  int year_graph6x(  char *fname,            /* file name use      */
+                     char *title,            /* title for graph    */
+                      int fmonth,            /* begin month number */
+!                  u_long data1[12],         /* data1 (hits)       */
+!                  u_long data2[12],         /* data2 (files)      */
+!                  u_long data3[12],         /* data3 (sites)      */
+                   double data4[12],         /* data4 (kbytes)     */
+!                  u_long data5[12],         /* data5 (views)      */
+!                  u_long data6[12])         /* data6 (visits)     */
+  {
+  
+     /* local variables */
+     int i,j,x1,y1,x2;
+     int s_mth;
+  
+!    u_long maxval=1;
+     double fmaxval=0.0;
+  
+     /* initalize the graph */
+--- 88,106 ----
+  int year_graph6x(  char *fname,            /* file name use      */
+                     char *title,            /* title for graph    */
+                      int fmonth,            /* begin month number */
+!                  u_int64_t data1[12],         /* data1 (hits)       */
+!                  u_int64_t data2[12],         /* data2 (files)      */
+!                  u_int64_t data3[12],         /* data3 (sites)      */
+                   double data4[12],         /* data4 (kbytes)     */
+!                  u_int64_t data5[12],         /* data5 (views)      */
+!                  u_int64_t data6[12])         /* data6 (visits)     */
+  {
+  
+     /* local variables */
+     int i,j,x1,y1,x2;
+     int s_mth;
+  
+!    u_int64_t maxval=1;
+     double fmaxval=0.0;
+  
+     /* initalize the graph */
+***************
+*** 137,143 ****
+        if (data5[i] > maxval) maxval = data5[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lu", maxval);
+     gdImageStringUp(im,gdFontSmall,8,26+(strlen(maxvaltxt)*6),maxvaltxt,black);
+  
+     if (graph_legend)                          /* print color coded legends? */
+--- 137,143 ----
+        if (data5[i] > maxval) maxval = data5[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lld", maxval);
+     gdImageStringUp(im,gdFontSmall,8,26+(strlen(maxvaltxt)*6),maxvaltxt,black);
+  
+     if (graph_legend)                          /* print color coded legends? */
+***************
+*** 221,227 ****
+         if (data6[i] > maxval) maxval = data6[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lu", maxval);
+     gdImageStringUp(im, gdFontSmall,493,26+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+  
+--- 221,227 ----
+         if (data6[i] > maxval) maxval = data6[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lld", maxval);
+     gdImageStringUp(im, gdFontSmall,493,26+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+  
+***************
+*** 299,315 ****
+                     char *title,            /* graph title        */
+                      int month,             /* graph month        */
+                      int year,              /* graph year         */
+!                  u_long data1[31],         /* data1 (hits)       */
+!                  u_long data2[31],         /* data2 (files)      */
+!                  u_long data3[31],         /* data3 (sites)      */
+                   double data4[31],         /* data4 (kbytes)     */
+!                  u_long data5[31],         /* data5 (views)      */
+!                  u_long data6[31])         /* data6 (visits)     */
+  {
+  
+     /* local variables */
+     int i,j,s,x1,y1,x2;
+!    u_long maxval=0;
+     double fmaxval=0.0;
+  
+     /* calc julian date for month */
+--- 299,315 ----
+                     char *title,            /* graph title        */
+                      int month,             /* graph month        */
+                      int year,              /* graph year         */
+!                  u_int64_t data1[31],         /* data1 (hits)       */
+!                  u_int64_t data2[31],         /* data2 (files)      */
+!                  u_int64_t data3[31],         /* data3 (sites)      */
+                   double data4[31],         /* data4 (kbytes)     */
+!                  u_int64_t data5[31],         /* data5 (views)      */
+!                  u_int64_t data6[31])         /* data6 (visits)     */
+  {
+  
+     /* local variables */
+     int i,j,s,x1,y1,x2;
+!    u_int64_t maxval=0;
+     double fmaxval=0.0;
+  
+     /* calc julian date for month */
+***************
+*** 354,360 ****
+         if (data5[i] > maxval) maxval = data5[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lu", maxval);
+     gdImageStringUp(im, gdFontSmall,8,26+(strlen(maxvaltxt)*6),
+                     maxvaltxt,black);
+  
+--- 354,360 ----
+         if (data5[i] > maxval) maxval = data5[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lld", maxval);
+     gdImageStringUp(im, gdFontSmall,8,26+(strlen(maxvaltxt)*6),
+                     maxvaltxt,black);
+  
+***************
+*** 434,440 ****
+        if (data6[i]>maxval) maxval = data6[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lu", maxval);
+     gdImageStringUp(im, gdFontSmall,8,180+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+     
+--- 434,440 ----
+        if (data6[i]>maxval) maxval = data6[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lld", maxval);
+     gdImageStringUp(im, gdFontSmall,8,180+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+     
+***************
+*** 502,515 ****
+  
+  int day_graph3(  char *fname,
+                   char *title,
+!                u_long data1[24],
+!                u_long data2[24],
+!                u_long data3[24])
+  {
+  
+     /* local variables */
+     int i,j,s,x1,y1,x2;
+!    u_long maxval=0;
+  
+     /* initalize the graph */
+     init_graph(title,512,256);
+--- 502,515 ----
+  
+  int day_graph3(  char *fname,
+                   char *title,
+!                u_int64_t data1[24],
+!                u_int64_t data2[24],
+!                u_int64_t data3[24])
+  {
+  
+     /* local variables */
+     int i,j,s,x1,y1,x2;
+!    u_int64_t maxval=0;
+  
+     /* initalize the graph */
+     init_graph(title,512,256);
+***************
+*** 531,537 ****
+        if (data3[i] > maxval) maxval = data3[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lu", maxval);
+     gdImageStringUp(im, gdFontSmall, 8, 26+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+     
+--- 531,537 ----
+        if (data3[i] > maxval) maxval = data3[i];
+     }
+     if (maxval <= 0) maxval = 1;
+!    sprintf(maxvaltxt, "%lld", maxval);
+     gdImageStringUp(im, gdFontSmall, 8, 26+(strlen(maxvaltxt)*6),
+                     maxvaltxt, black);
+     
+***************
+*** 607,614 ****
+  /*                                                               */
+  /*****************************************************************/
+  
+! int pie_chart(char *fname, char *title, u_long t_val,
+!               u_long data1[], char *legend[])
+  {
+     int i,x,percent,y=47;
+     double s_arc=0.0;
+--- 607,614 ----
+  /*                                                               */
+  /*****************************************************************/
+  
+! int pie_chart(char *fname, char *title, u_int64_t t_val,
+!               u_int64_t data1[], char *legend[])
+  {
+     int i,x,percent,y=47;
+     double s_arc=0.0;
+*** ./graphs.h.osr6	Thu Sep 28 20:50:30 2000
+--- ./graphs.h	Sun Feb 12 12:01:34 2006
+***************
+*** 1,11 ****
+  #ifndef _GRAPHS_H
+  #define _GRAPHS_H
+  
+! extern int  month_graph6(char *, char *, int, int, u_long *,
+!              u_long *, u_long *, double *, u_long *, u_long *);
+  extern int  year_graph6x(char *, char *, int, 
+!              u_long *, u_long *, u_long *, double *, u_long *, u_long *);
+! extern int  day_graph3(char *, char *, u_long *, u_long *, u_long *);
+! extern int  pie_chart(char *, char *, u_long, u_long *, char **);
+  
+  #endif  /* _GRAPHS_H */
+--- 1,11 ----
+  #ifndef _GRAPHS_H
+  #define _GRAPHS_H
+  
+! extern int  month_graph6(char *, char *, int, int, u_int64_t *,
+!              u_int64_t *, u_int64_t *, double *, u_int64_t *, u_int64_t *);
+  extern int  year_graph6x(char *, char *, int, 
+!              u_int64_t *, u_int64_t *, u_int64_t *, double *, u_int64_t *, u_int64_t *);
+! extern int  day_graph3(char *, char *, u_int64_t *, u_int64_t *, u_int64_t *);
+! extern int  pie_chart(char *, char *, u_int64_t, u_int64_t *, char **);
+  
+  #endif  /* _GRAPHS_H */
+*** ./hashtab.c.osr6	Fri Jun 15 01:34:24 2001
+--- ./hashtab.c	Sun Feb 12 12:01:34 2006
+***************
+*** 79,85 ****
+  void     update_entry(char *);                /* update entry/exit        */
+  void     update_exit(char *);                 /* page totals              */
+  
+! u_long   hash(char *);                        /* hash function            */
+  
+  /* local data */
+  
+--- 79,85 ----
+  void     update_entry(char *);                /* update entry/exit        */
+  void     update_exit(char *);                 /* page totals              */
+  
+! u_int64_t   hash(char *);                        /* hash function            */
+  
+  /* local data */
+  
+***************
+*** 154,165 ****
+  
+  int put_hnode( char     *str,   /* Hostname  */
+                 int       type,  /* obj type  */
+!                u_long    count, /* hit count */
+!                u_long    file,  /* File flag */
+                 double    xfer,  /* xfer size */
+!                u_long   *ctr,   /* counter   */
+!                u_long    visit, /* visits    */
+!                u_long    tstamp,/* timestamp */
+                 char     *lasturl, /* lasturl */
+                 HNODEPTR *htab)  /* ptr>next  */
+  {
+--- 154,165 ----
+  
+  int put_hnode( char     *str,   /* Hostname  */
+                 int       type,  /* obj type  */
+!                u_int64_t    count, /* hit count */
+!                u_int64_t    file,  /* File flag */
+                 double    xfer,  /* xfer size */
+!                u_int64_t   *ctr,   /* counter   */
+!                u_int64_t    visit, /* visits    */
+!                u_int64_t    tstamp,/* timestamp */
+                 char     *lasturl, /* lasturl */
+                 HNODEPTR *htab)  /* ptr>next  */
+  {
+***************
+*** 341,348 ****
+  /* PUT_UNODE - insert/update URL node        */
+  /*********************************************/
+  
+! int put_unode(char *str, int type, u_long count, double xfer,
+!               u_long *ctr, u_long entry, u_long exit, UNODEPTR *htab)
+  {
+     UNODEPTR cptr,nptr;
+  
+--- 341,348 ----
+  /* PUT_UNODE - insert/update URL node        */
+  /*********************************************/
+  
+! int put_unode(char *str, int type, u_int64_t count, double xfer,
+!               u_int64_t *ctr, u_int64_t entry, u_int64_t exit, UNODEPTR *htab)
+  {
+     UNODEPTR cptr,nptr;
+  
+***************
+*** 468,474 ****
+  /* PUT_RNODE - insert/update referrer node   */
+  /*********************************************/
+  
+! int put_rnode(char *str, int type, u_long count, u_long *ctr, RNODEPTR *htab)
+  {
+     RNODEPTR cptr,nptr;
+  
+--- 468,474 ----
+  /* PUT_RNODE - insert/update referrer node   */
+  /*********************************************/
+  
+! int put_rnode(char *str, int type, u_int64_t count, u_int64_t *ctr, RNODEPTR *htab)
+  {
+     RNODEPTR cptr,nptr;
+  
+***************
+*** 587,593 ****
+  /* PUT_ANODE - insert/update user agent node */
+  /*********************************************/
+  
+! int put_anode(char *str, int type, u_long count, u_long *ctr, ANODEPTR *htab)
+  {
+     ANODEPTR cptr,nptr;
+  
+--- 587,593 ----
+  /* PUT_ANODE - insert/update user agent node */
+  /*********************************************/
+  
+! int put_anode(char *str, int type, u_int64_t count, u_int64_t *ctr, ANODEPTR *htab)
+  {
+     ANODEPTR cptr,nptr;
+  
+***************
+*** 702,708 ****
+  /* PUT_SNODE - insert/update search str node */
+  /*********************************************/
+  
+! int put_snode(char *str, u_long count, SNODEPTR *htab)
+  {
+     SNODEPTR cptr,nptr;
+  
+--- 702,708 ----
+  /* PUT_SNODE - insert/update search str node */
+  /*********************************************/
+  
+! int put_snode(char *str, u_int64_t count, SNODEPTR *htab)
+  {
+     SNODEPTR cptr,nptr;
+  
+***************
+*** 810,821 ****
+  
+  int put_inode( char     *str,   /* ident str */
+                 int       type,  /* obj type  */
+!                u_long    count, /* hit count */
+!                u_long    file,  /* File flag */
+                 double    xfer,  /* xfer size */
+!                u_long   *ctr,   /* counter   */
+!                u_long    visit, /* visits    */
+!                u_long    tstamp,/* timestamp */
+                 INODEPTR *htab)  /* hashtable */
+  {
+     INODEPTR cptr,nptr;
+--- 810,821 ----
+  
+  int put_inode( char     *str,   /* ident str */
+                 int       type,  /* obj type  */
+!                u_int64_t    count, /* hit count */
+!                u_int64_t    file,  /* File flag */
+                 double    xfer,  /* xfer size */
+!                u_int64_t   *ctr,   /* counter   */
+!                u_int64_t    visit, /* visits    */
+!                u_int64_t    tstamp,/* timestamp */
+                 INODEPTR *htab)  /* hashtable */
+  {
+     INODEPTR cptr,nptr;
+***************
+*** 1047,1055 ****
+  /* HASH - return hash value for string       */
+  /*********************************************/
+  
+! u_long hash(char *str)
+  {
+!    u_long hashval;
+     for (hashval = 0; *str != '\0'; str++)
+        hashval = *str + 31 * hashval;
+     return hashval % MAXHASH;
+--- 1047,1055 ----
+  /* HASH - return hash value for string       */
+  /*********************************************/
+  
+! u_int64_t hash(char *str)
+  {
+!    u_int64_t hashval;
+     for (hashval = 0; *str != '\0'; str++)
+        hashval = *str + 31 * hashval;
+     return hashval % MAXHASH;
+***************
+*** 1133,1139 ****
+  /* MONTH_UPDATE_EXIT  - eom exit page update */
+  /*********************************************/
+  
+! void month_update_exit(u_long tstamp)
+  {
+     HNODEPTR nptr;
+     int i;
+--- 1133,1139 ----
+  /* MONTH_UPDATE_EXIT  - eom exit page update */
+  /*********************************************/
+  
+! void month_update_exit(u_int64_t tstamp)
+  {
+     HNODEPTR nptr;
+     int i;
+***************
+*** 1157,1166 ****
+  /* TOT_VISIT - calculate total visits        */
+  /*********************************************/
+  
+! u_long tot_visit(HNODEPTR *list)
+  {
+     HNODEPTR   hptr;
+!    u_long     tot=0;
+     int        i;
+  
+     for (i=0;i<MAXHASH;i++)
+--- 1157,1166 ----
+  /* TOT_VISIT - calculate total visits        */
+  /*********************************************/
+  
+! u_int64_t tot_visit(HNODEPTR *list)
+  {
+     HNODEPTR   hptr;
+!    u_int64_t     tot=0;
+     int        i;
+  
+     for (i=0;i<MAXHASH;i++)
+*** ./hashtab.h.osr6	Thu Sep 28 20:50:30 2000
+--- ./hashtab.h	Sun Feb 12 12:01:34 2006
+***************
+*** 25,67 ****
+  
+  struct hnode {  char *string;              /* host hash table structure    */
+                   int flag;
+!               u_long count;
+!               u_long files;
+!               u_long visit;                /* visit information            */
+!               u_long tstamp;
+                  char *lasturl;
+                double xfer;
+                struct hnode *next; };
+  
+  struct unode {  char *string;              /* url hash table structure     */
+                   int flag;                 /* Object type (REG, HIDE, GRP) */
+!               u_long count;                /* requests counter             */
+!               u_long files;                /* files counter                */
+!               u_long entry;                /* entry page counter           */
+!               u_long exit;                 /* exit page counter            */
+                double xfer;                 /* xfer size in bytes           */
+                struct unode *next; };       /* pointer to next node         */
+  
+  struct rnode {  char *string;              /* referrer hash table struct   */
+                   int flag;
+!               u_long count;
+                struct rnode *next; };
+  
+  struct anode {  char *string;
+                   int flag;
+!               u_long count;
+                struct anode *next; };
+  
+  struct snode {  char *string;                 /* search string struct      */
+!               u_long count;
+                struct snode *next; };
+  
+  struct inode {  char *string;                 /* host hash table struct    */
+                   int flag;
+!               u_long count;
+!               u_long files;
+!               u_long visit;
+!               u_long tstamp;
+                double xfer;
+                struct inode *next; };
+  
+--- 25,67 ----
+  
+  struct hnode {  char *string;              /* host hash table structure    */
+                   int flag;
+!               u_int64_t count;
+!               u_int64_t files;
+!               u_int64_t visit;                /* visit information            */
+!               u_int64_t tstamp;
+                  char *lasturl;
+                double xfer;
+                struct hnode *next; };
+  
+  struct unode {  char *string;              /* url hash table structure     */
+                   int flag;                 /* Object type (REG, HIDE, GRP) */
+!               u_int64_t count;                /* requests counter             */
+!               u_int64_t files;                /* files counter                */
+!               u_int64_t entry;                /* entry page counter           */
+!               u_int64_t exit;                 /* exit page counter            */
+                double xfer;                 /* xfer size in bytes           */
+                struct unode *next; };       /* pointer to next node         */
+  
+  struct rnode {  char *string;              /* referrer hash table struct   */
+                   int flag;
+!               u_int64_t count;
+                struct rnode *next; };
+  
+  struct anode {  char *string;
+                   int flag;
+!               u_int64_t count;
+                struct anode *next; };
+  
+  struct snode {  char *string;                 /* search string struct      */
+!               u_int64_t count;
+                struct snode *next; };
+  
+  struct inode {  char *string;                 /* host hash table struct    */
+                   int flag;
+!               u_int64_t count;
+!               u_int64_t files;
+!               u_int64_t visit;
+!               u_int64_t tstamp;
+                double xfer;
+                struct inode *next; };
+  
+***************
+*** 76,90 ****
+  extern DNODEPTR host_table[MAXHASH];          /* DNS resolver table        */
+  #endif
+  
+! extern int    put_hnode(char *, int, u_long, u_long, double, u_long *,
+!                         u_long, u_long, char *, HNODEPTR *);
+! extern int    put_unode(char *, int, u_long, double, u_long *,
+!                         u_long, u_long, UNODEPTR *);
+! extern int    put_inode(char *, int, u_long, u_long, double, u_long *,
+!                         u_long, u_long, INODEPTR *);
+! extern int    put_rnode(char *, int, u_long, u_long *, RNODEPTR *);
+! extern int    put_anode(char *, int, u_long, u_long *, ANODEPTR *);
+! extern int    put_snode(char *, u_long, SNODEPTR *);
+  
+  #ifdef USE_DNS
+  extern int    put_dnode(char *, struct in_addr *, DNODEPTR *);
+--- 76,90 ----
+  extern DNODEPTR host_table[MAXHASH];          /* DNS resolver table        */
+  #endif
+  
+! extern int    put_hnode(char *, int, u_int64_t, u_int64_t, double, u_int64_t *,
+!                         u_int64_t, u_int64_t, char *, HNODEPTR *);
+! extern int    put_unode(char *, int, u_int64_t, double, u_int64_t *,
+!                         u_int64_t, u_int64_t, UNODEPTR *);
+! extern int    put_inode(char *, int, u_int64_t, u_int64_t, double, u_int64_t *,
+!                         u_int64_t, u_int64_t, INODEPTR *);
+! extern int    put_rnode(char *, int, u_int64_t, u_int64_t *, RNODEPTR *);
+! extern int    put_anode(char *, int, u_int64_t, u_int64_t *, ANODEPTR *);
+! extern int    put_snode(char *, u_int64_t, SNODEPTR *);
+  
+  #ifdef USE_DNS
+  extern int    put_dnode(char *, struct in_addr *, DNODEPTR *);
+***************
+*** 99,106 ****
+  extern void   del_slist(SNODEPTR *);          /* delete host htab          */
+  extern void   del_ilist(INODEPTR *);          /* delete host htab          */
+  
+! extern void   month_update_exit(u_long);
+! extern u_long tot_visit(HNODEPTR *);
+  extern char   *find_url(char *);
+  
+  #endif  /* _HASHTAB_H */
+--- 99,106 ----
+  extern void   del_slist(SNODEPTR *);          /* delete host htab          */
+  extern void   del_ilist(INODEPTR *);          /* delete host htab          */
+  
+! extern void   month_update_exit(u_int64_t);
+! extern u_int64_t tot_visit(HNODEPTR *);
+  extern char   *find_url(char *);
+  
+  #endif  /* _HASHTAB_H */
+*** ./preserve.c.osr6	Sat Feb 11 06:54:04 2006
+--- ./preserve.c	Sun Feb 12 12:01:34 2006
+***************
+*** 67,78 ****
+  
+  /* local variables */
+  int     hist_month[12], hist_year[12];        /* arrays for monthly total */
+! u_long  hist_hit[12];                         /* calculations: used to    */
+! u_long  hist_files[12];                       /* produce index.html       */
+! u_long  hist_site[12];                        /* these are read and saved */
+  double  hist_xfer[12];                        /* in the history file      */
+! u_long  hist_page[12];
+! u_long  hist_visit[12];
+  
+  int     hist_fday[12], hist_lday[12];         /* first/last day arrays    */
+  
+--- 67,78 ----
+  
+  /* local variables */
+  int     hist_month[12], hist_year[12];        /* arrays for monthly total */
+! u_int64_t  hist_hit[12];                         /* calculations: used to    */
+! u_int64_t  hist_files[12];                       /* produce index.html       */
+! u_int64_t  hist_site[12];                        /* these are read and saved */
+  double  hist_xfer[12];                        /* in the history file      */
+! u_int64_t  hist_page[12];
+! u_int64_t  hist_visit[12];
+  
+  int     hist_fday[12], hist_lday[12];         /* first/last day arrays    */
+  
+***************
+*** 110,116 ****
+           }
+  
+           /* month# year# requests files sites xfer firstday lastday */
+!          numfields = sscanf(buffer,"%d %d %lu %lu %lu %lf %d %d %lu %lu",
+                         &hist_month[i],
+                         &hist_year[i],
+                         &hist_hit[i],
+--- 110,116 ----
+           }
+  
+           /* month# year# requests files sites xfer firstday lastday */
+!          numfields = sscanf(buffer,"%d %d %lld %lld %lld %lf %d %d %lld %lld",
+                         &hist_month[i],
+                         &hist_year[i],
+                         &hist_hit[i],
+***************
+*** 151,157 ****
+        {
+           if ((hist_month[i] != 0) && (hist_hit[i] != 0))
+           {
+!             fprintf(hist_fp,"%d %d %lu %lu %lu %.0f %d %d %lu %lu\n",
+                              hist_month[i],
+                              hist_year[i],
+                              hist_hit[i],
+--- 151,157 ----
+        {
+           if ((hist_month[i] != 0) && (hist_hit[i] != 0))
+           {
+!             fprintf(hist_fp,"%d %d %lld %lld %lld %.0f %d %d %lld %lld\n",
+                              hist_month[i],
+                              hist_year[i],
+                              hist_hit[i],
+***************
+*** 214,233 ****
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Monthly totals for sites, urls, etc... */
+!    sprintf(buffer,"%lu %lu %lu %lu %lu %lu %.0f %lu %lu %lu\n",
+          t_hit, t_file, t_site, t_url,
+          t_ref, t_agent, t_xfer, t_page, t_visit, t_user);
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Daily totals for sites, urls, etc... */
+!    sprintf(buffer,"%lu %lu %lu %d %d\n",
+          dt_site, ht_hit, mh_hit, f_day, l_day);
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Monthly (by day) total array */
+     for (i=0;i<31;i++)
+     {
+!       sprintf(buffer,"%lu %lu %.0f %lu %lu %lu\n",
+          tm_hit[i],tm_file[i],tm_xfer[i],tm_site[i],tm_page[i],tm_visit[i]);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+--- 214,233 ----
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Monthly totals for sites, urls, etc... */
+!    sprintf(buffer,"%lld %lld %lld %lld %lld %lld %.0f %lld %lld %lld\n",
+          t_hit, t_file, t_site, t_url,
+          t_ref, t_agent, t_xfer, t_page, t_visit, t_user);
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Daily totals for sites, urls, etc... */
+!    sprintf(buffer,"%lld %lld %lld %d %d\n",
+          dt_site, ht_hit, mh_hit, f_day, l_day);
+     if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+  
+     /* Monthly (by day) total array */
+     for (i=0;i<31;i++)
+     {
+!       sprintf(buffer,"%lld %lld %.0f %lld %lld %lld\n",
+          tm_hit[i],tm_file[i],tm_xfer[i],tm_site[i],tm_page[i],tm_visit[i]);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+***************
+*** 235,241 ****
+     /* Daily (by hour) total array */
+     for (i=0;i<24;i++)
+     {
+!       sprintf(buffer,"%lu %lu %.0f %lu\n",
+          th_hit[i],th_file[i],th_xfer[i],th_page[i]);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+--- 235,241 ----
+     /* Daily (by hour) total array */
+     for (i=0;i<24;i++)
+     {
+!       sprintf(buffer,"%lld %lld %.0f %lld\n",
+          th_hit[i],th_file[i],th_xfer[i],th_page[i]);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+***************
+*** 243,249 ****
+     /* Response codes */
+     for (i=0;i<TOTAL_RC;i++)
+     {
+!       sprintf(buffer,"%lu\n",response[i].count);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+  
+--- 243,249 ----
+     /* Response codes */
+     for (i=0;i<TOTAL_RC;i++)
+     {
+!       sprintf(buffer,"%lld\n",response[i].count);
+        if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+     }
+  
+***************
+*** 255,261 ****
+        uptr=um_htab[i];
+        while (uptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lu %lu %.0f %lu %lu\n", uptr->string,
+                uptr->flag, uptr->count, uptr->files, uptr->xfer,
+                uptr->entry, uptr->exit);
+           if (fputs(buffer,fp)==EOF) return 1;
+--- 255,261 ----
+        uptr=um_htab[i];
+        while (uptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lld %lld %.0f %lld %lld\n", uptr->string,
+                uptr->flag, uptr->count, uptr->files, uptr->xfer,
+                uptr->entry, uptr->exit);
+           if (fputs(buffer,fp)==EOF) return 1;
+***************
+*** 272,278 ****
+        hptr=sm_htab[i];
+        while (hptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lu %lu %.0f %lu %lu\n%s\n",
+                hptr->string,
+                hptr->flag,
+                hptr->count,
+--- 272,278 ----
+        hptr=sm_htab[i];
+        while (hptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lld %lld %.0f %lld %lld\n%s\n",
+                hptr->string,
+                hptr->flag,
+                hptr->count,
+***************
+*** 294,300 ****
+        hptr=sd_htab[i];
+        while (hptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lu %lu %.0f %lu %lu\n%s\n",
+                hptr->string,
+                hptr->flag,
+                hptr->count,
+--- 294,300 ----
+        hptr=sd_htab[i];
+        while (hptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lld %lld %.0f %lld %lld\n%s\n",
+                hptr->string,
+                hptr->flag,
+                hptr->count,
+***************
+*** 318,324 ****
+           rptr=rm_htab[i];
+           while (rptr!=NULL)
+           {
+!             sprintf(buffer,"%s\n%d %lu\n", rptr->string,
+                   rptr->flag, rptr->count);
+              if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+              rptr=rptr->next;
+--- 318,324 ----
+           rptr=rm_htab[i];
+           while (rptr!=NULL)
+           {
+!             sprintf(buffer,"%s\n%d %lld\n", rptr->string,
+                   rptr->flag, rptr->count);
+              if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+              rptr=rptr->next;
+***************
+*** 336,342 ****
+           aptr=am_htab[i];
+           while (aptr!=NULL)
+           {
+!             sprintf(buffer,"%s\n%d %lu\n", aptr->string,
+                   aptr->flag, aptr->count);
+              if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+              aptr=aptr->next;
+--- 336,342 ----
+           aptr=am_htab[i];
+           while (aptr!=NULL)
+           {
+!             sprintf(buffer,"%s\n%d %lld\n", aptr->string,
+                   aptr->flag, aptr->count);
+              if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+              aptr=aptr->next;
+***************
+*** 352,358 ****
+        sptr=sr_htab[i];
+        while (sptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%lu\n", sptr->string,sptr->count);
+           if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+           sptr=sptr->next;
+        }
+--- 352,358 ----
+        sptr=sr_htab[i];
+        while (sptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%lld\n", sptr->string,sptr->count);
+           if (fputs(buffer,fp)==EOF) return 1;  /* error exit */
+           sptr=sptr->next;
+        }
+***************
+*** 367,373 ****
+        iptr=im_htab[i];
+        while (iptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lu %lu %.0f %lu %lu\n",
+                iptr->string,
+                iptr->flag,
+                iptr->count,
+--- 367,373 ----
+        iptr=im_htab[i];
+        while (iptr!=NULL)
+        {
+!          sprintf(buffer,"%s\n%d %lld %lld %.0f %lld %lld\n",
+                iptr->string,
+                iptr->flag,
+                iptr->count,
+***************
+*** 416,422 ****
+     char   buffer[BUFSIZE];
+     char   tmp_buf[BUFSIZE];
+  
+!    u_long ul_bogus=0;
+  
+     fp=fopen(state_fname,"r");
+     if (fp==NULL)
+--- 416,422 ----
+     char   buffer[BUFSIZE];
+     char   tmp_buf[BUFSIZE];
+  
+!    u_int64_t ul_bogus=0;
+  
+     fp=fopen(state_fname,"r");
+     if (fp==NULL)
+***************
+*** 450,456 ****
+     /* Get monthly totals */
+     if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+     {
+!       sscanf(buffer,"%lu %lu %lu %lu %lu %lu %lf %lu %lu %lu",
+         &t_hit, &t_file, &t_site, &t_url,
+         &t_ref, &t_agent, &t_xfer, &t_page, &t_visit, &t_user);
+     } else return 3;  /* error exit */
+--- 450,456 ----
+     /* Get monthly totals */
+     if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+     {
+!       sscanf(buffer,"%lld %lld %lld %lld %lld %lld %lf %lld %lld %lld",
+         &t_hit, &t_file, &t_site, &t_url,
+         &t_ref, &t_agent, &t_xfer, &t_page, &t_visit, &t_user);
+     } else return 3;  /* error exit */
+***************
+*** 458,464 ****
+     /* Get daily totals */
+     if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+     {
+!       sscanf(buffer,"%lu %lu %lu %d %d",
+         &dt_site, &ht_hit, &mh_hit, &f_day, &l_day);
+     } else return 4;  /* error exit */
+  
+--- 458,464 ----
+     /* Get daily totals */
+     if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+     {
+!       sscanf(buffer,"%lld %lld %lld %d %d",
+         &dt_site, &ht_hit, &mh_hit, &f_day, &l_day);
+     } else return 4;  /* error exit */
+  
+***************
+*** 467,473 ****
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+        {
+!          sscanf(buffer,"%lu %lu %lf %lu %lu %lu",
+            &tm_hit[i],&tm_file[i],&tm_xfer[i],&tm_site[i],&tm_page[i],
+            &tm_visit[i]);
+        } else return 5;  /* error exit */
+--- 467,473 ----
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+        {
+!          sscanf(buffer,"%lld %lld %lf %lld %lld %lld",
+            &tm_hit[i],&tm_file[i],&tm_xfer[i],&tm_site[i],&tm_page[i],
+            &tm_visit[i]);
+        } else return 5;  /* error exit */
+***************
+*** 478,484 ****
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+        {
+!          sscanf(buffer,"%lu %lu %lf %lu",
+            &th_hit[i],&th_file[i],&th_xfer[i],&th_page[i]);
+        } else return 6;  /* error exit */
+     }
+--- 478,484 ----
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+        {
+!          sscanf(buffer,"%lld %lld %lf %lld",
+            &th_hit[i],&th_file[i],&th_xfer[i],&th_page[i]);
+        } else return 6;  /* error exit */
+     }
+***************
+*** 487,493 ****
+     for (i=0;i<TOTAL_RC;i++)
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+!          sscanf(buffer,"%lu",&response[i].count);
+        else return 7;  /* error exit */
+     }
+  
+--- 487,493 ----
+     for (i=0;i<TOTAL_RC;i++)
+     {
+        if ((fgets(buffer,BUFSIZE,fp)) != NULL)
+!          sscanf(buffer,"%lld",&response[i].count);
+        else return 7;  /* error exit */
+     }
+  
+***************
+*** 513,519 ****
+        if (!isdigit((int)buffer[0])) return 10;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu %lu %lf %lu %lu",
+           &t_unode.flag,&t_unode.count,
+           &t_unode.files, &t_unode.xfer,
+           &t_unode.entry, &t_unode.exit);
+--- 513,519 ----
+        if (!isdigit((int)buffer[0])) return 10;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld %lld %lf %lld %lld",
+           &t_unode.flag,&t_unode.count,
+           &t_unode.files, &t_unode.xfer,
+           &t_unode.entry, &t_unode.exit);
+***************
+*** 544,550 ****
+        if (!isdigit((int)buffer[0])) return 8;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu %lu %lf %lu %lu",
+           &t_hnode.flag,&t_hnode.count,
+           &t_hnode.files, &t_hnode.xfer,
+           &t_hnode.visit, &t_hnode.tstamp);
+--- 544,550 ----
+        if (!isdigit((int)buffer[0])) return 8;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld %lld %lf %lld %lld",
+           &t_hnode.flag,&t_hnode.count,
+           &t_hnode.files, &t_hnode.xfer,
+           &t_hnode.visit, &t_hnode.tstamp);
+***************
+*** 584,590 ****
+        if (!isdigit((int)buffer[0])) return 9;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu %lu %lf %lu %lu",
+            &t_hnode.flag,&t_hnode.count,
+            &t_hnode.files, &t_hnode.xfer,
+            &t_hnode.visit, &t_hnode.tstamp);
+--- 584,590 ----
+        if (!isdigit((int)buffer[0])) return 9;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld %lld %lf %lld %lld",
+            &t_hnode.flag,&t_hnode.count,
+            &t_hnode.files, &t_hnode.xfer,
+            &t_hnode.visit, &t_hnode.tstamp);
+***************
+*** 623,629 ****
+        if (!isdigit((int)buffer[0])) return 11;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu",&t_rnode.flag,&t_rnode.count);
+  
+        /* insert node */
+        if (put_rnode(tmp_buf,t_rnode.flag,
+--- 623,629 ----
+        if (!isdigit((int)buffer[0])) return 11;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld",&t_rnode.flag,&t_rnode.count);
+  
+        /* insert node */
+        if (put_rnode(tmp_buf,t_rnode.flag,
+***************
+*** 648,654 ****
+        if (!isdigit((int)buffer[0])) return 12;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu",&t_anode.flag,&t_anode.count);
+  
+        /* insert node */
+        if (put_anode(tmp_buf,t_anode.flag,t_anode.count,
+--- 648,654 ----
+        if (!isdigit((int)buffer[0])) return 12;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld",&t_anode.flag,&t_anode.count);
+  
+        /* insert node */
+        if (put_anode(tmp_buf,t_anode.flag,t_anode.count,
+***************
+*** 673,679 ****
+        if (!isdigit((int)buffer[0])) return 13;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%lu",&t_snode.count);
+  
+        /* insert node */
+        if (put_snode(tmp_buf,t_snode.count,sr_htab))
+--- 673,679 ----
+        if (!isdigit((int)buffer[0])) return 13;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%lld",&t_snode.count);
+  
+        /* insert node */
+        if (put_snode(tmp_buf,t_snode.count,sr_htab))
+***************
+*** 698,704 ****
+        if (!isdigit((int)buffer[0])) return 14;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lu %lu %lf %lu %lu",
+           &t_inode.flag,&t_inode.count,
+           &t_inode.files, &t_inode.xfer,
+           &t_inode.visit, &t_inode.tstamp);
+--- 698,704 ----
+        if (!isdigit((int)buffer[0])) return 14;  /* error exit */
+  
+        /* load temporary node data */
+!       sscanf(buffer,"%d %lld %lld %lf %lld %lld",
+           &t_inode.flag,&t_inode.count,
+           &t_inode.files, &t_inode.xfer,
+           &t_inode.visit, &t_inode.tstamp);
+*** ./preserve.h.osr6	Thu Sep 28 20:50:31 2000
+--- ./preserve.h	Sun Feb 12 12:01:34 2006
+***************
+*** 8,19 ****
+  
+  extern int     hist_month[12];                /* arrays for monthly total */
+  extern int     hist_year[12];
+! extern u_long  hist_hit[12];                  /* calculations: used to    */
+! extern u_long  hist_files[12];                /* produce index.html       */
+! extern u_long  hist_site[12];                 /* these are read and saved */
+  extern double  hist_xfer[12];                 /* in the history file      */
+! extern u_long  hist_page[12];
+! extern u_long  hist_visit[12];
+  
+  extern int     hist_fday[12];                 /* first/last day arrays    */
+  extern int     hist_lday[12];
+--- 8,19 ----
+  
+  extern int     hist_month[12];                /* arrays for monthly total */
+  extern int     hist_year[12];
+! extern u_int64_t  hist_hit[12];               /* calculations: used to    */
+! extern u_int64_t  hist_files[12];             /* produce index.html       */
+! extern u_int64_t  hist_site[12];              /* these are read and saved */
+  extern double  hist_xfer[12];                 /* in the history file      */
+! extern u_int64_t  hist_page[12];
+! extern u_int64_t  hist_visit[12];
+  
+  extern int     hist_fday[12];                 /* first/last day arrays    */
+  extern int     hist_lday[12];

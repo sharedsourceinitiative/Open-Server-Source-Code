@@ -1,0 +1,66 @@
+--- ./libtiff/Makefile.in.uw	2001-09-09 15:56:04.000000000 +0000
++++ ./libtiff/Makefile.in	2003-09-10 00:16:45.750000016 +0000
+@@ -183,6 +183,10 @@
+ SOLARISdso: ${OBJS}
+ 	${LD} -L@DIR_LIB@ -G -h libtiff.@DSOSUF@ -o libtiff.@DSOSUF@ ${OBJS}
+ 	touch $@
++# UnixWare
++UnixWaredso: ${OBJS}
++	${LD} -G -h libtiff.@DSOSUF@ -o libtiff.@DSOSUF@ ${OBJS}
++	touch $@
+ # HP-UX 10.x+
+ HPUXdso: ${OBJS}
+ 	${LD} -b -o libtiff.@DSOSUF_VERSION@ +h libtiff.@DSOSUF_VERSION@ ${OBJS}
+@@ -364,15 +368,17 @@
+ 
+ installDSO: @DSO@dso
+ 	if [ @DSOSUF_VERSION@ != @DSOSUF@ ]; then			\
+-	    ${INSTALL} -idb tiff.sw.tools -m 555 -F ${DESTDIR}@DIR_LIB@	\
+-		-O libtiff.@DSOSUF_VERSION@;				\
+-	    ${INSTALL} -idb tiff.sw.tools -F ${DESTDIR}@DIR_LIB@	\
++	    ${INSTALL} -idb nostrip -idb tiff.sw.tools -m 555           \
++		-F ${DESTDIR}@DIR_LIB@ -O libtiff.@DSOSUF_VERSION@;	\
++	    ${INSTALL} -idb nostrip -idb tiff.sw.tools                  \
++		-F ${DESTDIR}@DIR_LIB@	\
+ 		-lns libtiff.@DSOSUF_VERSION@ -O libtiff.@DSOSUF@;	\
+-	    ${INSTALL} -idb tiff.sw.tools -F ${DESTDIR}@DIR_LIB@	\
++	    ${INSTALL} -idb nostrip -idb tiff.sw.tools                  \
++		-F ${DESTDIR}@DIR_LIB@	\
+ 		-lns libtiff.@DSOSUF@ -O libtiff.so;			\
+ 	else								\
+-	    ${INSTALL} -idb tiff.sw.tools -m 555 -F ${DESTDIR}@DIR_LIB@	\
+-		-O libtiff.@DSOSUF@;					\
++	    ${INSTALL} -idb nostrip -idb tiff.sw.tools -m 555           \
++		-F ${DESTDIR}@DIR_LIB@ -O libtiff.@DSOSUF@;		\
+ 	fi
+ 
+ install: all installHdrs
+--- ./configure.uw	2001-11-15 17:21:05.000000000 +0000
++++ ./configure	2003-09-09 23:33:59.660000063 +0000
+@@ -1165,6 +1165,17 @@
+ 	DSO=SOLARIS
+ 	TIFFLIBREF='-L${DEPTH}/libtiff -R'${DIR_LIB}' -ltiff'
+ 	;;
++    *-sysv5*)
++	DSOSUF=so
++	DSOOPTS='-G'
++	if [ $ISGCC = yes ]; then
++	    LIBCOPTS="-fpic"
++	else
++	    LIBCOPTS="-KPIC"
++	fi
++	DSO=UnixWare
++	TIFFLIBREF='-ltiff'
++	;;
+     *-netbsd*)
+ 	DSOSUF=so.${DIST_MAJOR}.0
+ 	LIBCOPTS='-fPIC'
+@@ -1375,7 +1386,7 @@
+     *-linux*)			MANSCHEME=bsd-source-cat;;
+     *-ultrix*)			MANSCHEME=bsd-source-cat;;
+     *-sunos*)			MANSCHEME=bsd-source-cat-strip;;
+-    *-sysv[234]*)		MANSCHEME=sysv-source-cat-strip;;
++    *-sysv[2345]*)		MANSCHEME=sysv-source-cat-strip;;
+     *-hpux*)			MANSCHEME=sysv-source-cat;;
+     *-solaris*)			MANSCHEME=sysv-source-cat-strip;;
+     *-aix*)			MANSCHEME=sysv-source-strip;;

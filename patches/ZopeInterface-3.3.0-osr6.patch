@@ -1,0 +1,14 @@
+*** ./Build-OSR6.00 Tue May 17 15:22:00 2005
+--- ./Build-OSR6 Tue May 17 15:24:47 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ python setup.py build 2>&1 | tee $MOUT
++ 
++ echo "\nTo install, run the command:"
++ echo "\n\tpython setup.py install\n"
++ 

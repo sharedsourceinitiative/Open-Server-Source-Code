@@ -1,0 +1,302 @@
+*** ./Build-OSR6.osr6	Fri Nov  7 10:46:17 2008
+--- ./Build-OSR6	Fri Nov  7 10:46:17 2008
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ 
++ MAKE=/usr/gnu/bin/make
++ export MAKE
++ PATH=/usr/local/bin:/usr/X11R6/bin:$PATH
++ export PATH
++ CDEBUGFLAGS="-O2"
++ EXTRA_DEFINES="-D__OLD_SOCKADDR__"
++ export CDEBUGFLAGS EXTRA_DEFINES
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ 
++ /usr/local/bin/xmkmf -a 2>&1 | tee $MOUT-xmkmf
++ $MAKE World 2>&1 | tee $MOUT-World
++ cd Xvnc
++ ./configure 2>&1 | tee $MOUT-configure
++ $MAKE 2>&1 | tee $MOUT
+*** ./vncserver.osr6	Thu Apr 26 03:57:06 2007
+--- ./vncserver	Fri Nov  7 10:46:17 2008
+***************
+*** 36,51 ****
+  $geometry = "1024x768";
+  $depth = 24;
+  $desktopName = "X";
+! $vncClasses = "/usr/local/vnc/classes";
+  $vncUserDir = "$ENV{HOME}/.vnc";
+! $fontPath = "unix/:7100";
+  $authType = "-rfbauth $vncUserDir/passwd";
+  
+  # Here is another example of setting the font path:
+  # $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
+  
+  # X colors database path is optional, uncomment and edit to use:
+  # $colorPath = "/usr/lib/X11/rgb";
+  
+  # You might wish to make your vnc directory under /tmp, to make sure
+  # passwords are always kept on the local filesystem. To do that, just
+--- 36,53 ----
+  $geometry = "1024x768";
+  $depth = 24;
+  $desktopName = "X";
+! $vncClasses = "/usr/share/vnc/classes";
+  $vncUserDir = "$ENV{HOME}/.vnc";
+! # $fontPath = "unix/:7100";
+  $authType = "-rfbauth $vncUserDir/passwd";
+  
+  # Here is another example of setting the font path:
+  # $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
++ $fontPath = "/usr/X11R6/lib/X11/fonts/misc/,/usr/X11R6/lib/X11/fonts/75dpi/,/usr/X11R6/lib/X11/fonts/100dpi/";
+  
+  # X colors database path is optional, uncomment and edit to use:
+  # $colorPath = "/usr/lib/X11/rgb";
++ $colorPath = "/usr/X11R6/lib/X11/rgb.txt";
+  
+  # You might wish to make your vnc directory under /tmp, to make sure
+  # passwords are always kept on the local filesystem. To do that, just
+***************
+*** 58,64 ****
+  
+  $defaultXStartup
+      = ("#!/bin/sh\n\n".
+!        "xrdb \$HOME/.Xresources\n".
+         "xsetroot -solid grey\n".
+         "xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n".
+         "twm &\n");
+--- 60,68 ----
+  
+  $defaultXStartup
+      = ("#!/bin/sh\n\n".
+!        "PATH=/usr/X11R6/bin:/usr/gnu/bin:\$PATH:/usr/bin/X11:/usr/local/bin\n".
+!        "export PATH\n".
+!        "[ -f \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n".
+         "xsetroot -solid grey\n".
+         "xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n".
+         "twm &\n");
+***************
+*** 555,560 ****
+--- 559,570 ----
+      ($prog) = ($0 =~ m|([^/]+)$|);
+  
+      #
++     # Add /usr/X11R6/bin and /usr/gnu/bin to our PATH
++     #
++ 
++     $ENV{PATH} = "/etc:/usr/bin:/tcb/bin:/usr/X11R6/bin:/usr/gnu/bin";
++ 
++     #
+      # Check we have all the commands we'll need on the path.
+      #
+  
+***************
+*** 572,577 ****
+--- 582,593 ----
+      # Check the HOME and USER environment variables are both set.
+      #
+  
++     #
++     # Set the USER environment variable to 'id -u -n'
++     #
++ 
++     $ENV{USER} = `id -u -n`;
++ 
+      unless (defined($ENV{HOME})) {
+  	die "$prog: The HOME environment variable is not set.\n";
+      }
+*** ./Install-OSR6.osr6	Fri Nov  7 10:46:17 2008
+--- ./Install-OSR6	Fri Nov  7 10:46:17 2008
+***************
+*** 0 ****
+--- 1,53 ----
++ #!/bin/sh
++ 
++ buildroot=/u/tmp/tightvnc
++ _bindir=/usr/bin
++ _mandir=/usr/man
++ _datadir=/usr/share
++ 
++ [ -d $buildroot ] && rm -rf $buildroot
++ mkdir -p $buildroot
++ 
++ mkdir -p ${buildroot}${_bindir}
++ mkdir -p ${buildroot}${_mandir}/man1
++ ./vncinstall ${buildroot}${_bindir} ${buildroot}${_mandir}
++ 
++ mkdir -p ${buildroot}${_datadir}/vnc
++ cp -pR classes ${buildroot}${_datadir}/vnc
++ 
++ #strip ${buildroot}${_bindir}/* || :
++ 
++ mkdir -p ${buildroot}/etc/init.d
++ install -m755 vncserver.init ${buildroot}/etc/init.d/vncserver
++ 
++ mkdir -p ${buildroot}/etc/sysconfig
++ cat > ${buildroot}/etc/sysconfig/vncservers << EOF
++ # The VNCSERVERS variable is a list of display:user pairs.
++ #
++ # Uncomment the line below to start a VNC server on display :1
++ # as my 'myusername' (adjust this to your own).  You will also
++ # need to set a VNC password; run 'man vncpasswd' to see how
++ # to do that.  
++ #
++ # DO NOT RUN THIS SERVICE if your local area network is
++ # untrusted!  For a secure way of using VNC, see
++ # <URL:http://www.uk.research.att.com/vnc/sshvnc.html>.
++ 
++ # VNCSERVERS="1:myusername"
++ EOF
++ chmod 644 ${buildroot}/etc/sysconfig/vncservers
++ 
++ mkdir -p ${buildroot}/etc/X11/applnk/Applications
++ cat > ${buildroot}/etc/X11/applnk/Applications/vncviewer.desktop << EOF
++ [Desktop Entry]
++ Name=VNC Viewer
++ Comment=VNC client application
++ Exec=/usr/bin/vncviewer
++ Terminal=0
++ Type=Application
++ EOF
++ 
++ mkdir -p ${buildroot}/usr/share/doc/packages/tightvnc
++ cp LICENCE.TXT README WhatsNew ChangeLog \
++    ${buildroot}/usr/share/doc/packages/tightvnc
++ 
+*** ./vncserver.init.osr6	Fri Aug 30 02:16:52 2002
+--- ./vncserver.init	Fri Nov  7 10:46:17 2008
+***************
+*** 1,40 ****
+  #!/bin/bash
+  #
+- # chkconfig: - 91 35
+  # description: Starts and stops vncserver. \
+  #	       used to provide remote X administration services.
+  
+- # Source function library.
+- . /etc/init.d/functions
+- 
+- # Source networking configuration.
+- . /etc/sysconfig/network
+- 
+- # Check that networking is up.
+- [ ${NETWORKING} = "no" ] && exit 0
+- 
+  VNCSERVERS=""
+  [ -f /etc/sysconfig/vncservers ] && . /etc/sysconfig/vncservers
+  
+  prog=$"VNC server"
+  
+  start() {
+      echo -n $"Starting $prog: "
+      ulimit -S -c 0 >/dev/null 2>&1
+-     RETVAL=0
+      for display in ${VNCSERVERS}
+      do
+          echo -n "${display} "
+  	unset BASH_ENV ENV
+!         initlog $INITLOG_ARGS -c \
+!             "su ${display##*:} -c \"cd ~${display##*:} && [ -f .vnc/passwd ] && vncserver :${display%%:*}\""
+!         RETVAL=$?
+!         [ "$RETVAL" -ne 0 ] && break
+      done
+-     [ "$RETVAL" -eq 0 ] && success $"vncserver startup" || \
+-         failure $"vncserver start"
+      echo
+!     [ "$RETVAL" -eq 0 ] && touch /var/lock/subsys/vncserver
+  }
+  
+  stop() {
+--- 1,34 ----
+  #!/bin/bash
+  #
+  # description: Starts and stops vncserver. \
+  #	       used to provide remote X administration services.
+  
+  VNCSERVERS=""
+  [ -f /etc/sysconfig/vncservers ] && . /etc/sysconfig/vncservers
+  
++ PATH=/usr/X11R6/bin:/usr/gnu/bin:$PATH
++ SHELL=/u95/bin/sh
++ export PATH SHELL
++ 
+  prog=$"VNC server"
+  
++ [ -d /var/lock/subsys ] || mkdir -p /var/lock/subsys
++ 
+  start() {
+      echo -n $"Starting $prog: "
+      ulimit -S -c 0 >/dev/null 2>&1
+      for display in ${VNCSERVERS}
+      do
+          echo -n "${display} "
+  	unset BASH_ENV ENV
+!         USER=${display##*:}
+!         DISP=${display%%:*}
+!         export USER DISP
+! #       su -S -s /u95/bin/sh $USER -c "cd ~$USER && [ -f .vnc/passwd ] && vncserver :$DISP"
+!         su $USER -c "cd ~$USER && [ -f .vnc/passwd ] && vncserver :$DISP"
+      done
+      echo
+!     touch /var/lock/subsys/vncserver
+  }
+  
+  stop() {
+***************
+*** 43,56 ****
+      do
+          echo -n "${display} "
+  	unset BASH_ENV ENV
+!         initlog $INITLOG_ARGS -c \
+! 	    "su ${display##*:} -c \"vncserver -kill :${display%%:*}\" >/dev/null 2>&1"
+      done
+-     RETVAL=$?
+-     [ "$RETVAL" -eq 0 ] && success $"vncserver shutdown" || \
+-         failure $"vncserver shutdown"
+      echo
+!     [ "$RETVAL" -eq 0 ] && rm -f /var/lock/subsys/vncserver
+  }
+  
+  # See how we were called.
+--- 37,50 ----
+      do
+          echo -n "${display} "
+  	unset BASH_ENV ENV
+!         USER=${display##*:}
+!         DISP=${display%%:*}
+!         export USER DISP
+! #	su -S -s /u95/bin/sh $USER -c "vncserver -kill :$DISP" >/dev/null 2>&1
+! 	su $USER -c "vncserver -kill :$DISP" >/dev/null 2>&1
+      done
+      echo
+!     rm -f /var/lock/subsys/vncserver
+  }
+  
+  # See how we were called.
+***************
+*** 71,81 ****
+  	    start
+  	fi
+  	;;
+-   status)
+- 	status Xvnc
+- 	;;
+    *)
+! 	echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+  	exit 1
+  esac
+  
+--- 65,72 ----
+  	    start
+  	fi
+  	;;
+    *)
+! 	echo $"Usage: $0 {start|stop|restart|condrestart}"
+  	exit 1
+  esac
+  

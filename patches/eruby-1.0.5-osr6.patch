@@ -1,0 +1,54 @@
+*** ./Configure-OSR6.osr6	Fri Nov 16 15:18:30 2007
+--- ./Configure-OSR6	Fri Nov 16 15:18:30 2007
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure.rb --prefix=/usr --enable-shared 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Fri Nov 16 15:18:30 2007
+--- ./Install-OSR6	Fri Nov 16 15:18:30 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/eruby
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.rb.osr6	Sun Feb  9 19:18:10 2003
+--- ./configure.rb	Fri Nov 16 15:21:07 2007
+***************
+*** 449,454 ****
+--- 449,456 ----
+  if $ENABLE_SHARED
+    $LIBERUBY = "${LIBERUBY_SO}"
+    $LIBERUBYARG = "-L. -leruby"
++   $DLDFLAGS = '-Wl,-h,liberuby.so.$(MAJOR).$(MINOR)'
++   $LIBERUBY_ALIASES = "liberuby.so.$(MAJOR).$(MINOR) liberuby.so"
+    case PLATFORM
+    when /-sunos4/
+      $LIBERUBY_ALIASES = "liberuby.so.$(MAJOR).$(MINOR) liberuby.so"

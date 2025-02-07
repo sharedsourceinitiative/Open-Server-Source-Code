@@ -1,0 +1,59 @@
+--- ./contrib/diffimg/diffimg.c.00	2008-02-22 06:21:42.000000000 -0800
++++ ./contrib/diffimg/diffimg.c	2008-12-31 16:39:29.900000011 -0800
+@@ -42,8 +42,15 @@
+ #define EX_NOINPUT		66
+ #define EX_UNAVAILABLE	69
+ #else
++#if defined(__USLC__)
++#define EX_USAGE 1
++#define EX_DATAERR 2
++#define EX_NOINPUT 3
++#define EX_UNAVAILABLE 4
++#else
+ #include <sysexits.h>
+ #endif
++#endif
+ #include <gd.h>
+ #if defined HAVE_STDBOOL_H && ! defined __cplusplus
+ #include <stdbool.h>
+--- ./Configure-OSR6.00	2008-12-31 16:24:26.120000015 -0800
++++ ./Configure-OSR6	2008-12-31 16:24:26.120000012 -0800
+@@ -0,0 +1,23 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT -I/usr/X11R6/include"
++  CXX="g++ -D_REENTRANT -I/usr/X11R6/include"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca -I/usr/X11R6/include"
++  CXX="CC -Kpthread -Kalloca -I/usr/X11R6/include"
++fi
++LDFLAGS="-L/usr/X11R6/lib"
++export CC CXX CFLAGS NM M4 INSTALL LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr --sysconfdir=/etc \
++            --mandir=/usr/man --infodir=/usr/gnu/info \
++            --enable-swig=no \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2008-12-31 16:39:52.980000003 -0800
++++ ./Install-OSR6	2008-12-31 16:40:10.260000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/graphviz
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++

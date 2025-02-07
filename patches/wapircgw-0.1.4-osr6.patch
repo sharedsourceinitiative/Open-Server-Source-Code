@@ -1,0 +1,386 @@
+*** ./wapircd/src/Makefile.in.osr6	Fri Feb 10 11:11:52 2006
+--- ./wapircd/src/Makefile.in	Sat Feb 11 21:59:47 2006
+***************
+*** 63,72 ****
+  VERSION = @VERSION@
+  
+  bin_PROGRAMS = wapircd
+! CFLAGS = -g -O0 -Wall
+  wapircd_SOURCES = wapircd.c irc.c serverconn.c log.c helper.c garbage.c comm.c 		    cmdline.c clientconn.c snprintf.c
+  
+! wapircd_LDADD = -lpthread
+  mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+  CONFIG_CLEAN_FILES = 
+  PROGRAMS =  $(bin_PROGRAMS)
+--- 63,72 ----
+  VERSION = @VERSION@
+  
+  bin_PROGRAMS = wapircd
+! CFLAGS = -O2 -D_POSIX_SOURCE -U_XOPEN_SOURCE
+  wapircd_SOURCES = wapircd.c irc.c serverconn.c log.c helper.c garbage.c comm.c 		    cmdline.c clientconn.c snprintf.c
+  
+! wapircd_LDADD = -lsocket -lnsl
+  mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+  CONFIG_CLEAN_FILES = 
+  PROGRAMS =  $(bin_PROGRAMS)
+***************
+*** 216,238 ****
+  maintainer-clean-depend:
+  
+  %.o: %.c
+! 	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.c
+! 	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  info-am:
+  info: info-am
+  dvi-am:
+--- 216,226 ----
+  maintainer-clean-depend:
+  
+  %.o: %.c
+! 	$(COMPILE) -c $<
+  
+  %.lo: %.c
+! 	$(LTCOMPILE) -c $<
+! 
+  info-am:
+  info: info-am
+  dvi-am:
+*** ./wapircd/src/wapircd.c.osr6	Fri Feb 10 11:21:36 2006
+--- ./wapircd/src/wapircd.c	Sat Feb 11 21:59:47 2006
+***************
+*** 25,35 ****
+--- 25,39 ----
+  #include <netdb.h>
+  #include <signal.h>
+  #include <unistd.h>
++ #include <sys/socket.h>
++ #include <sys/types.h>
+  
+  #include "serverconn.h"
+  #include "helper.h"
+  #include "garbage.h"
+  
++ typedef unsigned long u_long;
++ 
+  /* listening socket */
+  int list_s=-1;
+  /* verbose output */
+*** ./wapircd/src/comm.c.osr6	Fri Feb 10 10:03:30 2006
+--- ./wapircd/src/comm.c	Sat Feb 11 21:59:47 2006
+***************
+*** 38,43 ****
+--- 38,48 ----
+      int res;
+      int herr;
+  	  
++ #ifdef __USLC__
++     hp = gethostbyname2(host, AF_INET);
++     if (hp == NULL) { return NULL; }
++     return hp;
++ #else
+      hstbuflen = 1024;
+      /* allocate buffer */
+      tmphstbuf = (char*)malloc(hstbuflen);
+***************
+*** 55,60 ****
+--- 60,66 ----
+      /* Check for errors. */
+      if (res || hp == NULL) { return NULL; }
+      return hp;
++ #endif
+  }
+  
+  /* reads a line from the given socket */
+*** ./wapircd/src/clientconn.c.osr6	Fri Feb 10 10:02:45 2006
+--- ./wapircd/src/clientconn.c	Sat Feb 11 21:59:47 2006
+***************
+*** 25,32 ****
+--- 25,44 ----
+  #include <stdlib.h>
+  #include <netdb.h>
+  #include <sys/poll.h>
++ #include <sys/socket.h>
++ #include <sys/types.h>
+  #include <errno.h>
+  #include <fcntl.h>
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  
+  #include "struct.h"
+***************
+*** 144,150 ****
+  	ret = poll(pfd,1,10000); /* 10 sec timeout */
+          if (ret == 1) {
+  	    value_len=sizeof(int);
+! 	    getsockopt(newclientconn->connid,SOL_SOCKET,SO_ERROR,&value,&value_len);
+      	    if (!value) { ret=0; }
+      	    else { ret=-1; }
+          }
+--- 156,162 ----
+  	ret = poll(pfd,1,10000); /* 10 sec timeout */
+          if (ret == 1) {
+  	    value_len=sizeof(int);
+! 	    getsockopt(newclientconn->connid,SOL_SOCKET,SO_ERROR,&value,(size_t *)(&value_len));
+      	    if (!value) { ret=0; }
+      	    else { ret=-1; }
+          }
+*** ./wapircd/src/irc.c.osr6	Fri Feb 10 14:33:56 2006
+--- ./wapircd/src/irc.c	Sat Feb 11 21:59:47 2006
+***************
+*** 22,30 ****
+  
+  #include <stdio.h>
+  #include <string.h>
+  #include <pthread.h>
+  #include <unistd.h>
+- 
+  #include "struct.h"
+  #include "log.h"
+  #include "helper.h"
+--- 22,39 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  #include <unistd.h>
+  #include "struct.h"
+  #include "log.h"
+  #include "helper.h"
+*** ./wapircd/src/cmdline.c.osr6	Fri Feb 10 09:47:03 2006
+--- ./wapircd/src/cmdline.c	Sat Feb 11 21:59:47 2006
+***************
+*** 22,27 ****
+--- 22,37 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  #include <unistd.h>
+  
+*** ./wapircd/src/garbage.c.osr6	Fri Feb 10 08:12:24 2006
+--- ./wapircd/src/garbage.c	Sat Feb 11 21:59:47 2006
+***************
+*** 21,26 ****
+--- 21,36 ----
+  */
+  
+  #include <stdio.h>
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+*** ./wapircd/src/log.c.osr6	Fri Feb 10 10:05:05 2006
+--- ./wapircd/src/log.c	Sat Feb 11 21:59:47 2006
+***************
+*** 24,29 ****
+--- 24,38 ----
+  #include <time.h>
+  #include <stdio.h>
+  #include <stdlib.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  
+  #include "snprintf.h"
+*** ./wapircd/src/serverconn.c.osr6	Fri Feb 10 10:05:28 2006
+--- ./wapircd/src/serverconn.c	Sat Feb 11 21:59:47 2006
+***************
+*** 23,28 ****
+--- 23,38 ----
+  #include <unistd.h>
+  #include <stdlib.h>
+  #include <stdio.h>
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <pthread.h>
+  #include <netdb.h>
+  
+*** ./wapircd/src/config.h.osr6	Fri Feb 10 15:51:51 2006
+--- ./wapircd/src/config.h	Sat Feb 11 21:59:47 2006
+***************
+*** 1,4 ****
+! #define WAPIRCDPASS "yourpasshere"
+  
+  /* usually you don't need to edit anything below this line */
+  
+--- 1,4 ----
+! #define WAPIRCDPASS "isthisthingon"
+  
+  /* usually you don't need to edit anything below this line */
+  
+*** ./wapircd/configure.osr6	Fri Feb 10 09:25:25 2006
+--- ./wapircd/configure	Sat Feb 11 21:59:47 2006
+***************
+*** 2748,2753 ****
+--- 2748,2763 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  $ac_includes_default
++ #include <time.h>
++ 
++ #ifndef _TIMESPEC
++ #define _TIMESPEC
++ struct timespec {
++     time_t      tv_sec;     /* seconds */
++     long        tv_nsec;    /* and nanoseconds */
++ };
++ #endif
++ 
+  #include <$ac_header>
+  _ACEOF
+  rm -f conftest.$ac_objext
+*** ./Build-OSR6.osr6	Sat Feb 11 21:59:47 2006
+--- ./Build-OSR6	Sat Feb 11 21:59:47 2006
+***************
+*** 0 ****
+--- 1,25 ----
++ #!/bin/sh
++ 
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ 
++ cd wapircd
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./wapirctable.sql.osr6	Sat Feb 11 21:59:47 2006
+--- ./wapirctable.sql	Sat Feb 11 21:59:47 2006
+***************
+*** 0 ****
+--- 1,31 ----
++ -- phpMyAdmin SQL Dump
++ -- version 2.7.0-pl2
++ -- http://www.phpmyadmin.net
++ -- 
++ -- Host: localhost
++ -- Generation Time: Feb 11, 2006 at 12:36 AM
++ -- Server version: 4.1.11
++ -- PHP Version: 4.3.10-16
++ -- 
++ -- Database: `nonoo`
++ -- 
++ 
++ -- --------------------------------------------------------
++ 
++ -- 
++ -- Table structure for table `wapirc`
++ -- 
++ 
++ CREATE TABLE `wapirc` (
++   `user` varchar(20) default NULL,
++   `pass` varchar(20) default NULL,
++   `ircserver` varchar(50) default NULL,
++   `ircport` varchar(5) default '6667',
++   `ircuser` varchar(50) NOT NULL default 'wapirc',
++   `ircnick` varchar(50) default NULL,
++   `ircpass` varchar(20) default NULL,
++   `autojoin` varchar(255) default NULL,
++   `loglines` tinyint(3) unsigned NOT NULL default '20',
++   `loglineslong` tinyint(3) unsigned NOT NULL default '100',
++   `allowrawirccmds` tinyint(1) NOT NULL default '0'
++ ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+*** ./Install-OSR6.osr6	Sat Feb 11 21:59:47 2006
+--- ./Install-OSR6	Sat Feb 11 22:01:12 2006
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/wapirc
++ P=$D/usr/lib/apache/htdocs/wapirc
++ 
++ [ -d $D ] && rm -rf $D
++ 
++ cd wapircd
++ 
++ make install DESTDIR=$D 2>&1 | tee mout-install
++ 
++ cd ../wapircphp
++ 
++ mkdir -p $P
++ 
++ cp * $P

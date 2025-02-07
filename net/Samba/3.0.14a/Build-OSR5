@@ -1,0 +1,63 @@
+#!/bin/bash
+
+TOP=/usr/src/sco/samba
+VER=3.0.14a
+SRC=/usr/src/sco/SOURCES
+
+cd $TOP
+rm -rf samba-$VER
+gzcat $SRC/samba-$VER.tar.gz | tar xf -
+cd samba-$VER/examples/VFS
+bzcat $SRC/samba-vscan-0.3.5.tar.bz2 | tar xf -
+cd ../..
+bzcat $SRC/ldapsmb-1.31.tar.bz2 | tar xf -
+cd ..
+/bin/chown -R root samba-$VER
+/bin/chgrp -R sys samba-$VER
+cd samba-$VER/examples
+patch -p0 -b --suffix .osr5 -s -i $TOP/samba-examples-osr5.patch
+cd $TOP/samba-$VER/source
+patch -p0 -b --suffix .osr5 -s -i $TOP/samba-source-osr5.patch
+[ -f $TOP/samba-pass_check-debug.patch ] && {
+  patch -p0 -b --suffix .debug -s -i $TOP/samba-pass_check-debug.patch
+}
+
+[ "$1" = "-p" ] && exit 0
+
+umask 022
+XML2_CONFIG=/usr/bin/libxml-2.0-config
+CC="gcc -DPATH_MAX=1024 -DMAXPATHLEN=1024"
+CXX="g++ -DPATH_MAX=1024 -DMAXPATHLEN=1024"
+CFLAGS="-O2 -D_GNU_SOURCE"
+CXXFLAGS="-O2 -D_GNU_SOURCE"
+export CC CXX CFLAGS CXXFLAGS XML2_CONFIG
+INSTALL=/usr/gnu/bin/install
+RANLIB=true
+CUPS_CONFIG=/usr/bin/cups-config
+export INSTALL RANLIB VISUAL CUPS_CONFIG
+./autogen.sh
+[ -f $TOP/samba-configure-osr5.patch ] && {
+  patch -p0 -b --suffix .netinet -s -i $TOP/samba-configure-osr5.patch
+}
+CONFIGURE_OPTIONS="	--prefix=/usr 	--sbindir=/usr/sbin 	--localstatedir=/var/lib/samba 	--sysconfdir=/etc/samba 	--with-configdir=/etc/samba 	--with-libdir=/usr/lib/samba 	--with-lockdir=/var/lib/samba 	--with-logfilebase=/var/log/samba 	--with-mandir=/usr/share/man 	--enable-cups 	--with-libiconv=/usr 	--with-msdfs 	--without-pam 	--without-pam_smbpass 	--with-piddir=/var/run/samba 	--with-privatedir=/etc/samba 	--without-quotas 	--without-smbmount 	--with-swatdir=/usr/share/samba/swat 	--with-syslog 	--with-tdbsam 	--with-utmp 	--with-vfs 	--without-winbind 	--with-shared-modules=idmap_rid         --with-expsam=xml,pgsql "
+PATH=/opt/gnome/bin:/sbin:/usr/sbin:/usr/gnu/bin:/bin:/etc:/usr/bin:/tcb/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/java/bin:/usr/local/bin:/usr/src/tools:/usr/lib/heimdal/bin
+export PATH
+./configure --prefix=/usr --sbindir=/usr/sbin --localstatedir=/var/lib/samba --sysconfdir=/etc/samba --with-configdir=/etc/samba --with-libdir=/usr/lib/samba --with-lockdir=/var/lib/samba --with-logfilebase=/var/log/samba --with-mandir=/usr/share/man --enable-cups --with-libiconv=/usr --with-msdfs --without-pam --without-pam_smbpass --with-piddir=/var/run/samba --with-privatedir=/etc/samba --without-quotas --without-smbmount --with-swatdir=/usr/share/samba/swat --with-syslog --with-tdbsam --with-utmp --with-vfs --without-winbind --with-shared-modules=idmap_rid --with-expsam=xml,pgsql
+
+[ "$1" = "-c" ] && exit 0
+
+/usr/gnu/bin/make proto
+/usr/gnu/bin/make all torture wins libsmbclient everything modules \
+                  talloctort bin/smbget
+/usr/gnu/bin/make -C tdb tdbdump tdbtest tdbtool tdbtorture
+/usr/gnu/bin/make -C ../examples/pdb
+cd ../examples/VFS
+sh -x autogen.sh
+./configure --prefix=/usr --sbindir=/usr/sbin --localstatedir=/var/lib/samba --sysconfdir=/etc/samba --with-configdir=/etc/samba --with-libdir=/usr/lib/samba --with-lockdir=/var/lib/samba --with-logfilebase=/var/log/samba --with-mandir=/usr/share/man --enable-cups --with-libiconv=/usr --with-msdfs --without-pam --without-pam_smbpass --with-piddir=/var/run/samba --with-privatedir=/etc/samba --without-quotas --without-smbmount --with-swatdir=/usr/share/samba/swat --with-syslog --with-tdbsam --with-utmp --with-vfs --without-winbind --with-shared-modules=idmap_rid --with-expsam=xml,pgsql
+
+/usr/gnu/bin/make
+
+cd samba-vscan-0.3.5
+autoreconf --force --install
+./configure
+/usr/gnu/bin/make

@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Language" content="en-us">
+	<meta name="copyright" content="(c) Copyright 2005 Tobias Luetke">
+	<meta name="generator" content="Hieraki book export (http://www.hieraki.org)"><title>SQLite</title></head>
+
+<body>
+<h1>SQLite</h1>
+
+
+	<p>This book recounts issues surrounding the installation and maintenance of SQLite</p>
+
+
+	<h2>Installing SQLite3</h2>
+
+
+	<h3>nnlbak</h3>
+
+
+	<p>These
+notes refer to the installation of the command-line version of SQLite.
+If you want to install the Perl SQLite libraries look <a href="http://doc.nomad-systems.com/export/html/39">here</a>.</p>
+
+
+	<ol>
+	<li>Download the latest tarball from <a href="http://www.sqlite.org/download.html">here</a> and place it in <code>/wk/BUILD</code>.</li>
+		<li>Unzip the package and follow the instructions in the <code>README</code> file.</li>
+		<li>Relink libsqlite3.so.8.8.6 with the gcc library as the make process does not do this on <span class="caps">SCO </span>Openserver.</li>
+	</ol>
+
+
+<pre>cd .libs
+gcc -shared -lgcc -o libsqlite3.so.8.8.6 *.o
+cp libsqlite3.so.8.8.6 /usr/local/lib
+</pre>
+
+	<h3>natnom</h3>
+
+
+	<p>The development kit is not installed on natnom so it is necessary to copy the sqlite binaries from nnlbak:</p>
+
+
+	<p>1. Tar the sqlite binaries into a single file:</p>
+
+
+<pre>tar cvf /tmp/sqlite.tar /usr/local/bin/sqlite* /usr/local/lib/libsqlite*</pre>
+(single command line)
+
+	<p>2. Copy the file to natnom and place it in the tmp directory:</p>
+
+
+<pre>scp /tmp/sqlite.tar natnom:/tmp
+</pre>
+
+3. Log on to natnom and unpack the file from the root directory:
+<pre>cd /
+tar xvf /tmp/sqlite.tar
+</pre>
+4. Check that it works:
+
+	<h2>Installing <span class="caps">DBD</span>::SQLite</h2>
+
+
+	<h3>Installation</h3>
+
+
+	<p>These notes refer to the installation of the Perl SQLite libraries. This installation is independent of the installation of the <a href="http://doc.nomad-systems.com/export/html/38">SQLite command-line</a> version. It is probably best to make sure both versions are the same.</p>
+
+
+	<p>By default the installed version of <code>DBD::SQLite</code> will probably be too old.</p>
+
+
+	<p><strong>Note:</strong> This probably won’t work on natnom. Do it on nnlbak first, transfer the entire contents of <code>/wk/CPAN/build/DBD-SQLite-1.08</code> to natnom then carry out steps 1 and 2 below followed by the <code>make install</code> in step 6.</p>
+
+
+	<p>These
+notes assume the current version of SQLite is 3.2.2. If you are
+installing a different version substitute ‘3.2.2’ below with the
+correct version number.</p>
+
+
+	<p>1. Start by loading <span class="caps">CPAN </span>(from any directory):</p>
+
+
+<pre>perl �MCPAN �e shell</pre>
+
+	<p>2. Ensure the latest version of <span class="caps">DBI</span> is installed (1.48 at the time of writing):</p>
+
+
+<pre>install DBI</pre>
+
+	<p>3. Load the latest <span class="caps">DBD</span>::SQLite:</p>
+
+
+<pre>look DBD::SQLite</pre>
+
+	<p>4. When this finishes, load the latest SQLite source:</p>
+
+
+<pre>perl getsqlite.pl 3.2.2</pre>
+
+	<p>5. When finished, compile it:</p>
+
+
+<pre>cd sqlite-3.2.2
+./configure
+make</pre>
+
+	<p>6. This will create (amongst other things) the file keywordhash.h. Copy this to the parent directory:</p>
+
+
+<pre>cp keywordhash.h ..</pre>
+
+	<p>7. Return to the parent directory; make and install the <span class="caps">DBD</span>::SQLite:</p>
+
+
+<pre>cd ..
+perl Makefile.PL
+make
+make install
+exit
+q
+</pre>
+
+	<p>8. <span class="caps">DBD</span>::SQLite should now be ready for use.</p>
+
+
+	<h2>Generic Webmin Module</h2>
+
+
+	<h3>Introduction</h3>
+
+
+	<p>The Generic SQLite Webmin module can be used to display or modify records in any configured SQLite database.</p>
+
+
+	<h3>Description</h3>
+
+
+	<p>The Generic SQLite Webmin module can be accessed by clicking the <strong>SQLite Manager</strong> icon under the <strong>Others</strong> tab in Webmin (if installed).</p>
+
+
+	<p>To select an SQLite database, click the <strong>Module Config</strong> link on the main SQLite Manager screen and select the database you wish to examine.</p>
+
+
+	<h3>Configuration</h3>
+
+
+	<p>This choice list is created by editing the file <code>/opt/webmin/sqlite/config.info</code> and adding or removing entries from the single config line.</p>
+
+
+	<p><em>Example:</em></p>
+
+
+<pre>dbase=Which database?,4,/wk/data/snug/etc/snug.db-LiveSnug, \
+/usr/ncsg2c/tst/snug.db-g2cTest,/etc/snug.db-etcSnug
+</pre>
+
+	<p>The format of the entry is documented in the Webmin <a href="http://www.webmin.com/modules.html">documentation</a>:</p>
+
+
+	<p><em>name=description,type,value-display[,value-display]...</em></p>
+
+
+	<p>The only thing(s) you need to modify are the <em>value_display</em> pairs (eg <code>/wk/data/snug/etc/snug.db-LiveSnug</code>).</p>
+
+
+	<p>The first part, <em>value</em>, is the path to the SQLite database file and the second part (<em>display</em>) is the text displayed in the choice list.</p>
+
+
+	<p>In the example above, the choice list will consist of:</p>
+
+
+<pre>LiveSnug
+g2cTest
+etcSnug
+</pre>
+</body></html>

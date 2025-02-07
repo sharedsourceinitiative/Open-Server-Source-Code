@@ -1,0 +1,193 @@
+*** ./include/wx/clntdata.h.osr6	Fri Jan 20 22:36:45 2006
+--- ./include/wx/clntdata.h	Mon Apr 10 18:07:33 2006
+***************
+*** 172,177 ****
+--- 172,181 ----
+  
+  #include "wx/vector.h"
+  
++ #ifdef index
++ #undef index
++ #endif
++ 
+  struct WXDLLIMPEXP_BASE wxClientDataDictionaryPair
+  {
+      wxClientDataDictionaryPair( size_t idx ) : index( idx ), data( 0 ) { }
+*** ./src/common/stopwatch.cpp.osr6	Thu Dec 15 16:11:33 2005
+--- ./src/common/stopwatch.cpp	Mon Apr 10 18:07:33 2006
+***************
+*** 101,108 ****
+--- 101,112 ----
+  // define wxGetTimeOfDay() to hide this difference
+  #ifdef HAVE_GETTIMEOFDAY
+      #ifdef WX_GETTIMEOFDAY_NO_TZ
++       #if defined(__USLC__)
++         #define wxGetTimeOfDay(tv, tz)      gettimeofday((tv), (tz))
++       #else
+          struct timezone;
+          #define wxGetTimeOfDay(tv, tz)      gettimeofday(tv)
++       #endif
+      #else
+          #define wxGetTimeOfDay(tv, tz)      gettimeofday((tv), (tz))
+      #endif
+*** ./configure.osr6	Tue Mar 28 11:51:03 2006
+--- ./configure	Mon Apr 10 18:07:33 2006
+***************
+*** 1897,1903 ****
+  #define __SVR4__ 1
+  _ACEOF
+  
+!     DEFAULT_DEFAULT_wxUSE_MOTIF=1
+    ;;
+    *-*-aix* )
+      USE_AIX=1
+--- 1897,1903 ----
+  #define __SVR4__ 1
+  _ACEOF
+  
+!     DEFAULT_DEFAULT_wxUSE_GTK=1
+    ;;
+    *-*-aix* )
+      USE_AIX=1
+***************
+*** 36663,36668 ****
+--- 36663,36675 ----
+                      THREAD_OPTS="-mt $THREAD_OPTS"
+                  fi
+                  ;;
++           *-*-sysv5* )
++                 if test "x$GCC" = "xyes"; then
++                                         THREAD_OPTS="-pthreads $THREAD_OPTS"
++                 else
++                     THREAD_OPTS=""
++                 fi
++                 ;;
+            *-*-freebsd*)
+                                                  THREAD_OPTS="-kthread lthread $THREAD_OPTS c_r"
+                  ;;
+***************
+*** 44613,44618 ****
+--- 44620,44633 ----
+          fi
+        ;;
+  
++       *-*-sysv5* )
++         if test "x$GCC" != xyes ; then
++             SHARED_LD_CC="${CC} -G -o"
++             SHARED_LD_CXX="${CXX} -G -o"
++             PIC_FLAG="-KPIC"
++         fi
++       ;;
++ 
+        *-*-darwin* )
+  
+  D='$'
+***************
+*** 45403,45408 ****
+--- 45418,45430 ----
+          USE_SOSYMLINKS=1
+        ;;
+  
++       *-*-sysv5* )
++         SONAME_FLAG="-Wl,-h,"
++         USE_SOVERSION=1
++         USE_SOVERLINUX=1
++         USE_SOSYMLINKS=1
++       ;;
++ 
+        *-*-solaris2* )
+          SONAME_FLAG="-h "
+          USE_SOVERSION=1
+*** ./wx-config.in.osr6	Mon Feb 20 12:10:19 2006
+--- ./wx-config.in	Mon Apr 10 18:07:34 2006
+***************
+*** 1,4 ****
+! #!/bin/sh
+  #
+  # Name:        wx-config{.in,}
+  # Purpose:     wx configuration search and query tool {template,}
+--- 1,4 ----
+! #!/bin/bash
+  #
+  # Name:        wx-config{.in,}
+  # Purpose:     wx configuration search and query tool {template,}
+*** ./wx-config-inplace.in.osr6	Sat Sep 25 14:55:37 2004
+--- ./wx-config-inplace.in	Mon Apr 10 18:07:34 2006
+***************
+*** 1,4 ****
+! #!/bin/sh
+  #
+  # Name:        wx-config-inplace
+  # Purpose:     wx configuration in tree search and query tool
+--- 1,4 ----
+! #!/bin/bash
+  #
+  # Name:        wx-config-inplace
+  # Purpose:     wx configuration in tree search and query tool
+*** ./Build-OSR6.osr6	Mon Apr 10 18:07:34 2006
+--- ./Build-OSR6	Mon Apr 10 22:05:10 2006
+***************
+*** 0 ****
+--- 1,38 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ MAKE=/usr/gnu/bin/make
++ export CC CXX CFLAGS NM MAKE
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT
++ MOUT=mout-contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make -C contrib 2>&1 | tee $MOUT
++ 
++ WXDIR=`pwd`
++ cd $WXDIR/wxPython
++ python setup.py \
++         WXPORT=gtk2 \
++         UNICODE=0 \
++         EP_ADD_OPTS=1 \
++         NO_SCRIPTS=1 \
++         WX_CONFIG="$WXDIR/wx-config --no_rpath" \
++         build_ext --rpath=/usr/lib/wxPython-2.6.3.2-gtk2-ansi/lib \
++         build 2>&1 | tee mout-setup
++ 
+*** ./Install-OSR6.osr6	Mon Apr 10 18:07:34 2006
+--- ./Install-OSR6	Mon Apr 10 18:07:34 2006
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/wxPython
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install
++ make -C contrib install DESTDIR=$D 2>&1 | tee mout-contrib-install
++ 
++ WXDIR=`pwd`
++ cd $WXDIR/wxPython
++ python setup.py \
++         WXPORT=gtk2 \
++         UNICODE=0 \
++         EP_ADD_OPTS=1 \
++         NO_SCRIPTS=1 \
++         WX_CONFIG="$D/usr/lib/wxPython-2.6.3.2-gtk2-ansi/bin/wx-config --prefix=$D/usr/lib/wxPython-2.6.3.2-gtk2-ansi --no_rpath" \
++         build_ext --rpath=/usr/lib/wxPython-2.6.3.2-gtk2-ansi/lib \
++         install --root=$D

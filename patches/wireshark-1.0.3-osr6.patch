@@ -1,0 +1,157 @@
+*** ./configure.osr6	Wed Sep  3 15:57:01 2008
+--- ./configure	Thu Oct  9 17:10:10 2008
+***************
+*** 15998,16004 ****
+      sys_lib_search_path_spec='/usr/local/lib /usr/gnu/lib /usr/ccs/lib /usr/lib /lib'
+      shlibpath_overrides_runpath=no
+    else
+!     sys_lib_search_path_spec='/usr/ccs/lib /usr/lib'
+      shlibpath_overrides_runpath=yes
+      case $host_os in
+        sco3.2v5*)
+--- 15998,16004 ----
+      sys_lib_search_path_spec='/usr/local/lib /usr/gnu/lib /usr/ccs/lib /usr/lib /lib'
+      shlibpath_overrides_runpath=no
+    else
+!     sys_lib_search_path_spec='/usr/ccs/lib /usr/lib /usr/X11R6/lib'
+      shlibpath_overrides_runpath=yes
+      case $host_os in
+        sco3.2v5*)
+***************
+*** 26474,26480 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpcap $SOCKET_LIBS $NSL_LIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 26474,26480 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpcap -lresmgr $SOCKET_LIBS $NSL_LIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 26531,26537 ****
+  echo "${ECHO_T}$ac_cv_lib_pcap_pcap_open_live" >&6; }
+  if test $ac_cv_lib_pcap_pcap_open_live = yes; then
+  
+! 	    PCAP_LIBS=-lpcap
+  
+  cat >>confdefs.h <<\_ACEOF
+  #define HAVE_LIBPCAP 1
+--- 26531,26537 ----
+  echo "${ECHO_T}$ac_cv_lib_pcap_pcap_open_live" >&6; }
+  if test $ac_cv_lib_pcap_pcap_open_live = yes; then
+  
+! 	    PCAP_LIBS="-lpcap -lresmgr"
+  
+  cat >>confdefs.h <<\_ACEOF
+  #define HAVE_LIBPCAP 1
+***************
+*** 26542,26552 ****
+  
+  	    ac_wireshark_extras_found=no
+  	    ac_save_LIBS="$LIBS"
+! 	    for extras in "-lcfg -lodm" "-lpfring"
+  	    do
+  		{ echo "$as_me:$LINENO: checking for pcap_open_live in -lpcap with $extras" >&5
+  echo $ECHO_N "checking for pcap_open_live in -lpcap with $extras... $ECHO_C" >&6; }
+! 		LIBS="-lpcap $extras"
+  		#
+  		# XXX - can't we use AC_CHECK_LIB here?
+  		#
+--- 26542,26552 ----
+  
+  	    ac_wireshark_extras_found=no
+  	    ac_save_LIBS="$LIBS"
+! 	    for extras in "-lresmgr -lcfg -lodm" "-lpfring"
+  	    do
+  		{ echo "$as_me:$LINENO: checking for pcap_open_live in -lpcap with $extras" >&5
+  echo $ECHO_N "checking for pcap_open_live in -lpcap with $extras... $ECHO_C" >&6; }
+! 		LIBS="-lpcap -lresmgr $extras"
+  		#
+  		# XXX - can't we use AC_CHECK_LIB here?
+  		#
+***************
+*** 26591,26597 ****
+  			ac_wireshark_extras_found=yes
+  			{ echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6; }
+! 			PCAP_LIBS="-lpcap $extras"
+  
+  cat >>confdefs.h <<\_ACEOF
+  #define HAVE_LIBPCAP 1
+--- 26591,26597 ----
+  			ac_wireshark_extras_found=yes
+  			{ echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6; }
+! 			PCAP_LIBS="-lpcap -lresmgr $extras"
+  
+  cat >>confdefs.h <<\_ACEOF
+  #define HAVE_LIBPCAP 1
+***************
+*** 27237,27243 ****
+  
+  
+  
+! for ac_func in pcap_get_selectable_fd pcap_free_datalinks
+  do
+  as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
+  { echo "$as_me:$LINENO: checking for $ac_func" >&5
+--- 27237,27243 ----
+  
+  
+  
+! for ac_func in pcap_get_selectable_fd
+  do
+  as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
+  { echo "$as_me:$LINENO: checking for $ac_func" >&5
+*** ./Configure-OSR6.osr6	Thu Oct  9 17:03:49 2008
+--- ./Configure-OSR6	Thu Oct  9 17:13:30 2008
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --program-prefix="" \
++             --with-ssl \
++             --enable-threads \
++             --disable-usr-local \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Thu Oct  9 17:03:49 2008
+--- ./Install-OSR6	Thu Oct  9 17:03:49 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/wireshark
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

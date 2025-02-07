@@ -1,0 +1,215 @@
+*** ./src/unix/utilsunx.cpp.osr6	Tue Sep 25 02:01:16 2007
+--- ./src/unix/utilsunx.cpp	Fri Nov 16 17:44:17 2007
+***************
+*** 1059,1065 ****
+  
+  bool wxSetEnv(const wxString& variable, const wxChar *value)
+  {
+! #if defined(HAVE_SETENV)
+      if ( !value )
+      {
+  #ifdef HAVE_UNSETENV
+--- 1059,1065 ----
+  
+  bool wxSetEnv(const wxString& variable, const wxChar *value)
+  {
+! #if defined(HAVE_SETENV) && !defined(__USLC__)
+      if ( !value )
+      {
+  #ifdef HAVE_UNSETENV
+*** ./include/wx/wxchar.h.osr6	Tue Sep 25 02:01:20 2007
+--- ./include/wx/wxchar.h	Fri Nov 16 17:44:17 2007
+***************
+*** 507,516 ****
+          #define wxNEED_WX_TIME_H
+  
+      #elif wxUSE_UNICODE
+!         #include <wctype.h>
+  
+!         /* this is probably glibc-specific */
+!         #if defined(__WCHAR_TYPE__) && !defined(__MWERKS__)
+              /* ctype.h functions (wctype.h) */
+              #define  wxIsalnum   iswalnum
+              #define  wxIsalpha   iswalpha
+--- 507,516 ----
+          #define wxNEED_WX_TIME_H
+  
+      #elif wxUSE_UNICODE
+!        #include <wctype.h>
+  
+!        /* this is probably glibc-specific */
+!        #if defined(__WCHAR_TYPE__) || defined(_WCTYPE_T) && !defined(__MWERKS__)
+              /* ctype.h functions (wctype.h) */
+              #define  wxIsalnum   iswalnum
+              #define  wxIsalpha   iswalpha
+*** ./include/wx/string.h.osr6	Tue Sep 25 02:01:20 2007
+--- ./include/wx/string.h	Fri Nov 16 17:44:17 2007
+***************
+*** 43,49 ****
+  #  include <stdlib.h>
+  #endif
+  
+! #ifdef HAVE_STRCASECMP_IN_STRINGS_H
+      #include <strings.h>    // for strcasecmp()
+  #endif // HAVE_STRCASECMP_IN_STRINGS_H
+  
+--- 43,49 ----
+  #  include <stdlib.h>
+  #endif
+  
+! #if defined(HAVE_STRCASECMP_IN_STRINGS_H) || defined(__USLC__)
+      #include <strings.h>    // for strcasecmp()
+  #endif // HAVE_STRCASECMP_IN_STRINGS_H
+  
+*** ./include/wx/clntdata.h.osr6	Tue Sep 25 02:01:17 2007
+--- ./include/wx/clntdata.h	Fri Nov 16 17:44:17 2007
+***************
+*** 16,21 ****
+--- 16,25 ----
+  #include "wx/string.h"
+  #include "wx/hashmap.h"
+  
++ #ifdef index
++ #undef index
++ #endif
++ 
+  typedef int (*wxShadowObjectMethod)(void*, void*);
+  WX_DECLARE_STRING_HASH_MAP_WITH_DECL(
+      wxShadowObjectMethod,
+*** ./configure.osr6	Tue Sep 25 02:01:22 2007
+--- ./configure	Fri Nov 16 17:50:35 2007
+***************
+*** 13008,13013 ****
+--- 13008,13014 ----
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
++    '#include <stdlib.h>' \
+     'extern "C" void std::exit (int) throw (); using std::exit;' \
+     'extern "C" void std::exit (int); using std::exit;' \
+     'extern "C" void exit (int) throw ();' \
+***************
+*** 14444,14449 ****
+--- 14445,14451 ----
+  fi
+  for ac_declaration in \
+     '' \
++    '#include <stdlib.h>' \
+     'extern "C" void std::exit (int) throw (); using std::exit;' \
+     'extern "C" void std::exit (int); using std::exit;' \
+     'extern "C" void exit (int) throw ();' \
+***************
+*** 17237,17242 ****
+--- 17239,17247 ----
+            LIBS="$LIBS -lintl"
+        fi
+    ;;
++   *sysv5* )
++           LIBS="-L/usr/gnu/lib $LIBS"
++   ;;
+  esac
+  
+  if test "$USE_UNIX" = 1 ; then
+***************
+*** 38453,38458 ****
+--- 38458,38466 ----
+                  fi
+                  ;;
+  
++           *-*-sysv5* )
++                     THREAD_OPTS=""
++                 ;;
+            *-*-*UnixWare*)
+                                  if test "x$GCC" != "xyes"; then
+                      THREAD_OPTS="-Ethread"
+***************
+*** 43533,43539 ****
+  /* end confdefs.h.  */
+  
+                      #include <sys/time.h>
+-                     #include <unistd.h>
+  
+  int
+  main ()
+--- 43541,43546 ----
+***************
+*** 43580,43586 ****
+  /* end confdefs.h.  */
+  
+                          #include <sys/time.h>
+-                         #include <unistd.h>
+  
+  int
+  main ()
+--- 43587,43592 ----
+***************
+*** 47311,47316 ****
+--- 47317,47330 ----
+          fi
+        ;;
+  
++       *-*-sysv5* )
++         if test "x$GCC" != xyes ; then
++             SHARED_LD_CC="${CC} -G -o"
++             SHARED_LD_CXX="${CXX} -G -o"
++             PIC_FLAG="-KPIC"
++         fi
++       ;;
++ 
+        *-*-darwin* )
+  
+  D='$'
+*** ./Install-OSR6.osr6	Fri Nov 16 17:44:17 2007
+--- ./Install-OSR6	Fri Nov 16 17:44:17 2007
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/wxGTK
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
++ cd contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install DESTDIR=$D 2>&1 | tee $MOUT
+*** ./Build-OSR6.osr6	Fri Nov 16 17:44:17 2007
+--- ./Build-OSR6	Fri Nov 16 17:44:17 2007
+***************
+*** 0 ****
+--- 1,29 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --disable-gtktest \
++             --enable-unicode --enable-shared --with-gtk \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
++ cd contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT

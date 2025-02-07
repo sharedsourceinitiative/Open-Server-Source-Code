@@ -1,0 +1,182 @@
+*** ./Makefile.in.osr6	Sat Feb  4 12:13:23 2006
+--- ./Makefile.in	Mon Feb  6 16:49:50 2006
+***************
+*** 14,20 ****
+  USE_SETGID=-DUSE_SETGID
+  
+  # group owner of games file.
+! GROUP_GID=5
+  @GROUP_GID@
+  
+  ###########################################################################
+--- 14,20 ----
+  USE_SETGID=-DUSE_SETGID
+  
+  # group owner of games file.
+! GROUP_GID=28
+  @GROUP_GID@
+  
+  ###########################################################################
+***************
+*** 94,100 ****
+  	 -DRESOURCEDIR=\"$(RESOURCEDIR)\" \
+  	 -DXBLVERSION=\"$(XBLVERSION)\" \
+  	 -DGROUP_GID=$(GROUP_GID) \
+! 	  $(USE_SETGID) @DEFS@ @CFLA@ -g
+  # For link edit options
+  LDOPTIONS=$(CFLAGS)
+  LDOPTIONS=@LDOPTIONS@
+--- 94,100 ----
+  	 -DRESOURCEDIR=\"$(RESOURCEDIR)\" \
+  	 -DXBLVERSION=\"$(XBLVERSION)\" \
+  	 -DGROUP_GID=$(GROUP_GID) \
+! 	  $(USE_SETGID) @DEFS@ @CFLA@
+  # For link edit options
+  LDOPTIONS=$(CFLAGS)
+  LDOPTIONS=@LDOPTIONS@
+***************
+*** 121,130 ****
+  #	XBLOPTIONS="-shownext" ; export XBLOPTIONS ; bl -smooth keyboard=1
+  
+  install:bl
+! 	@echo "Executable go in $(BINDIR)"
+! 	@echo "Scores     go in $(SCOREDIR)"
+! 	@echo "Defaults   go in $(RESOURCEDIR)/Xbl"
+! 	@echo "Man pages  go in $(MANPATH)/mann or man1"
+  	@-if [ "" != "$(USE_SETGID)" ] ; then \
+  		echo "You use GID=$(GROUP_GID) protection" ; \
+  		fi
+--- 121,130 ----
+  #	XBLOPTIONS="-shownext" ; export XBLOPTIONS ; bl -smooth keyboard=1
+  
+  install:bl
+! 	@echo "Executable go in $(DESTDIR)$(BINDIR)"
+! 	@echo "Scores     go in $(DESTDIR)$(SCOREDIR)"
+! 	@echo "Defaults   go in $(DESTDIR)$(RESOURCEDIR)/Xbl"
+! 	@echo "Man pages  go in $(DESTDIR)$(MANPATH)/mann or man1"
+  	@-if [ "" != "$(USE_SETGID)" ] ; then \
+  		echo "You use GID=$(GROUP_GID) protection" ; \
+  		fi
+***************
+*** 134,189 ****
+  	#
+  	# Remove old score file
+  	#
+! 	@-if [ -d "$(SCOREDIR)" ] ; \
+  		then \
+  		echo "The scoring method and speeds of Xbl had change" ; \
+  		echo "If your version is older than 0.2e, destroy score." ; \
+  		echo "Type <Return> to destroy old score files" ; \
+  		echo "Type NO       to hold old score files" ; \
+! 		read LINE && test "" = "$$LINE" && rm $(SCOREDIR)/[1-9]* ; \
+  		exit 0 ; \
+  		fi
+  	#
+  	# Install executable
+  	#
+! 	$(CP) bl $(BINDIR)/xbl	
+  	-if [ "" = "$(USE_SETGID)" ] ; then \
+! 	     chmod 755  $(BINDIR)/xbl ;\
+  	   else \
+! 	     chmod 2755  $(BINDIR)/xbl ;\
+! 	     chown root $(BINDIR)/xbl ;\
+! 	     chgrp $(GROUP_GID) $(BINDIR)/xbl ;\
+  	   fi
+  	#
+  	# Install executable
+  	#
+! 	-mkdir $(SCOREDIR) 2>/dev/null
+! 	$(CP) Xbl.ad  $(RESOURCEDIR)/Xbl ;	chmod 644 $(RESOURCEDIR)/Xbl
+! 	$(CP) Xbl.ad  $(SCOREDIR)/Xbl ;		chmod 644 $(SCOREDIR)/Xbl
+! 	$(CP) COPYING  $(SCOREDIR) ;		chmod 444 $(SCOREDIR)/COPYING
+  	-if [ "" = "$(USE_SETGID)" ] ; then \
+! 	     chmod 777 $(SCOREDIR) ;\
+! 	     chmod 666 $(SCOREDIR)/[1-9]* ;\
+  	   else \
+! 	     chmod 775 $(SCOREDIR) ;\
+! 	     chmod 664 $(SCOREDIR)/[1-9]* ;\
+! 	     chown root $(SCOREDIR) $(SCOREDIR)/[1-9]* ;\
+! 	     chgrp $(GROUP_GID) $(SCOREDIR) $(SCOREDIR)/[1-9]* ;\
+  	fi
+  	#
+  	# Install manual pages
+  	#
+! 	-if [ -d $(MANPATH)/mann ] ; \
+! 		then \
+! 		$(CP) xbl.man $(MANPATH)/mann/xbl.n ;\
+! 		chmod 444 $(MANPATH)/mann/xbl.n ; \
+! 	   else \
+! 		$(CP) xbl.man $(MANPATH)/man1/xbl.1 ;\
+! 		chmod 444 $(MANPATH)/man1/xbl.1 ; \
+! 		fi
+! 	cp *.gif *.html $(SCOREDIR)
+  	#
+! 	-ls -lsa $(SCOREDIR) $(BINDIR)/xbl $(MANPATH)/man[1n]/xbl.[1n]
+  	@echo "Type xbl to play"
+  
+  bl:$(OBJ)
+--- 134,186 ----
+  	#
+  	# Remove old score file
+  	#
+! 	@-if [ -d "$(DESTDIR)$(SCOREDIR)" ] ; \
+  		then \
+  		echo "The scoring method and speeds of Xbl had change" ; \
+  		echo "If your version is older than 0.2e, destroy score." ; \
+  		echo "Type <Return> to destroy old score files" ; \
+  		echo "Type NO       to hold old score files" ; \
+! 		read LINE && test "" = "$$LINE" && rm $(DESTDIR)$(SCOREDIR)/[1-9]* ; \
+  		exit 0 ; \
+  		fi
+  	#
+  	# Install executable
+  	#
+! 	[ -d $(DESTDIR)$(BINDIR) ] || mkdir -p $(DESTDIR)$(BINDIR)
+! 	$(CP) bl $(DESTDIR)$(BINDIR)/xbl	
+  	-if [ "" = "$(USE_SETGID)" ] ; then \
+! 	     chmod 755  $(DESTDIR)$(BINDIR)/xbl ;\
+  	   else \
+! 	     chmod 2755  $(DESTDIR)$(BINDIR)/xbl ;\
+! 	     chown root $(DESTDIR)$(BINDIR)/xbl ;\
+! 	     chgrp $(GROUP_GID) $(DESTDIR)$(BINDIR)/xbl ;\
+  	   fi
+  	#
+  	# Install executable
+  	#
+! 	[ -d $(DESTDIR)$(RESOURCEDIR) ] || mkdir -p $(DESTDIR)$(RESOURCEDIR)
+! 	[ -d $(DESTDIR)$(SCOREDIR) ] || mkdir -p $(DESTDIR)$(SCOREDIR)
+! 	$(CP) Xbl.ad  $(DESTDIR)$(RESOURCEDIR)/Xbl ;	chmod 644 $(DESTDIR)$(RESOURCEDIR)/Xbl
+! 	$(CP) Xbl.ad  $(DESTDIR)$(SCOREDIR)/Xbl ;		chmod 644 $(DESTDIR)$(SCOREDIR)/Xbl
+! 	$(CP) COPYING  $(DESTDIR)$(SCOREDIR) ;		chmod 444 $(DESTDIR)$(SCOREDIR)/COPYING
+  	-if [ "" = "$(USE_SETGID)" ] ; then \
+! 	     chmod 777 $(DESTDIR)$(SCOREDIR) ;\
+! 	     chmod 666 $(DESTDIR)$(SCOREDIR)/[1-9]* ;\
+  	   else \
+! 	     chmod 775 $(DESTDIR)$(SCOREDIR) ;\
+! 	     chmod 664 $(DESTDIR)$(SCOREDIR)/[1-9]* ;\
+! 	     chown root $(DESTDIR)$(SCOREDIR) $(DESTDIR)$(SCOREDIR)/[1-9]* ;\
+! 	     chgrp $(GROUP_GID) $(DESTDIR)$(SCOREDIR) $(DESTDIR)$(SCOREDIR)/[1-9]* ;\
+  	fi
+  	#
+  	# Install manual pages
+  	#
+! 	[ -d $(DESTDIR)$(MANPATH)/man1 ] || mkdir -p $(DESTDIR)$(MANPATH)/man1
+! 	$(CP) xbl.man $(DESTDIR)$(MANPATH)/man1/xbl.1
+! 	chmod 444 $(DESTDIR)$(MANPATH)/man1/xbl.1
+! 	cp *.gif *.html $(DESTDIR)$(SCOREDIR)
+  	#
+! 	-ls -lsa $(DESTDIR)$(SCOREDIR) $(DESTDIR)$(BINDIR)/xbl $(DESTDIR)$(MANPATH)/man[1n]/xbl.[1n]
+  	@echo "Type xbl to play"
+  
+  bl:$(OBJ)
+*** ./Install-OSR6.osr6	Mon Feb  6 16:43:34 2006
+--- ./Install-OSR6	Mon Feb  6 16:43:34 2006
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install DESTDIR=/u/tmp/xbl 2>&1 | tee $MOUT

@@ -1,0 +1,1148 @@
+*** events.C.00 Tue Nov  9 10:28:23 1999
+--- events.C Tue Nov  9 10:40:02 1999
+***************
+*** 482,487 ****
+  
+  
+  bool kPanel::eventFilter(QObject *ob, QEvent *ev){
+    // --sven: kdisknav button start --
+    if (ob == kdisknav && ev->type() == Event_MouseButtonRelease) {
+      bool doIt = false;
+--- 482,488 ----
+  
+  
+  bool kPanel::eventFilter(QObject *ob, QEvent *ev){
++ #ifndef THIN_CLIENT
+    // --sven: kdisknav button start --
+    if (ob == kdisknav && ev->type() == Event_MouseButtonRelease) {
+      bool doIt = false;
+***************
+*** 504,509 ****
+      }
+    }
+    // --sven: kdisknav button end --
+  
+    switch (ev->type()){
+  
+--- 505,511 ----
+      }
+    }
+    // --sven: kdisknav button end --
++ #endif
+  
+    switch (ev->type()){
+  
+***************
+*** 552,557 ****
+  
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()){
+        if (mev->button() == RightButton && ob != popup_item
+  	  && ob != windowlist
+  	  && ob != taskbarPopup){
+  	info_label_is_sleeping = false;
+--- 554,560 ----
+  
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()){
+        if (mev->button() == RightButton && ob != popup_item
++ #ifndef THIN_CLIENT
+  	  && ob != windowlist
+  #endif
+  	  && ob != taskbarPopup){
+***************
+*** 553,558 ****
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()){
+        if (mev->button() == RightButton && ob != popup_item
+  	  && ob != windowlist
+  	  && ob != taskbarPopup){
+  	info_label_is_sleeping = false;
+  	tipTimer->start(0, true);
+--- 556,562 ----
+        if (mev->button() == RightButton && ob != popup_item
+  #ifndef THIN_CLIENT
+  	  && ob != windowlist
++ #endif
+  	  && ob != taskbarPopup){
+  	info_label_is_sleeping = false;
+  	tipTimer->start(0, true);
+***************
+*** 642,648 ****
+      // ignore the right button on popups
+      // since we use it for tooltips
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()
+! 	&& ob != popup_item && ob != windowlist
+  	&& ob != taskbarPopup
+  	&& mev->button() == RightButton)
+        return true;
+--- 646,655 ----
+      // ignore the right button on popups
+      // since we use it for tooltips
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()
+! 	&& ob != popup_item 
+! #ifndef THIN_CLIENT
+! 	&& ob != windowlist
+! #endif
+  	&& ob != taskbarPopup
+  	&& mev->button() == RightButton)
+        return true;
+***************
+*** 705,711 ****
+  
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()){
+        if ((mev->state() & RightButton) == RightButton  && ob != popup_item
+! 	  && ob != windowlist){
+  	info_label_is_sleeping = false;
+        }
+      }
+--- 712,721 ----
+  
+      if (ob->isWidgetType() && ((QWidget*)ob)->isPopup()){
+        if ((mev->state() & RightButton) == RightButton  && ob != popup_item
+! #ifndef THIN_CLIENT
+! 	  && ob != windowlist
+! #endif
+! 	  ){
+  	info_label_is_sleeping = false;
+        }
+      }
+*** kpanel.C.00 Mon Nov  8 19:27:33 1999
+--- kpanel.C Tue Nov  9 18:11:22 1999
+***************
+*** 78,83 ****
+      menu_tool_tips = 1000;
+      menu_tool_tips_disabled = false;
+  
+      has_kdisknav_button = false;
+      has_windowlist_button = false;
+  
+--- 78,84 ----
+      menu_tool_tips = 1000;
+      menu_tool_tips_disabled = false;
+  
++ #ifndef THIN_CLIENT
+      has_kdisknav_button = false;
+      has_windowlist_button = false;
+  #endif
+***************
+*** 80,85 ****
+  
+      has_kdisknav_button = false;
+      has_windowlist_button = false;
+  
+      tbhs = 4;
+      tbmhs = 3;
+--- 81,87 ----
+  #ifndef THIN_CLIENT
+      has_kdisknav_button = false;
+      has_windowlist_button = false;
++ #endif
+  
+      tbhs = 4;
+      tbmhs = 3;
+***************
+*** 305,310 ****
+      CHECK_PTR( windows );
+      init_popup(windows);
+  
+      windowlist = new myPopupMenu;
+      CHECK_PTR( windowlist );
+      windowlist->setCheckable(true);
+--- 307,313 ----
+      CHECK_PTR( windows );
+      init_popup(windows);
+  
++ #ifndef THIN_CLIENT
+      windowlist = new myPopupMenu;
+      CHECK_PTR( windowlist );
+      windowlist->setCheckable(true);
+***************
+*** 317,322 ****
+      windowlist->setCheckable(true);
+      //init_popup(kdisknav); Not needed? Guess so...
+  // --sven: kdisknav button end --
+  
+      QPushButton* tmp_push_button = 0;
+      QButton* tmp_button = 0;
+--- 320,326 ----
+      windowlist->setCheckable(true);
+      //init_popup(kdisknav); Not needed? Guess so...
+  // --sven: kdisknav button end --
++ #endif
+  
+      QPushButton* tmp_push_button = 0;
+      QButton* tmp_button = 0;
+***************
+*** 947,952 ****
+  	popup_item->setItemEnabled(1, false);
+  	popup_item->setItemEnabled(3, true);
+        }
+        if (entries[i].popup == windowlist){
+  	popup_item->setItemEnabled(0, true);
+  	popup_item->setItemEnabled(1, true);
+--- 951,957 ----
+  	popup_item->setItemEnabled(1, false);
+  	popup_item->setItemEnabled(3, true);
+        }
++ #ifndef THIN_CLIENT
+        if (entries[i].popup == windowlist){
+  	popup_item->setItemEnabled(0, true);
+  	popup_item->setItemEnabled(1, true);
+***************
+*** 952,958 ****
+  	popup_item->setItemEnabled(1, true);
+  	popup_item->setItemEnabled(3, false);
+        }
+! 
+        switch (show_popup(popup_item, entries[i].button)){
+        case 3:
+  	  if (button_to_be_modified == kde_button) {
+--- 957,963 ----
+  	popup_item->setItemEnabled(1, true);
+  	popup_item->setItemEnabled(3, false);
+        }
+! #endif
+        switch (show_popup(popup_item, entries[i].button)){
+        case 3:
+  	  if (button_to_be_modified == kde_button) {
+***************
+*** 1214,1219 ****
+  
+  
+     }
+     else {
+       if (name == "windowlist"){
+         entries[nbuttons-1].popup = windowlist;
+--- 1219,1225 ----
+  
+  
+     }
++ #ifndef THIN_CLIENT
+     else {
+       if (name == "windowlist"){
+         entries[nbuttons-1].popup = windowlist;
+***************
+*** 1230,1236 ****
+       }
+       // --sven: kdisknav button end --
+     }
+! 
+  
+     if (x != -1 || y != -1)
+       entries[nbuttons-1].button->setGeometry(x, y,
+--- 1236,1242 ----
+       }
+       // --sven: kdisknav button end --
+     }
+! #endif
+  
+     if (x != -1 || y != -1)
+       entries[nbuttons-1].button->setGeometry(x, y,
+*** kpanel.h.00 Tue Nov  9 16:46:38 1999
+--- kpanel.h Tue Nov  9 16:50:07 1999
+***************
+*** 207,212 ****
+  
+  /*   void playSound(QString); */
+  
+    void windowlistActivated(int);
+  
+    void taskbarClicked(int);
+--- 207,213 ----
+  
+  /*   void playSound(QString); */
+  
++ #ifndef THIN_CLIENT
+    void windowlistActivated(int);
+  #endif
+  
+***************
+*** 208,213 ****
+  /*   void playSound(QString); */
+  
+    void windowlistActivated(int);
+  
+    void taskbarClicked(int);
+    void taskbarPressed(int);
+--- 209,215 ----
+  
+  #ifndef THIN_CLIENT
+    void windowlistActivated(int);
++ #endif
+  
+    void taskbarClicked(int);
+    void taskbarPressed(int);
+***************
+*** 215,220 ****
+    void button_clicked();
+    void button_pressed();
+  
+    void add_windowlist();
+    // --sven: kdisknav button start --
+    void add_kdisknav();
+--- 217,223 ----
+    void button_clicked();
+    void button_pressed();
+  
++ #ifndef THIN_CLIENT
+    void add_windowlist();
+    // --sven: kdisknav button start --
+    void add_kdisknav();
+***************
+*** 219,224 ****
+    // --sven: kdisknav button start --
+    void add_kdisknav();
+    // --sven: kdisknav button end --
+    void ask_logout();
+    void call_help();
+    void call_klock();
+--- 222,228 ----
+    // --sven: kdisknav button start --
+    void add_kdisknav();
+    // --sven: kdisknav button end --
++ #endif
+    void ask_logout();
+    void call_help();
+    void call_klock();
+***************
+*** 468,473 ****
+    PMenuItem*  personal_pmi;
+  
+    QPopupMenu* windows;
+    QPopupMenu* windowlist;
+    // --sven: kdisknav button start --
+    myPopupMenu *kdisknav;
+--- 472,478 ----
+    PMenuItem*  personal_pmi;
+  
+    QPopupMenu* windows;
++ #ifndef THIN_CLIENT
+    QPopupMenu* windowlist;
+    // --sven: kdisknav button start --
+    myPopupMenu *kdisknav;
+***************
+*** 473,478 ****
+    myPopupMenu *kdisknav;
+    // --sven: kdisknav button end --
+    void generateWindowlist(QPopupMenu*);
+  
+    QPixmap load_pixmap(const char* name, bool is_folder = false);
+  
+--- 478,484 ----
+    myPopupMenu *kdisknav;
+    // --sven: kdisknav button end --
+    void generateWindowlist(QPopupMenu*);
++ #endif
+  
+    QPixmap load_pixmap(const char* name, bool is_folder = false);
+  
+***************
+*** 510,515 ****
+  
+    QPixmap defaultPixmap;
+  
+    bool has_kdisknav_button;
+    bool has_windowlist_button;
+    int add_disknav_entry;
+--- 516,522 ----
+  
+    QPixmap defaultPixmap;
+  
++ #ifndef THIN_CLIENT
+    bool has_kdisknav_button;
+    bool has_windowlist_button;
+    int add_disknav_entry;
+***************
+*** 514,519 ****
+    bool has_windowlist_button;
+    int add_disknav_entry;
+    int add_windowlist_entry;
+    QPopupMenu* panel_popup;
+  
+  };
+--- 521,527 ----
+    bool has_windowlist_button;
+    int add_disknav_entry;
+    int add_windowlist_entry;
++ #endif
+    QPopupMenu* panel_popup;
+  
+  };
+*** kpanel.moc.00 Tue Nov  9 16:46:52 1999
+--- kpanel.moc Tue Nov  9 18:37:05 1999
+***************
+*** 261,266 ****
+      m1_t11 v1_11 = &kPanel::kwmCommandReceived;
+      m1_t12 v1_12 = &kPanel::dockWindowAdd;
+      m1_t13 v1_13 = &kPanel::dockWindowRemove;
+      m1_t14 v1_14 = &kPanel::windowlistActivated;
+      m1_t15 v1_15 = &kPanel::taskbarClicked;
+      m1_t16 v1_16 = &kPanel::taskbarPressed;
+--- 261,269 ----
+      m1_t11 v1_11 = &kPanel::kwmCommandReceived;
+      m1_t12 v1_12 = &kPanel::dockWindowAdd;
+      m1_t13 v1_13 = &kPanel::dockWindowRemove;
++ #ifdef THIN_CLIENT
++     m1_t14 v1_14 = NULL;
++ #else
+      m1_t14 v1_14 = &kPanel::windowlistActivated;
+  #endif
+      m1_t15 v1_15 = &kPanel::taskbarClicked;
+***************
+*** 262,267 ****
+      m1_t12 v1_12 = &kPanel::dockWindowAdd;
+      m1_t13 v1_13 = &kPanel::dockWindowRemove;
+      m1_t14 v1_14 = &kPanel::windowlistActivated;
+      m1_t15 v1_15 = &kPanel::taskbarClicked;
+      m1_t16 v1_16 = &kPanel::taskbarPressed;
+      m1_t17 v1_17 = &kPanel::button_clicked;
+--- 265,271 ----
+      m1_t14 v1_14 = NULL;
+  #else
+      m1_t14 v1_14 = &kPanel::windowlistActivated;
++ #endif
+      m1_t15 v1_15 = &kPanel::taskbarClicked;
+      m1_t16 v1_16 = &kPanel::taskbarPressed;
+      m1_t17 v1_17 = &kPanel::button_clicked;
+***************
+*** 266,271 ****
+      m1_t16 v1_16 = &kPanel::taskbarPressed;
+      m1_t17 v1_17 = &kPanel::button_clicked;
+      m1_t18 v1_18 = &kPanel::button_pressed;
+      m1_t19 v1_19 = &kPanel::add_windowlist;
+      m1_t20 v1_20 = &kPanel::add_kdisknav;
+      m1_t21 v1_21 = &kPanel::ask_logout;
+--- 270,279 ----
+      m1_t16 v1_16 = &kPanel::taskbarPressed;
+      m1_t17 v1_17 = &kPanel::button_clicked;
+      m1_t18 v1_18 = &kPanel::button_pressed;
++ #ifdef THIN_CLIENT
++     m1_t19 v1_19 = NULL;
++     m1_t20 v1_20 = NULL;
++ #else
+      m1_t19 v1_19 = &kPanel::add_windowlist;
+      m1_t20 v1_20 = &kPanel::add_kdisknav;
+  #endif
+***************
+*** 268,273 ****
+      m1_t18 v1_18 = &kPanel::button_pressed;
+      m1_t19 v1_19 = &kPanel::add_windowlist;
+      m1_t20 v1_20 = &kPanel::add_kdisknav;
+      m1_t21 v1_21 = &kPanel::ask_logout;
+      m1_t22 v1_22 = &kPanel::call_help;
+      m1_t23 v1_23 = &kPanel::call_klock;
+--- 276,282 ----
+  #else
+      m1_t19 v1_19 = &kPanel::add_windowlist;
+      m1_t20 v1_20 = &kPanel::add_kdisknav;
++ #endif
+      m1_t21 v1_21 = &kPanel::ask_logout;
+      m1_t22 v1_22 = &kPanel::call_help;
+      m1_t23 v1_23 = &kPanel::call_klock;
+***************
+*** 312,317 ****
+      slot_tbl[11].name = "kwmCommandReceived(QString)";
+      slot_tbl[12].name = "dockWindowAdd(Window)";
+      slot_tbl[13].name = "dockWindowRemove(Window)";
+      slot_tbl[14].name = "windowlistActivated(int)";
+      slot_tbl[15].name = "taskbarClicked(int)";
+      slot_tbl[16].name = "taskbarPressed(int)";
+--- 321,329 ----
+      slot_tbl[11].name = "kwmCommandReceived(QString)";
+      slot_tbl[12].name = "dockWindowAdd(Window)";
+      slot_tbl[13].name = "dockWindowRemove(Window)";
++ #ifdef THIN_CLIENT
++     slot_tbl[14].name = NULL;
++ #else
+      slot_tbl[14].name = "windowlistActivated(int)";
+  #endif
+      slot_tbl[15].name = "taskbarClicked(int)";
+***************
+*** 313,318 ****
+      slot_tbl[12].name = "dockWindowAdd(Window)";
+      slot_tbl[13].name = "dockWindowRemove(Window)";
+      slot_tbl[14].name = "windowlistActivated(int)";
+      slot_tbl[15].name = "taskbarClicked(int)";
+      slot_tbl[16].name = "taskbarPressed(int)";
+      slot_tbl[17].name = "button_clicked()";
+--- 325,331 ----
+      slot_tbl[14].name = NULL;
+  #else
+      slot_tbl[14].name = "windowlistActivated(int)";
++ #endif
+      slot_tbl[15].name = "taskbarClicked(int)";
+      slot_tbl[16].name = "taskbarPressed(int)";
+      slot_tbl[17].name = "button_clicked()";
+***************
+*** 317,322 ****
+      slot_tbl[16].name = "taskbarPressed(int)";
+      slot_tbl[17].name = "button_clicked()";
+      slot_tbl[18].name = "button_pressed()";
+      slot_tbl[19].name = "add_windowlist()";
+      slot_tbl[20].name = "add_kdisknav()";
+      slot_tbl[21].name = "ask_logout()";
+--- 330,339 ----
+      slot_tbl[16].name = "taskbarPressed(int)";
+      slot_tbl[17].name = "button_clicked()";
+      slot_tbl[18].name = "button_pressed()";
++ #ifdef THIN_CLIENT
++     slot_tbl[19].name = NULL;
++     slot_tbl[20].name = NULL;
++ #else
+      slot_tbl[19].name = "add_windowlist()";
+      slot_tbl[20].name = "add_kdisknav()";
+  #endif
+***************
+*** 319,324 ****
+      slot_tbl[18].name = "button_pressed()";
+      slot_tbl[19].name = "add_windowlist()";
+      slot_tbl[20].name = "add_kdisknav()";
+      slot_tbl[21].name = "ask_logout()";
+      slot_tbl[22].name = "call_help()";
+      slot_tbl[23].name = "call_klock()";
+--- 336,342 ----
+  #else
+      slot_tbl[19].name = "add_windowlist()";
+      slot_tbl[20].name = "add_kdisknav()";
++ #endif
+      slot_tbl[21].name = "ask_logout()";
+      slot_tbl[22].name = "call_help()";
+      slot_tbl[23].name = "call_klock()";
+*** pmenu.C.00 Mon Jan 11 15:13:53 1999
+--- pmenu.C Mon Nov 15 14:48:49 1999
+***************
+*** 243,248 ****
+  
+  void PMenuItem::addFolderToRecentList()
+  {
+    PFileMenu::updateRecentFolders(getDirPath());
+  }
+  
+--- 243,249 ----
+  
+  void PMenuItem::addFolderToRecentList()
+  {
++ #ifndef THIN_CLIENT
+    PFileMenu::updateRecentFolders(getDirPath());
+  #endif
+  }
+***************
+*** 244,249 ****
+  void PMenuItem::addFolderToRecentList()
+  {
+    PFileMenu::updateRecentFolders(getDirPath());
+  }
+  
+  
+--- 245,251 ----
+  {
+  #ifndef THIN_CLIENT
+    PFileMenu::updateRecentFolders(getDirPath());
++ #endif
+  }
+  
+  
+***************
+*** 252,257 ****
+    QDir d(getDirPath());
+    QString cpath = d.canonicalPath() + "/" + real_name;
+  
+    if (! ready_for_event_loop){ // hack: avoid doing this when the menu is not fully parsed.
+        // otherwise PFileMenu::updateRecentFiles will segfault (Matthias)
+  
+--- 254,260 ----
+    QDir d(getDirPath());
+    QString cpath = d.canonicalPath() + "/" + real_name;
+  
++ #ifndef THIN_CLIENT
+    if (! ready_for_event_loop){ // hack: avoid doing this when the menu is not fully parsed.
+        // otherwise PFileMenu::updateRecentFiles will segfault (Matthias)
+  
+***************
+*** 261,266 ****
+      // its container (PMenu);
+      PFileMenu::updateRecentFiles(cpath);
+    }
+  
+    KFM* kfm = new KFM;
+    QString com = "file:";
+--- 264,270 ----
+      // its container (PMenu);
+      PFileMenu::updateRecentFiles(cpath);
+    }
++ #endif
+  
+    KFM* kfm = new KFM;
+    QString com = "file:";
+*** props.C.00 Sun Aug 15 14:11:11 1999
+--- props.C Tue Nov  9 17:21:45 1999
+***************
+*** 37,42 ****
+         - panel_button->x() - panel_button->width();
+  
+     for (i=0; i<nbuttons;i++){
+       if (entries[i].popup == windowlist)
+         s="windowlist";
+       // --sven: kdisknav button start --
+--- 37,43 ----
+         - panel_button->x() - panel_button->width();
+  
+     for (i=0; i<nbuttons;i++){
++ #ifndef THIN_CLIENT
+       if (entries[i].popup == windowlist)
+         s="windowlist";
+       // --sven: kdisknav button start --
+***************
+*** 43,49 ****
+       else if (entries[i].popup == kdisknav)
+         s="kdisknav";
+       // --sven: kdisknav button end --
+!      else if (entries[i].pmi){
+         s=entries[i].pmi->getSaveName();
+       }
+       else
+--- 44,52 ----
+       else if (entries[i].popup == kdisknav)
+         s="kdisknav";
+       // --sven: kdisknav button end --
+!      else 
+! #endif
+!      if (entries[i].pmi){
+         s=entries[i].pmi->getSaveName();
+       }
+       else
+***************
+*** 177,182 ****
+  				   0, 0, new myPopupMenu, false, 0,
+  				   klocale->translate("Add an application or a submenu onto the panel")));
+  
+      PMenuItem* pdisknav;
+      PMenuItem* pwindowlist;
+  
+--- 180,186 ----
+  				   0, 0, new myPopupMenu, false, 0,
+  				   klocale->translate("Add an application or a submenu onto the panel")));
+  
++ #ifndef THIN_CLIENT
+      PMenuItem* pdisknav;
+      PMenuItem* pwindowlist;
+  
+***************
+*** 189,194 ****
+      panel_menu->add( pwindowlist = new PMenuItem(prog_com, klocale->translate("Add Windowlist"), 0, "window_list.xpm", 0,
+  				   this, SLOT(add_windowlist()), 0, false, 0,
+  				   klocale->translate("Add a windowlist menu onto the panel")) );
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Configure"), 0, 0, 0,
+  				   this, SLOT(configurePanel()), 0, false, 0,
+  				   klocale->translate("Configure panel")) );
+--- 193,199 ----
+      panel_menu->add( pwindowlist = new PMenuItem(prog_com, klocale->translate("Add Windowlist"), 0, "window_list.xpm", 0,
+  				   this, SLOT(add_windowlist()), 0, false, 0,
+  				   klocale->translate("Add a windowlist menu onto the panel")) );
++ #endif
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Configure"), 0, 0, 0,
+  				   this, SLOT(configurePanel()), 0, false, 0,
+  				   klocale->translate("Configure panel")) );
+***************
+*** 192,197 ****
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Configure"), 0, 0, 0,
+  				   this, SLOT(configurePanel()), 0, false, 0,
+  				   klocale->translate("Configure panel")) );
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Edit Menus"), 0, 0, 0,
+  				   this, SLOT(editMenus()), 0, false, 0,
+  				   klocale->translate("Add or remove applications in the menu structure ")) );
+--- 197,203 ----
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Configure"), 0, 0, 0,
+  				   this, SLOT(configurePanel()), 0, false, 0,
+  				   klocale->translate("Configure panel")) );
++ #ifndef THIN_CLIENT
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Edit Menus"), 0, 0, 0,
+  				   this, SLOT(editMenus()), 0, false, 0,
+  				   klocale->translate("Add or remove applications in the menu structure ")) );
+***************
+*** 195,200 ****
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Edit Menus"), 0, 0, 0,
+  				   this, SLOT(editMenus()), 0, false, 0,
+  				   klocale->translate("Add or remove applications in the menu structure ")) );
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Restart"), 0, 0, 0,
+  				   this, SLOT(restart()), 0, false, 0,
+  				   klocale->translate("Restart panel")) );
+--- 201,207 ----
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Edit Menus"), 0, 0, 0,
+  				   this, SLOT(editMenus()), 0, false, 0,
+  				   klocale->translate("Add or remove applications in the menu structure ")) );
++ #endif
+      panel_menu->add( new PMenuItem(prog_com, klocale->translate("Restart"), 0, 0, 0,
+  				   this, SLOT(restart()), 0, false, 0,
+  				   klocale->translate("Restart panel")) );
+***************
+*** 199,204 ****
+  				   this, SLOT(restart()), 0, false, 0,
+  				   klocale->translate("Restart panel")) );
+  
+      PMenuItem* fileBrowser =
+        new PMenuItem(submenu, klocale->translate("Disk Navigator"),
+                      0, "kdisknav.xpm", new PFileMenu(true), 0, 0,
+--- 206,212 ----
+  				   this, SLOT(restart()), 0, false, 0,
+  				   klocale->translate("Restart panel")) );
+  
++ #ifndef THIN_CLIENT
+      PMenuItem* fileBrowser =
+        new PMenuItem(submenu, klocale->translate("Disk Navigator"),
+                      0, "kdisknav.xpm", new PFileMenu(true), 0, 0,
+***************
+*** 206,213 ****
+  		    klocale->translate("Quickly navigate through the filesystem"));
+  
+      pmenu->add( fileBrowser );
+! 
+! 
+      pmenu->add( new PMenuItem(submenu, klocale->translate("Panel"), 0, "mini-panel.xpm",
+  			      panel_menu, 0, 0, new myPopupMenu) );
+      pmenu->add( new PMenuItem(prog_com, klocale->translate("Lock Screen"), 0, "mini-key.xpm", 0,
+--- 214,220 ----
+  		    klocale->translate("Quickly navigate through the filesystem"));
+  
+      pmenu->add( fileBrowser );
+! #endif
+      pmenu->add( new PMenuItem(submenu, klocale->translate("Panel"), 0, "mini-panel.xpm",
+  			      panel_menu, 0, 0, new myPopupMenu) );
+      pmenu->add( new PMenuItem(prog_com, klocale->translate("Lock Screen"), 0, "mini-key.xpm", 0,
+***************
+*** 217,222 ****
+  			      this, SLOT(ask_logout()), 0, false, 0, klocale->translate("Logout")) );
+  
+      pmenu->createMenu(new myPopupMenu, this);
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+  
+      panel_popup = panel_menu->getQPopupMenu();
+--- 224,230 ----
+  			      this, SLOT(ask_logout()), 0, false, 0, klocale->translate("Logout")) );
+  
+      pmenu->createMenu(new myPopupMenu, this);
++ #ifndef THIN_CLIENT
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+  #endif
+      panel_popup = panel_menu->getQPopupMenu();
+***************
+*** 218,224 ****
+  
+      pmenu->createMenu(new myPopupMenu, this);
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+! 
+      panel_popup = panel_menu->getQPopupMenu();
+      add_disknav_entry = pdisknav->getId();
+      add_windowlist_entry = pwindowlist->getId();
+--- 226,232 ----
+      pmenu->createMenu(new myPopupMenu, this);
+  #ifndef THIN_CLIENT
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+! #endif
+      panel_popup = panel_menu->getQPopupMenu();
+  #ifndef THIN_CLIENT
+      add_disknav_entry = pdisknav->getId();
+***************
+*** 220,225 ****
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+  
+      panel_popup = panel_menu->getQPopupMenu();
+      add_disknav_entry = pdisknav->getId();
+      add_windowlist_entry = pwindowlist->getId();
+  
+--- 228,234 ----
+      PFileMenu::calculateMaxEntriesOnScreen(fileBrowser);
+  #endif
+      panel_popup = panel_menu->getQPopupMenu();
++ #ifndef THIN_CLIENT
+      add_disknav_entry = pdisknav->getId();
+      add_windowlist_entry = pwindowlist->getId();
+  
+***************
+*** 228,233 ****
+  
+      if (has_windowlist_button)
+        panel_popup->setItemChecked(add_windowlist_entry, true);
+  
+      int i;
+      for (i=0; i<nbuttons && entries[i].button!=kde_button; i++);
+--- 237,243 ----
+  
+      if (has_windowlist_button)
+        panel_popup->setItemChecked(add_windowlist_entry, true);
++ #endif
+  
+      int i;
+      for (i=0; i<nbuttons && entries[i].button!=kde_button; i++);
+***************
+*** 309,314 ****
+  	 PMenuItem* pmi = 0;
+  	
+  	 bool buttonAdded = false;
+  	 if (button_entry_value == "windowlist"){
+  	     addButtonInternal(0, (int)x, (int)y, "windowlist");
+  	     buttonAdded = true;
+--- 319,325 ----
+  	 PMenuItem* pmi = 0;
+  	
+  	 bool buttonAdded = false;
++ #ifndef THIN_CLIENT
+  	 if (button_entry_value == "windowlist"){
+  	     addButtonInternal(0, (int)x, (int)y, "windowlist");
+  	     buttonAdded = true;
+***************
+*** 322,327 ****
+  	 }
+           // --sven: kdisknav button end --
+  	 else {
+  	   pmi = pmenu->searchItem( button_entry_value);
+  	   if (pmi){
+  	     addButtonInternal(pmi, (int)x, (int)y);
+--- 333,339 ----
+  	 }
+           // --sven: kdisknav button end --
+  	 else {
++ #endif
+  	   pmi = pmenu->searchItem( button_entry_value);
+  	   if (pmi){
+  	     addButtonInternal(pmi, (int)x, (int)y);
+***************
+*** 327,332 ****
+  	     addButtonInternal(pmi, (int)x, (int)y);
+  	     buttonAdded = true;
+  	   }
+  	 }
+  	
+  	 if (buttonAdded){
+--- 339,345 ----
+  	     addButtonInternal(pmi, (int)x, (int)y);
+  	     buttonAdded = true;
+  	   }
++ #ifndef THIN_CLIENT
+  	 }
+  #endif
+  	
+***************
+*** 328,333 ****
+  	     buttonAdded = true;
+  	   }
+  	 }
+  	
+  	 if (buttonAdded){
+  	   if (orientation == horizontal)
+--- 341,347 ----
+  	   }
+  #ifndef THIN_CLIENT
+  	 }
++ #endif
+  	
+  	 if (buttonAdded){
+  	   if (orientation == horizontal)
+*** tools.C.00 Sun Jul 11 11:56:34 1999
+--- tools.C Tue Nov  9 17:28:04 1999
+***************
+*** 356,361 ****
+  //   popup->hide();
+  }
+  
+  void kPanel::generateWindowlist(QPopupMenu* p){
+    Window *w;
+    int i = 0;
+--- 356,362 ----
+  //   popup->hide();
+  }
+  
++ #ifndef THIN_CLIENT
+  void kPanel::generateWindowlist(QPopupMenu* p){
+    Window *w;
+    int i = 0;
+***************
+*** 425,430 ****
+      KWM::activate(w);
+    }
+  }
+  
+  
+  
+--- 426,432 ----
+      KWM::activate(w);
+    }
+  }
++ #endif
+  
+  
+  int kPanel::show_popup(QPopupMenu* popup, QWidget* button, bool isTaskButton){
+***************
+*** 427,433 ****
+  }
+  
+  
+- 
+  int kPanel::show_popup(QPopupMenu* popup, QWidget* button, bool isTaskButton){
+    int xp;
+    int yp;
+--- 429,434 ----
+  #endif
+  
+  
+  int kPanel::show_popup(QPopupMenu* popup, QWidget* button, bool isTaskButton){
+    int xp;
+    int yp;
+***************
+*** 432,437 ****
+    int xp;
+    int yp;
+  
+    if (popup == windowlist)
+      generateWindowlist(windowlist);
+  
+--- 433,439 ----
+    int xp;
+    int yp;
+  
++ #ifndef THIN_CLIENT
+    if (popup == windowlist)
+      generateWindowlist(windowlist);
+  #endif
+***************
+*** 434,440 ****
+  
+    if (popup == windowlist)
+      generateWindowlist(windowlist);
+! 
+    popup->move(-1000,-1000);
+    popup->show();
+  
+--- 436,442 ----
+  #ifndef THIN_CLIENT
+    if (popup == windowlist)
+      generateWindowlist(windowlist);
+! #endif
+    popup->move(-1000,-1000);
+    popup->show();
+  
+***************
+*** 673,678 ****
+      label_date->setBackgroundPixmap( mBackTexture );
+  }
+  
+  void kPanel::add_windowlist(){
+    if (has_windowlist_button) {
+      for (int i = 0; i < nbuttons; i++)
+--- 675,681 ----
+      label_date->setBackgroundPixmap( mBackTexture );
+  }
+  
++ #ifndef THIN_CLIENT
+  void kPanel::add_windowlist(){
+    if (has_windowlist_button) {
+      for (int i = 0; i < nbuttons; i++)
+***************
+*** 706,711 ****
+    writeOutConfiguration();
+  }
+  // --sven: kdisknav button end --
+  
+  void kPanel::ask_logout(){
+    KWM::logout();
+--- 709,715 ----
+    writeOutConfiguration();
+  }
+  // --sven: kdisknav button end --
++ #endif
+  
+  #ifdef THIN_CLIENT
+  void kPanel::ask_logout(){
+***************
+*** 707,712 ****
+  }
+  // --sven: kdisknav button end --
+  
+  void kPanel::ask_logout(){
+    KWM::logout();
+  }
+--- 711,717 ----
+  // --sven: kdisknav button end --
+  #endif
+  
++ #ifdef THIN_CLIENT
+  void kPanel::ask_logout(){
+    execute("nc_logout");
+  }
+***************
+*** 708,713 ****
+  // --sven: kdisknav button end --
+  
+  void kPanel::ask_logout(){
+    KWM::logout();
+  }
+  
+--- 713,722 ----
+  
+  #ifdef THIN_CLIENT
+  void kPanel::ask_logout(){
++   execute("nc_logout");
++ }
++ #else
++ void kPanel::ask_logout(){
+    KWM::logout();
+  }
+  #endif
+***************
+*** 710,715 ****
+  void kPanel::ask_logout(){
+    KWM::logout();
+  }
+  
+  
+  void kPanel::call_klock(){
+--- 719,725 ----
+  void kPanel::ask_logout(){
+    KWM::logout();
+  }
++ #endif
+  
+  void kPanel::call_klock(){
+    execute("klock");
+***************
+*** 711,717 ****
+    KWM::logout();
+  }
+  
+- 
+  void kPanel::call_klock(){
+    execute("klock");
+  }
+--- 721,726 ----
+  }
+  #endif
+  
+  void kPanel::call_klock(){
+    execute("klock");
+  }
+***************
+*** 919,924 ****
+    miniSystem->setMouseTracking( true );
+    miniSystem->installEventFilter (this);
+  
+    miniDesk = new myPushButton(miniPanel);
+    QToolTip::add(miniDesk, klocale->translate("Windowlist"));
+    miniDesk->setFocusPolicy(NoFocus);
+--- 928,934 ----
+    miniSystem->setMouseTracking( true );
+    miniSystem->installEventFilter (this);
+  
++ #ifndef THIN_CLIENT
+    miniDesk = new myPushButton(miniPanel);
+    QToolTip::add(miniDesk, klocale->translate("Windowlist"));
+    miniDesk->setFocusPolicy(NoFocus);
+***************
+*** 936,941 ****
+    miniDiskNav->setMouseTracking( true );
+    miniDiskNav->installEventFilter (this);
+    // -- pietro: kdisknav button end --
+  
+    miniPanel->setGeometry (0, 0, 3*mh, mh);
+    miniPanel->insert(miniSystem, 1);
+--- 946,952 ----
+    miniDiskNav->setMouseTracking( true );
+    miniDiskNav->installEventFilter (this);
+    // -- pietro: kdisknav button end --
++ #endif
+  
+    miniPanel->setGeometry (0, 0, 3*mh, mh);
+    miniPanel->insert(miniSystem, 1);
+***************
+*** 939,944 ****
+  
+    miniPanel->setGeometry (0, 0, 3*mh, mh);
+    miniPanel->insert(miniSystem, 1);
+    miniPanel->insert(miniDesk, 2);
+    // -- pietro: kdisknav button start --
+    miniPanel->insert(miniDiskNav, 3);
+--- 950,956 ----
+  
+    miniPanel->setGeometry (0, 0, 3*mh, mh);
+    miniPanel->insert(miniSystem, 1);
++ #ifndef THIN_CLIENT
+    miniPanel->insert(miniDesk, 2);
+    // -- pietro: kdisknav button start --
+    miniPanel->insert(miniDiskNav, 3);
+***************
+*** 943,948 ****
+    // -- pietro: kdisknav button start --
+    miniPanel->insert(miniDiskNav, 3);
+    // -- pietro: kdisknav button end --
+  
+    miniSystem->setGeometry(1, 1, mh-1, mh-2);
+    miniDesk->setGeometry(mh, 1, mh-1, mh-2);
+--- 955,961 ----
+    // -- pietro: kdisknav button start --
+    miniPanel->insert(miniDiskNav, 3);
+    // -- pietro: kdisknav button end --
++ #endif
+  
+    miniSystem->setGeometry(1, 1, mh-1, mh-2);
+  #ifndef THIN_CLIENT
+***************
+*** 945,950 ****
+    // -- pietro: kdisknav button end --
+  
+    miniSystem->setGeometry(1, 1, mh-1, mh-2);
+    miniDesk->setGeometry(mh, 1, mh-1, mh-2);
+    // -- pietro: kdisknav button start --
+    miniDiskNav->setGeometry(mh*2, 1, mh-1, mh-2);
+--- 958,964 ----
+  #endif
+  
+    miniSystem->setGeometry(1, 1, mh-1, mh-2);
++ #ifndef THIN_CLIENT
+    miniDesk->setGeometry(mh, 1, mh-1, mh-2);
+    // -- pietro: kdisknav button start --
+    miniDiskNav->setGeometry(mh*2, 1, mh-1, mh-2);
+***************
+*** 949,954 ****
+    // -- pietro: kdisknav button start --
+    miniDiskNav->setGeometry(mh*2, 1, mh-1, mh-2);
+    // -- pietro: kdisknav button end --
+   }
+    int sx=0; int sx1 =0;
+    if (position == top_left && panelCurrentlyLeft)
+--- 963,969 ----
+    // -- pietro: kdisknav button start --
+    miniDiskNav->setGeometry(mh*2, 1, mh-1, mh-2);
+    // -- pietro: kdisknav button end --
++ #endif
+   }
+    int sx=0; int sx1 =0;
+    if (position == top_left && panelCurrentlyLeft)
+***************
+*** 1015,1020 ****
+        kmenu->exec();
+        break;
+  
+      case 2:
+        generateWindowlist(windowlist);
+        if (taskbar_position == bottom){
+--- 1030,1036 ----
+        kmenu->exec();
+        break;
+  
++ #ifndef THIN_CLIENT
+      case 2:
+        generateWindowlist(windowlist);
+        if (taskbar_position == bottom){
+***************
+*** 1051,1056 ****
+        kdisknav->exec();
+        break;
+        // -- pietro: kdisknav button end --
+      }
+  
+    QButton* button = miniPanel->find(i);
+--- 1067,1073 ----
+        kdisknav->exec();
+        break;
+        // -- pietro: kdisknav button end --
++ #endif
+      }
+  
+    QButton* button = miniPanel->find(i);

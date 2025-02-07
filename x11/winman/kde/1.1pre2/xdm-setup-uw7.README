@@ -1,0 +1,28 @@
+21-Feb-99 rr@sco.com
+
+As a convenience i have supplied a gzip'd tar archive of files preconfigured for
+use with kdm on UnixWare 7. The system administrator can replace the two files
+
+    usr/X/lib/X11/xdm/Xsetup_0
+    usr/X/lib/X11/xdm/Xsession
+
+and add the file
+
+    etc/rc2.d/S99kdm
+
+from the gzip'd tar archive xdm-setup-uw7.tar.gz in this directory:
+
+    # cd /
+    # tar cf usr/X/lib/X11/xdm-setup-orig.tar usr/X/lib/X11/xdm/Xsetup_0 \
+             usr/X/lib/X11/xdm/Xsession
+    # gzcat /usr/local/kde/share/config/xdm-setup-uw7.tar.gz | tar xf -
+
+After doing so, it should only be necessary to first stop and disable scologin:
+
+    # scologin stop
+    # scologin disable
+
+Then start kdm either by changing init states or running the rc script by hand:
+
+    # /etc/rc2.d/S99kdm
+

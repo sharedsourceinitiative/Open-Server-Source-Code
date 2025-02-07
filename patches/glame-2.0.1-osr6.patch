@@ -1,0 +1,127 @@
+*** ./configure.osr6	Mon Mar 28 09:11:46 2005
+--- ./configure	Fri Sep 30 20:41:18 2005
+***************
+*** 3554,3560 ****
+  sed 's/^/| /' conftest.$ac_ext >&5
+  
+  
+- CPPFLAGS="$CPPFLAGS -no-cpp-precomp"
+  cat >conftest.$ac_ext <<_ACEOF
+  
+  #define MACRO_WITH_VARARGS(dummy...)	/* nothing */
+--- 3554,3559 ----
+***************
+*** 3581,3588 ****
+  fi
+  if test -z "$ac_cpp_err"; then
+  
+! echo "$as_me:$LINENO: result: -no-cpp-precomp" >&5
+! echo "${ECHO_T}-no-cpp-precomp" >&6
+  
+  else
+    echo "$as_me: failed program was:" >&5
+--- 3580,3587 ----
+  fi
+  if test -z "$ac_cpp_err"; then
+  
+! echo "$as_me:$LINENO: result:" >&5
+! echo "${ECHO_T}" >&6
+  
+  else
+    echo "$as_me: failed program was:" >&5
+***************
+*** 4283,4289 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 4282,4288 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 4291,4297 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 4290,4296 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 7208,7214 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 7207,7213 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7898,7906 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7897,7904 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+*** ./Configure-OSR6.osr6	Fri Sep 30 20:39:11 2005
+--- ./Configure-OSR6	Fri Sep 30 20:39:11 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --with-libintl-prefix=/usr/gnu \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

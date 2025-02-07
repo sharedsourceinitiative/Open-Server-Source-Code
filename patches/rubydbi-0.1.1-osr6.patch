@@ -1,0 +1,43 @@
+*** ./Build-OSR6.osr6	Thu Nov  8 18:25:42 2007
+--- ./Build-OSR6	Thu Nov  8 18:25:42 2007
+***************
+*** 0 ****
+--- 1,4 ----
++ #!/bin/sh
++ 
++ ruby setup.rb config --with=dbi,dbd_pg,dbd_mysql,dbd_proxy 2>&1 > mout-config
++ ruby setup.rb setup 2>&1 > mout-setup
+*** ./Install-OSR6.osr6	Thu Nov  8 18:25:42 2007
+--- ./Install-OSR6	Thu Nov  8 18:25:42 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rubydbi
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ ruby setup.rb install 2>&1 | tee $MOUT
++ 
+*** ./Package-OSR6.osr6	Thu Nov  8 18:31:01 2007
+--- ./Package-OSR6	Thu Nov  8 18:30:38 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ cd /
++ tar cf - \
++ usr/bin/sqlsh.rb \
++ usr/bin/proxyserver.rb \
++ usr/lib/ruby/site_ruby/1.8/DBD/Mysql/Mysql.rb \
++ usr/lib/ruby/site_ruby/1.8/DBD/Pg/Pg.rb \
++ usr/lib/ruby/site_ruby/1.8/DBD/Proxy/Proxy.rb \
++ usr/lib/ruby/site_ruby/1.8/dbi \
++ usr/lib/ruby/site_ruby/1.8/dbi.rb | gzip -9 > \
++ /u/legend/skunkware/dist/rubydbi-0.1.1-dist.tar.gz

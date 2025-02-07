@@ -1,0 +1,691 @@
+*** ./Makefile.orig Sun Jan 16 14:28:39 2005
+--- ./Makefile Sun May 15 12:24:14 2005
+***************
+*** 8,14 ****
+  # Change these to locations you need, also
+  # remember to edit cdlabelgen and its @where_is_the_template as needed.
+  
+! BASE_DIR   = /usr/local
+  # BASE_DIR   = /usr/local
+  # BASE_DIR   = /opt
+  BIN_DIR   = $(BASE_DIR)/bin
+--- 8,14 ----
+  # Change these to locations you need, also
+  # remember to edit cdlabelgen and its @where_is_the_template as needed.
+  
+! BASE_DIR   = /usr
+  # BASE_DIR   = /usr/local
+  # BASE_DIR   = /opt
+  BIN_DIR   = $(BASE_DIR)/bin
+***************
+*** 13,18 ****
+  # BASE_DIR   = /opt
+  BIN_DIR   = $(BASE_DIR)/bin
+  LIB_DIR   = $(BASE_DIR)/lib/cdlabelgen
+  MAN_DIR   = $(BASE_DIR)/man
+  SOURCES    = cdlabelgen ChangeLog INSTALL README Makefile ../cdinsert.pl INSTALL.WEB cdlabelgen.pod cdlabelgen.1 cdlabelgen.html spec.template
+  POSTSCRIPT = template.ps *.eps
+--- 13,20 ----
+  # BASE_DIR   = /opt
+  BIN_DIR   = $(BASE_DIR)/bin
+  LIB_DIR   = $(BASE_DIR)/lib/cdlabelgen
++ INS_DIR   = $(BASE_DIR)/lib/apache/htdocs/cdinsert
++ CGI_DIR   = $(BASE_DIR)/lib/apache/cgi-bin
+  MAN_DIR   = $(BASE_DIR)/man
+  SOURCES    = cdlabelgen ChangeLog INSTALL README Makefile ../cdinsert.pl INSTALL.WEB cdlabelgen.pod cdlabelgen.1 cdlabelgen.html spec.template
+  POSTSCRIPT = template.ps *.eps
+***************
+*** 19,27 ****
+  DISTFILES = $(SOURCES) $(POSTSCRIPT)
+  
+  # just use 'cp -a' if you don't have install...
+! INSTALL		:= install -m 0755
+! INSTALL_DIR	:= install -d -m 0755
+! INSTALL_FILE	:= install -m 0644
+  
+  # Makefile macros....
+  #1.  $@ is the name of the file to be made.
+--- 21,29 ----
+  DISTFILES = $(SOURCES) $(POSTSCRIPT)
+  
+  # just use 'cp -a' if you don't have install...
+! INSTALL		:= /usr/gnu/bin/install -m 0755
+! INSTALL_DIR	:= /usr/gnu/bin/install -d -m 0755
+! INSTALL_FILE	:= /usr/gnu/bin/install -m 0644
+  
+  # Makefile macros....
+  #1.  $@ is the name of the file to be made.
+***************
+*** 44,49 ****
+  	@echo "Installing cdlabelgen in $(BIN_DIR) and $(LIB_DIR)"
+  	@echo ""
+  	$(INSTALL_DIR) $(BIN_DIR)
+  	$(INSTALL) cdlabelgen $(BIN_DIR)
+  	$(INSTALL) cdlabelgen.1 $(MAN_DIR)/man1
+  	$(INSTALL_DIR) $(LIB_DIR)
+--- 46,53 ----
+  	@echo "Installing cdlabelgen in $(BIN_DIR) and $(LIB_DIR)"
+  	@echo ""
+  	$(INSTALL_DIR) $(BIN_DIR)
++ 	$(INSTALL_DIR) $(INS_DIR)/tmp
++ 	$(INSTALL_DIR) $(MAN_DIR)/html.1
+  	$(INSTALL) cdlabelgen $(BIN_DIR)
+  	$(INSTALL) cdlabelgen.1 $(MAN_DIR)/man1
+  	$(INSTALL) cdlabelgen.html $(MAN_DIR)/html.1/cdlabelgen.1.html
+***************
+*** 46,51 ****
+  	$(INSTALL_DIR) $(BIN_DIR)
+  	$(INSTALL) cdlabelgen $(BIN_DIR)
+  	$(INSTALL) cdlabelgen.1 $(MAN_DIR)/man1
+  	$(INSTALL_DIR) $(LIB_DIR)
+  	set -e; \
+  	for file in $(POSTSCRIPT); do \
+--- 50,64 ----
+  	$(INSTALL_DIR) $(MAN_DIR)/html.1
+  	$(INSTALL) cdlabelgen $(BIN_DIR)
+  	$(INSTALL) cdlabelgen.1 $(MAN_DIR)/man1
++ 	$(INSTALL) cdlabelgen.html $(MAN_DIR)/html.1/cdlabelgen.1.html
++ 	$(INSTALL) cdinsert.html $(INS_DIR)
++ 	(cd $(INS_DIR); ln -s cdinsert.html index.html)
++ 	$(INSTALL) cdinsert.pl $(CGI_DIR)
++ 	$(INSTALL) crontab $(INS_DIR)
++ 	$(INSTALL) done_t.html $(INS_DIR)
++ 	$(INSTALL) wait_t.html $(INS_DIR)
++ 	$(INSTALL) rm-old-dirs $(INS_DIR)
++ 	chown nouser:nogroup $(INS_DIR) $(INS_DIR)/tmp
+  	$(INSTALL_DIR) $(LIB_DIR)
+  	set -e; \
+  	for file in $(POSTSCRIPT); do \
+***************
+*** 51,57 ****
+  	for file in $(POSTSCRIPT); do \
+  		$(INSTALL_FILE) postscript/$$file $(LIB_DIR)/; \
+  	done
+- 	@echo "** Done. Check $(BIN_DIR)/cdlabelgen and fix @where_is_the_template - if needed!"
+  
+  cdlabelgen-$(VERSION).spec: spec.template
+  	sed -e "s/TAG_VERSION/$(VERSION)/" < $? > $@
+--- 64,69 ----
+  	for file in $(POSTSCRIPT); do \
+  		$(INSTALL_FILE) postscript/$$file $(LIB_DIR)/; \
+  	done
+  
+  cdlabelgen-$(VERSION).spec: spec.template
+  	sed -e "s/TAG_VERSION/$(VERSION)/" < $? > $@
+*** ./Build-OSR6.orig Sun May 15 12:13:40 2005
+--- ./Build-OSR6 Sun May 15 12:13:40 2005
+***************
+*** 0 ****
+--- 1,5 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT
+*** ./cdinsert.pl.orig Sun Jan 16 14:28:39 2005
+--- ./cdinsert.pl Sun May 15 12:25:10 2005
+***************
+*** 100,106 ****
+  $SIG{HUP} = $SIG{INT} = $SIG{QUIT} = $SIG{PIPE} = $SIG{TERM} = \&sighandler;
+  #-----------------------------------------------------------------------------
+  # Following vars need to be set specifically for each site 
+! $ROOTDIR = "/home/cgi/cdinsert"; # where all web files are kept
+  
+  # "/usr/local/apache/htdocs/cgi" is symlink to "/home/cgi", so
+  # the HTTP address is:
+--- 100,106 ----
+  $SIG{HUP} = $SIG{INT} = $SIG{QUIT} = $SIG{PIPE} = $SIG{TERM} = \&sighandler;
+  #-----------------------------------------------------------------------------
+  # Following vars need to be set specifically for each site 
+! $ROOTDIR = "/usr/lib/apache/htdocs/cdinsert"; # where all web files are kept
+  
+  # the HTTP address is:
+  # $ROOTHTTP = "/cgi-bin/cdinsert"; # relative URL, absolute path
+***************
+*** 102,108 ****
+  # Following vars need to be set specifically for each site 
+  $ROOTDIR = "/home/cgi/cdinsert"; # where all web files are kept
+  
+- # "/usr/local/apache/htdocs/cgi" is symlink to "/home/cgi", so
+  # the HTTP address is:
+  # $ROOTHTTP = "/cgi/cdinsert"; # relative URL, absolute path
+  
+--- 102,107 ----
+  # Following vars need to be set specifically for each site 
+  $ROOTDIR = "/usr/lib/apache/htdocs/cdinsert"; # where all web files are kept
+  
+  # the HTTP address is:
+  # $ROOTHTTP = "/cgi-bin/cdinsert"; # relative URL, absolute path
+  
+***************
+*** 104,110 ****
+  
+  # "/usr/local/apache/htdocs/cgi" is symlink to "/home/cgi", so
+  # the HTTP address is:
+! # $ROOTHTTP = "/cgi/cdinsert"; # relative URL, absolute path
+  
+  # for each invocation - semi-random name - gets some privacy, since
+  # these folders are readable by the world.
+--- 103,109 ----
+  $ROOTDIR = "/usr/lib/apache/htdocs/cdinsert"; # where all web files are kept
+  
+  # the HTTP address is:
+! # $ROOTHTTP = "/cgi-bin/cdinsert"; # relative URL, absolute path
+  
+  # for each invocation - semi-random name - gets some privacy, since
+  # these folders are readable by the world.
+***************
+*** 112,121 ****
+  # $TDATE = sprintf("%02d%02d%02d", (localtime($start_time))[3], (localtime($start_time))[2], (localtime($start_time))[1]); # current date hour minute
+  $TDATE = sprintf("%02d%02d", (localtime($start_time))[3], (localtime($start_time))[2]); # current date hour
+  $WORKDIRNAME = "cd" . $TDATE;
+! $WORKDIRNAME = &mktempdir("/home/cgi/tmp", $WORKDIRNAME, floor(rand(1e3))); # 1e3 -> max 3 digits
+! $WORKDIR = "/home/cgi/tmp/$WORKDIRNAME"; 
+! # "/usr/local/apache/htdocs/cgi" is symlink to "/home/cgi", so
+! $WORKHTTP = "/cgi/tmp/$WORKDIRNAME"; 
+  
+  $LOGFILE = "/home/cgi/tmp/weblog.txt";
+  # log file - global script issues, not related to any one invocation
+--- 111,119 ----
+  # $TDATE = sprintf("%02d%02d%02d", (localtime($start_time))[3], (localtime($start_time))[2], (localtime($start_time))[1]); # current date hour minute
+  $TDATE = sprintf("%02d%02d", (localtime($start_time))[3], (localtime($start_time))[2]); # current date hour
+  $WORKDIRNAME = "cd" . $TDATE;
+! $WORKDIRNAME = &mktempdir("/usr/lib/apache/htdocs/cdinsert/tmp", $WORKDIRNAME, floor(rand(1e3))); # 1e3 -> max 3 digits
+! $WORKDIR = "/usr/lib/apache/htdocs/cdinsert/tmp/$WORKDIRNAME"; 
+! $WORKHTTP = "/cdinsert/tmp/$WORKDIRNAME"; 
+  
+  $LOGFILE = "/usr/lib/apache/htdocs/cdinsert/tmp/weblog.txt";
+  # log file - global script issues, not related to any one invocation
+***************
+*** 117,123 ****
+  # "/usr/local/apache/htdocs/cgi" is symlink to "/home/cgi", so
+  $WORKHTTP = "/cgi/tmp/$WORKDIRNAME"; 
+  
+! $LOGFILE = "/home/cgi/tmp/weblog.txt";
+  # log file - global script issues, not related to any one invocation
+  # make sure this file exists, and is chmod 662 - writeable, but not readable
+  # by others so casual web hackers can't read this directly using a browser.
+--- 115,121 ----
+  $WORKDIR = "/usr/lib/apache/htdocs/cdinsert/tmp/$WORKDIRNAME"; 
+  $WORKHTTP = "/cdinsert/tmp/$WORKDIRNAME"; 
+  
+! $LOGFILE = "/usr/lib/apache/htdocs/cdinsert/tmp/weblog.txt";
+  # log file - global script issues, not related to any one invocation
+  # make sure this file exists, and is chmod 662 - writeable, but not readable
+  # by others so casual web hackers can't read this directly using a browser.
+***************
+*** 142,148 ****
+  $CGI::POST_MAX=1024 * 600;  # max size posts accepted, bytes
+  # Note that the PDF file generated is around 4 times image sizes!
+  
+! $ENV{'PATH'}="/bin:/usr/bin:/usr/local/bin:/usr/local/netpbm/bin:/home/cgi/bin"; # security blanket (make sure all folders/files are non-writeable by others!)
+  
+  # following may be left alone, in most cases
+  $ENV{'SHELL'} = "/bin/sh";
+--- 140,147 ----
+  $CGI::POST_MAX=1024 * 600;  # max size posts accepted, bytes
+  # Note that the PDF file generated is around 4 times image sizes!
+  
+! # security blanket (make sure all folders/files are non-writeable by others!)
+! $ENV{'PATH'}="/bin:/usr/bin:/usr/local/bin:/usr/local/netpbm/bin:/usr/lib/apache/bin"; 
+  
+  # following may be left alone, in most cases
+  $ENV{'SHELL'} = "/bin/sh";
+***************
+*** 148,154 ****
+  $ENV{'SHELL'} = "/bin/sh";
+  $ENV{'TMPDIR'} = $WORKDIR;
+  $ENV{'TEMP'} = $WORKDIR;
+! $ENV{'TZ'} = "EST5EDT";
+  
+  delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};   # Make %ENV safer
+  
+--- 147,153 ----
+  $ENV{'SHELL'} = "/bin/sh";
+  $ENV{'TMPDIR'} = $WORKDIR;
+  $ENV{'TEMP'} = $WORKDIR;
+! $ENV{'TZ'} = "PST8PDT";
+  
+  delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};   # Make %ENV safer
+  
+***************
+*** 770,773 ****
+      $done || myexit("mktempdir: mkdir in ($dir) with prefix ($try-$n) failed: $!");
+      $done ? $dirname : "";
+  }
+- #-----------------------------------------------------------------------------
+--- 769,771 ----
+      $done || myexit("mktempdir: mkdir in ($dir) with prefix ($try-$n) failed: $!");
+      $done ? $dirname : "";
+  }
+*** ./rm-old-dirs.orig Sun May 15 12:13:40 2005
+--- ./rm-old-dirs Sun May 15 12:13:40 2005
+***************
+*** 0 ****
+--- 1,5 ----
++ #!/bin/sh
++ # 1440 minutes == 24 hours
++ # (using mtime +1 actually finds files more than  2 days old, mmin is better)
++ find /tmp -mindepth 1 -type d -mmin +1440 \( -name it\* -o -name cd\* \) -print0 | \
++      xargs -0r rm -rf
+*** ./crontab.orig Sun May 15 12:13:40 2005
+--- ./crontab Sun May 15 12:13:40 2005
+***************
+*** 0 ****
+--- 1,5 ----
++ # MIN HOUR DAY MONTH DAYOFWEEK   COMMAND
++ # remove web tmp folders on a periodic basis
++ # 10 0,6,12,18 * * * /usr/lib/cdlabelgen/rm-old-dirs >> /dev/null 2>&1
++ # or
++ # 10 0,6,12,18 * * * /usr/lib/cdlabelgen/rm-old-dirs >> ~/cron.log 2>&1
+*** ./done_t.html.orig Sun May 15 12:13:40 2005
+--- ./done_t.html Sun May 15 12:13:40 2005
+***************
+*** 0 ****
+--- 1,112 ----
++ <HTML>
++ <HEAD>
++   
++ <TITLE>Output - Online CD Inserts and Envelopes Creator</TITLE>
++ 
++   <style type="text/css">
++   BODY {margin-left: 10% ; margin-right: 10%}
++   </style>
++ 
++ </HEAD>
++ <BODY
++   TEXT="#000033" BGCOLOR="#EEEEFF"
++   LINK="#000066" VLINK="#666699" ALINK="#669966">
++ 
++ <H1 ALIGN="center">Output - Online CD Inserts and Envelopes Creator</H1>
++ 
++ <H3>Hello!</H3>
++ 
++ <P>
++ <!-- MRKR_ANYERROR
++ There was an error processing your input.
++ MRKR_ANYERROR -->
++ 
++ <!-- MRKR_SUCCESS
++ Successfully processed your input text!
++ MRKR_SUCCESS -->
++ 
++ <P>
++ <!-- MRKR_GIFERROR
++ We could not run the programs to convert the PostScript output
++ to a GIF image - it may be possible that the PostScript and/or PDF
++ output is correct, you can take a look at the links below.
++ MRKR_GIFERROR -->
++ <!-- MRKR_SYSERROR
++ We could not run the programs to create the PostScript file
++ or GIF image. This could be one of two things:
++ <P>
++ 1) A system
++ configuration problem at our server: we will try to fix this if
++ we can [the error has been logged].
++ <P>
++ 2) Input Error. If you uploaded image or item files, make sure that
++ the cover or tray image files you upload are JPEG files only (file names
++ usually end in .jpg or .jpeg). The list of items file you upload should
++ be a text file only (file names usually end in .txt). If either of
++ these files is an unsupported format, it will result in system errors.
++ MRKR_SYSERROR -->
++ 
++ <P>
++ <HR>
++ 
++ <P>
++ <!-- MRKR_ANYERROR
++ The output MAY be available in some formats (click to check and view, or use
++ your browser's tools to save to your local drive):
++ MRKR_ANYERROR -->
++ 
++ <!-- MRKR_SUCCESS
++ The output is available in following formats (click to view, or use
++ your browser's tools to save to your local drive):
++ MRKR_SUCCESS -->
++ 
++ <TABLE CELLSPACING="5">
++   <TR>
++     <TD ALIGN="right"><b>Adobe PDF:</b></TD>
++     <TD><A HREF="MRKR_PDF"><b>output.pdf</b></A></TD>
++   </TR>
++   <TR>
++     <TD ALIGN="right"><b>Adobe PostScript:</b></TD>
++     <TD><A HREF="MRKR_POSTSCRIPT"><b>output.ps</b></A></TD>
++   </TR>
++   <!-- MRKR_MAKEGIF
++   <TR>
++     <TD ALIGN="right"><b>GIF image:</b></TD>
++     <TD><A HREF="MRKR_GIF"><b>output.gif</b></A></TD>
++   </TR>
++   MRKR_MAKEGIF -->
++ </TABLE>
++ 
++ <P>
++ [
++ <EM>Note: these files will available here only for a short time, save all
++ required files to your local drive if you need to access them 
++ in the future.</EM>
++ <P>
++ <EM>Advanced users: If the output looks
++ incorrect to you, and if you have experience deciphering jpeg2ps or
++ cdlabelgen error messages,
++ you can take a look at the <A HREF="MRKR_MSGFILE">log file</A>
++ which shows the output from all programs.</EM>
++ ]
++ 
++ <P>
++ Your input is available here: <A HREF="MRKR_INPUT">input.txt</A> , in case
++ you wish to resend it with changes or corrections.
++ <BR>
++ 
++ <P>
++ <!-- MRKR_MAKEGIF
++ Here's the black and white GIF image of your output:
++ <P>
++ <IMG SRC="MRKR_GIF" HSPACE=20 VSPACE=10 BORDER=0>
++ <P>
++ MRKR_MAKEGIF -->
++ 
++ <!-- =============================== ========================= -->
++ <P>
++ <HR>
++ <FONT SIZE="-1">It took MRKR_TIMETAKEN seconds to process this input.</FONT>
++ 
++ </BODY>
++ </HTML>
+*** ./wait_t.html.orig Sun May 15 12:13:40 2005
+--- ./wait_t.html Sun May 15 12:13:40 2005
+***************
+*** 0 ****
+--- 1,58 ----
++ <HTML>
++ 
++ <HEAD>
++   <style type="text/css">
++   BODY {margin-left: 10% ; margin-right: 10%}
++   </style>
++   <TITLE>Processing - Online CD Inserts and Envelopes</TITLE>
++   <SCRIPT LANGUAGE="JavaScript"><!--
++     function redirect() {
++       setTimeout("goto_page()", 2000);
++     }
++ 
++     function goto_page() {
++       if (document.emptyform.dontredirect.value != "1") {
++ 	  window.location.href="MRKR_WEBDONEHTML";
++       }
++     }
++   //--></SCRIPT>
++ </HEAD>
++ 
++ <BODY
++   onLoad="redirect()"
++   TEXT="#000033" BGCOLOR="#EEEEFF"
++   LINK="#000066" VLINK="#666699" ALINK="#669966">
++ 
++ <P>
++ <!-- Hello, visitor from MRKR_HOSTNAME -->
++ <H3>Hello!</H3>
++ 
++ <P>Processing input from the cd inserts and envelopes creator...
++ 
++ <P>
++ MRKR_SHOWSTATUS
++ 
++ <P>
++ <HR>
++ <P>
++ 
++ <FONT SIZE="+0">If no error occurred, in a second,
++ this page will refresh to display your output.</FONT>
++ 
++ <P>
++ <FONT SIZE="+0">(If this page does not refresh automatically,
++ <A HREF="MRKR_WEBDONEHTML">click here to go to the results page</A>.)</FONT>
++ 
++ <FORM NAME="emptyform">
++ <input type="hidden" NAME="dontredirect" value="MRKR_DONTREDIRECT">
++ <!--
++      this dummy form is used to inhibit the redirect onLoad defined in BODY.
++      This is in case an error occured, which is then displayed in the middle
++      of this page itself, and we don't want to redirect in that case.
++      If the value is set to 1, no redirect takes place.
++ -->
++ </FORM>
++ <P>
++ <!-- =============================== ========================= -->
++ </BODY>
++ </HTML>
+*** ./cdinsert.html.orig Sun May 15 12:13:40 2005
+--- ./cdinsert.html Sun May 15 12:14:07 2005
+***************
+*** 0 ****
+--- 1,207 ----
++ <HTML>
++ <HEAD>
++ </HEAD>
++ 
++ 
++ <BODY
++   TEXT="#000033" BGCOLOR="#EEEEFF"
++   LINK="#000066" VLINK="#666699" ALINK="#669966">
++ 
++ <!--
++      Example use of a form to invoke cdinsert.pl server script, interface
++      to the cdlabelgen program.
++      More info at http://www.aczoom.com/tools/cdinsert/
++ -->
++ 
++ <!-- ================================ trailer ========================== -->
++ <P>
++     <FORM METHOD="POST"
++ 	  ENCTYPE="multipart/form-data"
++ 	  ACTION="/cgi-bin/cdinsert.pl"
++ 	  NAME="cdform">
++ 
++       <TABLE CELLSPACING="0" CELLPADDING="10" BORDER="3" ALIGN="CENTER">
++       <TR VALIGN="top">
++ 	<TD COLSPAN="2">
++ 	  <b>1</b>: [Optional] Title and/or Subtitle.
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <BR>
++ 	  Title:
++ 	  <input type="text" name="title" value="" size="30" maxlength="200">
++ 	  &nbsp;&nbsp;&nbsp;&nbsp;
++ 	  Subtitle:
++ 	  <input type="text" name="subtitle" value="" size="30" maxlength="200">
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD COLSPAN="2">
++ 	<!-- empty row, just making thicker border! -->
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD COLSPAN="2">
++ 	  <b>2</b>: [Optional] Image to print as background on cover.
++ 	  <BR>
++ 	  &nbsp;&nbsp;
++ 	  Select image, or upload a JPEG image file.
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD>
++ 	  &nbsp; 2a: 
++ 	  Select cover background: <select name="cimage">
++ 	    <option value="" selected>- no image -</option>
++ 	    <option value="music1.eps">Music Notes 1</option>
++ 	    <option value="music2.eps">Music Notes 2</option>
++ 	    <option value="cd.eps">CD</option>
++ 	    <option value="cdda.eps">CDDA</option>
++ 	    <option value="mp3.eps">MP3</option>
++ 	    <option value="penguin.eps">Penguin</option>
++ 	    <option value="recycle.eps">Recycle</option>
++ 	    <option value="debian-color.eps">Debian</option>
++ 	    <option value="divx.eps">DivX</option>
++ 	    <option value="ogg.eps">Xiph.Org Logo</option>
++ 	    <option value="winamp.eps">Winamp</option>
++ 	  </select>
++ 	  &nbsp;
++ 	  ( <A HREF="exlogos.html">Pictures.</A> )
++ 	</TD>
++ 	<TD ROWSPAN="2" VALIGN="middle">
++ 	  <input type="checkbox" name="clogo" value="true">Use image as logo, no scaling.
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD>
++ 	  &nbsp; 2b: 
++ 	  Upload cover JPEG:
++ 	    <input type=file name="cimagefile" size="17" maxlength="150000">
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD COLSPAN="2">
++ 	<!-- empty row, just making thicker border! -->
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD COLSPAN="2">
++ 	  <b>3</b>: [Optional] Image to print as background on tray card (or inside cover).
++ 	  <BR>
++ 	  &nbsp;&nbsp;
++ 	  Select image, or upload a JPEG image file.
++ 	</TD>
++       </TR>
++       <TR VALIGN="top">
++ 	<TD>
++ 	  &nbsp; 3a:
++ 	  Select tray background: <select name="timage">
++ 	    <option value="" selected>- no image -</option>
++ 	    <option value="music1.eps">Music Notes 1</option>
++ 	    <option value="music2.eps">Music Notes 2</option>
++ 	    <option value="cd.eps">CD</option>
++ 	    <option value="cdda.eps">CDDA</option>
++ 	    <option value="mp3.eps">MP3</option>
++ 	    <option value="penguin.eps">Penguin</option>
++ 	    <option value="recycle.eps">Recycle</option>
++ 	    <option value="debian-color.eps">Debian</option>
++ 	    <option value="divx.eps">DivX</option>
++ 	    <option value="ogg.eps">Xiph.Org Logo</option>
++ 	    <option value="winamp.eps">Winamp</option>
++ 	  </select>
++ 	  &nbsp;
++ 	  ( <A HREF="exlogos.html">Pictures.</A> )
++ 	</TD>
++ 	<TD ROWSPAN="2" VALIGN="middle">
++ 	  <input type="checkbox" name="tlogo" value="true">Use image as logo, no scaling.
++ 	</TD>
++       </TR>
++       <TR VALIGN="top">
++ 	<TD>
++ 	  &nbsp; 3b:
++ 	  Upload tray JPEG:
++ 	    <input type=file name="timagefile" size="17" maxlength="150000">
++ 	</TD>
++       </TR>
++       <TR COLSPAN="2">
++ 	<TD>
++ 	<!-- empty row, just making thicker border! -->
++ 	</TD>
++       </TR>
++       <TR>
++ 	<TD COLSPAN="2">
++ 	  <b>4</b>: Enter list of items (CD table of contents) here:
++ 	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++ 	  <input type="reset" value="[Clear All]">
++ 	  <BR>
++ 	  <textarea  name="contents" rows="20" cols="60"></textarea>
++ 	  <BR>
++ 	  OR:
++ 	  Select a text file containing
++ 	  the list of items:
++ 	  <BR>
++ 	  Upload text file:
++ 	      <input type=file name="filename" size="40" maxlength="150000">
++ 	</TD>
++       </TR>
++       <TR VALIGN="middle">
++ 	<TD>
++ 	  <b>5a</b>: Choose Output Type:
++ 
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="radio" name="cdcase" value="normal" checked>Create
++ 	  Inserts for Normal CD Case
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="radio" name="cdcase" value="slimcase">Create Folding
++ 	  Insert for Slim CD Case
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="radio" name="cdcase" value="dvdinside">Create Inside
++ 	  Insert for DVD case
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="radio" name="cdcase" value="dvdoutside">Create Outside
++ 	  Cover for DVD case
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="radio" name="cdcase" value="envelope">Create Envelope
++ 	  for CD/DVD
++ 	</TD>
++ 	<TD ROWSPAN="2" VALIGN="middle">
++ 	  <b>6</b>: 
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="submit" value="Submit for processing">
++ 	</TD>
++       </TR>
++       <TR VALIGN="middle">
++ 	<TD>
++ 	  <b>5b</b>: Select options:
++ 
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="checkbox" name="notrayheading" value="true">Omit
++ 	  Title &amp; Subtitle from Tray (more space for items)
++ 
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="checkbox" name="scaleitems" value="true">Enable
++ 	  scaling down of items (no clipping) if needed
++ 
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="checkbox" name="splititems" value="false">Print
++ 	  half the items on cover, rest on tray card
++ 
++ 	  <BR>
++ 	  &nbsp;&nbsp;&nbsp;
++ 	  <input type="checkbox" name="makegif" value="true">Create GIF preview
++ 	  too (adds 10 seconds to process)
++ 	</TD>
++       </TR>
++       </TABLE>
++     </FORM>
++ 
++ <CENTER>
++ <HR SIZE="2" WIDTH="100%">
++ </CENTER>
++ </BODY></HTML>
+*** ./cdlabelgen.orig Sun May 15 12:20:42 2005
+--- ./cdlabelgen Sun May 15 12:20:49 2005
+***************
+*** 97,103 ****
+  if ($^O !~ /^MSWin32/) { # not windows...
+    # Unix section -----------------------------------------------------
+    @where_is_the_template = (
+!     '/usr/local/lib/cdlabelgen/',
+      '/usr/share/cdlabelgen/',
+      '/opt/lib/cdlabelgen/',
+      '/usr/local/share/cdlabelgen/',
+--- 97,103 ----
+  if ($^O !~ /^MSWin32/) { # not windows...
+    # Unix section -----------------------------------------------------
+    @where_is_the_template = (
+!     '/usr/lib/cdlabelgen/',
+      '/usr/share/cdlabelgen/',
+      '/opt/lib/cdlabelgen/',
+      '/usr/local/share/cdlabelgen/',

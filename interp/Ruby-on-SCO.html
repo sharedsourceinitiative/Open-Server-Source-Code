@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Language" content="en-us">
+	<meta name="copyright" content="(c) Copyright 2005 Tobias Luetke">
+	<meta name="generator" content="Hieraki book export (http://www.hieraki.org)"><title>Ruby</title></head>
+
+<body>
+<h1>Ruby</h1>
+
+
+	<p>Ruby is used for some utility functions and (soon) for <span class="caps">SNUG</span> modules.</p>
+
+
+	<p>For simplicity, the base installation of Ruby is covered in it’s own book</p>
+
+
+	<h2>Installation</h2>
+
+
+	<h3>Getting Ruby</h3>
+
+
+	<p>For <span class="caps">SCO</span>, we obtain the source and do a custom installation.</p>
+
+
+	<p>The source code is available from <a href="http://ruby-lang.org/">The Ruby Home</a></p>
+
+
+At the time of writing the current version of Ruby is 1.8.2 As a normal user, get and extract the Ruby source tarball.
+<pre>bash-2.03$ wget ftp://ruby-lang.org/pub/ruby/ruby-1.8.2.tar.gz
+bash-2.03$ tar xvzf ruby-1.8.2.tar.gz
+bash-2.03$ cd ruby-1.8.2
+</pre>
+
+	<h3>Compile and Install</h3>
+
+
+To avoid some warnings, <code>missing.h</code> can be edited as follows (i.e. make the extern definition of <code>isinf</code> unconditional), although not necessary. If you do not make this edit, you can ignore the warnings about <code>isinf</code> being redefined.
+<pre><code>
+/*
+#ifndef HAVE_ISINF
+# if defined(HAVE_FINITE) &amp;&amp; defined(HAVE_ISNAN)
+# define isinf(x) (!finite(x) &amp;&amp; !isnan(x))
+# else
+*/
+extern int isinf _((double));
+/*
+# endif
+#endif
+*/
+</code>
+</pre>
+
+	<p>It is also necessary to adjust <code>ext/curses/Makefile</code>
+by removing the -ltinfo flag from the linking option. Whilst this
+allows the compile to proceed, I do not know if it breaks anything
+which uses the curses extention. I guess we’ll cross that bridge if it
+happens.</p>
+
+
+Now we are ready to compile ruby.
+<pre>bash-2.03$ ./configure --enable-install-doc --enable-shared \
+LDSHARED="gcc -shared -W1,B=export" 
+&lt;&lt;snip&gt;&gt;
+creating config.h
+configure: creating ./config.status
+config.status: creating Makefile
+bash-2.03$ make
+bash-2.03$ make test
+&lt;&lt;snip&gt;&gt;
+test succeeded
+bash-2.03$ sudo make install
+bash-2.03$ ruby -v
+ruby 1.8.2 (2004-12-25) [i686-sco3.2v5.0.7]
+</pre>
+
+	<p>So, even though it took me over 30 billable
+(non-chargeable) hours to get this right, you have now successfully
+installed ruby 1.8.2 on <span class="caps">SCO </span>Openserver in just a few minutes!</p>
+
+
+	<p>Note that all of these steps are done as a normal user. <code>sudo</code> is required only for the actual installation step.</p>
+
+
+	<p>Now we need to add a few libraries which will make life easier and allow development of our local software.</p>
+
+
+	<h3>Additional Libraries</h3>
+
+
+	<p>The key library we will install is <strong>Rubygems</strong>. In fact this is more than just a library as it performs a similar function to <code>CPAN</code> for <code>perl</code>.</p>
+
+
+	<h3>rubygems</h3>
+
+
+	<p>Get a version of rubygems from <a href="http://rubyforge.org/">RubyForge</a>, extract it somehere and run <code>sudo ruby setup.rb</code> in its directory.</p>
+
+
+	<p>Rubygems assumes that <code>/usr/bin/env</code> is available to locate ruby in script files. On <span class="caps">SCO </span>Openserver, <code>env</code> is in <code>/bin</code> so a quick soft link will save problems later.</p>
+
+
+Then make sure that your gems are updated (internet access required).
+<pre>bash-2.03$ sudo ln -s /bin/env /usr/bin/env
+bash-2.03$ sudo gem update --system
+Upgrading RubyGems...
+&lt;&lt;snip&gt;&gt;
+  Successfully built RubyGem
+  Name: sources
+  Version: 0.0.1
+  File: sources-0.0.1.gem
+RubyGems system software updated
+bash-2.03$
+</pre>
+
+	<h3>SQLite</h3>
+
+
+We make extensive use of <strong>SQLite</strong> for <strong>Nomad</strong> support functions so we will install the Ruby/SQLite bindings.
+<pre>bash-2.03# gem install sqlite3
+Attempting local installation of 'sqlite3'
+Local gem file not found: sqlite3*.gem
+Attempting remote installation of 'sqlite3'
+Select which gem to install for your platform (i686-sco3.2v5.0.6)
+ 1. sqlite3-ruby 1.1.0 (ruby)
+ 2. sqlite3-ruby 1.1.0 (mswin32)
+ 3. sqlite3-ruby 1.0.1 (ruby)
+ 4. sqlite3-ruby 1.0.1 (mswin32)
+ 5. sqlite3-ruby 1.0.0 (mswin32)
+ 6. sqlite3-ruby 1.0.0 (ruby)
+ 7. sqlite3-ruby 0.9.0 (ruby)
+ 8. sqlite3-ruby 0.9.0 (mswin32)
+ 9. sqlite3-ruby 0.6.0 (ruby)
+ 10. sqlite3-ruby 0.5.0 (ruby)
+ 11. Cancel installation
+&gt; 1
+Building native extensions.  This could take a while...
+ruby extconf.rb install sqlite3
+checking for sqlite3.h... yes
+checking for sqlite3_open() in -lsqlite3... yes
+creating Makefile
+
+make
+
+make install
+Successfully installed sqlite3-ruby-1.1.0
+Installing RDoc documentation for sqlite3-ruby-1.1.0...
+
+lib/sqlite3/database.rb:637:65: Skipping require of \
+  dynamic string: "sqlite3/driver/#{driver.to_s.downcase}/driver" 
+
+lib/sqlite3/database.rb:642:59: Skipping require of 
+  dynamic string: "sqlite3/driver/#{d.downcase}/driver" 
+bash-2.03#
+
+</pre>
+You must then run the following test program, which will fail and tell
+you to edit
+@/usr/local/lib/ruby/gems/1.8/gems/sqlite3-ruby-1.1.0/lib/sqlite3/drive
+r/dl/api.rb@
+<pre><code>
+require 'rubygems'
+require 'sqlite3'
+db = SQLite3::Database.new('/tmp/test.db')
+rows = db.execute('select * from test')
+</code>
+</pre>
+
+Add the following lines to the file.
+<pre><code>
+      when /sco3/
+        "/usr/local/lib/libsqlite3.so" 
+</code>
+</pre>
+
+	<h3>ActiveRecord</h3>
+
+
+	<p>Binding Ruby Objects to SQLite3 tables is a breeze with ActiveRecord. Install using <code>gem install activerecord</code></p>
+
+
+<pre>bash-2.03# gem install activerecord
+Attempting local installation of 'activerecord'
+Local gem file not found: activerecord*.gem
+Attempting remote installation of 'activerecord'
+Install required dependency activesupport? [Yn]  y
+Successfully installed activerecord-1.10.1
+Successfully installed activesupport-1.0.4
+Installing RDoc documentation for activerecord-1.10.1...
+Installing RDoc documentation for activesupport-1.0.4...
+bash-2.03#
+</pre>
+
+	<h2>Documentation</h2>
+
+
+	<h3>RDoc</h3>
+
+
+The alert reader would have noticed that whenever we install a Rubygem, we are told that …
+<pre>Installing RDoc documentation for &lt;name of gem here&gt;
+</pre>
+
+	<p>What does this mean, and how can you see the documentation?</p>The
+answer is simple really, just start the documentation server (if it
+isn’t already running) and point your browser at port 8808 on the
+machine where the server is running.
+<pre>bash-2.03# gem_server
+[2005-06-22 23:34:50] INFO  WEBrick 1.3.1
+[2005-06-22 23:34:50] INFO  ruby 1.8.2 (2004-12-25) \
+[i686-sco3.2v5.0.6]
+[2005-06-22 23:34:50] INFO  WEBrick::HTTPServer#start: \
+pid=17870 port=8808
+</pre>
+
+	<p>Hey, ain’t Ruby <strong>cool</strong>? Comes with its own web server (<code>webrick</code>).</p>
+
+
+	<p>The index page of your Ruby gems documentation looks like this …
+<img src="Ruby-on-SCO_files/gem_server_1.png" alt=""></p>
+
+
+	<h2>Rake</h2>
+
+
+	<h3>Background</h3>
+
+
+	<p><strong>Rake</strong> is the pure Ruby “make” tool which is used for compiling <strong>NPP</strong> and other functions. It is installed as a Rubygem as with <code>gem install rake</code>. The current version is 0.5.4.</p>
+
+
+	<p>In
+addition to traditional “make” type uses, rake can be used to automate
+all sorts of functions. It has the advantage that its Rakefile
+(Makefile in make terms) is pure Ruby code and has great flexibility.
+We use it for testing automation.</p>
+
+
+	<p>Full documentation is available <a href="http://nnlbak.nnl.thenational.com:8808/">locally</a> provided the <code>gem_server</code> is running. Otherwise refer to the <a href="http://rake.rubyforge.org/">On-line</a> version.</p>
+
+
+	<p>This chapter summarises some of the more common features that we use in real life!</p>
+
+
+	<h2>SWF Development</h2>
+
+
+	<h3>Introduction</h3>
+
+
+	<p>Ruby is being used in various different parts of the overall <strong>Nomad</strong> environment. This Chapter sets out how the <span class="caps">SWF</span> replacement module for <strong>SNUG</strong> is setup and tested.</p>
+
+
+	<h3>Set Up</h3>
+
+
+The source is held in its own <span class="caps">CVS</span> module. Get a working copy
+<pre>[nigelb@nnlbak nigelb]$ cd src
+[nigelb@nnlbak src]$ export \
+ CVSROOT=":pserver:nigelb@enesbe.com.au:/wk/cvs" 
+[nigelb@nnlbak src]$cvs checkout swf
+cvs server: Updating swf            
+U swf/.cvsignore                    
+U swf/.project                      
+U swf/snug.schema                   
+U swf/swi-2990-16170                
+U swf/swrf.rb                       
+U swf/swrf.schema                   
+U swf/tbl.txt                       
+U swf/test.rb                       
+U swf/test.txt                      
+cvs server: Updating swf/lib        
+U swf/lib/parser.rb                 
+U swf/lib/snug.rb                   
+[nigelb@nnlbak src]$         
+</pre>
+For testing we require an “empty” <strong>snug</strong> database
+(i.e. one with just the configuration table loaded). This can be
+created by taking a copy of a live database and then run the <strong>snug</strong> utility <code>reset.sh</code>.
+<pre>
+</pre>
+</body></html>

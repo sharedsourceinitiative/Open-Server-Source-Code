@@ -1,0 +1,232 @@
+--- ./config/ltmain.sh.00	2006-01-09 14:47:08.000000000 -0800
++++ ./config/ltmain.sh	2009-01-19 19:48:57.810000088 -0800
+@@ -2824,7 +2824,7 @@
+       case $outputname in
+       lib*)
+ 	name=`$echo "X$outputname" | $Xsed -e 's/\.la$//' -e 's/^lib//'`
+-	eval shared_ext=\"$shrext_cmds\"
++	eval shared_ext=\".so\"
+ 	eval libname=\"$libname_spec\"
+ 	;;
+       *)
+@@ -2836,7 +2836,7 @@
+ 	if test "$need_lib_prefix" != no; then
+ 	  # Add the "lib" prefix for modules if required
+ 	  name=`$echo "X$outputname" | $Xsed -e 's/\.la$//'`
+-	  eval shared_ext=\"$shrext_cmds\"
++	  eval shared_ext=\".so\"
+ 	  eval libname=\"$libname_spec\"
+ 	else
+ 	  libname=`$echo "X$outputname" | $Xsed -e 's/\.la$//'`
+@@ -3598,7 +3598,7 @@
+ 	fi
+ 
+ 	# Get the real and link names of the library.
+-	eval shared_ext=\"$shrext_cmds\"
++	eval shared_ext=\".so\"
+ 	eval library_names=\"$library_names_spec\"
+ 	set dummy $library_names
+ 	realname="$2"
+--- ./src/arp-bsd.c.00	2005-01-22 23:36:54.000000000 -0800
++++ ./src/arp-bsd.c	2009-01-19 19:46:31.000000008 -0800
+@@ -21,7 +21,9 @@
+ 
+ #include <net/if.h>
+ #include <net/if_dl.h>
++#define route_t oroute_t
+ #include <net/route.h>
++#undef route_t
+ #include <netinet/in.h>
+ #include <netinet/if_ether.h>
+ 
+--- ./src/eth-bsd.c.00	2005-01-25 13:30:39.000000000 -0800
++++ ./src/eth-bsd.c	2009-01-19 19:46:31.010000013 -0800
+@@ -15,7 +15,9 @@
+ #include <sys/time.h>
+ #if defined(HAVE_SYS_SYSCTL_H) && defined(HAVE_ROUTE_RT_MSGHDR)
+ #include <sys/sysctl.h>
++#define route_t oroute_t
+ #include <net/route.h>
++#undef route_t
+ #include <net/if_dl.h>
+ #endif
+ #include <net/bpf.h>
+--- ./src/arp-ioctl.c.00	2005-02-09 14:31:00.000000000 -0800
++++ ./src/arp-ioctl.c	2009-01-19 19:46:31.010000034 -0800
+@@ -25,6 +25,13 @@
+ # include <sys/mib.h>
+ #endif
+ 
++#ifdef __USLC__
++# include <sys/sockio.h>
++#define route_t oroute_t
++# include <net/route.h>
++#undef route_t
++#endif
++
+ #include <net/if.h>
+ #include <net/if_arp.h>
+ #ifdef HAVE_STREAMS_MIB2
+--- ./Configure-OSR5.00	2009-01-19 19:46:31.010000054 -0800
++++ ./Configure-OSR5	2009-01-19 19:46:31.010000051 -0800
+@@ -0,0 +1,20 @@
++#!/bin/sh
++#
++HOST=i386-sco-sco3.2v5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=/usr/gnu/bin/nm
++M4=/usr/gnu/bin/m4
++CC="/usr/gnu/bin/gcc"
++CXX="/usr/gnu/bin/g++"
++PATH=/usr/gnu/bin:$PATH
++export CC CXX CFLAGS NM M4 INSTALL PATH
++
++ac_cv_header_sys_dlpi_h=no
++ac_cv_dnet_streams_route=yes
++export ac_cv_header_sys_dlpi_h ac_cv_dnet_streams_route
++
++rm -f mout-configure
++./configure --prefix=/usr --sysconfdir=/etc \
++            --mandir=/usr/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Configure-OSR6.00	2009-01-19 19:46:31.010000068 -0800
++++ ./Configure-OSR6	2009-01-19 19:46:31.010000065 -0800
+@@ -0,0 +1,23 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM M4 INSTALL
++ac_cv_dnet_ioctl_arp=no
++export ac_cv_dnet_ioctl_arp
++rm -f mout-configure
++./configure --prefix=/usr --sysconfdir=/etc \
++            --mandir=/usr/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.00	2006-01-19 08:40:16.000000000 -0800
++++ ./configure	2009-01-19 19:46:31.030000088 -0800
+@@ -3625,7 +3625,7 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -3649,7 +3649,7 @@
+   esac
+   ;;
+ 
+-sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
++sysv5* | unixware7* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ esac
+@@ -6747,7 +6747,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7403,7 +7403,7 @@
+       runpath_var=LD_RUN_PATH
+       ;;
+ 
+-   sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
++   sysv5* | unixware7*)
+       no_undefined_flag='${wl}-z ${wl}text'
+       if test "$GCC" = yes; then
+ 	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+@@ -7412,18 +7412,7 @@
+       fi
+       runpath_var='LD_RUN_PATH'
+       hardcode_shlibpath_var=no
+-      ;;
+-
+-    sysv5*)
+-      no_undefined_flag=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp${_S_}cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp${_S_}$echo "local: *; };" >> $lib.exp${_S_}
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags${_S_}$rm $lib.exp'
+-      hardcode_libdir_flag_spec=
+-      hardcode_shlibpath_var=no
+-      runpath_var='LD_RUN_PATH'
++      archive_cmds_need_lc=no
+       ;;
+ 
+     uts4*)
+@@ -8043,6 +8032,7 @@
+   ;;
+ 
+ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++  shared_ext='.so'
+   version_type=linux
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+@@ -10557,7 +10547,7 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
++  sysv5* | unixware7*)
+     archive_cmds_need_lc_CXX=no
+     ;;
+   tandem*)
+@@ -11720,6 +11710,7 @@
+   ;;
+ 
+ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++  shared_ext='.so'
+   version_type=linux
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+@@ -14822,6 +14813,7 @@
+   ;;
+ 
+ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++  shared_ext='.so'
+   version_type=linux
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+@@ -17120,6 +17112,7 @@
+   ;;
+ 
+ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++  shared_ext='.so'
+   version_type=linux
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+--- ./Install-OSR6.00	2009-01-19 19:50:12.610000003 -0800
++++ ./Install-OSR6	2009-01-19 19:50:24.450000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/libdnet
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++

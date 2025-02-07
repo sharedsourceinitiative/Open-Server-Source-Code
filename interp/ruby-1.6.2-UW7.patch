@@ -1,0 +1,102 @@
+--- ext/dbm/Makefile.00	Tue Mar  6 15:51:43 2001
++++ ext/dbm/Makefile	Tue Mar  6 15:53:26 2001
+@@ -28,7 +28,7 @@
+ #### End of system configuration section. ####
+ 
+ LOCAL_LIBS =  
+-LIBS = $(LIBRUBY_A) -lgdbm -lc
++LIBS = $(LIBRUBY_A) -L/usr/local/lib -lgdbm -lc
+ OBJS = dbm.o
+ TARGET = dbm
+ DLLIB = $(TARGET).so
+--- ext/gdbm/Makefile.00	Tue Mar  6 15:53:34 2001
++++ ext/gdbm/Makefile	Tue Mar  6 15:54:15 2001
+@@ -28,7 +28,7 @@
+ #### End of system configuration section. ####
+ 
+ LOCAL_LIBS =  
+-LIBS = $(LIBRUBY_A) -lgdbm -lc
++LIBS = $(LIBRUBY_A) -L/usr/local/lib -lgdbm -lc
+ OBJS = gdbm.o
+ TARGET = gdbm
+ DLLIB = $(TARGET).so
+--- ext/readline/Makefile.00	Tue Mar  6 15:54:33 2001
++++ ext/readline/Makefile	Tue Mar  6 15:55:02 2001
+@@ -28,7 +28,7 @@
+ #### End of system configuration section. ####
+ 
+ LOCAL_LIBS =  
+-LIBS = $(LIBRUBY_A) -lreadline -ltermcap -lc
++LIBS = $(LIBRUBY_A) -L/usr/local/lib -lreadline -ltermcap -lc
+ OBJS = readline.o
+ TARGET = readline
+ DLLIB = $(TARGET).so
+--- ext/tcltklib/Makefile.00	Tue Mar  6 15:55:28 2001
++++ ext/tcltklib/Makefile	Tue Mar  6 15:59:22 2001
+@@ -28,7 +28,7 @@
+ #### End of system configuration section. ####
+ 
+ LOCAL_LIBS =  
+-LIBS = $(LIBRUBY_A) -ltk -ltcl -lX11 -lm -ldl -lsocket -lnsl -lc
++LIBS = $(LIBRUBY_A) -L/usr/local/lib -ltk -ltcl -lX11 -lm -ldl -lsocket -lnsl -lc
+ OBJS = tcltklib.o stubs.o
+ TARGET = tcltklib
+ DLLIB = $(TARGET).so
+--- configure.00	Sun Nov 12 21:06:24 2000
++++ configure	Tue Mar  6 15:49:18 2001
+@@ -3014,7 +3014,7 @@
+ #include "confdefs.h"
+ #include <alloca.h>
+ int main() {
+-void *p = alloca(2 * sizeof(int));
++char *p = alloca(2 * sizeof(int));
+ ; return 0; }
+ EOF
+ if { (eval echo configure:3021: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+@@ -4129,7 +4129,7 @@
+ int main() {
+ 
+ /* Ultrix mips cc rejects this.  */
+-typedef int charset[2]; const charset x = {0,0};
++typedef int charset[2]; const charset x;
+ /* SunOS 4.1.1 cc rejects this.  */
+ char const *const *ccp;
+ char **p;
+@@ -4544,7 +4544,7 @@
+   else
+     case "$target_os" in
+ 	hpux*)		CCDLFLAGS='+z';;
+-	solaris*|irix*)	CCDLFLAGS='-KPIC' ;;
++	sysv4*|sysv5*|solaris*|irix*)	CCDLFLAGS='-KPIC' ;;
+ 	sunos*)		CCDLFLAGS='-PIC' ;;
+ 	esix*|uxpds*)   CCDLFLAGS='-KPIC' ;;
+ 	*)		CCDLFLAGS='' ;;
+@@ -4567,7 +4567,7 @@
+ 			rb_cv_dlopen=yes;;
+ 	irix*)		LDSHARED='ld -shared'
+ 			rb_cv_dlopen=yes;;
+-	sysv4*) 	LDSHARED='ld -G'
++	sysv5*|sysv4*) 	LDSHARED='ld -G'
+ 			rb_cv_dlopen=yes;;
+ 	esix*|uxpds*) 	LDSHARED="ld -G"
+ 			rb_cv_dlopen=yes ;;
+--- configure.in.00	Sun Nov 12 08:44:04 2000
++++ configure.in	Tue Mar  6 15:47:41 2001
+@@ -469,7 +469,7 @@
+   else
+     case "$target_os" in
+ 	hpux*)		CCDLFLAGS='+z';;
+-	solaris*|irix*)	CCDLFLAGS='-KPIC' ;;
++	sysv4*|sysv5*|solaris*|irix*)	CCDLFLAGS='-KPIC' ;;
+ 	sunos*)		CCDLFLAGS='-PIC' ;;
+ 	esix*|uxpds*)   CCDLFLAGS='-KPIC' ;;
+ 	*)		CCDLFLAGS='' ;;
+@@ -492,7 +492,7 @@
+ 			rb_cv_dlopen=yes;;
+ 	irix*)		LDSHARED='ld -shared'
+ 			rb_cv_dlopen=yes;;
+-	sysv4*) 	LDSHARED='ld -G'
++	sysv5*|sysv4*) 	LDSHARED='ld -G'
+ 			rb_cv_dlopen=yes;;
+ 	esix*|uxpds*) 	LDSHARED="ld -G"
+ 			rb_cv_dlopen=yes ;;

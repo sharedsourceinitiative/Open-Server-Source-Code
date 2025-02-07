@@ -1,0 +1,223 @@
+*** ./foomatic-20050715-osr6.patch.osr6	Sat Jul 16 01:51:29 2005
+--- ./foomatic-20050715-osr6.patch	Sat Jul 16 01:51:29 2005
+***************
+*** 0 ****
+--- 1,157 ----
++ *** ./foomatic-db-20050715/Install-OSR6.osr6	Fri Jul 15 19:44:27 2005
++ --- ./foomatic-db-20050715/Install-OSR6	Fri Jul 15 19:44:46 2005
++ ***************
++ *** 0 ****
++ --- 1,11 ----
++ + #!/bin/sh
++ + 
++ + MOUT=mout-install
++ + D=/u/tmp/foomatic
++ + DESTDIR=$D
++ + export DESTDIR
++ + 
++ + [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ + [ -d $D ] && rm -rf $D
++ + mkdir -p $D
++ + make install DESTDIR=$D 2>&1 | tee $MOUT
++ *** ./foomatic-db-20050715/Build-OSR6.osr6	Fri Jul 15 19:53:43 2005
++ --- ./foomatic-db-20050715/Build-OSR6	Fri Jul 15 19:53:25 2005
++ ***************
++ *** 0 ****
++ --- 1,20 ----
++ + #!/bin/sh
++ + #
++ + HOST=i586-sco-sysv5
++ + CFLAGS="-O2"
++ + INSTALL=/usr/gnu/bin/install
++ + NM="/usr/ccs/bin/nm -p"
++ + M4=/usr/gnu/bin/m4
++ + if [ "$1" = "-g" ]
++ + then
++ +   CC="gcc -D_REENTRANT"
++ +   CXX="g++ -D_REENTRANT"
++ +   CFLAGS="$CFLAGS -Wall"
++ + else
++ +   CC="cc -Kpthread -Kalloca"
++ +   CXX="CC -Kpthread -Kalloca"
++ + fi
++ + export CC CXX CFLAGS NM M4 INSTALL
++ + rm -f mout-configure
++ + ./configure --prefix=/usr \
++ +             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ *** ./foomatic-db-engine-3.1-20050715/Makefile.in.osr6	Fri Jan 28 08:21:10 2005
++ --- ./foomatic-db-engine-3.1-20050715/Makefile.in	Fri Jul 15 22:07:37 2005
++ ***************
++ *** 16,21 ****
++ --- 16,22 ----
++   
++   # Variables
++   
++ + SHELL=/bin/bash
++   DEBUG=
++   
++   prefix=@prefix@
++ ***************
++ *** 338,349 ****
++   	./foomatic-compiledb -t ppd -j 1 || exit 1; \
++   	sleep 10; \
++   	( cd ppd; \
++ ! 	  for file in `ls -1 *.ppd`; do \
++   	    make=$${file%%-*}; \
++   	    mkdir -p $$make || exit 1; \
++   	    mv $$file $$make/ || exit 1; \
++   	  done; \
++ ! 	  rm -f *.ppd || exit 1; \
++   	); \
++   	mv ppd $${packagename}/share || exit 1; \
++   	${INSTALL} -m 755 $(LOCAL_FOOMATIC_RIP) $${packagename}/bin || exit 1; \
++ --- 339,350 ----
++   	./foomatic-compiledb -t ppd -j 1 || exit 1; \
++   	sleep 10; \
++   	( cd ppd; \
++ ! 	  find . -name \*\.ppd | while read file; do \
++   	    make=$${file%%-*}; \
++   	    mkdir -p $$make || exit 1; \
++   	    mv $$file $$make/ || exit 1; \
++   	  done; \
++ ! 	  find . -name \*\.ppd | xargs rm -f \
++   	); \
++   	mv ppd $${packagename}/share || exit 1; \
++   	${INSTALL} -m 755 $(LOCAL_FOOMATIC_RIP) $${packagename}/bin || exit 1; \
++ *** ./foomatic-db-engine-3.1-20050715/Install-OSR6.osr6	Fri Jul 15 20:00:47 2005
++ --- ./foomatic-db-engine-3.1-20050715/Install-OSR6	Fri Jul 15 20:01:14 2005
++ ***************
++ *** 0 ****
++ --- 1,11 ----
++ + #!/bin/sh
++ + 
++ + MOUT=mout-install
++ + D=/u/tmp/foomatic-engine
++ + DESTDIR=$D
++ + export DESTDIR
++ + 
++ + [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ + [ -d $D ] && rm -rf $D
++ + mkdir -p $D
++ + make install DESTDIR=$D 2>&1 | tee $MOUT
++ *** ./foomatic-db-engine-3.1-20050715/foomatic-combo-xml.c.osr6	Tue Aug 12 05:00:28 2003
++ --- ./foomatic-db-engine-3.1-20050715/foomatic-combo-xml.c	Fri Jul 15 19:57:13 2005
++ ***************
++ *** 68,74 ****
++     
++     const int blocksize = 1024 * 1024;
++     FILE *inputfile;          /* file to be read currently */
++ !   char buffer[blocksize + 1];/* data block currently read */
++     char *data = NULL;        /* the read data */
++     char *readpointer = NULL; /* pointer where next block of data should be
++   			       written */
++ --- 68,74 ----
++     
++     const int blocksize = 1024 * 1024;
++     FILE *inputfile;          /* file to be read currently */
++ !   char buffer[(1024 * 1024) + 1];/* data block currently read */
++     char *data = NULL;        /* the read data */
++     char *readpointer = NULL; /* pointer where next block of data should be
++   			       written */
++ *** ./foomatic-db-hpijs-1.5-20050715/Install-OSR6.osr6	Fri Jul 15 20:12:15 2005
++ --- ./foomatic-db-hpijs-1.5-20050715/Install-OSR6	Fri Jul 15 20:12:30 2005
++ ***************
++ *** 0 ****
++ --- 1,11 ----
++ + #!/bin/sh
++ + 
++ + MOUT=mout-install
++ + D=/u/tmp/foomatic-hpijs
++ + DESTDIR=$D
++ + export DESTDIR
++ + 
++ + [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ + [ -d $D ] && rm -rf $D
++ + mkdir -p $D
++ + make install DESTDIR=$D 2>&1 | tee $MOUT
++ *** ./foomatic-filters-3.1-20050715/Install-OSR6.osr6	Fri Jul 15 20:08:55 2005
++ --- ./foomatic-filters-3.1-20050715/Install-OSR6	Fri Jul 15 20:09:10 2005
++ ***************
++ *** 0 ****
++ --- 1,11 ----
++ + #!/bin/sh
++ + 
++ + MOUT=mout-install
++ + D=/u/tmp/foomatic-filters
++ + DESTDIR=$D
++ + export DESTDIR
++ + 
++ + [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ + [ -d $D ] && rm -rf $D
++ + mkdir -p $D
++ + make install DESTDIR=$D 2>&1 | tee $MOUT
++ --- foomatic-db-engine-3.1-20050715/foomatic-kitload.in.00	2002-10-10 18:16:34.000000000 -0700
++ +++ foomatic-db-engine-3.1-20050715/foomatic-kitload.in	2005-07-15 23:21:24.960000007 -0700
++ @@ -116,4 +116,5 @@
++  sub show_errors {
++      warn "\nError messages of the copying process:\n\n";
++      print STDERR `cat $destdir$libdir/kitload2.log`;
++ -}
++ \ No newline at end of file
++ +}
++ +
+*** ./Build-OSR6.osr6	Sat Jul 16 01:51:29 2005
+--- ./Build-OSR6	Sat Jul 16 01:55:29 2005
+***************
+*** 0 ****
+--- 1,56 ----
++ #!/bin/sh
++ 
++ tar -xvzf foomatic-db-engine*.tar.gz
++ tar -xvzf foomatic-filters*.tar.gz
++ tar -xvzf foomatic-db*.tar.gz
++ tar -xvzf foomatic-db-hpijs*.tar.gz
++ 
++ patch -p0 -b --suffix=.osr6 -i foomatic-20050715-osr6.patch
++ 
++ cd foomatic-filters*
++ Configure
++ make inplace 2>&1 | tee ../mout-filters
++ cd ..
++ 
++ cd foomatic-db-engine*
++ Configure
++ make inplace 2>&1 | tee ../mout-engine
++ cd ..
++ 
++ cd foomatic-db-hpijs*
++ Configure
++ make inplace 2>&1 | tee ../mout-hpijs
++ cd ../foomatic-db-engine*
++ ./foomatic-kitload -f -k ../foomatic-db-hpijs*/db/source/ 2>&1 | \
++     tee ../mout-kitload
++ cd ..
++ 
++ # Uncomment if gimp-print is present
++ #cd foomatic-db-engine*
++ #./foomatic-kitload -f -k <...>/src/foomatic/foomatic-db/gimp-print
++ #./foomatic-kitload -f -k <...>/src/foomatic/foomatic-db/gimp-print-ijs
++ #cd ..
++ 
++ # Uncomment if Omni is present
++ #cd foomatic-db-engine*
++ #export PATH=$PATH:/opt/Omni/bin
++ #/opt/Omni/bin/OmniFoomaticGenerator
++ #./foomatic-kitload -k foomatic-db/db/source
++ #cd ..
++ 
++ # Exclude unwished drivers or printers from being packaged by deleting
++ # their XML files:
++ 
++ #cd foomatic-db*/db/source
++ #rm -f driver/hpdj.xml
++ #rm -f driver/stp.xml
++ #rm -f driver/lxm3200?.xml
++ #rm -f driver/lxm3200.xml
++ #...
++ #cd ../../..
++ 
++ cd foomatic-db-engine*
++ ./foomatic-cleanupdrivers 2>&1 | tee ../mout-cleanup
++ ./foomatic-preferred-driver 2>&1 | tee ../mout-preferred
++ 
++ make filters-ppds 2>&1 | tee ../mout-ppds

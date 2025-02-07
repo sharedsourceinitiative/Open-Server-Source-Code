@@ -1,0 +1,35 @@
+--- src/dired.c.00	2006-06-01 11:06:55.000000000 -0700
++++ src/dired.c	2006-06-01 11:08:34.000000000 -0700
+@@ -35,6 +35,9 @@
+ #include "opaque.h"
+ #include "syntax.h"
+ 
++/* Defined in filemode.c */
++extern void filemodestring (struct stat *, char *);
++
+ Lisp_Object Vcompletion_ignored_extensions;
+ Lisp_Object Qdirectory_files;
+ Lisp_Object Qfile_name_completion;
+--- src/lisp.h.00	2006-06-01 11:06:45.000000000 -0700
++++ src/lisp.h	2006-06-01 11:07:19.000000000 -0700
+@@ -2695,9 +2695,6 @@
+ void unlock_all_files (void);
+ void unlock_buffer (struct buffer *);
+ 
+-/* Defined in filemode.c */
+-void filemodestring (struct stat *, char *);
+-
+ /* Defined in floatfns.c */
+ double extract_float (Lisp_Object);
+ 
+--- src/s/sco5.h.00	2006-06-01 11:38:27.000000000 -0700
++++ src/s/sco5.h	2006-06-01 11:40:09.000000000 -0700
+@@ -99,7 +99,7 @@
+ #ifndef __GNUC__
+ #define START_FILES "pre-crt0.o /usr/ccs/lib/crt1.o /usr/ccs/lib/values-Xc.o"
+ #else
+-#define START_FILES "pre-crt0.o /usr/ccs/lib/crt1.o"
++#define START_FILES "pre-crt0.o"
+ #endif
+ #define LIB_STANDARD "-lc"
+ 

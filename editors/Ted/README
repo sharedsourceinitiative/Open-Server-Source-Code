@@ -1,0 +1,96 @@
+
+Ted is an easy rich text processor for X Windows
+================================================
+
+Introduction
+------------
+
+Ted can edit RTF files in a wysiwyg manner. It supports multiple fonts and
+can print to PostScript printers.
+
+The current version is 2.4.
+
+More elaborate material is available through the web site:
+http://www.de-does.demon.nl in particular in the readme.{html,rtf,txt}
+files that make this concise README file obsolete.
+
+You can try to download Ted from one of the following locations:
+*   ftp://ftp.nluug.nl/pub/editors/ted
+*   http://www.nllgg.nl/Ted
+
+Ready to Install Packages, Installation
+---------------------------------------
+
+Ready to install packages include general part: The program, afm files
+and an American spelling checker. Additional packages with spell checkers
+for different languages exist.
+
+The following packages exist:
+-   Ted_Linux_ix86.tar.gz:		The program, American spelling.
+-   Ted_NL.tar.gz		Dutch spelling.
+-   Ted_F.tar.gz		French spelling.
+-   Ted_D.tar.gz		German spelling.
+-   Ted_P.tar.gz		Portuguese spelling.
+-   Ted_E.tar.gz		Spanish spelling.
+-   Ted_GB.tar.gz		British spelling.
+
+For more information in particular about configuration and issues around, 
+X11 configuration, refer to the readme.rtf and readme.txt files.
+
+Ted for Linux is free software. I assume no responsibility for the
+consequences of using it. It is up to you to decide whether Ted suits
+your purpose or not.
+
+To install log in as root, change directory to the derectory for your
+platform on the CD-ROM and issue the following command:
+$ sh ./installTed.sh
+
+If you do not trust my install script, you can install the different
+packages manually. Unpack the *.tar.gz files with the following commands:
+( As root )
+$ umask 0
+$ cd /usr/local
+$ tar xvfz something.tar.gz
+
+Source and Compilation
+----------------------
+
+Source is contained in the file ted-2.4.src.tar.gz
+
+Ted relies on a Motif development environment, and on certain graphics
+libraries.
+
+
+*   Libtiff by Sam Leffler:
+    ftp://sgi.com/graphics/tiff
+*   Libjpeg by the independent JPEG group:
+    ftp://ftp.uu.net/graphics/jpeg
+    Version 6 is required. If you get undifened symbols like 'jpeg_std_error'
+    you are using version 5.
+*   Libpng by the PNG group:
+    ftp://ftp.uu.net/graphics/png
+*   zlib by Jean-loup Gailly and Mark Adler:
+    ftp://ftp.cdrom.com/pub/infozip/zlib
+*   Libgif by Gershon Elber and Eric S. Raymond:
+    http://www.ccil.org/~esr/giflib
+
+A free motif implementation is available from http://www.lesstif.org
+
+To compile, simply call 'make', there is no need to call 'configure' as this
+is done by make. To build an installation package, call 'make package' AS ROOT.
+
+Ted can be installed from the package files that are produced in the
+directory tedPackage in the root of the source tree. If you are planning
+to actually distribute the package, it might be wise to link Ted
+statically. With gcc this can be done with the -static flag on the link
+command.
+
+To install Ted, call 'make install' AS ROOT, or install the package as
+described above.
+
+Author
+------
+
+Mark de Does
+M.de.Does@inter.nl.net
+May 15, 1999

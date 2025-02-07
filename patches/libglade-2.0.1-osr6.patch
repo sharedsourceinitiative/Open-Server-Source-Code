@@ -1,0 +1,1302 @@
+*** ./glade/glade-parser.c.osr6	Sun May 12 03:42:33 2002
+--- ./glade/glade-parser.c	Sat Jul  2 11:00:20 2005
+***************
+*** 158,167 ****
+      int i;
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "class"))
+! 	    info->classname = alloc_string(interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "id"))
+! 	    info->name = alloc_string(interface, attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <widget>.", attrs[i]);
+      }
+--- 158,167 ----
+      int i;
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "class"))
+! 	    info->classname = alloc_string(interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "id"))
+! 	    info->name = alloc_string(interface, (const char *)attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <widget>.", attrs[i]);
+      }
+***************
+*** 266,275 ****
+      flush_properties(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "action_name"))
+! 	    info.action_name = alloc_string(state->interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "description"))
+! 	    info.description = alloc_string(state->interface, attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <action>.", attrs[i]);
+      }
+--- 266,275 ----
+      flush_properties(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "action_name"))
+! 	    info.action_name = alloc_string(state->interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "description"))
+! 	    info.description = alloc_string(state->interface, (const char *)attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <action>.", attrs[i]);
+      }
+***************
+*** 292,301 ****
+      flush_properties(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "target"))
+! 	    info.target = alloc_string(state->interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "type"))
+! 	    info.type = alloc_string(state->interface, attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <signal>.", attrs[i]);
+      }
+--- 292,301 ----
+      flush_properties(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "target"))
+! 	    info.target = alloc_string(state->interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "type"))
+! 	    info.type = alloc_string(state->interface, (const char *)attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <signal>.", attrs[i]);
+      }
+***************
+*** 319,333 ****
+  
+      info.after = FALSE;
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "name"))
+! 	    info.name = alloc_string(state->interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "handler"))
+! 	    info.handler = alloc_string(state->interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "after"))
+  	    info.after = attrs[i+1][0] == 'y';
+! 	else if (!strcmp(attrs[i], "object"))
+! 	    info.object = alloc_string(state->interface, attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "last_modification_time"))
+  	    /* Do nothing. */;
+  	else
+  	    g_warning("unknown attribute `%s' for <signal>.", attrs[i]);
+--- 319,333 ----
+  
+      info.after = FALSE;
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "name"))
+! 	    info.name = alloc_string(state->interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "handler"))
+! 	    info.handler = alloc_string(state->interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "after"))
+  	    info.after = attrs[i+1][0] == 'y';
+! 	else if (!strcmp((const char *)attrs[i], "object"))
+! 	    info.object = alloc_string(state->interface, (const char *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "last_modification_time"))
+  	    /* Do nothing. */;
+  	else
+  	    g_warning("unknown attribute `%s' for <signal>.", attrs[i]);
+***************
+*** 354,379 ****
+      flush_relations(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "key"))
+! 	    info.key = gdk_keyval_from_name(attrs[i+1]);
+! 	else if (!strcmp(attrs[i], "modifiers")) {
+  	    const xmlChar *pos = attrs[i+1];
+  
+  	    info.modifiers = 0;
+  	    while (pos[0])
+! 		if (!strncmp(pos, "GDK_", 4)) {
+  		    pos += 4;
+! 		    if (!strncmp(pos, "SHIFT_MASK", 10)) {
+  			info.modifiers |= GDK_SHIFT_MASK;
+  			pos += 10;
+! 		    } else if (!strncmp(pos, "LOCK_MASK", 9)) {
+  			info.modifiers |= GDK_LOCK_MASK;
+  			pos += 9;
+! 		    } else if (!strncmp(pos, "CONTROL_MASK", 12)) {
+  			info.modifiers |= GDK_CONTROL_MASK;
+  			pos += 12;
+! 		    } else if (!strncmp(pos, "MOD", 3) &&
+! 			       !strncmp(pos+4, "_MASK", 5)) {
+  			switch (pos[3]) {
+  			case '1':
+  			    info.modifiers |= GDK_MOD1_MASK; break;
+--- 354,379 ----
+      flush_relations(state);
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "key"))
+! 	    info.key = gdk_keyval_from_name((const gchar *)attrs[i+1]);
+! 	else if (!strcmp((const char *)attrs[i], "modifiers")) {
+  	    const xmlChar *pos = attrs[i+1];
+  
+  	    info.modifiers = 0;
+  	    while (pos[0])
+! 		if (!strncmp((const char *)pos, "GDK_", 4)) {
+  		    pos += 4;
+! 		    if (!strncmp((const char *)pos, "SHIFT_MASK", 10)) {
+  			info.modifiers |= GDK_SHIFT_MASK;
+  			pos += 10;
+! 		    } else if (!strncmp((const char *)pos, "LOCK_MASK", 9)) {
+  			info.modifiers |= GDK_LOCK_MASK;
+  			pos += 9;
+! 		    } else if (!strncmp((const char *)pos, "CONTROL_MASK", 12)) {
+  			info.modifiers |= GDK_CONTROL_MASK;
+  			pos += 12;
+! 		    } else if (!strncmp((const char *)pos, "MOD", 3) &&
+! 			       !strncmp((const char *)pos+4, "_MASK", 5)) {
+  			switch (pos[3]) {
+  			case '1':
+  			    info.modifiers |= GDK_MOD1_MASK; break;
+***************
+*** 387,394 ****
+  			    info.modifiers |= GDK_MOD5_MASK; break;
+  			}
+  			pos += 9;
+! 		    } else if (!strncmp(pos, "BUTTON", 6) &&
+! 			       !strncmp(pos+7, "_MASK", 5)) {
+  			switch (pos[6]) {
+  			case '1':
+  			    info.modifiers |= GDK_BUTTON1_MASK; break;
+--- 387,394 ----
+  			    info.modifiers |= GDK_MOD5_MASK; break;
+  			}
+  			pos += 9;
+! 		    } else if (!strncmp((const char *)pos, "BUTTON", 6) &&
+! 			       !strncmp((const char *)pos+7, "_MASK", 5)) {
+  			switch (pos[6]) {
+  			case '1':
+  			    info.modifiers |= GDK_BUTTON1_MASK; break;
+***************
+*** 402,416 ****
+  			    info.modifiers |= GDK_BUTTON5_MASK; break;
+  			}
+  			pos += 12;
+! 		    } else if (!strncmp(pos, "RELEASE_MASK", 12)) {
+  			info.modifiers |= GDK_RELEASE_MASK;
+  			pos += 12;
+  		    } else
+  			pos++;
+                 } else
+                     pos++;
+! 	} else if (!strcmp(attrs[i], "signal"))
+! 	    info.signal = alloc_string(state->interface, attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <accelerator>.", attrs[i]);
+      }
+--- 402,416 ----
+  			    info.modifiers |= GDK_BUTTON5_MASK; break;
+  			}
+  			pos += 12;
+! 		    } else if (!strncmp((const char *)pos, "RELEASE_MASK", 12)) {
+  			info.modifiers |= GDK_RELEASE_MASK;
+  			pos += 12;
+  		    } else
+  			pos++;
+                 } else
+                     pos++;
+! 	} else if (!strcmp((const char *)attrs[i], "signal"))
+! 	    info.signal = alloc_string(state->interface, (const char *)attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <accelerator>.", attrs[i]);
+      }
+***************
+*** 447,454 ****
+      info->child = NULL;
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp(attrs[i], "internal-child"))
+! 	    info->internal_child = alloc_string(state->interface, attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <child>.", attrs[i]);
+      }
+--- 447,454 ----
+      info->child = NULL;
+  
+      for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 	if (!strcmp((const char *)attrs[i], "internal-child"))
+! 	    info->internal_child = alloc_string(state->interface, (const char *)attrs[i+1]);
+  	else
+  	    g_warning("unknown attribute `%s' for <child>.", attrs[i]);
+      }
+***************
+*** 504,516 ****
+  
+      switch (state->state) {
+      case PARSER_START:
+! 	if (!strcmp(name, "glade-interface")) {
+  	    state->state = PARSER_GLADE_INTERFACE;
+  #if 0
+  	    /* check for correct XML namespace */
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp(attrs[i], "xmlns") &&
+! 		    !strcmp(attrs[i+1], "...")) {
+  		    g_warning("bad XML namespace `%s'.", attrs[i+1]);
+  		} else
+  		    g_warning("unknown attribute `%s' for <glade-interface>",
+--- 504,516 ----
+  
+      switch (state->state) {
+      case PARSER_START:
+! 	if (!strcmp((const char *)name, "glade-interface")) {
+  	    state->state = PARSER_GLADE_INTERFACE;
+  #if 0
+  	    /* check for correct XML namespace */
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp((const char *)attrs[i], "xmlns") &&
+! 		    !strcmp((const char *)attrs[i+1], "...")) {
+  		    g_warning("bad XML namespace `%s'.", attrs[i+1]);
+  		} else
+  		    g_warning("unknown attribute `%s' for <glade-interface>",
+***************
+*** 525,533 ****
+  	}
+  	break;
+      case PARSER_GLADE_INTERFACE:
+! 	if (!strcmp(name, "requires")) {
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp(attrs[i], "lib")) {
+  		    GladeInterface *iface = state->interface;
+  
+  		    /* add to the list of requirements for this module */
+--- 525,533 ----
+  	}
+  	break;
+      case PARSER_GLADE_INTERFACE:
+! 	if (!strcmp((const char *)name, "requires")) {
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp((const char *)attrs[i], "lib")) {
+  		    GladeInterface *iface = state->interface;
+  
+  		    /* add to the list of requirements for this module */
+***************
+*** 535,547 ****
+  		    iface->requires = g_renew(gchar *, iface->requires,
+  					      iface->n_requires);
+  		    iface->requires[iface->n_requires-1] =
+! 			alloc_string(iface, attrs[i+1]);
+  		} else
+  		    g_warning("unknown attribute `%s' for <requires>.",
+  			      attrs[i]);
+  	    }
+  	    state->state = PARSER_REQUIRES;
+! 	} else if (!strcmp(name, "widget")) {
+  	    GladeInterface *iface = state->interface;
+  
+  	    iface->n_toplevels++;
+--- 535,547 ----
+  		    iface->requires = g_renew(gchar *, iface->requires,
+  					      iface->n_requires);
+  		    iface->requires[iface->n_requires-1] =
+! 			alloc_string(iface, (const char *)attrs[i+1]);
+  		} else
+  		    g_warning("unknown attribute `%s' for <requires>.",
+  			      attrs[i]);
+  	    }
+  	    state->state = PARSER_REQUIRES;
+! 	} else if (!strcmp((const char *)name, "widget")) {
+  	    GladeInterface *iface = state->interface;
+  
+  	    iface->n_toplevels++;
+***************
+*** 573,579 ****
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET:
+! 	if (!strcmp(name, "property")) {
+  	    gboolean bad_agent = FALSE;
+  
+  	    if (state->prop_type != PROP_NONE &&
+--- 573,579 ----
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET:
+! 	if (!strcmp((const char *)name, "property")) {
+  	    gboolean bad_agent = FALSE;
+  
+  	    if (state->prop_type != PROP_NONE &&
+***************
+*** 581,593 ****
+  		g_warning("non widget properties defined here (oh no!)");
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp(attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 						      attrs[i+1]);
+! 		else if (!strcmp(attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp(attrs[i+1], "yes");
+! 		else if (!strcmp(attrs[i], "agent"))
+! 		    bad_agent = strcmp(attrs[i], "libglade") != 0;
+  		else
+  		    g_warning("unknown attribute `%s' for <property>.",
+  			      attrs[i]);
+--- 581,593 ----
+  		g_warning("non widget properties defined here (oh no!)");
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp((const char *)attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 					      (const gchar *)attrs[i+1]);
+! 		else if (!strcmp((const char *)attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp((const char *)attrs[i+1], "yes");
+! 		else if (!strcmp((const char *)attrs[i], "agent"))
+! 		    bad_agent = strcmp((const char *)attrs[i], "libglade") != 0;
+  		else
+  		    g_warning("unknown attribute `%s' for <property>.",
+  			      attrs[i]);
+***************
+*** 601,619 ****
+  		state->prop_type = PROP_WIDGET;
+  		state->state = PARSER_WIDGET_PROPERTY;
+  	    }
+! 	} else if (!strcmp(name, "accessibility")) {
+  	    flush_properties(state);
+  
+  	    if (attrs != NULL && attrs[0] != NULL)
+  		g_warning("<accessibility> element should have no attributes");
+  	    state->state = PARSER_WIDGET_ATK;
+! 	} else if (!strcmp(name, "signal")) {
+  	    handle_signal(state, attrs);
+  	    state->state = PARSER_WIDGET_SIGNAL;
+! 	} else if (!strcmp(name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp(name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+--- 601,619 ----
+  		state->prop_type = PROP_WIDGET;
+  		state->state = PARSER_WIDGET_PROPERTY;
+  	    }
+! 	} else if (!strcmp((const char *)name, "accessibility")) {
+  	    flush_properties(state);
+  
+  	    if (attrs != NULL && attrs[0] != NULL)
+  		g_warning("<accessibility> element should have no attributes");
+  	    state->state = PARSER_WIDGET_ATK;
+! 	} else if (!strcmp((const char *)name, "signal")) {
+  	    handle_signal(state, attrs);
+  	    state->state = PARSER_WIDGET_SIGNAL;
+! 	} else if (!strcmp((const char *)name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp((const char *)name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+***************
+*** 630,656 ****
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_ATK:
+! 	if (!strcmp(name, "atkproperty")) {
+  	    if (state->prop_type != PROP_NONE &&
+  		state->prop_type != PROP_ATK)
+  		g_warning("non atk properties defined here (oh no!)");
+  	    state->prop_type = PROP_ATK;
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp(attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 						      attrs[i+1]);
+! 		else if (!strcmp(attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp(attrs[i+1], "yes");
+  		else
+  		    g_warning("unknown attribute `%s' for <atkproperty>.",
+  			      attrs[i]);
+  	    }
+  	    state->state = PARSER_WIDGET_ATK_PROPERTY;
+! 	} else if (!strcmp(name, "atkaction")) {
+  	    handle_atk_action(state, attrs);
+  	    state->state = PARSER_WIDGET_ATK_ACTION;
+! 	} else if (!strcmp(name, "atkrelation")) {
+  	    handle_atk_relation(state, attrs);
+  	    state->state = PARSER_WIDGET_ATK_RELATION;
+  	} else {
+--- 630,656 ----
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_ATK:
+! 	if (!strcmp((const char *)name, "atkproperty")) {
+  	    if (state->prop_type != PROP_NONE &&
+  		state->prop_type != PROP_ATK)
+  		g_warning("non atk properties defined here (oh no!)");
+  	    state->prop_type = PROP_ATK;
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp((const char *)attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 					      (const gchar *)attrs[i+1]);
+! 		else if (!strcmp((const char *)attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp((const char *)attrs[i+1], "yes");
+  		else
+  		    g_warning("unknown attribute `%s' for <atkproperty>.",
+  			      attrs[i]);
+  	    }
+  	    state->state = PARSER_WIDGET_ATK_PROPERTY;
+! 	} else if (!strcmp((const char *)name, "atkaction")) {
+  	    handle_atk_action(state, attrs);
+  	    state->state = PARSER_WIDGET_ATK_ACTION;
+! 	} else if (!strcmp((const char *)name, "atkrelation")) {
+  	    handle_atk_relation(state, attrs);
+  	    state->state = PARSER_WIDGET_ATK_RELATION;
+  	} else {
+***************
+*** 661,667 ****
+  	}
+  	break;
+      case PARSER_WIDGET_ATK_PROPERTY:
+! 	if (!strcmp(name, "accessibility")) {
+  	    state->state = PARSER_WIDGET_ATK;
+  	} else {
+  	    g_warning("Unexpected element <%s> inside <atkproperty>.", name);
+--- 661,667 ----
+  	}
+  	break;
+      case PARSER_WIDGET_ATK_PROPERTY:
+! 	if (!strcmp((const char *)name, "accessibility")) {
+  	    state->state = PARSER_WIDGET_ATK;
+  	} else {
+  	    g_warning("Unexpected element <%s> inside <atkproperty>.", name);
+***************
+*** 683,695 ****
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_ATK:
+! 	if (!strcmp(name, "signal")) {
+  	    handle_signal(state, attrs);
+  	    state->state = PARSER_WIDGET_SIGNAL;
+! 	} else if (!strcmp(name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp(name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+--- 683,695 ----
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_ATK:
+! 	if (!strcmp((const char *)name, "signal")) {
+  	    handle_signal(state, attrs);
+  	    state->state = PARSER_WIDGET_SIGNAL;
+! 	} else if (!strcmp((const char *)name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp((const char *)name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+***************
+*** 706,715 ****
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_SIGNAL:
+! 	if (!strcmp(name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp(name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+--- 706,715 ----
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_SIGNAL:
+! 	if (!strcmp((const char *)name, "accelerator")) {
+  	    handle_accel(state, attrs);
+  	    state->state = PARSER_WIDGET_ACCEL;
+! 	} else if (!strcmp((const char *)name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+***************
+*** 726,732 ****
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_ACCEL:
+! 	if (!strcmp(name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+--- 726,732 ----
+  	state->unknown_depth++;
+  	break;
+      case PARSER_WIDGET_AFTER_ACCEL:
+! 	if (!strcmp((const char *)name, "child")) {
+  	    handle_child(state, attrs);
+  	    state->state = PARSER_WIDGET_CHILD;
+  	} else {
+***************
+*** 737,743 ****
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD:
+! 	if (!strcmp(name, "widget")) {
+  	    GladeWidgetInfo *parent = state->widget;
+  	    GladeChildInfo *info = &parent->children[parent->n_children-1];
+  
+--- 737,743 ----
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD:
+! 	if (!strcmp((const char *)name, "widget")) {
+  	    GladeWidgetInfo *parent = state->widget;
+  	    GladeChildInfo *info = &parent->children[parent->n_children-1];
+  
+***************
+*** 756,762 ****
+  	    state->accels = NULL;
+  
+  	    state->state = PARSER_WIDGET;
+! 	} else if (!strcmp(name, "placeholder")) {
+  	    /* this isn't a real child, so knock off  the last ChildInfo */
+  	    state->widget->n_children--;
+  	    state->state = PARSER_WIDGET_CHILD_PLACEHOLDER;
+--- 756,762 ----
+  	    state->accels = NULL;
+  
+  	    state->state = PARSER_WIDGET;
+! 	} else if (!strcmp((const char *)name, "placeholder")) {
+  	    /* this isn't a real child, so knock off  the last ChildInfo */
+  	    state->widget->n_children--;
+  	    state->state = PARSER_WIDGET_CHILD_PLACEHOLDER;
+***************
+*** 768,774 ****
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_WIDGET:
+! 	if (!strcmp(name, "packing")) {
+  	    state->state = PARSER_WIDGET_CHILD_PACKING;
+  	} else {
+  	    g_warning("Unexpected element <%s> inside <child>.", name);
+--- 768,774 ----
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_WIDGET:
+! 	if (!strcmp((const char *)name, "packing")) {
+  	    state->state = PARSER_WIDGET_CHILD_PACKING;
+  	} else {
+  	    g_warning("Unexpected element <%s> inside <child>.", name);
+***************
+*** 778,784 ****
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING:
+! 	if (!strcmp(name, "property")) {
+  	    gboolean bad_agent = FALSE;
+  
+  	    if (state->prop_type != PROP_NONE &&
+--- 778,784 ----
+  	}
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING:
+! 	if (!strcmp((const char *)name, "property")) {
+  	    gboolean bad_agent = FALSE;
+  
+  	    if (state->prop_type != PROP_NONE &&
+***************
+*** 786,798 ****
+  		g_warning("non child properties defined here (oh no!)");
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp(attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 						      attrs[i+1]);
+! 		else if (!strcmp(attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp(attrs[i+1], "yes");
+! 		else if (!strcmp(attrs[i], "agent"))
+! 		    bad_agent = strcmp(attrs[i], "libglade") != 0;
+  		else
+  		    g_warning("unknown attribute `%s' for <property>.",
+  			      attrs[i]);
+--- 786,798 ----
+  		g_warning("non child properties defined here (oh no!)");
+  	    state->translate_prop = FALSE;
+  	    for (i = 0; attrs && attrs[i] != NULL; i += 2) {
+! 		if (!strcmp((const char *)attrs[i], "name"))
+  		    state->prop_name = alloc_propname(state->interface,
+! 					      (const gchar *)attrs[i+1]);
+! 		else if (!strcmp((const char *)attrs[i], "translatable"))
+! 		    state->translate_prop = !strcmp((const char *)attrs[i+1], "yes");
+! 		else if (!strcmp((const char *)attrs[i], "agent"))
+! 		    bad_agent = strcmp((const char *)attrs[i], "libglade") != 0;
+  		else
+  		    g_warning("unknown attribute `%s' for <property>.",
+  			      attrs[i]);
+***************
+*** 864,876 ****
+  	g_warning("should not be closing any elements in this state");
+  	break;
+      case PARSER_GLADE_INTERFACE:
+! 	if (strcmp(name, "glade-interface") != 0)
+  	    g_warning("should find </glade-interface> here.  Found </%s>",
+  		      name);
+  	state->state = PARSER_FINISH;
+  	break;
+      case PARSER_REQUIRES:
+! 	if (strcmp(name, "requires") != 0)
+  	    g_warning("should find </requires> here.  Found </%s>", name);
+  	state->state = PARSER_GLADE_INTERFACE;
+  	break;
+--- 864,876 ----
+  	g_warning("should not be closing any elements in this state");
+  	break;
+      case PARSER_GLADE_INTERFACE:
+! 	if (strcmp((const char *)name, "glade-interface") != 0)
+  	    g_warning("should find </glade-interface> here.  Found </%s>",
+  		      name);
+  	state->state = PARSER_FINISH;
+  	break;
+      case PARSER_REQUIRES:
+! 	if (strcmp((const char *)name, "requires") != 0)
+  	    g_warning("should find </requires> here.  Found </%s>", name);
+  	state->state = PARSER_GLADE_INTERFACE;
+  	break;
+***************
+*** 878,884 ****
+      case PARSER_WIDGET_AFTER_ATK:
+      case PARSER_WIDGET_AFTER_SIGNAL:
+      case PARSER_WIDGET_AFTER_ACCEL:
+! 	if (strcmp(name, "widget") != 0)
+  	    g_warning("should find </widget> here.  Found </%s>", name);
+  	flush_properties(state);
+  	flush_signals(state);
+--- 878,884 ----
+      case PARSER_WIDGET_AFTER_ATK:
+      case PARSER_WIDGET_AFTER_SIGNAL:
+      case PARSER_WIDGET_AFTER_ACCEL:
+! 	if (strcmp((const char *)name, "widget") != 0)
+  	    g_warning("should find </widget> here.  Found </%s>", name);
+  	flush_properties(state);
+  	flush_signals(state);
+***************
+*** 894,900 ****
+  	    state->state = PARSER_WIDGET_CHILD_AFTER_WIDGET;
+  	break;
+      case PARSER_WIDGET_PROPERTY:
+! 	if (strcmp(name, "property") != 0)
+  	    g_warning("should find </property> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+--- 894,900 ----
+  	    state->state = PARSER_WIDGET_CHILD_AFTER_WIDGET;
+  	break;
+      case PARSER_WIDGET_PROPERTY:
+! 	if (strcmp((const char *)name, "property") != 0)
+  	    g_warning("should find </property> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+***************
+*** 910,922 ****
+  	state->state = PARSER_WIDGET;
+  	break;
+      case PARSER_WIDGET_ATK:
+! 	if (strcmp(name, "accessibility") != 0)
+  	    g_warning("should find </accessibility> here.  Found </%s>", name);
+  	flush_properties(state); /* flush the ATK properties */
+  	state->state = PARSER_WIDGET_AFTER_ATK;
+  	break;
+      case PARSER_WIDGET_ATK_PROPERTY:
+! 	if (strcmp(name, "atkproperty") != 0)
+  	    g_warning("should find </atkproperty> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+--- 910,922 ----
+  	state->state = PARSER_WIDGET;
+  	break;
+      case PARSER_WIDGET_ATK:
+! 	if (strcmp((const char *)name, "accessibility") != 0)
+  	    g_warning("should find </accessibility> here.  Found </%s>", name);
+  	flush_properties(state); /* flush the ATK properties */
+  	state->state = PARSER_WIDGET_AFTER_ATK;
+  	break;
+      case PARSER_WIDGET_ATK_PROPERTY:
+! 	if (strcmp((const char *)name, "atkproperty") != 0)
+  	    g_warning("should find </atkproperty> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+***************
+*** 932,960 ****
+  	state->state = PARSER_WIDGET_ATK;
+  	break;
+      case PARSER_WIDGET_ATK_ACTION:
+! 	if (strcmp(name, "atkaction") != 0)
+  	    g_warning("should find </atkaction> here.  Found </%s>", name);
+          state->prop_name = NULL;
+          state->state = PARSER_WIDGET_ATK;
+          break;
+      case PARSER_WIDGET_ATK_RELATION:
+! 	if (strcmp(name, "atkrelation") != 0)
+  	    g_warning("should find </atkrelation> here.  Found </%s>", name);
+          state->prop_name = NULL;
+          state->state = PARSER_WIDGET_ATK;
+          break;
+      case PARSER_WIDGET_SIGNAL:
+! 	if (strcmp(name, "signal") != 0)
+  	    g_warning("should find </signal> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ATK;
+  	break;
+      case PARSER_WIDGET_ACCEL:
+! 	if (strcmp(name, "accelerator") != 0)
+  	    g_warning("should find </accelerator> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_SIGNAL;
+  	break;
+      case PARSER_WIDGET_CHILD:
+! 	if (strcmp(name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	/* if we are ending the element in this state, then there
+  	 * hasn't been a <widget> element inside this <child>
+--- 932,960 ----
+  	state->state = PARSER_WIDGET_ATK;
+  	break;
+      case PARSER_WIDGET_ATK_ACTION:
+! 	if (strcmp((const char *)name, "atkaction") != 0)
+  	    g_warning("should find </atkaction> here.  Found </%s>", name);
+          state->prop_name = NULL;
+          state->state = PARSER_WIDGET_ATK;
+          break;
+      case PARSER_WIDGET_ATK_RELATION:
+! 	if (strcmp((const char *)name, "atkrelation") != 0)
+  	    g_warning("should find </atkrelation> here.  Found </%s>", name);
+          state->prop_name = NULL;
+          state->state = PARSER_WIDGET_ATK;
+          break;
+      case PARSER_WIDGET_SIGNAL:
+! 	if (strcmp((const char *)name, "signal") != 0)
+  	    g_warning("should find </signal> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ATK;
+  	break;
+      case PARSER_WIDGET_ACCEL:
+! 	if (strcmp((const char *)name, "accelerator") != 0)
+  	    g_warning("should find </accelerator> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_SIGNAL;
+  	break;
+      case PARSER_WIDGET_CHILD:
+! 	if (strcmp((const char *)name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	/* if we are ending the element in this state, then there
+  	 * hasn't been a <widget> element inside this <child>
+***************
+*** 967,984 ****
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_WIDGET:
+! 	if (strcmp(name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING:
+! 	if (strcmp(name, "packing") != 0)
+  	    g_warning("should find </packing> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_CHILD_AFTER_PACKING;
+  	flush_properties(state); /* flush the properties. */
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING_PROPERTY:
+! 	if (strcmp(name, "property") != 0)
+  	    g_warning("should find </property> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+--- 967,984 ----
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_WIDGET:
+! 	if (strcmp((const char *)name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING:
+! 	if (strcmp((const char *)name, "packing") != 0)
+  	    g_warning("should find </packing> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_CHILD_AFTER_PACKING;
+  	flush_properties(state); /* flush the properties. */
+  	break;
+      case PARSER_WIDGET_CHILD_PACKING_PROPERTY:
+! 	if (strcmp((const char *)name, "property") != 0)
+  	    g_warning("should find </property> here.  Found </%s>", name);
+  	if (!state->props)
+  	    state->props = g_array_new(FALSE, FALSE, sizeof(GladeProperty));
+***************
+*** 994,1010 ****
+  	state->state = PARSER_WIDGET_CHILD_PACKING;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_PACKING:
+! 	if (strcmp(name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_PLACEHOLDER:
+! 	if (strcmp(name, "placeholder") != 0)
+  	    g_warning("should find </placeholder> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_CHILD_AFTER_PLACEHOLDER;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_PLACEHOLDER:
+! 	if (strcmp(name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+--- 994,1010 ----
+  	state->state = PARSER_WIDGET_CHILD_PACKING;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_PACKING:
+! 	if (strcmp((const char *)name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+      case PARSER_WIDGET_CHILD_PLACEHOLDER:
+! 	if (strcmp((const char *)name, "placeholder") != 0)
+  	    g_warning("should find </placeholder> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_CHILD_AFTER_PLACEHOLDER;
+  	break;
+      case PARSER_WIDGET_CHILD_AFTER_PLACEHOLDER:
+! 	if (strcmp((const char *)name, "child") != 0)
+  	    g_warning("should find </child> here.  Found </%s>", name);
+  	state->state = PARSER_WIDGET_AFTER_ACCEL;
+  	break;
+***************
+*** 1026,1032 ****
+      case PARSER_WIDGET_PROPERTY:
+      case PARSER_WIDGET_ATK_PROPERTY:
+      case PARSER_WIDGET_CHILD_PACKING_PROPERTY:
+! 	g_string_append_len(state->content, chars, len);
+  	break;
+      default:
+  	/* don't care about content in any other states */
+--- 1026,1032 ----
+      case PARSER_WIDGET_PROPERTY:
+      case PARSER_WIDGET_ATK_PROPERTY:
+      case PARSER_WIDGET_CHILD_PACKING_PROPERTY:
+! 	g_string_append_len(state->content, (const gchar *)chars, len);
+  	break;
+      default:
+  	/* don't care about content in any other states */
+***************
+*** 1235,1314 ****
+  static void
+  dump_widget(xmlNode *parent, GladeWidgetInfo *info, gint indent)
+  {
+!     xmlNode *widget = xmlNewNode(NULL, "widget");
+      gint i, j;
+  
+!     xmlSetProp(widget, "class", info->classname);
+!     xmlSetProp(widget, "id", info->name);
+      xmlAddChild(parent, widget);
+!     xmlNodeAddContent(widget, "\n");
+  
+      for (i = 0; i < info->n_properties; i++) { 
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, "  ");
+! 	node = xmlNewNode(NULL, "property");
+! 	xmlSetProp(node, "name", info->properties[i].name);
+! 	xmlNodeSetContent(node, info->properties[i].value);
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, "\n");
+      }
+  
+      if (info->n_atk_props != 0) {
+  	xmlNode *atk;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, "  ");
+! 	atk = xmlNewNode(NULL, "accessibility");
+  	xmlAddChild(widget, atk);
+! 	xmlNodeAddContent(widget, "\n");
+! 	xmlNodeAddContent(atk, "\n");
+  
+  	for (i = 0; i < info->n_atk_props; i++) {
+  	    xmlNode *node;
+  
+  	    for (j = 0; j < indent + 2; j++)
+! 		xmlNodeAddContent(atk, "  ");
+! 	    node = xmlNewNode(NULL, "property");
+! 	    xmlSetProp(node, "name", info->atk_props[i].name);
+! 	    xmlNodeSetContent(node, info->atk_props[i].value);
+  	    xmlAddChild(atk, node);
+! 	    xmlNodeAddContent(atk, "\n");
+  	}
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(atk, "  ");
+      }
+  
+      for (i = 0; i < info->n_signals; i++) {
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, "  ");
+  
+! 	node = xmlNewNode(NULL, "signal");
+! 	xmlSetProp(node, "name", info->signals[i].name);
+! 	xmlSetProp(node, "handler", info->signals[i].handler);
+  	if (info->signals[i].after)
+! 	    xmlSetProp(node, "after", "yes");
+  	if (info->signals[i].object)
+! 	    xmlSetProp(node, "object", info->signals[i].object);
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, "\n");
+      }
+  
+      for (i = 0; i < info->n_accels; i++) {
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, "  ");
+  
+! 	node = xmlNewNode(NULL, "accelerator");
+! 	xmlSetProp(node, "key", gdk_keyval_name(info->accels[i].key));
+! 	xmlSetProp(node, "modifier", "something"/*info->accels[i].modifiers*/);
+! 	xmlSetProp(node, "signal", info->accels[i].signal);
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, "\n");
+      }
+  
+      for (i = 0; i < info->n_children; i++) {
+--- 1235,1314 ----
+  static void
+  dump_widget(xmlNode *parent, GladeWidgetInfo *info, gint indent)
+  {
+!     xmlNode *widget = xmlNewNode(NULL, (const xmlChar *)"widget");
+      gint i, j;
+  
+!     xmlSetProp(widget, (const xmlChar *)"class", (const xmlChar *)info->classname);
+!     xmlSetProp(widget, (const xmlChar *)"id", (const xmlChar *)info->name);
+      xmlAddChild(parent, widget);
+!     xmlNodeAddContent(widget, (const xmlChar *)"\n");
+  
+      for (i = 0; i < info->n_properties; i++) { 
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, (const xmlChar *)"  ");
+! 	node = xmlNewNode(NULL, (const xmlChar *)"property");
+! 	xmlSetProp(node, (const xmlChar *)"name", (const xmlChar *)info->properties[i].name);
+! 	xmlNodeSetContent(node, (const xmlChar *)(info->properties[i].value));
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, (const xmlChar *)"\n");
+      }
+  
+      if (info->n_atk_props != 0) {
+  	xmlNode *atk;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, (const xmlChar *)"  ");
+! 	atk = xmlNewNode(NULL, (const xmlChar *)"accessibility");
+  	xmlAddChild(widget, atk);
+! 	xmlNodeAddContent(widget, (const xmlChar *)"\n");
+! 	xmlNodeAddContent(atk, (const xmlChar *)"\n");
+  
+  	for (i = 0; i < info->n_atk_props; i++) {
+  	    xmlNode *node;
+  
+  	    for (j = 0; j < indent + 2; j++)
+! 		xmlNodeAddContent(atk, (const xmlChar *)"  ");
+! 	    node = xmlNewNode(NULL, (const xmlChar *)"property");
+! 	    xmlSetProp(node, (const xmlChar *)"name", (const xmlChar *)info->atk_props[i].name);
+! 	    xmlNodeSetContent(node, (const xmlChar *)(info->atk_props[i].value));
+  	    xmlAddChild(atk, node);
+! 	    xmlNodeAddContent(atk, (const xmlChar *)"\n");
+  	}
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(atk, (const xmlChar *)"  ");
+      }
+  
+      for (i = 0; i < info->n_signals; i++) {
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, (const xmlChar *)"  ");
+  
+! 	node = xmlNewNode(NULL, (const xmlChar *)"signal");
+! 	xmlSetProp(node, (const xmlChar *)"name", (const xmlChar *)info->signals[i].name);
+! 	xmlSetProp(node, (const xmlChar *)"handler", (const xmlChar *)info->signals[i].handler);
+  	if (info->signals[i].after)
+! 	    xmlSetProp(node, (const xmlChar *)"after", (const xmlChar *)"yes");
+  	if (info->signals[i].object)
+! 	    xmlSetProp(node, (const xmlChar *)"object", (const xmlChar *)info->signals[i].object);
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, (const xmlChar *)"\n");
+      }
+  
+      for (i = 0; i < info->n_accels; i++) {
+  	xmlNode *node;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, (const xmlChar *)"  ");
+  
+! 	node = xmlNewNode(NULL, (const xmlChar *)"accelerator");
+! 	xmlSetProp(node, (const xmlChar *)"key", (const xmlChar *)gdk_keyval_name(info->accels[i].key));
+! 	xmlSetProp(node, (const xmlChar *)"modifier", (const xmlChar *)"something"/*info->accels[i].modifiers*/);
+! 	xmlSetProp(node, (const xmlChar *)"signal", (const xmlChar *)info->accels[i].signal);
+  	xmlAddChild(widget, node);
+! 	xmlNodeAddContent(widget, (const xmlChar *)"\n");
+      }
+  
+      for (i = 0; i < info->n_children; i++) {
+***************
+*** 1317,1354 ****
+  	gint k;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, "  ");
+  
+! 	child = xmlNewNode(NULL, "child");
+  	if (childinfo->internal_child)
+! 	    xmlSetProp(child, "internal-child", childinfo->internal_child);
+  	xmlAddChild(widget, child);
+! 	xmlNodeAddContent(widget, "\n");
+! 	xmlNodeAddContent(child, "\n");
+  
+  	for (k = 0; k < childinfo->n_properties; k++) { 
+  	    xmlNode *node;
+  
+  	    for (j = 0; j < indent + 2; j++)
+! 		xmlNodeAddContent(child, "  ");
+! 	    node = xmlNewNode(NULL, "property");
+! 	    xmlSetProp(node, "name", childinfo->properties[i].name);
+! 	    xmlNodeSetContent(node, childinfo->properties[i].value);
+  	    xmlAddChild(child, node);
+! 	    xmlNodeAddContent(child, "\n");
+  	}
+  
+  	for (j = 0; j < indent + 2; j++)
+! 	    xmlNodeAddContent(child, "  ");
+  	dump_widget(child, childinfo->child, indent + 2);
+! 	xmlNodeAddContent(child, "\n");
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(child, "  ");
+      }
+  
+      for (j = 0; j < indent; j++)
+! 	xmlNodeAddContent(widget, "  ");
+  }
+  
+  /**
+--- 1317,1354 ----
+  	gint k;
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(widget, (const xmlChar *)"  ");
+  
+! 	child = xmlNewNode(NULL, (const xmlChar *)"child");
+  	if (childinfo->internal_child)
+! 	    xmlSetProp(child, (const xmlChar *)"internal-child", (const xmlChar *)childinfo->internal_child);
+  	xmlAddChild(widget, child);
+! 	xmlNodeAddContent(widget, (const xmlChar *)"\n");
+! 	xmlNodeAddContent(child, (const xmlChar *)"\n");
+  
+  	for (k = 0; k < childinfo->n_properties; k++) { 
+  	    xmlNode *node;
+  
+  	    for (j = 0; j < indent + 2; j++)
+! 		xmlNodeAddContent(child, (const xmlChar *)"  ");
+! 	    node = xmlNewNode(NULL, (const xmlChar *)"property");
+! 	    xmlSetProp(node, (const xmlChar *)"name", (const xmlChar *)childinfo->properties[i].name);
+! 	    xmlNodeSetContent(node, (const xmlChar *)(childinfo->properties[i].value));
+  	    xmlAddChild(child, node);
+! 	    xmlNodeAddContent(child, (const xmlChar *)"\n");
+  	}
+  
+  	for (j = 0; j < indent + 2; j++)
+! 	    xmlNodeAddContent(child, (const xmlChar *)"  ");
+  	dump_widget(child, childinfo->child, indent + 2);
+! 	xmlNodeAddContent(child, (const xmlChar *)"\n");
+  
+  	for (j = 0; j < indent + 1; j++)
+! 	    xmlNodeAddContent(child, (const xmlChar *)"  ");
+      }
+  
+      for (j = 0; j < indent; j++)
+! 	xmlNodeAddContent(widget, (const xmlChar *)"  ");
+  }
+  
+  /**
+***************
+*** 1366,1394 ****
+      xmlNode *root;
+      gint i;
+  
+!     doc = xmlNewDoc("1.0");
+      doc->standalone = FALSE;
+!     xmlCreateIntSubset(doc, "glade-interface",
+! 		       NULL, "glade-2.0.dtd");
+!     root = xmlNewNode(NULL, "glade-interface");
+      xmlDocSetRootElement(doc, root);
+  
+!     xmlNodeAddContent(root, "\n");
+  
+      for (i = 0; i < interface->n_requires; i++) {
+! 	xmlNode *node = xmlNewNode(NULL, "requires");
+  
+! 	xmlSetProp(node, "lib", interface->requires[i]);
+  
+! 	xmlNodeAddContent(root, "  ");
+  	xmlAddChild(root, node);
+! 	xmlNodeAddContent(root, "\n");
+      }
+  
+      for (i = 0; i < interface->n_toplevels; i++) {
+! 	xmlNodeAddContent(root, "  ");
+  	dump_widget(root, interface->toplevels[i], 1);
+! 	xmlNodeAddContent(root, "\n");
+      }
+  
+      /* output */
+--- 1366,1394 ----
+      xmlNode *root;
+      gint i;
+  
+!     doc = xmlNewDoc((const xmlChar *)"1.0");
+      doc->standalone = FALSE;
+!     xmlCreateIntSubset(doc, (const xmlChar *)"glade-interface",
+! 		       NULL, (const xmlChar *)"glade-2.0.dtd");
+!     root = xmlNewNode(NULL, (const xmlChar *)"glade-interface");
+      xmlDocSetRootElement(doc, root);
+  
+!     xmlNodeAddContent(root, (const xmlChar *)"\n");
+  
+      for (i = 0; i < interface->n_requires; i++) {
+! 	xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"requires");
+  
+! 	xmlSetProp(node, (const xmlChar *)"lib", (const xmlChar *)interface->requires[i]);
+  
+! 	xmlNodeAddContent(root, (const xmlChar *)"  ");
+  	xmlAddChild(root, node);
+! 	xmlNodeAddContent(root, (const xmlChar *)"\n");
+      }
+  
+      for (i = 0; i < interface->n_toplevels; i++) {
+! 	xmlNodeAddContent(root, (const xmlChar *)"  ");
+  	dump_widget(root, interface->toplevels[i], 1);
+! 	xmlNodeAddContent(root, (const xmlChar *)"\n");
+      }
+  
+      /* output */
+*** ./Build-OSR6.osr6	Sat Jul  2 11:00:20 2005
+--- ./Build-OSR6	Sat Jul  2 11:00:52 2005
+***************
+*** 0 ****
+--- 1,17 ----
++ #!/bin/sh
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ NM="/usr/ccs/bin/nm -p"
++ PYTHON=/usr/bin/python
++ export CC CXX NM PYTHON
++ rm -f mout-configure
++ ./configure $* --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ if [ -x /usr/local/bin/makeout ]
++ then
++   /usr/local/bin/makeout
++ else
++   [ -f mout ] && mv mout mout-prev
++   make $* 2>&1 | tee mout
++ fi
+*** ./configure.osr6	Thu Aug 29 05:54:02 2002
+--- ./configure	Sat Jul  2 11:00:20 2005
+***************
+*** 3539,3549 ****
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv5uw[78]* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3539,3549 ----
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv5* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 3617,3623 ****
+  irix*)
+    symcode='[BCDEGRST]'
+    ;;
+! solaris* | sysv5*)
+    symcode='[BDT]'
+    ;;
+  sysv4)
+--- 3617,3623 ----
+  irix*)
+    symcode='[BCDEGRST]'
+    ;;
+! solaris*|sysv5*)
+    symcode='[BDT]'
+    ;;
+  sysv4)
+***************
+*** 5169,5175 ****
+      fi
+      ;;
+  
+!   solaris* | sysv5*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+--- 5169,5175 ----
+      fi
+      ;;
+  
+!   solaris*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+***************
+*** 5629,5637 ****
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!     archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+! 		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+--- 5629,5636 ----
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!     archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+*** ./Install-OSR6.osr6	Sat Jul  2 11:00:20 2005
+--- ./Install-OSR6	Sat Jul  2 11:00:20 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/libglade
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

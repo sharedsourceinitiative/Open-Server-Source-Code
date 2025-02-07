@@ -1,0 +1,22 @@
+--- ./Build-OSR6.00	2009-01-06 08:43:33.000000000 -0800
++++ ./Build-OSR6	2009-01-06 08:43:29.580000002 -0800
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++MOUT=mout
++[ "$1" ] && MOUT=mout-$1
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make solaris 2>&1 | tee $MOUT
+--- ./Install-OSR6.00	2009-01-06 08:46:33.710000002 -0800
++++ ./Install-OSR6	2009-01-06 08:48:08.280000011 -0800
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/lua
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D/usr/local
++make install INSTALL_TOP=$D/usr/local 2>&1 | tee $MOUT
++

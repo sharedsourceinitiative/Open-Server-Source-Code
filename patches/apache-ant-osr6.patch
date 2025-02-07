@@ -1,0 +1,75 @@
+*** ./build.sh.00	Thu Jun  2 06:19:54 2005
+--- ./build.sh	Fri Oct  7 15:59:53 2005
+***************
+*** 13,18 ****
+--- 13,24 ----
+               JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+             fi
+             ;;
++   SCO_SV*)
++            if [ -z "$JAVA_HOME" ] ; then
++              JAVA_HOME=/usr/java
++              export JAVA_HOME
++            fi
++            ;;
+  esac
+  
+  REALANTHOME=$ANT_HOME
+*** ./Build-OSR6.00	Fri Oct  7 15:58:01 2005
+--- ./Build-OSR6	Fri Oct  7 15:57:57 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ ./build.sh 2>&1 | tee $MOUT
+*** ./bootstrap.sh.00	Thu Jun  2 06:19:54 2005
+--- ./bootstrap.sh	Fri Oct  7 16:00:28 2005
+***************
+*** 24,29 ****
+--- 24,35 ----
+               JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home   
+             fi
+             ;;
++   SCO_SV*)
++            if [ -z "$JAVA_HOME" ] ; then
++              JAVA_HOME=/usr/java
++              export JAVA_HOME
++            fi
++            ;;
+  esac
+  
+  # For Cygwin, ensure paths are in UNIX format before anything is touched
+*** ./Install-OSR6.00	Fri Oct  7 16:24:54 2005
+--- ./Install-OSR6	Fri Oct  7 16:24:50 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ ANT_HOME=/usr/ant
++ JAVA_HOME=/usr/java
++ export ANT_HOME JAVA_HOME
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $ANT_HOME ] || mkdir -p $ANT_HOME
++ ./build.sh install 2>&1 | tee $MOUT
++ 

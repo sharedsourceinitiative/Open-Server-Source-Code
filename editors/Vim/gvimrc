@@ -1,0 +1,9 @@
+" version 5.1
+" highlight Normal guibg=Black guifg=White
+" autocmd BufRead *.java set cindent
+" set background=dark showmatch cindent
+" set bs=1 mouse=a ru! sw=4 sta ts=4 esckeys paste columns=90 lines=30
+" set guifont=courier_new:h9
+" syntax on
+
+  hi Normal guibg=black guifg=grey

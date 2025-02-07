@@ -1,0 +1,46 @@
+--- ./Configure-OSR6.00	2008-12-31 18:24:10.610000014 -0800
++++ ./Configure-OSR6	2008-12-31 18:25:53.470000011 -0800
+@@ -0,0 +1,28 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/X11R6/include -I/usr/local/include -I/usr/include/stlport -O2"
++  CXXFLAGS="-I/usr/X11R6/include -I/usr/local/include -I/usr/include/stlport -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/X11R6/include -I/usr/local/include -O2 -Wall"
++  CXXFLAGS="-I/usr/X11R6/include -I/usr/local/include -O2 -Wall"
++  LIBS=""
++fi
++LDFLAGS="-L/usr/X11R6/lib"
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PKG_CONFIG_PATH LIBS LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local --sysconfdir=/etc \
++            --disable-shared --enable-static \
++            --mandir=/usr/local/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2008-12-31 18:24:10.610000029 -0800
++++ ./Install-OSR6	2008-12-31 18:24:10.610000026 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/pixman
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++

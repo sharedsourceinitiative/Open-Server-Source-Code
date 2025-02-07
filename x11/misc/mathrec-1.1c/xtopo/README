@@ -1,0 +1,72 @@
+
+
+Written by Ronald Joe Record (rr@sco.com) 27 Oct 1992
+
+INTRO
+-----
+
+The idea here is to calculate and display a fractal landscape topographically.
+In order to accomplish this, a midpoint displacement algorithm is used.
+The colors in the image represent heights in the landscape. Landscapes of
+varying "roughness" or "smoothness" can be calculated by varying the 
+parameter "beta" which controls the fractal dimension.
+
+ACKNOWLEDGEMENTS
+----------------
+
+The algorithm was derived from lectures given by Dietmar Saupe at the 
+University of California at Santa Cruz. Assistance with colormaps and 
+spinning color wheels and X was gleaned from Hiram Clawson and Stacey Campbell.
+
+BUILD
+-----
+
+To build the xtopo binary, either use the Imakefile or the sample makefile,
+Makefile.std.  If your system doesn't support prototypes, uncomment the 
+PROTODEFINE line of the Imakefile.
+
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile xtopo.
+
+The manual page can be formatted by typing "nroff -man xtopo.man > xtopo.6X".
+
+INSTALL
+-------
+
+To install xtopo, copy the xtopo binary to the desired location (the sample
+makefile puts it in /usr/local/bin)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/man/cat.LOCAL for imaging software), then add that location
+to your MANPATH.
+
+TEST
+----
+
+You can test xtopo by just invoking it with no arguments. It should display
+a 512x512 image. Some workstations may be slow to calculate and display a
+map as there are lots of calculations involved. On a DECstation 5000/200
+with 32 Mb memory, "time ./xtopo -V -d" gave a test timing of :
+real    0m17.46s
+user    0m5.30s
+sys     0m1.10s
+
+On a Compaq 33 MHz 386 with no co-processor and 10 Mb memory, the same 
+command gave results of :
+real    4m18.09s
+user    4m7.32s
+sys     0m2.20s
+
+Some "interesting" ways to run xtopo are as follows :
+% xtopo -F -S 0 -m 0 -r -n 10 -d
+(use the full screen, set sea level to 0, minimum upper color index to 0,
+ randomly select beta for each map, calculate 10 maps in demo mode)
+% xtopo -R -H 0.9
+(display on the root window a landscape with paramter beta equal to 0.9)
+% xtopo -o topomap.ppm
+(calculate and display with default parameters and save the resulting image
+ as a PPM file called topomap.ppm. this can be viewed later using xv or any
+ PPM viewing utility)
+
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com or ...uunet!sco!rr.
+

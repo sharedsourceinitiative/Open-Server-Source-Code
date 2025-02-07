@@ -1,0 +1,192 @@
+# A SAMPLE .PROCMAILRC FILE FOR NOVICES
+# Written by Catherine Hampton <ariel@best.com>
+# Version 1.1
+# Updated 1/6/98
+#
+# Released to the Public Domain.
+#
+#
+# SET VARIABLES
+
+# Internal Variables
+
+SHELL=/bin/sh               #Shell used to run procmail.  Be sure this points to
+                            #your system's copy of sh.  DO NOT substitute a
+                            #different shell unless you really know UNIX
+
+LINEBUF=4096                #Needed to keep Procmail from choking on long
+                            #"recipes", or instructions on what to do with
+                            #particular kinds of email.
+
+PATH=$HOME/bin:/bin:/usr/bin:/usr/local/bin
+                            #Path for your programs -- this is probably best
+                            #left alone.
+
+VERBOSE=off                 #Change this to "on" when you try a new recipe
+                            #so that Procmail will log literally every step
+                            #it takes.  DO NOT LEAVE IT ON, though, because
+                            #it creates huge logfiles.
+
+# Default Program & file locations
+
+MAILDIR=$HOME/Mail          #you'd better make sure this directory exists
+
+DEFAULT=/var/mail/$USER         #default incoming mailbox for UnixWare 7 users
+#DEFAULT=$HOME/inbox        #default incoming mailbox for shell2-5 users
+                            #on Best Internet.  Substitute the correct
+                            #setting for your system.
+
+ADMINFOLDER=$MAILDIR/admin.incoming  #for bounced mail, mail from root,
+                                     #postmaster, abuse, etc. Change this to
+                                     #$DEFAULT if you use
+                                     #Eudora, Pegasus Mail, Netscape, Internet
+                                     #Explorer, or another Windows- or Mac-based
+                                     #POP email program.
+
+BULKFOLDER=$MAILDIR/bulk.incoming    #for bulk mail which appears legitimate, such
+                                     #as mail from mailing lists or mail sent using
+                                     #Bcc:  Change this to $DEFAULT if you use
+                                     #Eudora, Pegasus Mail, Netscape, Internet
+                                     #Explorer, or another Windows- or Mac-based
+                                     #POP email program.
+
+LOGFILE=$MAILDIR/log        #Logs message disposition.  Recommended -- otherwise
+                            #errors are emailed to you. :/
+
+FORMAIL=/usr/local/bin/formail #useful for autoreply recipes.  If you
+                               #are not on Best Internet, modify this to
+                               #your system's copy of formail.
+
+SENDMAIL=/usr/lib/sendmail     #useful for autoreply recipes.  If you are
+                               #not on an SCO system, modify this to point
+                               #to your system's copy of sendmail.
+
+# SpamBouncer settings
+#
+# You can ignore these if you aren't installing the Spam Bouncer.
+# If you are installing the Spam Bouncer, PLEASE BE SURE TO READ
+# the installation instructions at <http://www.best.com/~ariel/nospam>
+
+ALTFROM=otheremail@othersite.com    #An alternate email address which doesn't
+                                    #show your normal email address, so that
+                                    #spammers don't get your usual email address
+                                    #from complaints.  Set this to a real email
+                                    #address, but not one you use for private
+                                    #email, preferably.
+
+BLOCKFOLDER=$MAILDIR/block.incoming  #for suspicious mail, but possibly not spam
+
+BLOCKREPLY=SILENT                 #SILENT tells the SpamBouncer to just filter 
+                                  #blocked email, and not reply to it.
+                                  #NOTIFY tells the SpamBouncer to tell the 
+                                  #sender that his/her email was blocked, and
+                                  #tells them how to bypass the filter if their
+                                  #email is legitimate.
+
+BYPASSWD=letmein                  #Password that allows people who send you
+                                  #legitimate email, but whose email is
+                                  #blocked for some reason by the Spam Bouncer,
+                                  #to bypass the Spam Bouncer.  Change this
+                                  #frequently.
+
+FREEMAIL=INTERNAL                    #Tells the Spam Bouncer whether to filter
+                                     #email from sites which offer free email
+                                     #addresses, and which list to use.
+
+NOBOUNCE=$HOME/nobounce              #Tells the Spam Bouncer where your NOBOUNCE
+                                     #file is located.
+
+NOLOOP=$ALTFROM                      #Setting for email address used in X-Loop: 
+                                     #header, a header which should prevent
+                                     #mailing loops.  Leave this alone unless
+                                     #you know what you're doing.
+
+SBDIR=$HOME/shared                   #Directory where SpamBouncer program files
+                                     #are located.  Edit this to point to that
+                                     #directory on your system.
+
+SPAMFOLDER=$MAILDIR/spam.incoming    #change this to SPAMFOLDER=/dev/null
+                                     #to delete spam entirely.
+
+SPAMREPLY=SILENT                     #SILENT tells the Spam Bouncer to filter spam,
+                                     #but not attempt to autocomplain about it.
+                                     #BOUNCE tells the Spam Bouncer to send a
+                                     #"MAILER-DAEMON" bounce message to the spammer.
+                                     #COMPLAIN tells the Spam Bouncer to send an
+                                     #autocomplaint to the spammer's postmaster and
+                                     #upstream sites.
+
+# BEGIN RECIPES
+
+# Nuke duplicate messages
+:0 Wh: msgid.lock
+| $FORMAIL -D 8192 msgid.cache
+
+# Create a backup cache of 100 most recent messages in case of mistakes
+:0 c
+backup
+
+  :0 ic
+  | cd backup && rm -f dummy `ls -t msg.* | sed -e 1,100d`
+
+# Regenerate "From" lines to make sure they are valid
+:0 fhw
+| formail -I "From " -a "From "
+
+# Send bounced mail and mail from admin accounts to its own folder
+:0:
+* (^FROM_MAILER|\
+   ^From.*[^0-9A-Za-z]abuse@|\
+   ^From.*[^0-9a-zA-Z]spam@)
+| $FORMAIL -A"X-Sorted: Admin" >>$ADMINFOLDER
+
+# MAILING LISTS
+
+# Filter out mail from all mailing lists you are on =before= spam
+# filtering.  I included two I subscribe to and recommend highly, but
+# your list will doubtless be different.  Just duplicate the recipe
+# for each mailing list you are on, and put the correct address for
+# the list in the condition statement.  (The "* ^TO" part.)  If you
+# read mail on shell, you may find it easier to deliver this mail
+# to separate folders, especially for busy lists.  I do. :)
+
+# List Mom mail (GREAT list for mailing list managers)
+:0:
+* ^TOlistmom-talk@skyweyr.com
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+# Procmail list (Wonderful for new Procmail users!)
+:0:
+* ^TOprocmail@Informatik.RWTH-Aachen.DE
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+
+# Call the Spam Bouncer to filter remaining mail for spam.
+INCLUDERC=$SBDIR/sb.rc
+
+
+# Sort out mail that really is to you from mail Bcc'd to you, or mail
+# which doesn't have any of your email addresses on the To: or Cc: line.
+# (Best Internet users -- I recommend =NOT= putting your
+# login@shellx.best.com, login@nntp?.best.com, or login@shell#.ba.best.com
+# addresses in here if you post to Usenet from shell, since they appear in
+# those posts, and spammers tend to collect them. :()
+#
+# This does =wonders= in keeping spam from appearing in your personal
+# mail. :)
+#
+# Substitute your shell account email address, custom domain, and any other email
+# address you may have for the entries below.
+:0:
+* ^(To:|Cc:).*(login@shelldomain\.com|\
+         .*@customdomain\.com|\
+         login@otherdomain\.net)
+| $FORMAIL -A"X-Sorted: Default" >>$DEFAULT
+
+# Deliver email which passed spam filtering, but which wasn't sent to
+# a recognizable personal email address of yours, to your "bulk mail"
+# folder, for reading on a less-urgent basis.
+:0:
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+# Done :)

@@ -1,0 +1,174 @@
+*** ./goo/GString.cc.osr6	Tue Feb 27 14:05:51 2007
+--- ./goo/GString.cc	Tue Mar 13 12:29:50 2007
+***************
+*** 528,534 ****
+    if ((neg = x < 0)) {
+      x = -x;
+    }
+!   x = floor(x * pow(10, prec) + 0.5);
+    i = bufSize;
+    started = !trim;
+    for (j = 0; j < prec && i > 1; ++j) {
+--- 528,534 ----
+    if ((neg = x < 0)) {
+      x = -x;
+    }
+!   x = floor(x * pow((double)10, prec) + 0.5);
+    i = bufSize;
+    started = !trim;
+    for (j = 0; j < prec && i > 1; ++j) {
+*** ./Configure-OSR6.osr6	Tue Mar 13 12:29:50 2007
+--- ./Configure-OSR6	Tue Mar 13 12:29:50 2007
+***************
+*** 0 ****
+--- 1,29 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ # Apply xpdf 3.01pl2 patch
++ #/usr/gnu/bin/patch -p1 -b -z .pl2 -i ../../patches/xpdf-3.01pl2.patch
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --sysconfdir=/etc \
++             --enable-freetype2 \
++             --with-freetype2-includes=/usr/include/freetype2 \
++             --with-Xpm-library=/usr/X11R6/lib --with-Xt-library=/usr/X11R6/lib \
++             --without-t1-library \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Tue Mar 13 12:29:50 2007
+--- ./Install-OSR6	Tue Mar 13 12:29:50 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/xpdf
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.osr6	Tue Feb 27 14:05:51 2007
+--- ./configure	Tue Mar 13 12:31:22 2007
+***************
+*** 3542,3548 ****
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-lXt $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 3542,3548 ----
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-L/usr/X11R6/lib -lXt $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 7163,7169 ****
+  
+    case x"$smr_cv_with_Xpm_library" in
+        xyes | xmaybe)
+!           Xpm_LIBS="-lXpm"
+            with_Xpm=$smr_cv_with_Xpm_library
+            ;;
+        xno)
+--- 7163,7169 ----
+  
+    case x"$smr_cv_with_Xpm_library" in
+        xyes | xmaybe)
+!           Xpm_LIBS="-L/usr/X11R6/lib -lXpm"
+            with_Xpm=$smr_cv_with_Xpm_library
+            ;;
+        xno)
+***************
+*** 7409,7415 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXpm $Xpm_CFLAGS $X_CFLAGS $Xpm_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 7409,7415 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-L/usr/X11R6/lib -lXpm $Xpm_CFLAGS $X_CFLAGS $Xpm_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 8300,8306 ****
+  
+    case x"$smr_cv_with_Xt_library" in
+        xyes | xmaybe)
+!           Xt_LIBS="-lXt"
+            with_Xt=$smr_cv_with_Xt_library
+            ;;
+        xno)
+--- 8300,8306 ----
+  
+    case x"$smr_cv_with_Xt_library" in
+        xyes | xmaybe)
+!           Xt_LIBS="-L/usr/X11R6/lib -lXt"
+            with_Xt=$smr_cv_with_Xt_library
+            ;;
+        xno)
+***************
+*** 8546,8552 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXt $Xt_CFLAGS $X_CFLAGS $Xt_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 8546,8552 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-L/usr/X11R6/lib -lXt $Xt_CFLAGS $X_CFLAGS $Xt_LIBS $X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 9405,9411 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXt $Xt_LIBS $X_LIBS $X_PRE_LIBS $Xp_LIBS $Xext_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 9405,9411 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-L/usr/X11R6/lib -lXt $Xt_LIBS $X_LIBS $X_PRE_LIBS $Xp_LIBS $Xext_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF

@@ -1,0 +1,119 @@
+*** ./Configure-OSR6.00 Thu May 12 21:27:56 2005
+--- ./Configure-OSR6 Sat May  7 07:59:40 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ HOST=i586-sco-sysv5
++ rm -f mout-configure
++ ./configure --host=$HOST --build=$HOST \
++             --with-postgrsql --with-mysql --prefix=/usr \
++             2>&1 | tee mout-configure
+*** ./configure.00 Sat May  7 07:59:40 2005
+--- ./configure Sat May  7 07:57:15 2005
+***************
+*** 5814,5820 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpcap  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  #include "confdefs.h"
+--- 5814,5820 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpcap -lresmgr $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  #include "confdefs.h"
+***************
+*** 5868,5874 ****
+  #define HAVE_LIBPCAP 1
+  _ACEOF
+  
+!   LIBS="-lpcap $LIBS"
+  
+  else
+    LPCAP="no"
+--- 5868,5874 ----
+  #define HAVE_LIBPCAP 1
+  _ACEOF
+  
+!   LIBS="-lpcap -lresmgr $LIBS"
+  
+  else
+    LPCAP="no"
+*** ./src/plugbase.c.00 Sat May  7 07:57:40 2005
+--- ./src/plugbase.c Sat May  7 07:57:17 2005
+***************
+*** 32,37 ****
+  
+  #ifndef WIN32
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #endif /* !WIN32 */
+--- 32,38 ----
+  
+  #ifndef WIN32
+  #include <sys/socket.h>
++ #include <sys/sockio.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #endif /* !WIN32 */
+***************
+*** 1115,1121 ****
+      time(&ut);
+      ltm = localtime(&ut);
+  
+! #if defined(WIN32) || defined(SOLARIS)
+      /* localtime() sets the global timezone variable,
+         which is defined in <time.h> */
+      seconds_away_from_utc = timezone;
+--- 1116,1122 ----
+      time(&ut);
+      ltm = localtime(&ut);
+  
+! #if defined(WIN32) || defined(SOLARIS) || defined(__USLC__)
+      /* localtime() sets the global timezone variable,
+         which is defined in <time.h> */
+      seconds_away_from_utc = timezone;
+*** ./src/snort.c.00 Sat May  7 07:57:40 2005
+--- ./src/snort.c Sat May  7 07:57:17 2005
+***************
+*** 187,193 ****
+  int SnortMain(int argc, char *argv[])
+  {
+  #ifndef WIN32
+!     #if defined(LINUX) || defined(FREEBSD) || defined(OPENBSD) || defined(SOLARIS)
+          sigset_t set;
+  
+          sigemptyset(&set);
+--- 187,193 ----
+  int SnortMain(int argc, char *argv[])
+  {
+  #ifndef WIN32
+!     #if defined(LINUX) || defined(FREEBSD) || defined(OPENBSD) || defined(SOLARIS) || defined(__USLC__)
+          sigset_t set;
+  
+          sigemptyset(&set);
+***************
+*** 1936,1942 ****
+  static void SigUsr1Handler(int signal)
+  {
+  #ifndef WIN32
+! #if defined(LINUX) || defined(FREEBSD) || defined(OPENBSD) || defined(SOLARIS)
+      sigset_t set;
+  
+      /* XXX why do we unblock all signals here? */
+--- 1936,1942 ----
+  static void SigUsr1Handler(int signal)
+  {
+  #ifndef WIN32
+! #if defined(LINUX) || defined(FREEBSD) || defined(OPENBSD) || defined(SOLARIS) || defined(__USLC__)
+      sigset_t set;
+  
+      /* XXX why do we unblock all signals here? */

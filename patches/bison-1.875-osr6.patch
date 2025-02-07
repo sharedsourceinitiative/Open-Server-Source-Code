@@ -1,0 +1,189 @@
+*** ./data/m4sugar/m4sugar.m4.osr6	Sat May  7 08:01:02 2005
+--- ./data/m4sugar/m4sugar.m4	Sun Jul  3 17:59:29 2005
+***************
+*** 53,67 ****
+  changequote()
+  changequote([, ])
+  
+- # Some old m4's don't support m4exit.  But they provide
+- # equivalent functionality by core dumping because of the
+- # long macros we define.
+- ifdef([__gnu__], ,
+- [errprint(M4sugar requires GNU M4. Install it before installing M4sugar or
+- set the M4 environment variable to its path name.)
+- m4exit(2)])
+- 
+- 
+  ## ------------------------------- ##
+  ## 1. Simulate --prefix-builtins.  ##
+  ## ------------------------------- ##
+--- 53,58 ----
+*** ./lib/timevar.c.osr6	Sat May  7 08:01:02 2005
+--- ./lib/timevar.c	Sun Jul  3 17:39:04 2005
+***************
+*** 19,27 ****
+  Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+  02111-1307, USA.  */
+  
+  #if IN_GCC
+  
+- #include "config.h"
+  #include "system.h"
+  #include "intl.h"
+  #include "rtl.h"
+--- 19,27 ----
+  Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+  02111-1307, USA.  */
+  
++ #include "config.h"
+  #if IN_GCC
+  
+  #include "system.h"
+  #include "intl.h"
+  #include "rtl.h"
+***************
+*** 44,58 ****
+--- 44,68 ----
+  #ifdef HAVE_SYS_TIMES_H
+  # include <sys/times.h>
+  #endif
++ #ifndef _TIMEVAL_STR
++ #define _TIMEVAL_STR
++ struct timeval {
++         long    tv_sec;         /* seconds */
++         long    tv_usec;        /* and microseconds */
++ };
++ #endif
+  #ifdef HAVE_SYS_RESOURCE_H
+  #include <sys/resource.h>
+  #endif
+  
+  #ifndef HAVE_CLOCK_T
++ #ifndef __USLC__
+  typedef int clock_t;
+  #endif
++ #endif
+  
+  #ifndef HAVE_STRUCT_TMS
++ #ifndef __USLC__
+  struct tms
+  {
+    clock_t tms_utime;
+***************
+*** 61,73 ****
+--- 71,86 ----
+    clock_t tms_cstime;
+  };
+  #endif
++ #endif
+  
+  #if defined HAVE_DECL_GETRUSAGE && !HAVE_DECL_GETRUSAGE
+  extern int getrusage PARAMS ((int, struct rusage *));
+  #endif
+  #if defined HAVE_DECL_TIMES && !HAVE_DECL_TIMES
++ #ifndef __USLC__
+  extern clock_t times PARAMS ((struct tms *));
+  #endif
++ #endif
+  #if defined HAVE_DECL_CLOCK && !HAVE_DECL_CLOCK
+  extern clock_t clock PARAMS ((void));
+  #endif
+*** ./Configure-OSR6.osr6	Sun Jul  3 17:39:04 2005
+--- ./Configure-OSR6	Sun Jul  3 17:39:04 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca -D_XOPEN_SOURCE=500 -D_POSIX_SOURCE"
++ CXX="CC -Kpthread -Kalloca -D_XOPEN_SOURCE=500 -D_POSIX_SOURCE"
++ LIBINTL=-lgnuintl
++ M4=/usr/gnu/bin/m4
++ export CC CXX LIBINTL M4
++ rm -f mout-configure
++ ./configure $* --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Sat May  7 08:01:11 2005
+--- ./configure	Sun Jul  3 17:39:04 2005
+***************
+*** 11379,11385 ****
+    rpathdirs=
+    ltrpathdirs=
+    names_already_handled=
+!   names_next_round='intl '
+    while test -n "$names_next_round"; do
+      names_this_round="$names_next_round"
+      names_next_round=
+--- 11379,11385 ----
+    rpathdirs=
+    ltrpathdirs=
+    names_already_handled=
+!   names_next_round='gnuintl '
+    while test -n "$names_next_round"; do
+      names_this_round="$names_next_round"
+      names_next_round=
+***************
+*** 11716,11722 ****
+    gt_save_CPPFLAGS="$CPPFLAGS"
+              CPPFLAGS="$CPPFLAGS $INCINTL"
+              gt_save_LIBS="$LIBS"
+!             LIBS="$LIBS $LIBINTL"
+                          cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 11716,11722 ----
+    gt_save_CPPFLAGS="$CPPFLAGS"
+              CPPFLAGS="$CPPFLAGS $INCINTL"
+              gt_save_LIBS="$LIBS"
+!             LIBS="$LIBS -lgnuintl"
+                          cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 11797,11804 ****
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   LIBINTL="$LIBINTL $LIBICONV"
+!                 LTLIBINTL="$LTLIBINTL $LTLIBICONV"
+                  gt_cv_func_gnugettext2_libintl=yes
+  
+  else
+--- 11797,11804 ----
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   LIBINTL="-lgnuintl $LIBICONV"
+!                 LTLIBINTL="-lgnuintl $LTLIBICONV"
+                  gt_cv_func_gnugettext2_libintl=yes
+  
+  else
+***************
+*** 11819,11824 ****
+--- 11819,11826 ----
+             || { test "$gt_cv_func_gnugettext2_libintl" = "yes" \
+                  && test "$PACKAGE" != gettext; }; then
+            gt_use_preinstalled_gnugettext=yes
++                     LIBINTL=-lgnuintl
++           LTLIBINTL=-lgnuintl
+          else
+                      LIBINTL=
+            LTLIBINTL=
+***************
+*** 11889,11895 ****
+  
+  
+  
+!     INTLLIBS="$LIBINTL"
+  
+  
+  
+--- 11891,11897 ----
+  
+  
+  
+!     INTLLIBS="-lgnuintl"
+  
+  
+  

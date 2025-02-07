@@ -1,0 +1,52 @@
+
+The lds program generates and displays a sequence of curves or 
+cellular automata like figures which graphically represent the 
+evolution of a Lattice Dynamical System (LDS). An LDS is an array
+of cells, each of which represents a dynamical system. Each cell
+is coupled to its nearest neighbors. The dynamical systems available
+in this software package are currently the logistic map, circle map
+and tent map. The state of each cell in the LDS is a real number in
+the unit interval. The evolution of the lattice is determined by an
+iteration thru the specified dynamic (e.g. the logistic equation)
+followed by a weighted averaging with its nearest neighbors.
+
+Command line arguments and run-time keyboard input allow lds to simulate
+a wide variety of lattice dynamical systems. The user can specify the
+dynamic to be used, the non-linearity parameter, the strength of coupling,
+the initial conditions, the size of the array, the lenght of the run,
+whether and how to evolve connection strengths, and more. During the run,
+the display of the evolving LDS can either be CA-like with each generation
+being represented as a horizontal line evolving upward in the window or as
+points or a curve with X axis the lattice and Y-axis the cell states [0,1].
+In addition, graphical display of cell states can be toggled between actual
+state and phase difference with left neighbor. A site histogram curve can 
+also be displayed.
+
+Lattice dynamical systems are also referred to as coupled map lattices.
+The literature is sparse but includes the following excellent papers :
+
+"Lyapunov Analysis and Information Flow in Coupled Map Lattices" by
+Kunihiko Kaneko, Physica 23D (1986) 436-447
+
+"Spatiotemporal Chaos in One- and Two- Dimensional Coupled Map Lattices"
+by Kaneko
+
+"Spatiotemporal Chaos and Noise" by Gottfried Mayer-Kress and Kaneko,
+J. Stat. Phys.(1988)
+
+"Pattern Competition Intermittency and Selective Flicker Noise in
+Spatiotemporal Chaos" by Kaneko, Physics Letters A, V125, 1 (1987)
+
+"Pattern Dynamics in Spatiotemporal Chaos" by Kaneko (1987)
+
+"Phenomenology of Spatial-Temporal Chaos" by Jim Crutchfield and Kaneko,
+appearing as a chapter in "Directions in Chaos" edited by Hao Bai-lin,
+World Scientific Publishing (1987)
+
+"Robust Space-Time Intermittency and 1/f Noise" by James Keeler and Doyne
+Farmer, Physica 23D (1986) 413-435
+
+For further info/assistance, e-mail rr@sco.com or ...uunet!sco!rr
+
+Ronald Record
+UCSC/SCO

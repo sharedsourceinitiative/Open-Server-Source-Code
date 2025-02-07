@@ -1,0 +1,117 @@
+*** ./lib/Xm/XmosP.h.osr6	Mon Jun 17 13:36:30 2002
+--- ./lib/Xm/XmosP.h	Fri Aug 10 23:49:25 2007
+***************
+*** 148,159 ****
+  /*
+   * warning: mips alloca is unsuitable, do not use.
+   */
+! #if defined(vax) || defined(sun) || defined(apollo) || defined(stellar)
+  /*
+   * Some System V boxes extract alloca.o from libPW.a; if you
+   * decide that you don't want to use alloca, you might want to fix it here.
+   */
+  char *alloca();
+  #define ALLOCATE_LOCAL(size) alloca(size)
+  #define DEALLOCATE_LOCAL(ptr)  /* as nothing */
+  #endif /* who does alloca */
+--- 148,162 ----
+  /*
+   * warning: mips alloca is unsuitable, do not use.
+   */
+! #if defined(vax) || defined(sun) || defined(apollo) || defined(stellar) || \
+!     defined(__USLC__)
+  /*
+   * Some System V boxes extract alloca.o from libPW.a; if you
+   * decide that you don't want to use alloca, you might want to fix it here.
+   */
++ #ifndef __USLC__
+  char *alloca();
++ #endif /* __USLC__ */
+  #define ALLOCATE_LOCAL(size) alloca(size)
+  #define DEALLOCATE_LOCAL(ptr)  /* as nothing */
+  #endif /* who does alloca */
+*** ./lib/Xm/DataF.c.osr6	Mon Dec 19 02:32:35 2005
+--- ./lib/Xm/DataF.c	Fri Aug 10 23:49:25 2007
+***************
+*** 8958,8965 ****
+  	    curr_str++;
+  	    i++;
+  	 } else {
+! 	    wchar_t tmp[XmTextF_max_char_size(tf)+1];
+  	    int num_conv;
+  	    num_conv = mbtowc(tmp, curr_str, XmTextF_max_char_size(tf));
+              if (num_conv >= 0 && df_FindPixelLength(tf, (char*) &tmp, 1)) {
+  	       for (j = 0; j < num_conv; j++) {
+--- 8958,8966 ----
+  	    curr_str++;
+  	    i++;
+  	 } else {
+! 	    wchar_t *tmp;
+  	    int num_conv;
++ 	    tmp = (wchar_t *)malloc(XmTextF_max_char_size(tf)+1);
+  	    num_conv = mbtowc(tmp, curr_str, XmTextF_max_char_size(tf));
+              if (num_conv >= 0 && df_FindPixelLength(tf, (char*) &tmp, 1)) {
+  	       for (j = 0; j < num_conv; j++) {
+*** ./Install-OSR6.osr6	Fri Aug 10 23:49:25 2007
+--- ./Install-OSR6	Fri Aug 10 23:49:25 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/openmotif
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Fri Aug 10 23:49:25 2007
+--- ./Configure-OSR6	Fri Aug 10 23:50:00 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr/X11R6 --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Thu Aug  9 00:27:12 2007
+--- ./configure	Fri Aug 10 23:49:25 2007
+***************
+*** 8640,8647 ****
+  	archive_cmds='$CC -shared ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+  	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+! 	archive_cmds='$CC -G ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+! 	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        ;;
+  
+--- 8640,8647 ----
+  	archive_cmds='$CC -shared ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+  	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,\${SCOABSPATH:+${install_libdir}/}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+! 	archive_cmds='$CC -G ${wl}-h,${install_libdir}/$soname -o $lib $libobjs $deplibs $compiler_flags'
+! 	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,${install_libdir}/$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        ;;
+  

@@ -1,0 +1,41 @@
+--- ./Makefile.uw	2004-01-13 22:19:57.430000015 +0000
++++ ./Makefile	2004-01-13 22:28:26.900000026 +0000
+@@ -898,7 +898,7 @@
+     USRLIBDIRPATH = $(USRLIBDIR)
+         LDPRELIBS = -L$(USRLIBDIR)  $(INSTALLED_LIBS)
+        LDPOSTLIBS =
+-     TOP_INCLUDES = -I$(INCROOT) $(TOP_X_INCLUDES)
++     TOP_INCLUDES = -I$(INCROOT) -I$(BUILDINCDIR) $(TOP_X_INCLUDES)
+   PROJECT_DEFINES =
+ 
+ # ----------------------------------------------------------------------
+@@ -1131,12 +1131,12 @@
+ 
+ lib$(LIBNAME).so.$(SOXAWREV): $(OBJS) $(EXTRASHAREDOBJS) $(EXTRALIBRARYDEPS)
+ 	$(RM) $@~
+-	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $@ $(OBJS) $(EXTRASHAREDOBJS) $(REQUIREDLIBS))
++	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $(SHLIBDIR)/$@ $(OBJS) $(EXTRASHAREDOBJS) $(REQUIREDLIBS))
+ 	if [ -f lib$(LIBNAME).elist ]; then \
+ 	$(RM) ./$@.exports $@.list; \
+ 	$(CPP) $(ALLINCLUDES) $(EXTRA_DEFINES) $(PROTO_DEFINES) $(THREADS_DEFINES) $(DEFINES) lib$(LIBNAME).elist | sed -e '/^#  *[0-9][0-9]*  *.*$$/d' -e '/^XCOMM$$/s//#/' -e '/^XCOMM[^a-zA-Z0-9_]/s/^XCOMM/#/' >$@.list; \
+ 	$(EXPORTLISTGEN) $@~ $@.list > ./$@.exports; \
+-(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $@ -Bexport:$@.exports $(OBJS) $(EXTRASHAREDOBJS) $(REQUIREDLIBS)); \
++(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $(SHLIBDIR)/$@ -Bexport:$@.exports $(OBJS) $(EXTRASHAREDOBJS) $(REQUIREDLIBS)); \
+ 	$(RM) ./$@.exports $@.list; \
+ 	fi;
+ 	$(RM) $@
+@@ -1242,12 +1242,12 @@
+ 
+ libXaw.so.$(SOXAWREV): $(OBJS) $(EXTRALIBRARYDEPS)
+ 	$(RM) $@~
+-	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $@ $(OBJS) $(REQUIREDLIBS))
++	(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $(SHLIBDIR)/Xaw3d/$@ $(OBJS) $(REQUIREDLIBS))
+ 	if [ -f libXaw.elist ]; then \
+ 	$(RM) ./$@.exports $@.list; \
+ 	$(CPP) $(ALLINCLUDES) $(EXTRA_DEFINES) $(PROTO_DEFINES) $(THREADS_DEFINES) $(DEFINES) libXaw.elist | sed -e '/^#  *[0-9][0-9]*  *.*$$/d' -e '/^XCOMM$$/s//#/' -e '/^XCOMM[^a-zA-Z0-9_]/s/^XCOMM/#/' >$@.list; \
+ 	$(EXPORTLISTGEN) $@~ $@.list > ./$@.exports; \
+-(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $@ -Bexport:$@.exports $(OBJS) $(REQUIREDLIBS)); \
++(cd .; $(CCENVSETUP) $(LD) -o ./$@~ $(SHLIBLDFLAGS) -h $(SHLIBDIR)/Xaw3d/$@ -Bexport:$@.exports $(OBJS) $(REQUIREDLIBS)); \
+ 	$(RM) ./$@.exports $@.list; \
+ 	fi;
+ 	$(RM) $@

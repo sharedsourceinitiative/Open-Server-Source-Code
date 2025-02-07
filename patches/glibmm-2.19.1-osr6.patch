@@ -1,0 +1,138 @@
+--- ./glib/glibmm/ustring.h.00	2008-12-11 17:11:29.000000000 -0800
++++ ./glib/glibmm/ustring.h	2008-12-30 10:01:40.750000028 -0800
+@@ -1285,20 +1285,22 @@
+ /** A template specialization for Stringify<char[N]> (for string literals),
+  * because the regular template has ambiguous constructor overloads for char*.
+  */
+-template <std::size_t N>
+-class ustring::Stringify<char[N]>
+-{
+-private:
+-  const ustring string_;
+-
+-  // noncopyable
+-  Stringify(const ustring::Stringify<char[N]>&);
+-  Stringify<ustring>& operator=(const ustring::Stringify<char[N]>&);
+-
+-public:
+-  explicit inline Stringify(const char arg[N]) : string_(arg) {}
+-  inline const ustring* ptr() const { return &string_; }
+-};
++/**
++ * template <std::size_t N>
++ * class ustring::Stringify<char[N]>
++ * {
++ * private:
++ *   const ustring string_;
++ * 
++ *   // noncopyable
++ *   Stringify(const ustring::Stringify<char[N]>&);
++ *   Stringify<ustring>& operator=(const ustring::Stringify<char[N]>&);
++ * 
++ * public:
++ *   explicit inline Stringify(const char arg[N]) : string_(arg) {}
++ *   inline const ustring* ptr() const { return &string_; }
++ * };
++ */
+ 
+ template <class T1>
+ inline // static
+--- ./configure.00	2008-12-14 11:09:16.000000000 -0800
++++ ./configure	2008-12-30 10:22:07.730000018 -0800
+@@ -3359,7 +3359,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3438,7 +3438,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3495,9 +3495,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -5998,7 +5998,7 @@
+   ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+    ac_cxx_werror_flag=yes
+    ac_cv_prog_cxx_g=no
+-   CXXFLAGS="-g"
++   CXXFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6077,7 +6077,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+-	 CXXFLAGS="-g"
++	 CXXFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6134,9 +6134,9 @@
+   CXXFLAGS=$ac_save_CXXFLAGS
+ elif test $ac_cv_prog_cxx_g = yes; then
+   if test "$GXX" = yes; then
+-    CXXFLAGS="-g -O2"
++    CXXFLAGS="-O2"
+   else
+-    CXXFLAGS="-g"
++    CXXFLAGS=""
+   fi
+ else
+   if test "$GXX" = yes; then
+@@ -20735,7 +20735,7 @@
+ #  Dependancy checks
+ #########################################################################
+ gtkmm_min_sigc_version=2.0.0
+-gtkmm_min_glib_version=2.19.0
++gtkmm_min_glib_version=2.18.0
+ 
+ 
+ 
+--- ./Configure-OSR6.00	2008-12-30 10:01:40.810000015 -0800
++++ ./Configure-OSR6	2008-12-30 10:01:40.810000012 -0800
+@@ -0,0 +1,25 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-I/usr/include/stlport -O2"
++CXXFLAGS="-I/usr/include/stlport -O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++LIBS="-lstlport_sysv5 -lm"
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PKG_CONFIG_PATH LIBS
++rm -f mout-configure
++./configure --prefix=/usr/local --sysconfdir=/etc \
++            --disable-shared --enable-static \
++            --mandir=/usr/local/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

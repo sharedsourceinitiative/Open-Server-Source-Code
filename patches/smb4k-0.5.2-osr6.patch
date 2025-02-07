@@ -1,0 +1,175 @@
+--- ./smb4k/core/smb4kuser.cpp.osr6	2004-12-11 00:36:54.000000000 -0800
++++ ./smb4k/core/smb4kuser.cpp	2005-06-11 10:35:22.136761000 -0700
+@@ -33,10 +33,10 @@
+     struct passwd p;
+     struct passwd *p_ptr = &p;
+     struct passwd *p_tmp;
+-#ifndef __FreeBSD__    
+-    char p_buf[sysconf( _SC_GETPW_R_SIZE_MAX )];
+-#else
++#if defined(__FreeBSD__) || defined(__USLC__)
+     char p_buf[250];
++#else
++    char p_buf[sysconf( _SC_GETPW_R_SIZE_MAX )];
+ #endif
+     int p_buf_len = sizeof( p_buf );
+     
+@@ -52,10 +52,10 @@
+     struct group g;
+     struct group *g_ptr = &g;
+     struct group *g_tmp;
+-#ifndef __FreeBSD__
+-    char g_buf[sysconf( _SC_GETGR_R_SIZE_MAX )];
+-#else
++#if defined(__FreeBSD__) || defined(__USLC__)
+     char g_buf[250];
++#else
++    char g_buf[sysconf( _SC_GETGR_R_SIZE_MAX )];
+ #endif
+     int g_buf_len = sizeof( g_buf );
+     
+--- ./Configure-OSR6.osr6	2005-06-11 09:52:13.725961006 -0700
++++ ./Configure-OSR6	2005-06-11 09:56:20.075961008 -0700
+@@ -0,0 +1,15 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++#CC="gcc -D_REENTRANT"
++#CXX="g++ -D_REENTRANT"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS
++rm -f mout-configure
++./configure --prefix=/usr \
++            --with-qt-dir=/opt/kde \
++            --with-qt-includes=/opt/kde/include \
++            --with-qt-libraries=/opt/kde/lib \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.osr6	2005-03-27 08:26:01.000000000 -0800
++++ ./configure	2005-06-11 10:20:42.117161016 -0700
+@@ -3534,7 +3534,7 @@
+ 
+   case "$host" in
+   *-*-sysv4.2uw*) CFLAGS="-D_UNIXWARE $CFLAGS";;
+-  *-*-sysv5uw7*) CFLAGS="-D_UNIXWARE7 $CFLAGS";;
++  *-*-sysv5*) CFLAGS="-D_UNIXWARE7 $CFLAGS";;
+   esac
+ 
+   if test -z "$LDFLAGS" && test "$kde_use_debug_code" = "no" && test "$GCC" = "yes"; then
+@@ -5557,7 +5557,7 @@
+   case "$host" in
+       *-*-irix*)  test "$GXX" = yes && CXXFLAGS="-D_LANGUAGE_C_PLUS_PLUS -D__LANGUAGE_C_PLUS_PLUS $CXXFLAGS" ;;
+       *-*-sysv4.2uw*) CXXFLAGS="-D_UNIXWARE $CXXFLAGS";;
+-      *-*-sysv5uw7*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
++      *-*-sysv5*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
+       *-*-solaris*)
+         if test "$GXX" = yes; then
+           libstdcpp=`$CXX -print-file-name=libstdc++.so`
+@@ -6750,7 +6750,7 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -6774,7 +6774,7 @@
+   esac
+   ;;
+ 
+-sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
++sysv5* | unixware7* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ esac
+@@ -8980,7 +8980,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -10187,7 +10187,7 @@
+   need_version=yes
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   version_type=linux
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+@@ -12714,7 +12714,7 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
++  sysv5* | unixware7*)
+     archive_cmds_need_lc_CXX=no
+     ;;
+   tandem*)
+@@ -13827,6 +13827,7 @@
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
++  sys_lib_search_path_spec='/usr/lib /usr/ccs/lib'
+   case $host_vendor in
+     sni)
+       shlibpath_overrides_runpath=no
+@@ -15706,7 +15707,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_F77=no
+ 	cat <<EOF 1>&2
+@@ -16898,6 +16899,7 @@
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
++  sys_lib_search_path_spec='/usr/lib /usr/ccs/lib'
+   case $host_vendor in
+     sni)
+       shlibpath_overrides_runpath=no
+@@ -17966,7 +17968,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_GCJ=no
+ 	cat <<EOF 1>&2
+@@ -19178,6 +19180,7 @@
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
++  sys_lib_search_path_spec='/usr/lib /usr/ccs/lib'
+   case $host_vendor in
+     sni)
+       shlibpath_overrides_runpath=no
+@@ -21256,19 +21259,9 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ 
+-#include <string>
+-using namespace std;
+-
+ int
+ main ()
+ {
+-
+-  string astring="Hallo Welt.";
+-  astring.erase(0, 6); // now astring is "Welt"
+-  return 0;
+-
+-  ;
+-  return 0;
+ }
+ _ACEOF
+ rm -f conftest.$ac_objext

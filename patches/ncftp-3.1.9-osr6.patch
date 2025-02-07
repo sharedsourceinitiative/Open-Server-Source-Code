@@ -1,0 +1,19 @@
+*** ./libncftp/ftw.c.00 Sun Jan 23 10:48:30 2005
+--- ./libncftp/ftw.c Sun May 29 16:37:16 2005
+***************
+*** 110,116 ****
+  		memcpy(dp, p, sz);
+  		return (dp);
+  	}
+! #elif defined(HAVE_READDIR_R) && ( (defined(SOLARIS) && (SOLARIS < 250)) || (defined(SCO)) || (defined(IRIX) && (IRIX < 6)) )
+  	struct dirent *p;
+  	p = readdir_r(dir, dp);
+  	if (p != NULL)
+--- 110,116 ----
+  		memcpy(dp, p, sz);
+  		return (dp);
+  	}
+! #elif defined(HAVE_READDIR_R) && ( (defined(SOLARIS) && (SOLARIS < 250)) || (defined(IRIX) && (IRIX < 6)) )
+  	struct dirent *p;
+  	p = readdir_r(dir, dp);
+  	if (p != NULL)

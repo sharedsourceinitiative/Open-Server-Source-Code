@@ -1,0 +1,7 @@
+echo "Making tags files"
+make tags
+echo "Backing up previous shar file, if any"
+[ -f madness.shar ] && mv madness.shar backups/madness.shar-
+echo "Creating new shar file"
+shar Imakefile Package *.c Madness.ad tags TAGS params/* > madness.shar
+echo "Done"

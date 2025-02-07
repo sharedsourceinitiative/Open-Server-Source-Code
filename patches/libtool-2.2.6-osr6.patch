@@ -1,0 +1,4452 @@
+*** ./libltdl/config/compile.00	Sun Sep  7 10:52:54 2008
+--- ./libltdl/config/compile	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Wrapper for compilers which do not understand `-c -o'.
+  
+  scriptversion=2005-05-14.22
+--- 1,4 ----
+! #! /bin/bash
+  # Wrapper for compilers which do not understand `-c -o'.
+  
+  scriptversion=2005-05-14.22
+*** ./libltdl/config/config.guess.00	Sun Sep  7 11:00:36 2008
+--- ./libltdl/config/config.guess	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Attempt to guess a canonical system name.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+--- 1,4 ----
+! #! /bin/bash
+  # Attempt to guess a canonical system name.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+*** ./libltdl/config/config.sub.00	Sun Sep  7 10:54:50 2008
+--- ./libltdl/config/config.sub	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Configuration validation subroutine script.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+--- 1,4 ----
+! #! /bin/bash
+  # Configuration validation subroutine script.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+*** ./libltdl/config/depcomp.00	Sun Sep  7 10:53:08 2008
+--- ./libltdl/config/depcomp	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depcomp - compile a program generating dependencies as side-effects
+  
+  scriptversion=2007-03-29.01
+--- 1,4 ----
+! #! /bin/bash
+  # depcomp - compile a program generating dependencies as side-effects
+  
+  scriptversion=2007-03-29.01
+*** ./libltdl/config/general.m4sh.00	Sat May 10 11:59:39 2008
+--- ./libltdl/config/general.m4sh	Sat Nov  8 09:58:07 2008
+***************
+*** 42,48 ****
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+--- 42,48 ----
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/bash}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+*** ./libltdl/config/install-sh.00	Sun Sep  7 10:54:50 2008
+--- ./libltdl/config/install-sh	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # install - install a program, script, or datafile
+  
+  scriptversion=2006-12-25.00
+--- 1,4 ----
+! #!/bin/bash
+  # install - install a program, script, or datafile
+  
+  scriptversion=2006-12-25.00
+*** ./libltdl/config/ltmain.sh.00	Sun Sep  7 10:56:33 2008
+--- ./libltdl/config/ltmain.sh	Sat Nov  8 09:58:07 2008
+***************
+*** 125,131 ****
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="/opt/local/bin/gsed"}
+! : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+--- 125,131 ----
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="/opt/local/bin/gsed"}
+! : ${SHELL="${CONFIG_SHELL-/bin/bash}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+*** ./libltdl/config/mdate-sh.00	Sun Sep  7 10:52:55 2008
+--- ./libltdl/config/mdate-sh	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # Get modification time of a file or directory and pretty-print it.
+  
+  scriptversion=2007-03-30.02
+--- 1,4 ----
+! #!/bin/bash
+  # Get modification time of a file or directory and pretty-print it.
+  
+  scriptversion=2007-03-30.02
+*** ./libltdl/config/missing.00	Sun Sep  7 10:54:50 2008
+--- ./libltdl/config/missing	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Common stub for a few missing GNU programs while installing.
+  
+  scriptversion=2006-05-10.23
+--- 1,4 ----
+! #! /bin/bash
+  # Common stub for a few missing GNU programs while installing.
+  
+  scriptversion=2006-05-10.23
+***************
+*** 201,207 ****
+  	touch $file
+      else
+  	test -z "$file" || exec >$file
+! 	echo "#! /bin/sh"
+  	echo "# Created by GNU Automake missing as a replacement of"
+  	echo "#  $ $@"
+  	echo "exit 0"
+--- 201,207 ----
+  	touch $file
+      else
+  	test -z "$file" || exec >$file
+! 	echo "#! /bin/bash"
+  	echo "# Created by GNU Automake missing as a replacement of"
+  	echo "#  $ $@"
+  	echo "exit 0"
+*** ./libltdl/config/mkstamp.00	Sat May 10 11:59:39 2008
+--- ./libltdl/config/mkstamp	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  
+  #   mkstamp - extract data from Revision and Date RCS tags in a file
+  #   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  
+  #   mkstamp - extract data from Revision and Date RCS tags in a file
+  #   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
+*** ./libltdl/m4/libtool.m4.00	Fri Sep  5 04:54:41 2008
+--- ./libltdl/m4/libtool.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 1056,1062 ****
+  m4_defun([_LT_PROG_ECHO_BACKSLASH],
+  [_LT_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 1056,1062 ----
+  m4_defun([_LT_PROG_ECHO_BACKSLASH],
+  [_LT_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 1140,1146 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 1140,1146 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 1182,1188 ****
+  	  if test "$prev" != 'sed 50q "[$]0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 1182,1188 ----
+  	  if test "$prev" != 'sed 50q "[$]0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 1587,1593 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 1587,1593 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./libltdl/aclocal.m4.00	Sun Sep  7 10:53:03 2008
+--- ./libltdl/aclocal.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./libltdl/configure.00	Sun Sep  7 10:53:05 2008
+--- ./libltdl/configure	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for libltdl 2.2.6.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for libltdl 2.2.6.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='libltdl'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='libltdl'
+***************
+*** 2339,2345 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2339,2345 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 4482,4488 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4482,4488 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/cdemo/aclocal.m4.00	Sun Sep  7 10:53:16 2008
+--- ./tests/cdemo/aclocal.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/cdemo/configure.00	Sun Sep  7 10:53:18 2008
+--- ./tests/cdemo/configure	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for cdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for cdemo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='cdemo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='cdemo'
+***************
+*** 2313,2319 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2313,2319 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 4455,4461 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4455,4461 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/demo/Makefile.am.00	Sat May 10 11:59:39 2008
+--- ./tests/demo/Makefile.am	Sat Nov  8 09:58:07 2008
+***************
+*** 64,70 ****
+  # create a script that says that -dlopen is not supported
+  helldl helldl$(EXEEXT):
+  	rm -f $@
+! 	echo '#! /bin/sh' > $@
+  	echo '-dlopen is unsupported' >> $@
+  	chmod +x $@
+  endif
+--- 64,70 ----
+  # create a script that says that -dlopen is not supported
+  helldl helldl$(EXEEXT):
+  	rm -f $@
+! 	echo '#! /bin/bash' > $@
+  	echo '-dlopen is unsupported' >> $@
+  	chmod +x $@
+  endif
+*** ./tests/demo/Makefile.in.00	Sun Sep  7 10:53:29 2008
+--- ./tests/demo/Makefile.in	Sat Nov  8 09:58:07 2008
+***************
+*** 807,813 ****
+  # create a script that says that -dlopen is not supported
+  @BINARY_HELLDL_FALSE@helldl helldl$(EXEEXT):
+  @BINARY_HELLDL_FALSE@	rm -f $@
+! @BINARY_HELLDL_FALSE@	echo '#! /bin/sh' > $@
+  @BINARY_HELLDL_FALSE@	echo '-dlopen is unsupported' >> $@
+  @BINARY_HELLDL_FALSE@	chmod +x $@
+  
+--- 807,813 ----
+  # create a script that says that -dlopen is not supported
+  @BINARY_HELLDL_FALSE@helldl helldl$(EXEEXT):
+  @BINARY_HELLDL_FALSE@	rm -f $@
+! @BINARY_HELLDL_FALSE@	echo '#! /bin/bash' > $@
+  @BINARY_HELLDL_FALSE@	echo '-dlopen is unsupported' >> $@
+  @BINARY_HELLDL_FALSE@	chmod +x $@
+  
+*** ./tests/demo/aclocal.m4.00	Sun Sep  7 10:53:27 2008
+--- ./tests/demo/aclocal.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+***************
+*** 6837,6843 ****
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/sh.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+--- 6837,6843 ----
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/bash.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+*** ./tests/demo/configure.00	Sun Sep  7 10:53:28 2008
+--- ./tests/demo/configure	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for demo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for demo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='demo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='demo'
+***************
+*** 2318,2324 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2318,2324 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 3560,3566 ****
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/sh.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+--- 3560,3566 ----
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/bash.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+***************
+*** 4460,4466 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4460,4466 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/depdemo/aclocal.m4.00	Sun Sep  7 10:53:37 2008
+--- ./tests/depdemo/aclocal.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/depdemo/configure.00	Sun Sep  7 10:53:39 2008
+--- ./tests/depdemo/configure	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for depdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for depdemo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='depdemo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='depdemo'
+***************
+*** 2316,2322 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2316,2322 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 3558,3564 ****
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/sh.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+--- 3558,3564 ----
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/bash.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+***************
+*** 4457,4463 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4457,4463 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/f77demo/aclocal.m4.00	Sun Sep  7 10:53:49 2008
+--- ./tests/f77demo/aclocal.m4	Sat Nov  8 09:58:07 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/f77demo/configure.00	Sun Sep  7 10:53:51 2008
+--- ./tests/f77demo/configure	Sat Nov  8 09:58:07 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for f77demo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for f77demo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='f77demo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='f77demo'
+***************
+*** 2330,2336 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2330,2336 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 3572,3578 ****
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/sh.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+--- 3572,3578 ----
+      for i in 1 2 3 4 5 6; do
+        echo '#include "conftst'$i'.h"' >> sub/conftest.c
+        # Using `: > sub/conftst$i.h' creates only sub/conftst1.h with
+!       # Solaris 8's {/usr,}/bin/bash.
+        touch sub/conftst$i.h
+      done
+      echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+***************
+*** 5599,5605 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 5599,5605 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/fcdemo/aclocal.m4.00	Sun Sep  7 10:54:02 2008
+--- ./tests/fcdemo/aclocal.m4	Sat Nov  8 09:58:08 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/fcdemo/configure.00	Sun Sep  7 10:54:04 2008
+--- ./tests/fcdemo/configure	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for fcdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for fcdemo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='fcdemo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='fcdemo'
+***************
+*** 2331,2337 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2331,2337 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 5748,5754 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 5748,5754 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/mdemo/aclocal.m4.00	Sun Sep  7 10:54:15 2008
+--- ./tests/mdemo/aclocal.m4	Sat Nov  8 09:58:08 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/mdemo/configure.00	Sun Sep  7 10:54:17 2008
+--- ./tests/mdemo/configure	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for mdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for mdemo 1.0.
+  #
+***************
+*** 577,583 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 577,583 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 661,667 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 661,667 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 703,709 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 703,709 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 742,748 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='mdemo'
+--- 742,748 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='mdemo'
+***************
+*** 2322,2328 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2322,2328 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 4492,4498 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4492,4498 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/mdemo2/aclocal.m4.00	Sun Sep  7 10:54:25 2008
+--- ./tests/mdemo2/aclocal.m4	Sat Nov  8 09:58:08 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/mdemo2/configure.00	Sun Sep  7 10:54:27 2008
+--- ./tests/mdemo2/configure	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for mdemo2 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for mdemo2 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='mdemo2'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='mdemo2'
+***************
+*** 2313,2319 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2313,2319 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 4455,4461 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4455,4461 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/pdemo/Makefile.am.00	Sat May 10 11:59:39 2008
+--- ./tests/pdemo/Makefile.am	Sat Nov  8 09:58:08 2008
+***************
+*** 64,70 ****
+  # create a script that says that -dlopen is not supported
+  helldl helldl$(EXEEXT):
+  	rm -f $@
+! 	echo '#! /bin/sh' > $@
+  	echo '-dlopen is unsupported' >> $@
+  	chmod +x $@
+  endif
+--- 64,70 ----
+  # create a script that says that -dlopen is not supported
+  helldl helldl$(EXEEXT):
+  	rm -f $@
+! 	echo '#! /bin/bash' > $@
+  	echo '-dlopen is unsupported' >> $@
+  	chmod +x $@
+  endif
+*** ./tests/pdemo/Makefile.in.00	Sun Sep  7 10:54:39 2008
+--- ./tests/pdemo/Makefile.in	Sat Nov  8 09:58:08 2008
+***************
+*** 808,814 ****
+  # create a script that says that -dlopen is not supported
+  @BINARY_HELLDL_FALSE@helldl helldl$(EXEEXT):
+  @BINARY_HELLDL_FALSE@	rm -f $@
+! @BINARY_HELLDL_FALSE@	echo '#! /bin/sh' > $@
+  @BINARY_HELLDL_FALSE@	echo '-dlopen is unsupported' >> $@
+  @BINARY_HELLDL_FALSE@	chmod +x $@
+  
+--- 808,814 ----
+  # create a script that says that -dlopen is not supported
+  @BINARY_HELLDL_FALSE@helldl helldl$(EXEEXT):
+  @BINARY_HELLDL_FALSE@	rm -f $@
+! @BINARY_HELLDL_FALSE@	echo '#! /bin/bash' > $@
+  @BINARY_HELLDL_FALSE@	echo '-dlopen is unsupported' >> $@
+  @BINARY_HELLDL_FALSE@	chmod +x $@
+  
+*** ./tests/pdemo/aclocal.m4.00	Sun Sep  7 10:54:36 2008
+--- ./tests/pdemo/aclocal.m4	Sat Nov  8 09:58:08 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/pdemo/configure.00	Sun Sep  7 10:54:38 2008
+--- ./tests/pdemo/configure	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for pdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for pdemo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='pdemo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='pdemo'
+***************
+*** 2316,2322 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2316,2322 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 4458,4464 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 4458,4464 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+*** ./tests/tagdemo/aclocal.m4.00	Sun Sep  7 10:54:47 2008
+--- ./tests/tagdemo/aclocal.m4	Sat Nov  8 09:58:08 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./tests/tagdemo/configure.00	Sun Sep  7 10:54:49 2008
+--- ./tests/tagdemo/configure	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for tagdemo 1.0.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for tagdemo 1.0.
+  #
+***************
+*** 575,581 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 575,581 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 659,665 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 659,665 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 701,707 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 701,707 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 740,746 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='tagdemo'
+--- 740,746 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='tagdemo'
+***************
+*** 2458,2464 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2458,2464 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+*** ./tests/cdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-conf.test	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-conf.test - try configuring the cdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-conf.test - try configuring the cdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/cdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-exec.test	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-exec.test - check that programs in the cdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-exec.test - check that programs in the cdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/cdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-make.test	Sat Nov  8 09:58:08 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-make.test - try building in the cdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-make.test - try building in the cdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/cdemo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-shared.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-shared.test - try configuring the cdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-shared.test - try configuring the cdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/cdemo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-static.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-static.test - try configuring the cdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-static.test - try configuring the cdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/cdemo-undef.test.00	Sat May 10 11:59:39 2008
+--- ./tests/cdemo-undef.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # cdemo-undef - test generating shared libraries with undefined symbols
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # cdemo-undef - test generating shared libraries with undefined symbols
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/darwin.at.00	Wed Jun 18 03:52:57 2008
+--- ./tests/darwin.at	Sat Nov  8 09:58:09 2008
+***************
+*** 66,72 ****
+  
+  mkdir bin
+  AT_DATA([bin/basename],[[
+! #! /bin/sh
+  
+  usage="usage: $0 argument"
+  if test $# != 1; then
+--- 66,72 ----
+  
+  mkdir bin
+  AT_DATA([bin/basename],[[
+! #! /bin/bash
+  
+  usage="usage: $0 argument"
+  if test $# != 1; then
+*** ./tests/defs.in.00	Fri Sep  5 06:09:27 2008
+--- ./tests/defs.in	Sat Nov  8 09:58:09 2008
+***************
+*** 204,210 ****
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+--- 204,210 ----
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/bash}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+*** ./tests/demo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-conf.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-conf.test - try configuring the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-conf.test - try configuring the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-deplibs.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-deplibs.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-deplibs.test - check whether the shared library check method is OK
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-deplibs.test - check whether the shared library check method is OK
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-exec.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-exec.test - check that programs in the ../demo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-exec.test - check that programs in the ../demo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/demo-hardcode.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-hardcode.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-hardcode.test - check to see what the system linker hardcodes
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-hardcode.test - check to see what the system linker hardcodes
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-inst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-inst.test	Sat Nov  8 09:58:09 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-inst.test - try installing from the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-inst.test - try installing from the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-make.test - try building in the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-make.test - try building in the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-nofast.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-nofast.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-nofast.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-nofast.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-noinst-link.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-noinst-link.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-noinst-link.test - make sure we do not link with an installed
+  #                         library when an uninstalled one is to be used
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # demo-noinst-link.test - make sure we do not link with an installed
+  #                         library when an uninstalled one is to be used
+  #
+*** ./tests/demo-nopic.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-nopic.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-nopic.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-nopic.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-pic.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-pic.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-pic.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-pic.test - try configuring the ../demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-relink.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-relink.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-relink.test - check to see whether shlibpath overrides runpath
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-relink.test - check to see whether shlibpath overrides runpath
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-shared.test - try configuring the demo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-shared.test - try configuring the demo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-static.test - try configuring the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-static.test - try configuring the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/demo-unst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/demo-unst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-unst.test - try uninstalling in the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-unst.test - try uninstalling in the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-conf.test - try configuring the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-conf.test - try configuring the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-exec.test - check that programs in the depdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-exec.test - check that programs in the depdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-inst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-inst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-inst.test - try installing from the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-inst.test - try installing from the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-make.test - try building in the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-make.test - try building in the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-nofast.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-nofast.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-nofast.test - try configuring the ./depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-nofast.test - try configuring the ./depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-relink.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-relink.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-relink.test - check to see whether shlibpath overrides runpath
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-relink.test - check to see whether shlibpath overrides runpath
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-shared.test - try configuring the depdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-shared.test - try configuring the depdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-static.test - try configuring the depdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-static.test - try configuring the depdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/depdemo-unst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/depdemo-unst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # depdemo-unst.test - try uninstalling in the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # depdemo-unst.test - try uninstalling in the depdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/early-libtool.at.00	Wed Aug 13 03:14:51 2008
+--- ./tests/early-libtool.at	Sat Nov  8 09:58:10 2008
+***************
+*** 100,106 ****
+  ]])
+  
+  cat > missing <<_EOF
+! #! /bin/sh
+  exit 0
+  _EOF
+  chmod a+x missing
+--- 100,106 ----
+  ]])
+  
+  cat > missing <<_EOF
+! #! /bin/bash
+  exit 0
+  _EOF
+  chmod a+x missing
+***************
+*** 207,213 ****
+  ]])
+  
+  cat > missing <<_EOF
+! #! /bin/sh
+  exit 0
+  _EOF
+  chmod a+x missing
+--- 207,213 ----
+  ]])
+  
+  cat > missing <<_EOF
+! #! /bin/bash
+  exit 0
+  _EOF
+  chmod a+x missing
+*** ./tests/execute-mode.at.00	Sat May 10 11:59:39 2008
+--- ./tests/execute-mode.at	Sat Nov  8 09:58:10 2008
+***************
+*** 26,32 ****
+  AT_KEYWORDS([libtool])
+  
+  AT_DATA([foo],
+! [[#! /bin/sh
+  if test $# -gt 0; then
+    echo "$@"
+  else
+--- 26,32 ----
+  AT_KEYWORDS([libtool])
+  
+  AT_DATA([foo],
+! [[#! /bin/bash
+  if test $# -gt 0; then
+    echo "$@"
+  else
+***************
+*** 35,41 ****
+  ]])
+  
+  AT_DATA([lt-wrapper],
+! [[#! /bin/sh
+  # Generated by GNU libtool.
+  # fake wrapper script.
+  program=lt-real
+--- 35,41 ----
+  ]])
+  
+  AT_DATA([lt-wrapper],
+! [[#! /bin/bash
+  # Generated by GNU libtool.
+  # fake wrapper script.
+  program=lt-real
+***************
+*** 49,55 ****
+  ]])
+  
+  AT_DATA([lt-real],
+! [[#! /bin/sh
+  echo "$@"
+  cat
+  ]])
+--- 49,55 ----
+  ]])
+  
+  AT_DATA([lt-real],
+! [[#! /bin/bash
+  echo "$@"
+  cat
+  ]])
+*** ./tests/f77demo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/f77demo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # f77demo-conf.test - try configuring the f77demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # f77demo-conf.test - try configuring the f77demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/f77demo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/f77demo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # f77demo-exec.test - check that programs in the f77demo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # f77demo-exec.test - check that programs in the f77demo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/f77demo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/f77demo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # f77demo-make.test - try building in the f77demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # f77demo-make.test - try building in the f77demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/f77demo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/f77demo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # f77demo-shared.test - try configuring the f77demo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # f77demo-shared.test - try configuring the f77demo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/f77demo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/f77demo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # f77demo-static.test - try configuring the f77demo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # f77demo-static.test - try configuring the f77demo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/fail.at.00	Fri Sep  5 04:54:41 2008
+--- ./tests/fail.at	Sat Nov  8 09:58:10 2008
+***************
+*** 34,40 ****
+  ])
+  
+  AT_DATA([script],
+! [[#! /bin/sh
+  exit 0
+  ]])
+  chmod +x script
+--- 34,40 ----
+  ])
+  
+  AT_DATA([script],
+! [[#! /bin/bash
+  exit 0
+  ]])
+  chmod +x script
+*** ./tests/fcdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/fcdemo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # fcdemo-conf.test - try configuring the fcdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # fcdemo-conf.test - try configuring the fcdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/fcdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/fcdemo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # fcdemo-exec.test - check that programs in the fcdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # fcdemo-exec.test - check that programs in the fcdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/fcdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/fcdemo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # fcdemo-make.test - try building in the fcdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # fcdemo-make.test - try building in the fcdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/fcdemo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/fcdemo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # fcdemo-shared.test - try configuring the fcdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # fcdemo-shared.test - try configuring the fcdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/fcdemo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/fcdemo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # fcdemo-static.test - try configuring the fcdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # fcdemo-static.test - try configuring the fcdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/link-2.test.00	Sat May 10 11:59:39 2008
+--- ./tests/link-2.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # link-2.test - check that .lo files aren't made into programs.
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # link-2.test - check that .lo files aren't made into programs.
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/link.test.00	Sat May 10 11:59:39 2008
+--- ./tests/link.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # link.test - make sure that linking against libraries is legal.
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # link.test - make sure that linking against libraries is legal.
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-conf.test - try configuring the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-conf.test - try configuring the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-dryrun.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-dryrun.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-dryrun.test - check whether the --dry-run mode works properly
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-dryrun.test - check whether the --dry-run mode works properly
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-exec.test - check that programs in the mdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-exec.test - check that programs in the mdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+*** ./tests/mdemo-inst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-inst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-inst.test - try installing from the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-inst.test - try installing from the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-make.test - try building in the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-make.test - try building in the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-shared.test - try configuring the mdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-shared.test - try configuring the mdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-static.test - try configuring the mdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-static.test - try configuring the mdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo-unst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo-unst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo-unst.test - try uninstalling in the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo-unst.test - try uninstalling in the mdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo2-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo2-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo2-conf.test - try configuring the mdemo2 subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo2-conf.test - try configuring the mdemo2 subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo2-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo2-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo2-exec.test - check that programs in the mdemo2 subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo2-exec.test - check that programs in the mdemo2 subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/mdemo2-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/mdemo2-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mdemo2-make.test - try building in the mdemo2 subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # mdemo2-make.test - try building in the mdemo2 subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/nomode.test.00	Sat May 10 11:59:39 2008
+--- ./tests/nomode.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # nomode.test - check that we can actually get help
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # nomode.test - check that we can actually get help
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/objectlist.test.00	Sat May 10 11:59:39 2008
+--- ./tests/objectlist.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # objectlist.test - make sure that a nonexisting objectlist file is properly
+  #                   mentioned and that the argument may contain spaces.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # objectlist.test - make sure that a nonexisting objectlist file is properly
+  #                   mentioned and that the argument may contain spaces.
+  #
+*** ./tests/pdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/pdemo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # pdemo-conf.test - try configuring the pdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # pdemo-conf.test - try configuring the pdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/pdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/pdemo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # pdemo-exec.test - check that programs in the pdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # pdemo-exec.test - check that programs in the pdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/pdemo-inst.test.00	Sat May 10 11:59:39 2008
+--- ./tests/pdemo-inst.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # demo-inst.test - try installing from the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # demo-inst.test - try installing from the demo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/pdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/pdemo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # pdemo-make.test - try building in the pdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # pdemo-make.test - try building in the pdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/quote.test.00	Sat May 10 11:59:39 2008
+--- ./tests/quote.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # quote.test - make sure that shell metacharacters do not blow up libtool
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # quote.test - make sure that shell metacharacters do not blow up libtool
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
+*** ./tests/sh.test.00	Sat May 10 11:59:39 2008
+--- ./tests/sh.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # sh.test - check for some nonportable or dubious or undesired shell
+  #           constructs in shell scripts.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # sh.test - check for some nonportable or dubious or undesired shell
+  #           constructs in shell scripts.
+  #
+*** ./tests/static.at.00	Sat May 10 11:59:39 2008
+--- ./tests/static.at	Sat Nov  8 09:58:10 2008
+***************
+*** 357,363 ****
+  AT_SETUP([ccache -all-static])
+  
+  AT_DATA([ccache],
+! [[#! /bin/sh
+  # poor man's ccache clone
+  case $1 in
+  -*) echo "bogus argument: $1" >&2; exit 1 ;;
+--- 357,363 ----
+  AT_SETUP([ccache -all-static])
+  
+  AT_DATA([ccache],
+! [[#! /bin/bash
+  # poor man's ccache clone
+  case $1 in
+  -*) echo "bogus argument: $1" >&2; exit 1 ;;
+*** ./tests/suffix.test.00	Sat May 10 11:59:39 2008
+--- ./tests/suffix.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # suffix.test - check that libtool knows how to transform source suffices.
+  #
+  #   Copyright (C) 2003, 2004, 2007, 2008  Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # suffix.test - check that libtool knows how to transform source suffices.
+  #
+  #   Copyright (C) 2003, 2004, 2007, 2008  Free Software Foundation, Inc.
+*** ./tests/tagdemo-conf.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-conf.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-conf.test - try configuring the tagdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-conf.test - try configuring the tagdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagdemo-exec.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-exec.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-exec.test - check that programs in the tagdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-exec.test - check that programs in the tagdemo subdirectory are viable
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagdemo-make.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-make.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-make.test - try building in the tagdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-make.test - try building in the tagdemo subdirectory
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagdemo-shared.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-shared.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-shared.test - try configuring the tagdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-shared.test - try configuring the tagdemo subdirectory for shared libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagdemo-static.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-static.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-static.test - try configuring tagdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-static.test - try configuring tagdemo subdirectory for static libs
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagdemo-undef.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagdemo-undef.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagdemo-undef - test generating shared libraries with undefined symbols
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagdemo-undef - test generating shared libraries with undefined symbols
+  #
+  #   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+*** ./tests/tagtrace.test.00	Sat May 10 11:59:39 2008
+--- ./tests/tagtrace.test	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # tagtrace.test - check the LT_SUPPORTED_TAGS interface
+  #
+  #   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # tagtrace.test - check the LT_SUPPORTED_TAGS interface
+  #
+  #   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+*** ./tests/testsuite.00	Sun Sep  7 10:52:24 2008
+--- ./tests/testsuite	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Generated from testsuite.at by GNU Autoconf 2.62.
+  #
+  # Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+--- 1,4 ----
+! #! /bin/bash
+  # Generated from testsuite.at by GNU Autoconf 2.62.
+  #
+  # Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+***************
+*** 572,578 ****
+  
+  
+  
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # How were we run?
+  at_cli_args="$@"
+--- 572,578 ----
+  
+  
+  
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # How were we run?
+  at_cli_args="$@"
+***************
+*** 1401,1407 ****
+  at_func_create_debugging_script ()
+  {
+    {
+!     echo "#! /bin/sh" &&
+      echo 'test "${ZSH_VERSION+set}" = set && alias -g '\''${1+"$@"}'\''='\''"$@"'\''' &&
+      $as_echo "cd '$at_dir'" &&
+      $as_echo "exec \${CONFIG_SHELL-$SHELL} \"$at_myself\" -v -d $at_debug_args $at_group \${1+\"\$@\"}" &&
+--- 1401,1407 ----
+  at_func_create_debugging_script ()
+  {
+    {
+!     echo "#! /bin/bash" &&
+      echo 'test "${ZSH_VERSION+set}" = set && alias -g '\''${1+"$@"}'\''='\''"$@"'\''' &&
+      $as_echo "cd '$at_dir'" &&
+      $as_echo "exec \${CONFIG_SHELL-$SHELL} \"$at_myself\" -v -d $at_debug_args $at_group \${1+\"\$@\"}" &&
+***************
+*** 6759,6765 ****
+  
+  
+  cat >script <<'_ATEOF'
+! #! /bin/sh
+  exit 0
+  _ATEOF
+  
+--- 6759,6765 ----
+  
+  
+  cat >script <<'_ATEOF'
+! #! /bin/bash
+  exit 0
+  _ATEOF
+  
+***************
+*** 8217,8223 ****
+  
+  
+  cat >ccache <<'_ATEOF'
+! #! /bin/sh
+  # poor man's ccache clone
+  case $1 in
+  -*) echo "bogus argument: $1" >&2; exit 1 ;;
+--- 8217,8223 ----
+  
+  
+  cat >ccache <<'_ATEOF'
+! #! /bin/bash
+  # poor man's ccache clone
+  case $1 in
+  -*) echo "bogus argument: $1" >&2; exit 1 ;;
+***************
+*** 9292,9298 ****
+  
+  
+  cat >foo <<'_ATEOF'
+! #! /bin/sh
+  if test $# -gt 0; then
+    echo "$@"
+  else
+--- 9292,9298 ----
+  
+  
+  cat >foo <<'_ATEOF'
+! #! /bin/bash
+  if test $# -gt 0; then
+    echo "$@"
+  else
+***************
+*** 9302,9308 ****
+  
+  
+  cat >lt-wrapper <<'_ATEOF'
+! #! /bin/sh
+  # Generated by GNU libtool.
+  # fake wrapper script.
+  program=lt-real
+--- 9302,9308 ----
+  
+  
+  cat >lt-wrapper <<'_ATEOF'
+! #! /bin/bash
+  # Generated by GNU libtool.
+  # fake wrapper script.
+  program=lt-real
+***************
+*** 9317,9323 ****
+  
+  
+  cat >lt-real <<'_ATEOF'
+! #! /bin/sh
+  echo "$@"
+  cat
+  _ATEOF
+--- 9317,9323 ----
+  
+  
+  cat >lt-real <<'_ATEOF'
+! #! /bin/bash
+  echo "$@"
+  cat
+  _ATEOF
+***************
+*** 10338,10344 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/old-m4-iface.at:85: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo old-m4-iface.at:85 >"$at_check_line_file"
+--- 10338,10344 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/old-m4-iface.at:85: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo old-m4-iface.at:85 >"$at_check_line_file"
+***************
+*** 10699,10705 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/old-m4-iface.at:153: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo old-m4-iface.at:153 >"$at_check_line_file"
+--- 10699,10705 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/old-m4-iface.at:153: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo old-m4-iface.at:153 >"$at_check_line_file"
+***************
+*** 10944,10950 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/am-subdir.at:78: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo am-subdir.at:78 >"$at_check_line_file"
+--- 10944,10950 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/am-subdir.at:78: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo am-subdir.at:78 >"$at_check_line_file"
+***************
+*** 11277,11283 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/am-subdir.at:146: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo am-subdir.at:146 >"$at_check_line_file"
+--- 11277,11283 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/am-subdir.at:146: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo am-subdir.at:146 >"$at_check_line_file"
+***************
+*** 12602,12608 ****
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:34: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo standalone.at:34 >"$at_check_line_file"
+--- 12602,12608 ----
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:34: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo standalone.at:34 >"$at_check_line_file"
+***************
+*** 12715,12721 ****
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:49: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo standalone.at:49 >"$at_check_line_file"
+--- 12715,12721 ----
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:49: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo standalone.at:49 >"$at_check_line_file"
+***************
+*** 12830,12836 ****
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:66: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo standalone.at:66 >"$at_check_line_file"
+--- 12830,12836 ----
+  $at_traceon; }
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/standalone.at:66: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo standalone.at:66 >"$at_check_line_file"
+***************
+*** 13268,13274 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:61: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo subproject.at:61 >"$at_check_line_file"
+--- 13268,13274 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:61: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo subproject.at:61 >"$at_check_line_file"
+***************
+*** 13478,13484 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:77: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo subproject.at:77 >"$at_check_line_file"
+--- 13478,13484 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:77: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo subproject.at:77 >"$at_check_line_file"
+***************
+*** 13690,13696 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:95: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo subproject.at:95 >"$at_check_line_file"
+--- 13690,13696 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/subproject.at:95: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo subproject.at:95 >"$at_check_line_file"
+***************
+*** 14175,14181 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:90: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo nonrecursive.at:90 >"$at_check_line_file"
+--- 14175,14181 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:90: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo nonrecursive.at:90 >"$at_check_line_file"
+***************
+*** 14454,14460 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:114: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo nonrecursive.at:114 >"$at_check_line_file"
+--- 14454,14460 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:114: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo nonrecursive.at:114 >"$at_check_line_file"
+***************
+*** 14735,14741 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:140: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo nonrecursive.at:140 >"$at_check_line_file"
+--- 14735,14741 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/nonrecursive.at:140: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo nonrecursive.at:140 >"$at_check_line_file"
+***************
+*** 14940,14946 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:68: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo recursive.at:68 >"$at_check_line_file"
+--- 14940,14946 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:68: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo recursive.at:68 >"$at_check_line_file"
+***************
+*** 15123,15129 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:88: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo recursive.at:88 >"$at_check_line_file"
+--- 15123,15129 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:88: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo recursive.at:88 >"$at_check_line_file"
+***************
+*** 15308,15314 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:110: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo recursive.at:110 >"$at_check_line_file"
+--- 15308,15314 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/recursive.at:110: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo recursive.at:110 >"$at_check_line_file"
+***************
+*** 16771,16777 ****
+  
+  
+  cat > missing <<_EOF
+! #! /bin/sh
+  exit 0
+  _EOF
+  chmod a+x missing
+--- 16771,16777 ----
+  
+  
+  cat > missing <<_EOF
+! #! /bin/bash
+  exit 0
+  _EOF
+  chmod a+x missing
+***************
+*** 16825,16831 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/early-libtool.at:111: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo early-libtool.at:111 >"$at_check_line_file"
+--- 16825,16831 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/early-libtool.at:111: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo early-libtool.at:111 >"$at_check_line_file"
+***************
+*** 17051,17057 ****
+  
+  
+  cat > missing <<_EOF
+! #! /bin/sh
+  exit 0
+  _EOF
+  chmod a+x missing
+--- 17051,17057 ----
+  
+  
+  cat > missing <<_EOF
+! #! /bin/bash
+  exit 0
+  _EOF
+  chmod a+x missing
+***************
+*** 17105,17111 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/early-libtool.at:218: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo early-libtool.at:218 >"$at_check_line_file"
+--- 17105,17111 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/early-libtool.at:218: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo early-libtool.at:218 >"$at_check_line_file"
+***************
+*** 17659,17665 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:141: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-included-ltdl --prefix=\$prefix"
+  echo configure-iface.at:141 >"$at_check_line_file"
+--- 17659,17665 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:141: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-included-ltdl --prefix=\$prefix"
+  echo configure-iface.at:141 >"$at_check_line_file"
+***************
+*** 17805,17811 ****
+  
+  
+  (cd ltdl
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:168: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo configure-iface.at:168 >"$at_check_line_file"
+--- 17805,17811 ----
+  
+  
+  (cd ltdl
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:168: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --enable-ltdl-install --prefix=\$prefix"
+  echo configure-iface.at:168 >"$at_check_line_file"
+***************
+*** 18116,18122 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:209: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-ltdl-lib=\$prefix/lib --with-ltdl-include=\$prefix/include"
+  echo configure-iface.at:209 >"$at_check_line_file"
+--- 18116,18122 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:209: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-ltdl-lib=\$prefix/lib --with-ltdl-include=\$prefix/include"
+  echo configure-iface.at:209 >"$at_check_line_file"
+***************
+*** 18450,18456 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:261: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-included-ltdl"
+  echo configure-iface.at:261 >"$at_check_line_file"
+--- 18450,18456 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:261: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options --with-included-ltdl"
+  echo configure-iface.at:261 >"$at_check_line_file"
+***************
+*** 18674,18680 ****
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/sh}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:300: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo configure-iface.at:300 >"$at_check_line_file"
+--- 18674,18680 ----
+  
+  
+  
+! ( SHELL=${CONFIG_SHELL-/bin/bash}
+     { $at_traceoff
+  $as_echo "$at_srcdir/configure-iface.at:300: CONFIG_SHELL=\$SHELL \$SHELL ./configure \$configure_options "
+  echo configure-iface.at:300 >"$at_check_line_file"
+***************
+*** 19370,19376 ****
+  mkdir bin
+  cat >bin/basename <<'_ATEOF'
+  
+! #! /bin/sh
+  
+  usage="usage: $0 argument"
+  if test $# != 1; then
+--- 19370,19376 ----
+  mkdir bin
+  cat >bin/basename <<'_ATEOF'
+  
+! #! /bin/bash
+  
+  usage="usage: $0 argument"
+  if test $# != 1; then
+*** ./tests/testsuite.at.00	Sat Sep  6 06:51:29 2008
+--- ./tests/testsuite.at	Sat Nov  8 09:58:10 2008
+***************
+*** 141,147 ****
+  # LT_AT_CONFIGURE([OPTIONS])
+  # --------------------------
+  m4_define([LT_AT_CONFIGURE],
+! [( SHELL=${CONFIG_SHELL-/bin/sh}
+     AT_CHECK([CONFIG_SHELL=$SHELL $SHELL ./configure $configure_options $1],
+  	 [0], [ignore], [ignore])
+   )
+--- 141,147 ----
+  # LT_AT_CONFIGURE([OPTIONS])
+  # --------------------------
+  m4_define([LT_AT_CONFIGURE],
+! [( SHELL=${CONFIG_SHELL-/bin/bash}
+     AT_CHECK([CONFIG_SHELL=$SHELL $SHELL ./configure $configure_options $1],
+  	 [0], [ignore], [ignore])
+   )
+*** ./aclocal.m4.00	Sun Sep  7 10:52:46 2008
+--- ./aclocal.m4	Sat Nov  8 09:58:10 2008
+***************
+*** 411,417 ****
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+--- 411,417 ----
+  AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH],
+  [_LT_AC_SHELL_INIT([
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$ECHO in
+  X*--fallback-echo)
+***************
+*** 496,502 ****
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+--- 496,502 ----
+      elif (test -f /bin/ksh || test -f /bin/ksh$ac_exeext) &&
+  	 test "X$CONFIG_SHELL" != X/bin/ksh; then
+        # If we have ksh, try running configure again with it.
+!       ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+        export ORIGINAL_CONFIG_SHELL
+        CONFIG_SHELL=/bin/ksh
+        export CONFIG_SHELL
+***************
+*** 538,544 ****
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+--- 538,544 ----
+  	if test "$prev" != 'sed 50q "[$]0"'; then
+  	  echo_test_string=`eval $prev`
+  	  export echo_test_string
+! 	  exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "[$]0" ${1+"[$]@"}
+  	else
+  	  # Oops.  We lost completely, so just stick with echo.
+  	  echo=echo
+***************
+*** 889,895 ****
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+--- 889,895 ----
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+        lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+      else
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+  	       = "XX$teststring") >/dev/null 2>&1 &&
+  	      new_result=`expr "X$teststring" : ".*" 2>&1` &&
+*** ./bootstrap.00	Sat May 10 11:59:39 2008
+--- ./bootstrap	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # bootstrap -- Helps bootstrapping libtool, when checked out from CVS.
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc,
+--- 1,4 ----
+! #! /bin/bash
+  # bootstrap -- Helps bootstrapping libtool, when checked out from CVS.
+  #
+  #   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc,
+***************
+*** 29,35 ****
+  # better features, and configure.ac documents oldest version of each
+  # required for bootstrap (AC_PREREQ, and AM_INIT_AUTOMAKE).
+  
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  export SHELL
+  : ${AUTORECONF=autoreconf}
+  : ${AUTOCONF=autoconf}
+--- 29,35 ----
+  # better features, and configure.ac documents oldest version of each
+  # required for bootstrap (AC_PREREQ, and AM_INIT_AUTOMAKE).
+  
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  export SHELL
+  : ${AUTORECONF=autoreconf}
+  : ${AUTOCONF=autoconf}
+***************
+*** 148,154 ****
+  
+  # Make a dummy libtoolize script for autoreconf:
+  cat > $auxdir/libtoolize <<'EOF'
+! #! /bin/sh
+  # This is a dummy file for bootstrapping CVS libtool.
+  echo "$0: Bootstrap detected, no files installed." | sed 's,^.*/,,g'
+  exit 0
+--- 148,154 ----
+  
+  # Make a dummy libtoolize script for autoreconf:
+  cat > $auxdir/libtoolize <<'EOF'
+! #! /bin/bash
+  # This is a dummy file for bootstrapping CVS libtool.
+  echo "$0: Bootstrap detected, no files installed." | sed 's,^.*/,,g'
+  exit 0
+*** ./configure.00	Sun Sep  7 10:52:50 2008
+--- ./configure	Sat Nov  8 10:00:25 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for libtool 2.2.6.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.62 for libtool 2.2.6.
+  #
+***************
+*** 577,583 ****
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+--- 577,583 ----
+  
+  
+  # Check that we are running under the correct shell.
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  case X$lt_ECHO in
+  X*--fallback-echo)
+***************
+*** 661,667 ****
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+--- 661,667 ----
+        elif { test -f /bin/ksh || test -f /bin/ksh$ac_exeext; } &&
+  	   test "X$CONFIG_SHELL" != X/bin/ksh; then
+          # If we have ksh, try running configure again with it.
+!         ORIGINAL_CONFIG_SHELL=${CONFIG_SHELL-/bin/bash}
+          export ORIGINAL_CONFIG_SHELL
+          CONFIG_SHELL=/bin/ksh
+          export CONFIG_SHELL
+***************
+*** 703,709 ****
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/sh}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+--- 703,709 ----
+  	  if test "$prev" != 'sed 50q "$0"'; then
+  	    echo_test_string=`eval $prev`
+  	    export echo_test_string
+! 	    exec ${ORIGINAL_CONFIG_SHELL-${CONFIG_SHELL-/bin/bash}} "$0" ${1+"$@"}
+  	  else
+  	    # Oops.  We lost completely, so just stick with echo.
+  	    ECHO=echo
+***************
+*** 744,750 ****
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/sh}
+  
+  # Identity of this package.
+  PACKAGE_NAME='libtool'
+--- 744,750 ----
+  subdirs=
+  MFLAGS=
+  MAKEFLAGS=
+! SHELL=${CONFIG_SHELL-/bin/bash}
+  
+  # Identity of this package.
+  PACKAGE_NAME='libtool'
+***************
+*** 2485,2491 ****
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/sh
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+--- 2485,2491 ----
+    $as_echo_n "(cached) " >&6
+  else
+    cat >conftest.make <<\_ACEOF
+! SHELL = /bin/bash
+  all:
+  	@echo '@@@%%%=$(MAKE)=@@@%%%'
+  _ACEOF
+***************
+*** 5046,5052 ****
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+--- 5046,5052 ----
+        for i in 1 2 3 4 5 6 7 8 ; do
+          teststring=$teststring$teststring
+        done
+!       SHELL=${SHELL-${CONFIG_SHELL-/bin/bash}}
+        # If test is not a shell built-in, we'll probably end up computing a
+        # maximum length that is only half of the actual maximum length, but
+        # we can't tell.
+***************
+*** 9667,9673 ****
+        fi
+        ;;
+  
+!     sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7* | sco3.2v5.0.[024]*)
+        no_undefined_flag='${wl}-z,text'
+        archive_cmds_need_lc=no
+        hardcode_shlibpath_var=no
+--- 9667,9673 ----
+        fi
+        ;;
+  
+!     sysv4*uw2* | sysv5* | unixware7* | sco3.2v5.0.[024]*)
+        no_undefined_flag='${wl}-z,text'
+        archive_cmds_need_lc=no
+        hardcode_shlibpath_var=no
+***************
+*** 9677,9688 ****
+  	archive_cmds='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+  	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+! 	archive_cmds='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+! 	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        ;;
+  
+!     sysv5* | sco3.2v5* | sco5v6*)
+        # Note: We can NOT use -z defs as we might desire, because we do not
+        # link with -lc, and that would cause any symbols used from libc to
+        # always be unresolved, which means just about no library would
+--- 9677,9688 ----
+  	archive_cmds='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+  	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+! 	archive_cmds='$CC -G ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+! 	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        ;;
+  
+!     sco3.2v5* | sco5v6*)
+        # Note: We can NOT use -z defs as we might desire, because we do not
+        # link with -lc, and that would cause any symbols used from libc to
+        # always be unresolved, which means just about no library would
+*** ./libtoolize.in.00	Sat Sep  6 06:52:56 2008
+--- ./libtoolize.in	Sat Nov  8 09:58:10 2008
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # @configure_input@
+  
+  # libtoolize (GNU @PACKAGE@@TIMESTAMP@) @VERSION@
+--- 1,4 ----
+! #! /bin/bash
+  # @configure_input@
+  
+  # libtoolize (GNU @PACKAGE@@TIMESTAMP@) @VERSION@
+***************
+*** 73,145 ****
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+  
+! # Be more Bourne compatible
+! DUALCASE=1; export DUALCASE # for MKS sh
+  if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+    emulate sh
+    NULLCMD=:
+!   # Pre-4.2 versions of Zsh do word splitting on ${1+"$@"}, which
+    # is contrary to our usage.  Disable this feature.
+    alias -g '${1+"$@"}'='"$@"'
+!   setopt NO_GLOB_SUBST
+! else
+!   case `(set -o) 2>/dev/null` in
+!   *posix*) set -o posix ;;
+! esac
+! 
+! fi
+! 
+! 
+! 
+! 
+! # PATH needs CR
+! # Avoid depending upon Character Ranges.
+! as_cr_letters='abcdefghijklmnopqrstuvwxyz'
+! as_cr_LETTERS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+! as_cr_Letters=$as_cr_letters$as_cr_LETTERS
+! as_cr_digits='0123456789'
+! as_cr_alnum=$as_cr_Letters$as_cr_digits
+! 
+! as_nl='
+! '
+! export as_nl
+! # Printing a long string crashes Solaris 7 /usr/bin/printf.
+! as_echo='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'
+! as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo
+! as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo$as_echo
+! if (test "X`printf %s $as_echo`" = "X$as_echo") 2>/dev/null; then
+!   as_echo='printf %s\n'
+!   as_echo_n='printf %s'
+! else
+!   if test "X`(/usr/ucb/echo -n -n $as_echo) 2>/dev/null`" = "X-n $as_echo"; then
+!     as_echo_body='eval /usr/ucb/echo -n "$1$as_nl"'
+!     as_echo_n='/usr/ucb/echo -n'
+!   else
+!     as_echo_body='eval expr "X$1" : "X\\(.*\\)"'
+!     as_echo_n_body='eval
+!       arg=$1;
+!       case $arg in
+!       *"$as_nl"*)
+! 	expr "X$arg" : "X\\(.*\\)$as_nl";
+! 	arg=`expr "X$arg" : ".*$as_nl\\(.*\\)"`;;
+!       esac;
+!       expr "X$arg" : "X\\(.*\\)" | tr -d "$as_nl"
+!     '
+!     export as_echo_n_body
+!     as_echo_n='sh -c $as_echo_n_body as_echo'
+!   fi
+!   export as_echo_body
+!   as_echo='sh -c $as_echo_body as_echo'
+! fi
+! 
+! # The user is always right.
+! if test "${PATH_SEPARATOR+set}" != set; then
+!   PATH_SEPARATOR=:
+!   (PATH='/bin;/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 && {
+!     (PATH='/bin:/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 ||
+!       PATH_SEPARATOR=';'
+!   }
+  fi
+  
+  # Support unset when possible.
+  if ( (MAIL=60; unset MAIL) || exit) >/dev/null 2>&1; then
+--- 73,89 ----
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+  
+! # Be Bourne compatible
+  if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+    emulate sh
+    NULLCMD=:
+!   # Zsh 3.x and 4.x performs word splitting on ${1+"$@"}, which
+    # is contrary to our usage.  Disable this feature.
+    alias -g '${1+"$@"}'='"$@"'
+! elif test -n "${BASH_VERSION+set}" && (set -o posix) >/dev/null 2>&1; then
+!   set -o posix
+  fi
++ DUALCASE=1; export DUALCASE # for MKS sh
+  
+  # Support unset when possible.
+  if ( (MAIL=60; unset MAIL) || exit) >/dev/null 2>&1; then
+***************
+*** 149,208 ****
+  fi
+  
+  
+- # IFS
+- # We need space, tab and new line, in precisely that order.  Quoting is
+- # there to prevent editors from complaining about space-tab.
+- # (If _AS_PATH_WALK were called with IFS unset, it would disable word
+- # splitting by setting IFS to empty value.)
+- IFS=" ""	$as_nl"
+- 
+- # Find who we are.  Look in the path if we contain no directory separator.
+- case $0 in
+-   *[\\/]* ) as_myself=$0 ;;
+-   *) as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+- for as_dir in $PATH
+- do
+-   IFS=$as_save_IFS
+-   test -z "$as_dir" && as_dir=.
+-   test -r "$as_dir/$0" && as_myself=$as_dir/$0 && break
+- done
+- IFS=$as_save_IFS
+- 
+-      ;;
+- esac
+- # We did not find ourselves, most probably we were run as `sh COMMAND'
+- # in which case we are not to be found in the path.
+- if test "x$as_myself" = x; then
+-   as_myself=$0
+- fi
+- if test ! -f "$as_myself"; then
+-   $as_echo "$as_myself: error: cannot find myself; rerun with an absolute file name" >&2
+-   { (exit 1); exit 1; }
+- fi
+- 
+  # Work around bugs in pre-3.0 UWIN ksh.
+! for as_var in ENV MAIL MAILPATH
+! do ($as_unset $as_var) >/dev/null 2>&1 && $as_unset $as_var
+! done
+  PS1='$ '
+  PS2='> '
+  PS4='+ '
+  
+  # NLS nuisances.
+! LC_ALL=C
+! export LC_ALL
+! LANGUAGE=C
+! export LANGUAGE
+  
+  # Required to use basename.
+! if expr a : '\(a\)' >/dev/null 2>&1 &&
+!    test "X`expr 00001 : '.*\(...\)'`" = X001; then
+    as_expr=expr
+  else
+    as_expr=false
+  fi
+  
+! if (basename -- /) >/dev/null 2>&1 && test "X`basename -- / 2>&1`" = "X/"; then
+    as_basename=basename
+  else
+    as_basename=false
+--- 93,125 ----
+  fi
+  
+  
+  # Work around bugs in pre-3.0 UWIN ksh.
+! $as_unset ENV MAIL MAILPATH
+  PS1='$ '
+  PS2='> '
+  PS4='+ '
+  
+  # NLS nuisances.
+! for as_var in \
+!   LANG LANGUAGE LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION \
+!   LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER \
+!   LC_TELEPHONE LC_TIME
+! do
+!   if (set +x; test -z "`(eval $as_var=C; export $as_var) 2>&1`"); then
+!     eval $as_var=C; export $as_var
+!   else
+!     $as_unset $as_var
+!   fi
+! done
+  
+  # Required to use basename.
+! if expr a : '\(a\)' >/dev/null 2>&1; then
+    as_expr=expr
+  else
+    as_expr=false
+  fi
+  
+! if (basename /) >/dev/null 2>&1 && test "X`basename / 2>&1`" = "X/"; then
+    as_basename=basename
+  else
+    as_basename=false
+***************
+*** 210,236 ****
+  
+  
+  # Name of the executable.
+! as_me=`$as_basename -- "$0" ||
+  $as_expr X/"$0" : '.*/\([^/][^/]*\)/*$' \| \
+  	 X"$0" : 'X\(//\)$' \| \
+! 	 X"$0" : 'X\(/\)' \| . 2>/dev/null ||
+! $as_echo X/"$0" |
+!     sed '/^.*\/\([^/][^/]*\)\/*$/{
+! 	    s//\1/
+! 	    q
+! 	  }
+! 	  /^X\/\(\/\/\)$/{
+! 	    s//\1/
+! 	    q
+! 	  }
+! 	  /^X\/\(\/\).*/{
+! 	    s//\1/
+! 	    q
+! 	  }
+! 	  s/.*/./; q'`
+  
+- # CDPATH.
+- $as_unset CDPATH
+  
+  $as_unset CDPATH
+  
+--- 127,143 ----
+  
+  
+  # Name of the executable.
+! as_me=`$as_basename "$0" ||
+  $as_expr X/"$0" : '.*/\([^/][^/]*\)/*$' \| \
+  	 X"$0" : 'X\(//\)$' \| \
+! 	 X"$0" : 'X\(/\)$' \| \
+! 	 .     : '\(.\)' 2>/dev/null ||
+! echo X/"$0" |
+!     sed '/^.*\/\([^/][^/]*\)\/*$/{ s//\1/; q; }
+!   	  /^X\/\(\/\/\)$/{ s//\1/; q; }
+!   	  /^X\/\(\/\).*/{ s//\1/; q; }
+!   	  s/.*/./; q'`
+  
+  
+  $as_unset CDPATH
+  
+***************
+*** 249,255 ****
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+--- 156,162 ----
+  : ${MV="mv -f"}
+  : ${RM="rm -f"}
+  : ${SED="@SED@"}
+! : ${SHELL="${CONFIG_SHELL-/bin/bash}"}
+  : ${Xsed="$SED -e 1s/^X//"}
+  
+  # Global variables:
+*** ./libtoolize.m4sh.00	Sat Sep  6 06:51:06 2008
+--- ./libtoolize.m4sh	Sat Nov  8 09:58:10 2008
+***************
+*** 1,5 ****
+  m4_define([_m4_divert(SCRIPT)], 100)
+! m4_divert_push([SCRIPT])#! /bin/sh
+  # @configure_input@
+  
+  # libtoolize (GNU @PACKAGE@@TIMESTAMP@) @VERSION@
+--- 1,5 ----
+  m4_define([_m4_divert(SCRIPT)], 100)
+! m4_divert_push([SCRIPT])#! /bin/bash
+  # @configure_input@
+  
+  # libtoolize (GNU @PACKAGE@@TIMESTAMP@) @VERSION@
+*** ./Install-OSR6.00	Sat Nov  8 09:58:10 2008
+--- ./Install-OSR6	Sat Nov  8 09:58:10 2008
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/libtool
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
+*** ./Build-OSR6.00	Sat Nov  8 09:58:10 2008
+--- ./Build-OSR6	Sat Nov  8 09:58:10 2008
+***************
+*** 0 ****
+--- 1,26 ----
++ #!/bin/sh
++ #
++ PATH=/usr/local/bin:$PATH
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/local/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL PATH
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --program-suffix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT

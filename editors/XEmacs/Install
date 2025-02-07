@@ -1,0 +1,13 @@
+#!/bin/sh
+
+PATH=/usr/gnu/bin:$PATH
+export PATH
+VER=21.4.19
+D=/u/tmp/xemacs-$VER-root
+
+rm -rf $D
+mkdir -p $D
+
+cd /usr/src/sco/XEmacs
+cd xemacs-$VER
+/usr/gnu/bin/make DESTDIR=$D install 2>&1 | tee mout-install

@@ -1,0 +1,59 @@
+*** ./Install-OSR6.osr6	Tue Apr 25 14:13:23 2006
+--- ./Install-OSR6	Tue Apr 25 14:13:23 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/subversion
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install
+*** ./Configure-OSR6.osr6	Tue Apr 25 14:13:23 2006
+--- ./Configure-OSR6	Tue Apr 25 22:18:15 2006
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ if [ -x configure ]
++ then
++     ./configure --prefix=/usr --with-jdk=/usr/java --without-berkeley-db \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ else
++     [ -f Makefile.PL ] && perl Makefile.PL 2>&1 | tee mout-configure
++ fi
+*** ./configure.osr6	Fri Mar 24 18:00:55 2006
+--- ./configure	Tue Apr 25 14:13:23 2006
+***************
+*** 21024,21030 ****
+  rm -f conftest.err conftest.$ac_objext \
+        conftest$ac_exeext conftest.$ac_ext
+  if test "$ac_cv_search_bindtextdomain" = no; then
+!   for ac_lib in intl; do
+      LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+      cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+--- 21024,21030 ----
+  rm -f conftest.err conftest.$ac_objext \
+        conftest$ac_exeext conftest.$ac_ext
+  if test "$ac_cv_search_bindtextdomain" = no; then
+!   for ac_lib in gnuintl; do
+      LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+      cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */

@@ -1,0 +1,67 @@
+*** ./vshnu.00	Tue Jul  5 14:00:33 2005
+--- ./vshnu	Tue Jul  5 22:42:23 2005
+***************
+*** 3,9 ****
+  		      "$ENV{'HOME'}/libp/perl", "$ENV{'HOME'}/lib/perl",
+  		      "$ENV{'HOME'}/libp",	"$ENV{'HOME'}/lib" }
+  
+! $default_vshnucfg = '';
+  
+  $debug	  = 0;
+  $debug_ch = 0;
+--- 3,9 ----
+  		      "$ENV{'HOME'}/libp/perl", "$ENV{'HOME'}/lib/perl",
+  		      "$ENV{'HOME'}/libp",	"$ENV{'HOME'}/lib" }
+  
+! $default_vshnucfg = '/etc/default/vshnu';
+  
+  $debug	  = 0;
+  $debug_ch = 0;
+*** ./Build-OSR6.00	Tue Jul  5 22:43:37 2005
+--- ./Build-OSR6	Tue Jul  5 22:43:32 2005
+***************
+*** 0 ****
+--- 1,3 ----
++ #!/bin/sh
++ 
++ true
+*** ./Install-OSR6.00	Tue Jul  5 22:49:44 2005
+--- ./Install-OSR6	Tue Jul  5 22:49:21 2005
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ 
++ DESTDIR=/u/tmp/vshnu
++ 
++ rm -rf $DESTDIR
++ mkdir -p $DESTDIR/usr/bin
++ mkdir -p $DESTDIR/etc/default
++ 
++ cp vshnu $DESTDIR/usr/bin/vshnu
++ chmod 755 $DESTDIR/usr/bin/vshnu
++ 
++ cp vshnucfg.pl $DESTDIR/etc/default/vshnu
++ chmod 644 $DESTDIR/etc/default/vshnu
++ 
++ cp vshnurc.pl $DESTDIR/etc/vshnurc
++ chmod 644 $DESTDIR/etc/vshnurc
+*** ./vshnucfg.pl.00	Tue Jul  5 14:00:33 2005
+--- ./vshnucfg.pl	Tue Jul  5 22:52:12 2005
+***************
+*** 1,7 ****
+  #!/usr/bin/perl
+  
+  $default_vshnucap = '';
+! $default_vshnurc  = '';
+  
+  # .vshnucfg - required general vshnu configuration file
+  # Steve Kinzler, kinzler@cs.indiana.edu, Aug 99/Mar 00/Sep 00
+--- 1,7 ----
+  #!/usr/bin/perl
+  
+  $default_vshnucap = '';
+! $default_vshnurc  = '/etc/vshnurc';
+  
+  # .vshnucfg - required general vshnu configuration file
+  # Steve Kinzler, kinzler@cs.indiana.edu, Aug 99/Mar 00/Sep 00

@@ -1,0 +1,40 @@
+--- ./Makefile.am.uw	1999-12-21 05:56:42.000000000 +0000
++++ ./Makefile.am	2003-09-06 04:32:07.120000005 +0000
+@@ -20,7 +20,7 @@
+ AUTOMAKE_OPTIONS = gnits dist-shar
+ 
+ man_MANS = gunzip.1 gzexe.1 gzip.1 \
+-  zcat.1 zcmp.1 zdiff.1 zforce.1 zgrep.1 zless.1 zmore.1 znew.1
++  gzcat.1 zcmp.1 zdiff.1 zforce.1 zgrep.1 zless.1 zmore.1 znew.1
+ 
+ # The following hack works around a bug in automake 1.4.
+ M4DIR = $(srcdir)/m4
+@@ -71,7 +71,7 @@
+ 
+ install-exec-hook:
+ 	ln $(bindir)/gzip $(bindir)/gunzip
+-	ln $(bindir)/gzip $(bindir)/zcat
++	ln $(bindir)/gzip $(bindir)/gzcat
+ 	ln $(bindir)/zdiff $(bindir)/zcmp
+ 	ln $(bindir)/zgrep $(bindir)/zegrep
+ 	ln $(bindir)/zgrep $(bindir)/zfgrep
+--- ./Makefile.in.uw	2003-09-06 04:27:33.090000137 +0000
++++ ./Makefile.in	2003-09-06 04:31:46.980000023 +0000
+@@ -74,7 +74,7 @@
+ 
+ AUTOMAKE_OPTIONS = gnits dist-shar
+ 
+-man_MANS = gunzip.1 gzexe.1 gzip.1   zcat.1 zcmp.1 zdiff.1 zforce.1 zgrep.1 zless.1 zmore.1 znew.1
++man_MANS = gunzip.1 gzexe.1 gzip.1   gzcat.1 zcmp.1 zdiff.1 zforce.1 zgrep.1 zless.1 zmore.1 znew.1
+ 
+ 
+ # The following hack works around a bug in automake 1.4.
+@@ -630,7 +630,7 @@
+ 
+ install-exec-hook:
+ 	ln -sf $(bindir)/gzip $(bindir)/gunzip
+-	ln -sf $(bindir)/gzip $(bindir)/zcat
++	ln -sf $(bindir)/gzip $(bindir)/gzcat
+ 	ln -sf $(bindir)/zdiff $(bindir)/zcmp
+ 	ln -sf $(bindir)/zgrep $(bindir)/zegrep
+ 	ln -sf $(bindir)/zgrep $(bindir)/zfgrep

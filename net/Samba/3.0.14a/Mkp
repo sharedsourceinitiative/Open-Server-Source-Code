@@ -1,0 +1,14 @@
+#!/bin/sh
+
+T=/usr/src/sco/samba
+P=`pwd`
+D=`basename $P`
+E=`echo $D | awk -F "-" ' { print $1 } '`
+rm -f $T/samba-$E-osr5.patch
+touch $T/samba-$E-osr5.patch
+
+find . -name \*\.osr5 | while read i
+do
+    F=`echo $i | sed -e "s/\.osr5//"`
+    [ -f $F ] && diff -u $F.osr5 $F >> $T/samba-$E-osr5.patch
+done

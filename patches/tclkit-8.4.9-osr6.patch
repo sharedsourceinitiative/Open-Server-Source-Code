@@ -1,0 +1,37 @@
+*** ./genkit.orig Thu Dec  9 03:59:50 2004
+--- ./genkit Sat May 14 18:51:04 2005
+***************
+*** 60,66 ****
+  	{GENERIC_FLAGS=-UHAVE_STRTOLL\ -UHAVE_STRTOULL\ -UHAVE_LANGINFO \
+                                  COMPAT_OBJS=strtoll.o\ strtoull.o} \
+  				stripopt -x}}
+!     default	{ array set X {} }
+    }
+  
+  # make $X(anything) default to the value "anything"
+--- 60,66 ----
+  	{GENERIC_FLAGS=-UHAVE_STRTOLL\ -UHAVE_STRTOULL\ -UHAVE_LANGINFO \
+                                  COMPAT_OBJS=strtoll.o\ strtoull.o} \
+  				stripopt -x}}
+!     default	{ array set X {cc CC} }
+    }
+  
+  # make $X(anything) default to the value "anything"
+*** ./Build-OSR6.orig Sat May 14 18:51:27 2005
+--- ./Build-OSR6 Sat May 14 18:52:07 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ # Makefile does:
++ # tclsh genkit A
++ # tclsh genkit B tcl
++ # sh genkit B
++ # sh genkit C
++ # sh genkit D
++ # sh genkit E
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT

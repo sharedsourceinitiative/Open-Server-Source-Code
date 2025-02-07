@@ -1,0 +1,43 @@
+--- ./Install-OSR6.00	2008-12-31 10:55:10.910000014 -0800
++++ ./Install-OSR6	2008-12-31 10:55:10.910000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/sigcplus
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./Configure-OSR6.00	2008-12-31 10:55:10.910000029 -0800
++++ ./Configure-OSR6	2008-12-31 11:03:16.270000011 -0800
+@@ -0,0 +1,25 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/include/stlport -I/usr/gnu/include -O2"
++  CXXFLAGS="-I/usr/include/stlport -I/usr/gnu/include -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/gnu/include -O2 -Wall"
++  CXXFLAGS="-I/usr/gnu/include -O2"
++  LIBS=""
++fi
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL LIBS
++rm -f mout-configure
++./configure --prefix=/usr/local --sysconfdir=/etc \
++            --disable-shared --enable-static \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

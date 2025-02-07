@@ -1,0 +1,285 @@
+*** ./src/fe-gtk/Makefile.in.osr6	Thu Nov 18 05:33:08 2004
+--- ./src/fe-gtk/Makefile.in	Sun Sep  4 17:29:14 2005
+***************
+*** 262,267 ****
+--- 262,268 ----
+  xchatsharedir = @xchatsharedir@
+  localedir = $(datadir)/locale
+  INCLUDES = $(GUI_CFLAGS) -DG_DISABLE_CAST_CHECKS -DLOCALEDIR=\"$(localedir)\"
++ xchat_LDFLAGS = -Wl,-Bexport
+  xchat_LDADD = ../common/libxchatcommon.a $(GUI_LIBS)
+  EXTRA_DIST = makefile.msc \
+  	about.h ascii.h banlist.h chanlist.h editlist.h fe-gtk.h fkeys.h \
+*** ./Configure-OSR6.osr6	Sun Sep  4 17:26:54 2005
+--- ./Configure-OSR6	Sun Sep  4 17:26:54 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ NM="/usr/ccs/bin/nm -p"
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --disable-mmx --with-libintl-prefix=/usr/gnu --enable-perl \
++             --enable-tcl=/usr/gnu/lib --host=$HOST --target=$HOST --build=$HOST 2>&1 \
++             | tee mout-configure
+*** ./configure.osr6	Thu Nov 18 05:33:13 2004
+--- ./configure	Sun Sep  4 17:26:54 2005
+***************
+*** 3871,3877 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3871,3877 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 3895,3901 ****
+    esac
+    ;;
+  
+! sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+--- 3895,3901 ----
+    esac
+    ;;
+  
+! sysv5* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+***************
+*** 5556,5562 ****
+  osf*)
+    symcode='[BCDEGQRST]'
+    ;;
+! solaris* | sysv5*)
+    symcode='[BDRT]'
+    ;;
+  sysv4)
+--- 5556,5562 ----
+  osf*)
+    symcode='[BCDEGQRST]'
+    ;;
+! solaris*|sysv5*)
+    symcode='[BDRT]'
+    ;;
+  sysv4)
+***************
+*** 6800,6806 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6800,6806 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7491,7499 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7491,7498 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 8104,8109 ****
+--- 8103,8109 ----
+    library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+    soname_spec='${libname}${release}${shared_ext}$major'
+    shlibpath_var=LD_LIBRARY_PATH
++   export_dynamic_flag_spec='${wl}-Bexport'
+    case $host_vendor in
+      sni)
+        shlibpath_overrides_runpath=no
+***************
+*** 10675,10681 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+--- 10675,10681 ----
+  	;;
+      esac
+      ;;
+!   sysv5* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+***************
+*** 11823,11828 ****
+--- 11823,11829 ----
+    library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+    soname_spec='${libname}${release}${shared_ext}$major'
+    shlibpath_var=LD_LIBRARY_PATH
++   export_dynamic_flag_spec='${wl}-Bexport'
+    case $host_vendor in
+      sni)
+        shlibpath_overrides_runpath=no
+***************
+*** 13709,13715 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 13710,13716 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 14380,14388 ****
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+--- 14381,14388 ----
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 14993,14998 ****
+--- 14993,14999 ----
+    library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+    soname_spec='${libname}${release}${shared_ext}$major'
+    shlibpath_var=LD_LIBRARY_PATH
++   export_dynamic_flag_spec='${wl}-Bexport'
+    case $host_vendor in
+      sni)
+        shlibpath_overrides_runpath=no
+***************
+*** 16057,16063 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+--- 16058,16064 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+***************
+*** 16748,16756 ****
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+--- 16749,16756 ----
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 17361,17366 ****
+--- 17361,17367 ----
+    library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+    soname_spec='${libname}${release}${shared_ext}$major'
+    shlibpath_var=LD_LIBRARY_PATH
++   export_dynamic_flag_spec='${wl}-Bexport'
+    case $host_vendor in
+      sni)
+        shlibpath_overrides_runpath=no
+***************
+*** 27001,27007 ****
+                          PY_PREFIX=`$pythonpath -c 'import sys; print sys.prefix'`
+                          PY_EXEC_PREFIX=`$pythonpath -c 'import sys; print sys.exec_prefix'`
+                          if test -f $PY_INC/Python.h; then
+!                                 PY_LIBS="-L$PY_LIB/config -lpython$PY_VER -lpthread -lutil"
+                                  PY_CFLAGS="-I$PY_INC"
+                                  echo "$as_me:$LINENO: result: ok" >&5
+  echo "${ECHO_T}ok" >&6
+--- 27002,27008 ----
+                          PY_PREFIX=`$pythonpath -c 'import sys; print sys.prefix'`
+                          PY_EXEC_PREFIX=`$pythonpath -c 'import sys; print sys.exec_prefix'`
+                          if test -f $PY_INC/Python.h; then
+!                                 PY_LIBS="-L$PY_LIB/config -lpython$PY_VER"
+                                  PY_CFLAGS="-I$PY_INC"
+                                  echo "$as_me:$LINENO: result: ok" >&5
+  echo "${ECHO_T}ok" >&6
+*** ./Install-OSR6.osr6	Sun Sep  4 17:26:54 2005
+--- ./Install-OSR6	Sun Sep  4 17:26:54 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/xchat
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

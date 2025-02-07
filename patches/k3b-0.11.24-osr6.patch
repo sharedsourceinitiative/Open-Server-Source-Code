@@ -1,0 +1,2433 @@
+*** ./src/rip/k3bmovieview.cpp.osr6 Wed May 11 01:57:51 2005
+--- ./src/rip/k3bmovieview.cpp Thu May 19 16:20:21 2005
+***************
+*** 223,228 ****
+      }
+  
+      QWidget::show();
+      longestTitle->parent()->setOpen( true );
+      m_listView->setSelected( longestTitle, true );
+    } else {
+--- 223,230 ----
+      }
+  
+      QWidget::show();
++     if (longestTitle)
++     {
+      longestTitle->parent()->setOpen( true );
+      m_listView->setSelected( longestTitle, true );
+      }
+***************
+*** 225,230 ****
+      QWidget::show();
+      longestTitle->parent()->setOpen( true );
+      m_listView->setSelected( longestTitle, true );
+    } else {
+      // error during parsing
+      emit notSupportedDisc( m_device->devicename() );
+--- 227,233 ----
+      {
+      longestTitle->parent()->setOpen( true );
+      m_listView->setSelected( longestTitle, true );
++     }
+    } else {
+      // error during parsing
+      emit notSupportedDisc( m_device->devicename() );
+*** ./src/rip/k3btcwrapper.cpp.osr6 Wed May 11 01:57:51 2005
+--- ./src/rip/k3btcwrapper.cpp Thu May 19 16:20:21 2005
+***************
+*** 65,70 ****
+    //K3bProcess *p = new K3bProcess();
+    emit tcprobeTitleParsed( m_currentTitle );
+  
+    *p << bin->path << "-i" <<  m_device->blockDeviceName() << "-T" << QString::number(m_currentTitle);
+    //p->setSplitStdout( true );
+    connect( p, SIGNAL(receivedStderr(KProcess*, char*, int)), this, SLOT(slotParseTcprobeError(KProcess*, char*, int)) );
+--- 65,71 ----
+    //K3bProcess *p = new K3bProcess();
+    emit tcprobeTitleParsed( m_currentTitle );
+  
++ #ifndef __FreeBSD__
+    *p << bin->path << "-i" <<  m_device->blockDeviceName() << "-T" << QString::number(m_currentTitle);
+  #else
+      kdDebug() << "(K3bTcWrapper) executing: " << bin->path << " -i " <<  m_device->mountPoint() << " -T " << QString::number(m_currentTitle) << endl;
+***************
+*** 66,71 ****
+    emit tcprobeTitleParsed( m_currentTitle );
+  
+    *p << bin->path << "-i" <<  m_device->blockDeviceName() << "-T" << QString::number(m_currentTitle);
+    //p->setSplitStdout( true );
+    connect( p, SIGNAL(receivedStderr(KProcess*, char*, int)), this, SLOT(slotParseTcprobeError(KProcess*, char*, int)) );
+    connect( p, SIGNAL(receivedStdout(KProcess*, char*, int)), this, SLOT(slotParseTcprobeOutput(KProcess*, char*, int)) );
+--- 67,76 ----
+  
+  #ifndef __FreeBSD__
+    *p << bin->path << "-i" <<  m_device->blockDeviceName() << "-T" << QString::number(m_currentTitle);
++ #else
++     kdDebug() << "(K3bTcWrapper) executing: " << bin->path << " -i " <<  m_device->mountPoint() << " -T " << QString::number(m_currentTitle) << endl;
++   *p << bin->path << "-i" <<  m_device->mountPoint() << "-T" << QString::number(m_currentTitle);
++ #endif
+    //p->setSplitStdout( true );
+    connect( p, SIGNAL(receivedStderr(KProcess*, char*, int)), this, SLOT(slotParseTcprobeError(KProcess*, char*, int)) );
+    connect( p, SIGNAL(receivedStdout(KProcess*, char*, int)), this, SLOT(slotParseTcprobeOutput(KProcess*, char*, int)) );
+***************
+*** 77,83 ****
+    if( !p->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
+      // something went wrong when starting the program
+      // it "should" be the executable
+!     kdDebug() << "(K3bDirView) Error during checking drive for DVD." << endl;
+    }
+  }
+  
+--- 82,88 ----
+    if( !p->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
+      // something went wrong when starting the program
+      // it "should" be the executable
+!     kdDebug() << "(K3bTcWrapper) Error during checking drive for DVD." << endl;
+    }
+  }
+  
+*** ./src/rip/k3bvideocdrip.cpp.osr6 Wed May 11 01:57:51 2005
+--- ./src/rip/k3bvideocdrip.cpp Thu May 19 16:20:21 2005
+***************
+*** 41,47 ****
+          m_ripsourceType( 0 ),
+          m_videooptions( options ),
+          m_canceled( false ),
+!         m_process( 0 )
+  {}
+  
+  
+--- 41,48 ----
+          m_ripsourceType( 0 ),
+          m_videooptions( options ),
+          m_canceled( false ),
+!         m_process( 0 ),
+! 	m_subPosition( 0 )
+  {}
+  
+  
+*** ./src/rip/k3bdvdrippingprocess.cpp.osr6 Wed May 11 01:57:51 2005
+--- ./src/rip/k3bdvdrippingprocess.cpp Thu May 19 16:20:21 2005
+***************
+*** 299,304 ****
+  void K3bDvdRippingProcess::slotPreProcessingDvd() {
+      QString video;
+      QDir video_ts( m_mountPoint + "/VIDEO_TS");
+      if( video_ts.exists() ) {
+          m_udfMount = true;
+          kdDebug() << "(K3bDvdRippingProcess) <" << m_mountPoint << "> has UDF filesystem." << endl;
+--- 299,306 ----
+  void K3bDvdRippingProcess::slotPreProcessingDvd() {
+      QString video;
+      QDir video_ts( m_mountPoint + "/VIDEO_TS");
++ #ifndef FreeBSD
++ // on FreeBSD both /VIDEO_TS and /video_ts exist on dvd devices ?!?
+      if( video_ts.exists() ) {
+          m_udfMount = true;
+          kdDebug() << "(K3bDvdRippingProcess) <" << m_mountPoint << "> has UDF filesystem." << endl;
+***************
+*** 303,308 ****
+          m_udfMount = true;
+          kdDebug() << "(K3bDvdRippingProcess) <" << m_mountPoint << "> has UDF filesystem." << endl;
+      }
+      video_ts.setPath( m_mountPoint + "/video_ts");
+      if( !video_ts.exists() && !m_udfMount){
+          m_preProcessingFailed = true;
+--- 305,311 ----
+          m_udfMount = true;
+          kdDebug() << "(K3bDvdRippingProcess) <" << m_mountPoint << "> has UDF filesystem." << endl;
+      }
++ #endif
+      video_ts.setPath( m_mountPoint + "/video_ts");
+      if( !video_ts.exists() && !m_udfMount){
+          m_preProcessingFailed = true;
+*** ./src/device/k3bdevice.cpp.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bdevice.cpp Thu May 19 16:42:37 2005
+***************
+*** 52,58 ****
+  #endif
+  
+  #undef __STRICT_ANSI__
+! #include <linux/cdrom.h>
+  #define __STRICT_ANSI__
+  
+  #endif // Q_OS_LINUX
+--- 52,68 ----
+  #endif
+  
+  #undef __STRICT_ANSI__
+! #include <sys/cdrom.h>
+! 
+! #undef  sense
+! #undef  SC_PARITY
+! #undef  scb
+! 
+! #include <sys/sysmacros.h>
+! #include <sys/scsi.h>
+! #include <sys/sdi_edt.h>
+! #include <sys/sdi.h>
+! 
+  #define __STRICT_ANSI__
+  
+  #endif // Q_OS_LINUX
+***************
+*** 57,62 ****
+  
+  #endif // Q_OS_LINUX
+  
+  
+  #ifdef HAVE_RESMGR
+  extern "C" {
+--- 67,78 ----
+  
+  #endif // Q_OS_LINUX
+  
++ #if defined(__FreeBSD__) || defined(__USLC__)
++ #define __BYTE_ORDER BYTE_ORDER
++ #define __BIG_ENDIAN BIG_ENDIAN
++ #define CD_FRAMESIZE_RAW 2352
++ #define nearbyint(x) rint(x)
++ #endif
+  
+  
+  #ifdef HAVE_RESMGR
+***************
+*** 58,63 ****
+  #endif // Q_OS_LINUX
+  
+  
+  #ifdef HAVE_RESMGR
+  extern "C" {
+  #include <resmgr.h>
+--- 74,80 ----
+  #define nearbyint(x) rint(x)
+  #endif
+  
++ 
+  #ifdef HAVE_RESMGR
+  extern "C" {
+  #include <resmgr.h>
+***************
+*** 188,193 ****
+  
+    d->supportedProfiles = 0;
+  
+    if(open() < 0)
+      return false;
+  
+--- 205,211 ----
+  
+    d->supportedProfiles = 0;
+  
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+    if(open() < 0)
+      return false;
+  #endif
+***************
+*** 190,195 ****
+  
+    if(open() < 0)
+      return false;
+  
+  
+    //
+--- 208,214 ----
+  #if !defined(__FreeBSD__) && !defined(__USLC__)
+    if(open() < 0)
+      return false;
++ #endif
+  
+  
+    //
+***************
+*** 232,237 ****
+    unsigned char header[2048];
+    ::memset( header, 0, 2048 );
+  
+    cmd[0] = MMC::GET_CONFIGURATION;
+    cmd[8] = 8;
+    if( cmd.transport( TR_DIR_READ, header, 8 ) ) {
+--- 251,257 ----
+    unsigned char header[2048];
+    ::memset( header, 0, 2048 );
+  
++   cmd.clear();
+    cmd[0] = MMC::GET_CONFIGURATION;
+    cmd[8] = 8;
+    if( cmd.transport( TR_DIR_READ, header, 8 ) ) {
+***************
+*** 824,829 ****
+      m_bufferSize = 1024;
+      d->burnfree = false;
+    }
+    else if( vendor().startsWith("MATSHITA") ) {
+      if( description().startsWith("CD-R   CW-7501") ) {
+        m_writeModes = TAO|SAO;
+--- 844,867 ----
+      m_bufferSize = 1024;
+      d->burnfree = false;
+    }
++   else if( vendor().startsWith("TEAC") ) { 
++     if( description().startsWith("CD-R56S") ) {
++       m_writeModes |= TAO;
++       d->deviceType |= CDROM|CDR;
++       m_maxWriteSpeed = 6;
++       m_maxReadSpeed = 24;
++       m_bufferSize = 1302;
++       d->burnfree = false;
++     }
++     if( description().startsWith("CD-R58S") ) {
++       m_writeModes |= TAO;
++       d->deviceType |= CDROM|CDR;
++       m_maxWriteSpeed = 8;
++       m_maxReadSpeed = 24;
++       m_bufferSize = 4096;
++       d->burnfree = false;
++     }
++   }
+    else if( vendor().startsWith("MATSHITA") ) {
+      if( description().startsWith("CD-R   CW-7501") ) {
+        m_writeModes = TAO|SAO;
+***************
+*** 2677,2682 ****
+  {
+    // if the device is already opened we do not close it
+    // to allow fast multible method calls in a row
+    bool needToClose = !isOpen();
+  
+    if (open() < 0)
+--- 2715,2721 ----
+  {
+    // if the device is already opened we do not close it
+    // to allow fast multible method calls in a row
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+    bool needToClose = !isOpen();
+  
+    if (open() < 0)
+***************
+*** 2681,2686 ****
+  
+    if (open() < 0)
+      return;
+  
+    // header size is 8
+    unsigned char* buffer = 0;
+--- 2720,2726 ----
+  
+    if (open() < 0)
+      return;
++ #endif
+  
+    // header size is 8
+    unsigned char* buffer = 0;
+***************
+*** 2766,2771 ****
+      delete [] buffer;
+    }
+      
+    if( needToClose )
+      close();
+  }
+--- 2806,2812 ----
+      delete [] buffer;
+    }
+      
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+    if( needToClose )
+      close();
+  #endif
+***************
+*** 2768,2773 ****
+      
+    if( needToClose )
+      close();
+  }
+  
+  
+--- 2809,2815 ----
+  #if !defined(__FreeBSD__) && !defined(__USLC__)
+    if( needToClose )
+      close();
++ #endif
+  }
+  
+  
+***************
+*** 2773,2778 ****
+  
+  bool K3bCdDevice::CdDevice::readTocPmaAtip( unsigned char** data, int& dataLen, int format, bool time, int track ) const
+  {
+    unsigned char header[2048];
+    ::memset( header, 0, 2048 );
+  
+--- 2815,2821 ----
+  
+  bool K3bCdDevice::CdDevice::readTocPmaAtip( unsigned char** data, int& dataLen, int format, bool time, int track ) const
+  {
++   kdDebug() << "(K3bCdDevice::CdDevice) readTocPmaAtip started,  format:" << format << ", time: " << time << ", track: " << track << endl;
+    unsigned char header[2048];
+    ::memset( header, 0, 2048 );
+  
+*** ./src/device/k3bdevice.h.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bdevice.h Thu May 19 16:43:21 2005
+***************
+*** 690,695 ****
+  
+      class Private;
+      Private* d;
+      friend class DeviceManager;
+    };
+  
+--- 690,699 ----
+  
+      class Private;
+      Private* d;
++ #if defined(__FreeBSD__) || defined(__USLC__)
++     QString m_passDevice;
++     friend class ScsiCommand;
++ #endif
+      friend class DeviceManager;
+    };
+  
+*** ./src/device/k3bscsicommand.h.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bscsicommand.h Thu May 19 16:48:04 2005
+***************
+*** 18,24 ****
+  
+  #include <sys/types.h>
+  #undef __STRICT_ANSI__
+! #include <linux/cdrom.h>
+  #define __STRICT_ANSI__
+  
+  
+--- 18,33 ----
+  
+  #include <sys/types.h>
+  #undef __STRICT_ANSI__
+! #include <sys/cdrom.h>
+! 
+! #undef  sense
+! #undef  SC_PARITY
+! #undef  scb
+! 
+! #include <sys/sysmacros.h>
+! #include <sys/scsi.h>
+! #include <sys/sdi_edt.h>
+! #include <sys/sdi.h>
+  #define __STRICT_ANSI__
+  
+  
+***************
+*** 96,102 ****
+    class ScsiCommand
+      {
+      public:
+!       ScsiCommand( int fd );
+        ScsiCommand( const CdDevice* );
+        ~ScsiCommand();
+  
+--- 105,111 ----
+    class ScsiCommand
+      {
+      public:
+! //      ScsiCommand( int fd );
+        ScsiCommand( const CdDevice* );
+        ~ScsiCommand();
+  
+***************
+*** 109,114 ****
+  		     size_t len = 0 );
+  
+      private:
+        struct cdrom_generic_command m_cmd;
+        struct request_sense m_sense;
+  
+--- 118,124 ----
+  		     size_t len = 0 );
+  
+      private:
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+        struct cdrom_generic_command m_cmd;
+        struct request_sense m_sense;
+  #else
+***************
+*** 111,117 ****
+      private:
+        struct cdrom_generic_command m_cmd;
+        struct request_sense m_sense;
+! 
+        int m_fd;
+        const CdDevice* m_device;
+        bool m_needToCloseDevice;
+--- 121,131 ----
+  #if !defined(__FreeBSD__) && !defined(__USLC__)
+        struct cdrom_generic_command m_cmd;
+        struct request_sense m_sense;
+! #else
+!       ScsiCommand( const CdDevice* , struct cam_device *);
+!       bool closecam;
+!       struct cam_device  *cam;
+!       union ccb		ccb;
+        int m_fd;
+  #endif
+        const CdDevice* m_device;
+***************
+*** 113,118 ****
+        struct request_sense m_sense;
+  
+        int m_fd;
+        const CdDevice* m_device;
+        bool m_needToCloseDevice;
+      };
+--- 127,133 ----
+        struct cam_device  *cam;
+        union ccb		ccb;
+        int m_fd;
++ #endif
+        const CdDevice* m_device;
+        bool m_needToCloseDevice;
+      };
+*** ./src/device/scsi-unixware.c.osr6 Thu May 19 15:41:48 2005
+--- ./src/device/scsi-unixware.c Thu May 19 15:41:36 2005
+***************
+*** 0 ****
+--- 1,946 ----
++ /* @(#)scsi-unixware.c	1.36 04/01/15 Copyright 1998 J. Schilling, Santa Cruz Operation */
++ #ifndef lint
++ static	char __sccsid[] =
++ 	"@(#)scsi-unixware.c	1.36 04/01/15 Copyright 1998 J. Schilling, Santa Cruz Operation";
++ #endif
++ /*
++  *	Interface for the SCO UnixWare SCSI implementation.
++  *
++  *	Warning: you may change this source, but if you do that
++  *	you need to change the _scg_version and _scg_auth* string below.
++  *	You may not return "schily" for an SCG_AUTHOR request anymore.
++  *	Choose your name instead of "schily" and make clear that the version
++  *	string is related to a modified source.
++  *
++  *	Copyright (c) 1998 J. Schilling, Santa Cruz Operation
++  */
++ /*
++  * This program is free software; you can redistribute it and/or modify
++  * it under the terms of the GNU General Public License as published by
++  * the Free Software Foundation; either version 2, or (at your option)
++  * any later version.
++  *
++  * This program is distributed in the hope that it will be useful,
++  * but WITHOUT ANY WARRANTY; without even the implied warranty of
++  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++  * GNU General Public License for more details.
++  *
++  * You should have received a copy of the GNU General Public License along with
++  * this program; see the file COPYING.  If not, write to the Free Software
++  * Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++  */
++ 
++ #undef	sense
++ #undef	SC_PARITY
++ #undef	scb
++ 
++ #include <sys/sysmacros.h>	/* XXX Falsch, richtig -> sys/mkdev.h */
++ #include <sys/scsi.h>
++ #include <sys/sdi_edt.h>
++ #include <sys/sdi.h>
++ 
++ /*
++  *	Warning: you may change this source, but if you do that
++  *	you need to change the _scg_version and _scg_auth* string below.
++  *	You may not return "schily" for an SCG_AUTHOR request anymore.
++  *	Choose your name instead of "schily" and make clear that the version
++  *	string is related to a modified source.
++  */
++ LOCAL	char	_scg_trans_version[] = "scsi-unixware.c-1.36";	/* The version for this transport*/
++ 
++ /* Max. number of scg scsibusses.  The real limit would be		*/
++ /* MAX_HBA * MAX_BUS (which would be 32 * 8 on UnixWare 2.1/7.x),	*/
++ /* but given that we will hardly see such a beast, lets take 32		*/
++ 
++ #define	MAX_SCG		32
++ 
++ 	/* maximum defines for UnixWare 2.x/7.x from <sys/sdi_edt.h> */
++ 
++ #define	MAX_TGT		MAX_EXTCS	/* Max # of target id's		*/
++ #define	MAX_LUN		MAX_EXLUS	/* Max # of lun's		*/
++ 
++ #define	MAX_DMA		(32*1024)
++ #ifdef	__WHAT_TODO__
++ #define	MAX_DMA		(16*1024)	/* On UnixWare 2.1.x w/ AHA2940 HBA */
++ 					/* the max DMA size is 16KB.	    */
++ #endif
++ 
++ #define	MAXLINE		80
++ #define	MAXPATH		256
++ 
++ #define	DEV_DIR		"/tmp"
++ #define	DEV_NAME	"scg.s%1dt%1dl%1d"
++ 
++ #define	SCAN_HBA	"%d:%d,%d,%d:%7s : %n"
++ #define	SCAN_DEV	"%d,%d,%d:%7s : %n"
++ 
++ #define	PRIM_HBA	"/dev/hba/hba1"
++ #define	SCSI_CFG	"LC_ALL=C /etc/scsi/pdiconfig -l"
++ 
++ #define	SCAN_ALL	"LIBSCG_SCAN_ALL"
++ 
++ #define	SDI_VALID	0x01	/* Entry may be used (non disk)	   */
++ #define	SDI_ATAPI	0x02	/* Connected via IDE HBA	   */
++ #define	SDI_INITIATOR	0x04	/* This is the initiator target ID */
++ 
++ typedef struct scg2sdi {
++ 	short	open;
++ 	short	flags;
++ 	short	fd;
++ 	char	hba;
++ 	char	bus;
++ 	char	tgt;
++ 	char	lun;
++ 
++ 	dev_t	node;
++ 	dev_t	major;
++ 	dev_t	minor;
++ /*#define	SCG_DEBUG*/
++ #ifdef	SCG_DEBUG
++ 	char	type[20];
++ 	char	vend[40];
++ 	char	devn[32];
++ #endif
++ } scg2sdi_t;
++ 
++ LOCAL	scg2sdi_t	sdidevs [MAX_SCG][MAX_TGT][MAX_LUN];
++ LOCAL	BOOL		sdiinit = FALSE;
++ 
++ struct scg_local {
++ 	short	scgfiles[MAX_SCG][MAX_TGT][MAX_LUN];
++ };
++ #define	scglocal(p)	((struct scg_local *)((p)->local))
++ 
++ LOCAL	int	unixware_init	__PR((SCSI *scgp));
++ LOCAL	int	do_scg_cmd	__PR((SCSI *scgp, struct scg_cmd *sp));
++ LOCAL	int	do_scg_sense	__PR((SCSI *scgp, struct scg_cmd *sp));
++ LOCAL	FILE	*xpopen		__PR((char *cmd, char *type));
++ LOCAL	int	xpclose		__PR((FILE *f));
++ 
++ /*
++  * -------------------------------------------------------------------------
++  * SCO UnixWare 2.1.x / UnixWare 7 provides a scsi pass-through mechanism,
++  * which can be used to access any configured scsi device.
++  *
++  * NOTE: The libscg UnixWare passthrough routines have changed with
++  *       cdrecord-1.8 to enable the -scanbus, -load, -eject option
++  *	 regardless of the status of media and the addressing
++  *       scheme is now the same as used on many other platforms like
++  *       Solaris, Linux etc.
++  *
++  *      ===============================================================
++  *	RUN 'cdrecord -scanbus' TO SEE THE DEVICE ADDRESSES YOU CAN USE
++  *	===============================================================
++  */
++ 
++ /*
++  * Return version information for the low level SCSI transport code.
++  * This has been introduced to make it easier to trace down problems
++  * in applications.
++  *
++  */
++ LOCAL char *
++ scgo_version(scgp, what)
++ 	SCSI	*scgp;
++ 	int	what;
++ {
++ 	if (scgp != (SCSI *)0) {
++ 		switch (what) {
++ 
++ 		case SCG_VERSION:
++ 			return (_scg_trans_version);
++ 		/*
++ 		 * If you changed this source, you are not allowed to
++ 		 * return "schily" for the SCG_AUTHOR request.
++ 		 */
++ 		case SCG_AUTHOR:
++ 			return (_scg_auth_schily);
++ 		case SCG_SCCS_ID:
++ 			return (__sccsid);
++ 		}
++ 	}
++ 	return ((char *)0);
++ }
++ 
++ 
++ LOCAL int
++ scgo_help(scgp, f)
++ 	SCSI	*scgp;
++ 	FILE	*f;
++ {
++ 	__scg_help(f, "SDI_SEND", "Generic SCSI",
++ 		"", "bus,target,lun", "1,2,0", TRUE, FALSE);
++ 	return (0);
++ }
++ 
++ /*
++  * ---------------------------------------------------------------
++  * This routine is introduced to create all device nodes necessary
++  * to access any detected scsi device. It parses the output of
++  * /etc/scsi/pdiconfig -l and creates passthru device node for each
++  * found scsi device apart from the listed hba's.
++  *
++  */
++ 
++ LOCAL int
++ unixware_init(scgp)
++ 	SCSI	*scgp;
++ {
++ 	FILE		*cmd;
++ 	int		hba = 0, bus = 0, scg = 0, tgt = 0, lun = 0;
++ 	int		nscg = -1, lhba = -1, lbus = 0;
++ 	int		atapi, fd, nopen = 0, pos = 0, len = 0;
++ 	int		s, t, l;
++ 	int		scan_disks;
++ 	char		lines[MAXLINE];
++ 	char		class[MAXLINE];
++ 	char		ident[MAXLINE];
++ 	char		devnm[MAXPATH];
++ 	char		dname[MAXPATH];
++ 	struct stat 	stbuf;
++ 	dev_t		ptdev, major, minor, node;
++ 	char		**evsave;
++ extern	char		**environ;
++ 
++ 	/* Check for validity of primary hostbus adapter node */
++ 
++ 	if (stat(PRIM_HBA, &stbuf) < 0) {
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 				"Can not stat() primary hba (%s)",
++ 				PRIM_HBA);
++ 		return (-1);
++ 	}
++ 
++ 	if (!S_ISCHR(stbuf.st_mode)) {
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 				"Primary hba (%s) not a character device",
++ 				PRIM_HBA);
++ 		return (-1);
++ 	}
++ 
++ 	major = getmajor(stbuf.st_rdev);
++ 
++ 	/*
++ 	 * Check whether we want to scan all devices
++ 	 */
++ 	if (getenv(SCAN_ALL) != NULL) {
++ 		scan_disks = 1;
++ 	} else {
++ 		scan_disks = 0;
++ 	}
++ 
++ 	/* read pdiconfig output and get all attached scsi devices ! */
++ 
++ 	evsave = environ;
++ 	environ = 0;
++ 	if ((cmd = xpopen(SCSI_CFG, "r")) == NULL) {
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 				"Error popen() for \"%s\"",
++ 				SCSI_CFG);
++ 		environ = evsave;
++ 		return (-1);
++ 	}
++ 	environ = evsave;
++ 
++ 
++ 	for (;;) {
++ 		if (fgets(lines, MAXLINE, cmd) == NULL)
++ 			break;
++ 
++ 		memset(class, '\0', sizeof (class));
++ 		memset(ident, '\0', sizeof (ident));
++ 
++ 		if (lines[0] == ' ') {
++ 			sscanf(lines, SCAN_DEV, &bus, &tgt, &lun, class, &pos);
++ 			hba = lhba;
++ 		} else {
++ 			sscanf(lines, SCAN_HBA, &hba, &bus, &tgt, &lun, class, &pos);
++ 			nscg++;
++ 			lhba = hba;
++ 			atapi = 0;
++ 		}
++ 
++ 		/* We can't sscanf() the ident string of the device	*/
++ 		/* as it may contain characters sscanf() will		*/
++ 		/* recognize as a delimiter. So do a strcpy() instead !	*/
++ 
++ 		len = strlen(lines) - pos - 1; /* don't copy the '\n' */
++ 
++ 		strncpy(ident, &lines[pos], len);
++ 
++ 		if (scgp->debug > 0) {
++ 			js_fprintf((FILE *)scgp->errfile,
++ 				"SDI -> %d:%d,%d,%d: %-7s : %s\n",
++ 				hba, bus, tgt, lun, class, ident);
++ 		}
++ 		if (bus != lbus) {
++ 			nscg++;
++ 			lbus = bus;
++ 		}
++ 
++ 		scg = nscg;
++ 
++ 		/* check whether we have a HBA or a SCSI device, don't 	*/
++ 		/* let HBA's be valid device for cdrecord, but mark	*/
++ 		/* them as a controller (initiator = 1).		*/
++ 
++ 		/* Don't detect disks, opening a mounted disk can hang	*/
++ 		/* the disk subsystem !!! So unless we set an		*/
++ 		/* environment variable LIBSCG_SCAN_ALL, we will ignore	*/
++ 		/* disks						*/
++ 
++ 		if (strstr(class, "HBA") == NULL) {
++ 			if (strstr(class, "DISK") != NULL) {
++ 				if (scan_disks)
++ 					sdidevs[scg][tgt][lun].flags |= SDI_VALID;
++ 				else
++ 					sdidevs[scg][tgt][lun].flags &= ~SDI_VALID;
++ 			} else {
++ 				sdidevs[scg][tgt][lun].flags |= SDI_VALID;
++ 			}
++ 		} else {
++ 			sdidevs[scg][tgt][lun].flags |= SDI_INITIATOR;
++ 		}
++ 
++ 
++ 		/* There is no real flag that shows a HBA as an ATAPI	*/
++ 		/* controller, so as we know the driver is called 'ide'	*/
++ 		/* we can check the ident string for the occurence of it*/
++ 
++ 		if (strstr(ident, "(ide,") != NULL) {
++ 			atapi = 1;
++ 		}
++ 
++ 		/*
++ 		 * Fill the sdidevs array with all we know now.
++ 		 * Do not overwrite fields that may contain old state like
++ 		 * sdidevs[scg][tgt][lun].open
++ 		 */
++ 
++ 		if (atapi)
++ 			sdidevs[scg][tgt][lun].flags |= SDI_ATAPI;
++ 		else
++ 			sdidevs[scg][tgt][lun].flags &= ~SDI_ATAPI;
++ 
++ 		sdidevs[scg][tgt][lun].hba = hba;
++ 		sdidevs[scg][tgt][lun].bus = bus;
++ 		sdidevs[scg][tgt][lun].tgt = tgt;
++ 		sdidevs[scg][tgt][lun].lun = lun;
++ 
++ #ifdef	SCG_DEBUG
++ 		strcpy(sdidevs[scg][tgt][lun].type, class);
++ 		strcpy(sdidevs[scg][tgt][lun].vend, ident);
++ 
++ 		js_snprintf(sdidevs[scg][tgt][lun].devn,
++ 				sizeof (sdidevs[scg][tgt][lun].devn),
++ 				DEV_NAME, scg, tgt, lun);
++ #endif
++ 		js_snprintf(devnm, sizeof (devnm),
++ 				DEV_NAME, scg, tgt, lun);
++ 
++ 		minor = SDI_MINOR(hba, tgt, lun, bus);
++ 		node  = makedevice(major, minor);
++ 
++ 		sdidevs[scg][tgt][lun].major = major;
++ 		sdidevs[scg][tgt][lun].minor = minor;
++ 		sdidevs[scg][tgt][lun].node  = node;
++ 
++ 		if (scgp->debug > 0) {
++ 
++ 			js_fprintf((FILE *)scgp->errfile,
++ 			"h = %d; b = %d, s = %d, t = %d, l = %d, a = %d, ma = %d, mi = %2d, dev = '%s', id = '%s'\n",
++ 			hba, bus, scg, tgt, lun,
++ 			(sdidevs[scg][tgt][lun].flags & SDI_ATAPI) != 0,
++ 			sdidevs[scg][tgt][lun].major,
++ 			sdidevs[scg][tgt][lun].minor,
++ 			devnm,
++ 			ident);
++ 		}
++ 
++ 
++ 	}
++ 
++ 	if (xpclose(cmd) == -1) {
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 				"Error pclose() for \"%s\"",
++ 				SCSI_CFG);
++ 		return (-1);
++ 	}
++ 
++ 
++ 	/* create all temporary device nodes */
++ 
++ 	for (s = 0; s < MAX_SCG; s++) {
++ 		for (t = 0; t < MAX_TGT; t++) {
++ 			for (l = 0; l < MAX_LUN; l++) {
++ 
++ 				if ((sdidevs[s][t][l].flags & SDI_VALID) == 0) {
++ 					if (sdidevs[s][t][l].fd >= 0) {
++ 						close(sdidevs[s][t][l].fd);
++ 					}
++ 					sdidevs[s][t][l].fd = -1;
++ 					sdidevs[s][t][l].open = 0;
++ 					continue;
++ 				}
++ 
++ 				/* Make pass-through interface device node */
++ 
++ 				js_snprintf(devnm,
++ 					sizeof (devnm),
++ 					DEV_NAME, s, t, l);
++ 
++ 				js_snprintf(dname, sizeof (dname),
++ 					"%s/%s", DEV_DIR, devnm);
++ 
++ 				ptdev = sdidevs[s][t][l].node;
++ 
++ 				if (mknod(dname, S_IFCHR | 0700, ptdev) < 0) {
++ 					if (errno == EEXIST) {
++ 						unlink(dname);
++ 
++ 						if (mknod(dname, S_IFCHR | 0700, ptdev) < 0) {
++ 							if (scgp->errstr)
++ 								js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 									"mknod() error for \"%s\"", dname);
++ 							return (-1);
++ 						}
++ 					} else {
++ 						if (scgp->errstr)
++ 							js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 								"mknod() error for \"%s\"", dname);
++ 						return (-1);
++ 					}
++ 				}
++ 
++ 				/* Open pass-through device node */
++ 
++ 				if ((fd = open(dname, O_RDONLY)) < 0) {
++ 					if (errno == EBUSY && sdidevs[s][t][l].open > 0) {
++ 						/*
++ 						 * Device has already been opened, just
++ 						 * return the saved file desc.
++ 						 */
++ 						fd = sdidevs[s][t][l].fd;
++ 					} else {
++ 						if (scgp->errstr)
++ 							js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 								"can not open pass-through %s", dname);
++ 						return (-1);
++ 					}
++ 				}
++ 
++ 				/*
++ 				 * If for whatever reason we may open a pass through
++ 				 * device more than once, this will waste fs's as we
++ 				 * do not check for sdidevs[s][t][l].fd == -1.
++ 				 */
++ 				sdidevs[s][t][l].fd   = fd;
++ 				sdidevs[s][t][l].open++;
++ 				nopen++;
++ 				scglocal(scgp)->scgfiles[s][t][l] = (short) fd;
++ 
++ 				if (scgp->debug > 0) {
++ 
++ 					js_fprintf((FILE *)scgp->errfile,
++ 						"s = %d, t = %d, l = %d, dev = %s, fd = %d\n",
++ 						s, t, l,
++ 						devnm,
++ 						sdidevs[s][t][l].fd);
++ 				}
++ 
++ 			}
++ 		}
++ 	}
++ 
++ 	return (nopen);
++ }
++ 
++ 
++ LOCAL int
++ scgo_open(scgp, device)
++ 	SCSI	*scgp;
++ 	char	*device;
++ {
++ 	int	busno	= scg_scsibus(scgp);
++ 	int	tgt	= scg_target(scgp);
++ 	int	tlun	= scg_lun(scgp);
++ 	int	b, t, l;
++ 
++ 	if (busno >= MAX_SCG || tgt >= MAX_TGT || tlun >= MAX_LUN) {
++ 		errno = EINVAL;
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 				"Illegal value for busno, target or lun '%d,%d,%d'",
++ 				busno, tgt, tlun);
++ 		return (-1);
++ 	}
++ 
++ 	if (scgp->local == NULL) {
++ 		scgp->local = malloc(sizeof (struct scg_local));
++ 		if (scgp->local == NULL)
++ 			return (0);
++ 
++ 		for (b = 0; b < MAX_SCG; b++) {
++ 			for (t = 0; t < MAX_TGT; t++) {
++ 				for (l = 0; l < MAX_LUN; l++)
++ 					scglocal(scgp)->scgfiles[b][t][l] = (short)-1;
++ 			}
++ 		}
++ 	}
++ 
++ 	if (!sdiinit) {
++ 		sdiinit = TRUE;
++ 		memset(sdidevs, 0, sizeof (sdidevs));	/* init tmp_structure */
++ 		for (b = 0; b < MAX_SCG; b++) {
++ 			for (t = 0; t < MAX_TGT; t++) {
++ 				for (l = 0; l < MAX_LUN; l++) {
++ 
++ 					sdidevs[b][t][l].flags = 0;
++ 					sdidevs[b][t][l].fd = -1;
++ 					sdidevs[b][t][l].open = 0;
++ 				}
++ 			}
++ 		}
++ 	}
++ 
++ 	if (*device != '\0') {		/* we don't allow old dev usage */
++ 		errno = EINVAL;
++ 		if (scgp->errstr)
++ 			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++ 			"Open by 'devname' no longer supported on this OS");
++ 		return (-1);
++ 	} else {			/* this is the new stuff	 */
++ 					/* it will do the initialisation */
++ 					/* and return the number of	 */
++ 					/* detected devices to be used	 */
++ 					/* with the new addressing	 */
++ 					/* scheme.			 */
++ 
++ 		return (unixware_init(scgp));
++ 	}
++ 
++ }
++ 
++ 
++ LOCAL int
++ scgo_close(scgp)
++ 	SCSI	*scgp;
++ {
++ 	register int	f;
++ 	register int	b;
++ 	register int	t;
++ 	register int	l;
++ 
++ 	if (scgp->local == NULL)
++ 		return (-1);
++ 
++ 	for (b = 0; b < MAX_SCG; b++) {
++ 		for (t = 0; t < MAX_TGT; t++) {
++ 			for (l = 0; l < MAX_LUN; l++) {
++ 
++ 				f = scglocal(scgp)->scgfiles[b][t][l];
++ 				if (f >= 0) {
++ 					if (sdidevs[b][t][l].open > 0)
++ 						sdidevs[b][t][l].open--;
++ 					if (sdidevs[b][t][l].open <= 0) {
++ 						if (sdidevs[b][t][l].fd >= 0)
++ 							close(sdidevs[b][t][l].fd);
++ 						sdidevs[b][t][l].fd    = -1;
++ 						sdidevs[b][t][l].flags &= ~SDI_VALID;
++ 					}
++ 				}
++ 				scglocal(scgp)->scgfiles[b][t][l] = (short)-1;
++ 			}
++ 		}
++ 	}
++ 	return (0);
++ }
++ 
++ LOCAL long
++ scgo_maxdma(scgp, amt)
++ 	SCSI	*scgp;
++ 	long	amt;
++ {
++ 	return (MAX_DMA);
++ }
++ 
++ 
++ LOCAL void *
++ scgo_getbuf(scgp, amt)
++ 	SCSI	*scgp;
++ 	long	amt;
++ {
++ 	if (scgp->debug > 0) {
++ 		js_fprintf((FILE *)scgp->errfile,
++ 			"scgo_getbuf: %ld bytes\n", amt);
++ 	}
++ 	scgp->bufbase = (void *) valloc((size_t)(amt));
++ 
++ 	return (scgp->bufbase);
++ }
++ 
++ LOCAL void
++ scgo_freebuf(scgp)
++ 	SCSI	*scgp;
++ {
++ 	if (scgp->bufbase)
++ 		free(scgp->bufbase);
++ 	scgp->bufbase = NULL;
++ }
++ 
++ LOCAL BOOL
++ scgo_havebus(scgp, busno)
++ 	SCSI	*scgp;
++ 	int	busno;
++ {
++ 	register int	t;
++ 	register int	l;
++ 
++ 	if (busno < 0 || busno >= MAX_SCG)
++ 		return (FALSE);
++ 
++ 	if (scgp->local == NULL)
++ 		return (FALSE);
++ 
++ 	for (t = 0; t < MAX_TGT; t++) {
++ 		for (l = 0; l < MAX_LUN; l++)
++ 			if (scglocal(scgp)->scgfiles[busno][t][l] >= 0)
++ 				return (TRUE);
++ 	}
++ 	return (FALSE);
++ }
++ 
++ LOCAL int
++ scgo_fileno(scgp, busno, tgt, tlun)
++ 	SCSI	*scgp;
++ 	int	busno;
++ 	int	tgt;
++ 	int	tlun;
++ {
++ 	if (busno < 0 || busno >= MAX_SCG ||
++ 	    tgt   < 0 || tgt   >= MAX_TGT ||
++ 	    tlun  < 0 || tlun  >= MAX_LUN)
++ 		return (-1);
++ 
++ 	if (scgp->local == NULL)
++ 		return (-1);
++ 
++ 	return ((int)scglocal(scgp)->scgfiles[busno][tgt][tlun]);
++ }
++ 
++ LOCAL int
++ scgo_initiator_id(scgp)
++ 	SCSI	*scgp;
++ {
++ 	register int	t;
++ 	register int	l;
++ 	register int	busno;
++ 
++ 	busno = scg_scsibus(scgp);
++ 
++ 	if (busno < 0 || busno >= MAX_SCG)
++ 		return (FALSE);
++ 
++ 	for (t = 0; t < MAX_TGT; t++) {
++ 		for (l = 0; l < MAX_LUN; l++)
++ 			if ((sdidevs[busno][t][l].flags & SDI_INITIATOR) != 0) {
++ 				if (scgp->debug > 0) {
++ 					js_fprintf((FILE *)scgp->errfile,
++ 						"scgo_initiator_id: id = %d\n", t);
++ 				}
++ 				return (t);
++ 			}
++ 	}
++ 
++ 	return (-1);
++ }
++ 
++ LOCAL int
++ scgo_isatapi(scgp)
++ 	SCSI	*scgp;
++ {
++ 	/* if the new address method is used we know if this is ATAPI */
++ 
++ 	return ((sdidevs[scg_scsibus(scgp)][scg_target(scgp)][scg_lun(scgp)].flags & SDI_ATAPI) != 0);
++ }
++ 
++ LOCAL int
++ scgo_reset(scgp, what)
++ 	SCSI	*scgp;
++ 	int	what;
++ {
++ 	int	f = scgp->fd;
++ 
++ 	errno = EINVAL;
++ 
++ #if defined(SDI_TRESET) || defined(SDI_BRESET)
++ 	if (what == SCG_RESET_NOP) {
++ 		errno = 0;
++ 		return (0);
++ 	}
++ 
++ #ifdef	SDI_TRESET
++ 	if (what == SCG_RESET_TGT) {
++ 		errno = 0;
++ 		if (ioctl(f, SDI_TRESET, 0) >= 0)
++ 			return (0);
++ 	}
++ #endif
++ 
++ #ifdef	SDI_BRESET
++ 	if (what == SCG_RESET_BUS) {
++ 		errno = 0;
++ 		if (ioctl(f, SDI_BRESET, 0) >= 0)
++ 			return (0);
++ 	}
++ #endif
++ 
++ #endif	/* defined(SDI_TRESET) || defined(SDI_BRESET) */
++ 
++ 	return (-1);
++ }
++ 
++ LOCAL int
++ do_scg_cmd(scgp, sp)
++ 	SCSI		*scgp;
++ 	struct scg_cmd	*sp;
++ {
++ 	int			ret;
++ 	int			i;
++ 	struct sb		scsi_cmd;
++ 	struct scb		*scbp;
++ 
++ 	memset(&scsi_cmd,  0, sizeof (scsi_cmd));
++ 
++ 	scsi_cmd.sb_type = ISCB_TYPE;
++ 	scbp = &scsi_cmd.SCB;
++ 
++ 	scbp->sc_cmdpt = (caddr_t) sp->cdb.cmd_cdb;
++ 	scbp->sc_cmdsz = sp->cdb_len;
++ 
++ 	scbp->sc_datapt = sp->addr;
++ 	scbp->sc_datasz = sp->size;
++ 
++ 	if (!(sp->flags & SCG_RECV_DATA) && (sp->size > 0))
++ 		scbp->sc_mode = SCB_WRITE;
++ 	else
++ 		scbp->sc_mode = SCB_READ;
++ 
++ 	scbp->sc_time = sp->timeout;
++ 
++ 	sp->error = SCG_NO_ERROR;
++ 	errno = 0;
++ 	for (;;) {
++ 		if ((ret = ioctl(scgp->fd, SDI_SEND, &scsi_cmd)) < 0) {
++ 			if (errno == EAGAIN) {
++ 				sleep(1);
++ 				errno = 0;
++ 				continue;
++ 			}
++ 			sp->ux_errno = errno;
++ 			if (errno == 0)
++ 				sp->ux_errno = EIO;
++ 			sp->error = SCG_RETRYABLE;
++ 
++ #ifdef	__needed__
++ 			if (errno == ENOTTY || errno == EINVAL ||
++ 			    errno == EACCES) {
++ 				return (-1);
++ 			}
++ #endif
++ 			return (ret);
++ 		}
++ 		break;
++ 	}
++ 	sp->ux_errno = errno;
++ 	sp->resid = scbp->sc_resid;
++ 	memset(&sp->u_scb.Scb, 0, sizeof (sp->u_scb.Scb));
++ 	sp->u_scb.cmd_scb[0] = scbp->sc_status;
++ 
++ 	if (sp->u_scb.cmd_scb[0] & 0x02) {
++ 		if (sp->ux_errno == 0)
++ 			sp->ux_errno = EIO;
++ 	}
++ 
++ 	switch (scbp->sc_comp_code) {
++ 
++ 		case SDI_ASW	 : /* Job completed normally		*/
++ 		case SDI_LINKF0	 : /* Linked command done without flag	*/
++ 		case SDI_LINKF1	 : /* Linked command done with flag	*/
++ 
++ 				sp->error = SCG_NO_ERROR;
++ 				break;
++ 
++ 		case SDI_CKSTAT	 : /* Check the status byte		*/
++ 
++ 				sp->error = SCG_NO_ERROR;
++ 				break;
++ 
++ 		case SDI_NOALLOC : /* This block is not allocated	*/
++ 		case SDI_NOTEQ	 : /* Addressed device not present	*/
++ 		case SDI_OOS	 : /* Device is out of service		*/
++ 		case SDI_NOSELE	 : /* The SCSI bus select failed	*/
++ 		case SDI_SBRESC	 : /* SCSI bus reservation conflict	*/
++ 
++ 				sp->error = SCG_FATAL;
++ 				if (sp->ux_errno == 0)
++ 					sp->ux_errno = EIO;
++ 				break;
++ 
++ 		case SDI_QFLUSH	 : /* Job was flushed			*/
++ 		case SDI_ABORT	 : /* Command was aborted		*/
++ 		case SDI_RESET	 : /* Reset was detected on the bus	*/
++ 		case SDI_CRESET	 : /* Reset was caused by this unit	*/
++ 		case SDI_V2PERR	 : /* vtop failed			*/
++ 		case SDI_HAERR	 : /* Host adapter error		*/
++ 		case SDI_MEMERR	 : /* Memory fault			*/
++ 		case SDI_SBUSER	 : /* SCSI bus error			*/
++ 		case SDI_SCBERR	 : /* SCB error				*/
++ 		case SDI_MISMAT	 : /* parameter mismatch		*/
++ 
++ 		case SDI_PROGRES : /* Job in progress			*/
++ 		case SDI_UNUSED	 : /* Job not in use			*/
++ 
++ 		case SDI_ONEIC	 : /* More than one immediate request	*/
++ 		case SDI_SFBERR	 : /* SFB error				*/
++ 		case SDI_TCERR	 : /* Target protocol error detected	*/
++ 		default:
++ 				sp->error = SCG_RETRYABLE;
++ 				if (sp->ux_errno == 0)
++ 					sp->ux_errno = EIO;
++ 				break;
++ 
++ 		case SDI_TIME	 : /* Job timed out			*/
++ 		case SDI_TIME_NOABORT : /* Job timed out, but could not be aborted */
++ 
++ 				sp->error = SCG_TIMEOUT;
++ 				if (sp->ux_errno == 0)
++ 					sp->ux_errno = EIO;
++ 				break;
++ 	}
++ 	return (0);
++ }
++ 
++ 
++ LOCAL int
++ do_scg_sense(scgp, sp)
++ 	SCSI		*scgp;
++ 	struct scg_cmd	*sp;
++ {
++ 	int		ret;
++ 	struct scg_cmd	s_cmd;
++ 
++ 	memset((caddr_t)&s_cmd, 0, sizeof (s_cmd));
++ 
++ 	s_cmd.addr	= (caddr_t) sp->u_sense.cmd_sense;
++ 	s_cmd.size	= sp->sense_len;
++ 	s_cmd.flags	= SCG_RECV_DATA|SCG_DISRE_ENA;
++ 	s_cmd.cdb_len	= SC_G0_CDBLEN;
++ 	s_cmd.sense_len	= CCS_SENSE_LEN;
++ 
++ 	s_cmd.cdb.g0_cdb.cmd   = SC_REQUEST_SENSE;
++ 	s_cmd.cdb.g0_cdb.lun   = sp->cdb.g0_cdb.lun;
++ 	s_cmd.cdb.g0_cdb.count = sp->sense_len;
++ 
++ 	ret = do_scg_cmd(scgp, &s_cmd);
++ 
++ 	if (ret < 0)
++ 		return (ret);
++ 
++ 	sp->sense_count = sp->sense_len - s_cmd.resid;
++ 	return (ret);
++ }
++ 
++ LOCAL int
++ scgo_send(scgp)
++ 	SCSI		*scgp;
++ {
++ 	struct scg_cmd	*sp = scgp->scmd;
++ 	int	ret;
++ 
++ 	if (scgp->fd < 0) {
++ 		sp->error = SCG_FATAL;
++ 		return (0);
++ 	}
++ 
++ 	ret = do_scg_cmd(scgp, sp);
++ 	if (ret < 0)
++ 		return (ret);
++ 
++ 	if (sp->u_scb.cmd_scb[0] & S_CKCON)
++ 		ret = do_scg_sense(scgp, sp);
++ 
++ 	return (ret);
++ }
++ 
++ #define	sense	u_sense.Sense
++ #undef	SC_PARITY
++ #define	SC_PARITY	0x09
++ #define	scb		u_scb.Scb
++ 
++ /*--------------------------------------------------------------------------*/
++ #include <unixstd.h>
++ #include <waitdefs.h>
++ /*
++  * Simplified version of popen()
++  * This version of popen() is not usable more than once at a time.
++  * Needed because /etc/scsi/pdiconfig will not work if euid != uid
++  */
++ LOCAL pid_t	po_pid;
++ 
++ LOCAL FILE *
++ xpopen(cmd, type)
++ 	char	*cmd;
++ 	char	*type;
++ {
++ 	FILE	*ret;
++ 	FILE	*pp[2];
++ 
++ 	if (po_pid != 0)
++ 		return ((FILE *)NULL);
++ 
++ 	if (*type != 'r')
++ 		return ((FILE *)NULL);
++ 
++ 	if (fpipe(pp) == 0)
++ 		return ((FILE *)NULL);
++ 
++ 
++ 	if ((po_pid = fork()) == 0) {
++ 		setuid(0);
++ 
++ 		fclose(pp[0]);
++ 		(void) fexecl("/bin/sh", stdin, pp[1], stderr,
++ 					"sh", "-c", cmd, (char *)0);
++ 		_exit(1);
++ 	}
++ 	fclose(pp[1]);
++ 
++ 	if (po_pid == (pid_t)-1) {
++ 		fclose(pp[0]);
++ 		return ((FILE *)NULL);
++ 	}
++ 	return (pp[0]);
++ }
++ 
++ LOCAL int
++ xpclose(f)
++ 	FILE	*f;
++ {
++ 	int	ret = 0;
++ 
++ 	if (po_pid == 0)
++ 		return (-1);
++ 
++ 	fclose(f);
++ 
++ 	if (waitpid(po_pid, &ret, 0) < 0)
++ 		ret = -1;
++ 
++ 	po_pid = 0;
++ 	return (ret);
++ }
+*** ./src/device/k3bdevicemanager.h.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bdevicemanager.h Thu May 19 16:46:22 2005
+***************
+*** 112,117 ****
+  
+        class Private;
+        Private* d;
+      };
+  }
+  
+--- 112,121 ----
+  
+        class Private;
+        Private* d;
++ #if defined(__FreeBSD__) || defined(__USLC__)
++       void bsd_scan_devices();
++       CdDevice* addDevice( CdDevice* );
++ #endif
+      };
+  }
+  
+*** ./src/device/k3bscsicommand.cpp.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bscsicommand.cpp Thu May 19 16:46:59 2005
+***************
+*** 58,69 ****
+  
+  
+  
+! K3bCdDevice::ScsiCommand::ScsiCommand( int fd )
+!   : m_fd(fd),
+!     m_device(0)
+! {
+!   clear();
+! }
+  
+  
+  K3bCdDevice::ScsiCommand::ScsiCommand( const K3bCdDevice::CdDevice* dev )
+--- 58,69 ----
+  
+  
+  
+! //K3bCdDevice::ScsiCommand::ScsiCommand( int fd )
+! //  : m_fd(fd),
+! //    m_device(0)
+! //{
+! //  clear();
+! //}
+  
+  #if !defined(__FreeBSD__) && !defined(__USLC__)
+  
+***************
+*** 65,70 ****
+    clear();
+  }
+  
+  
+  K3bCdDevice::ScsiCommand::ScsiCommand( const K3bCdDevice::CdDevice* dev )
+    : m_device(dev)
+--- 65,71 ----
+  //  clear();
+  //}
+  
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+  
+  K3bCdDevice::ScsiCommand::ScsiCommand( const K3bCdDevice::CdDevice* dev )
+    : m_device(dev)
+***************
+*** 141,146 ****
+      return 0;
+  }
+  
+  
+  QString K3bCdDevice::MMC::commandString( const unsigned char& command )
+  {
+--- 142,296 ----
+      return 0;
+  }
+  
++ #else
++ 
++ #include <fcntl.h>
++ #include <cam/scsi/scsi_message.h>
++ #include <cam/scsi/scsi_pass.h>
++ #include <errno.h>
++ #define ERRCODE(s)	((((s)[2]&0x0F)<<16)|((s)[12]<<8)|((s)[13]))
++ #define EMEDIUMTYPE	EINVAL
++ #define	ENOMEDIUM	ENODEV
++ #define CREAM_ON_ERRNO(s)	do {			\
++     switch ((s)[12])					\
++     {	case 0x04:	errno=EAGAIN;	break;		\
++ 	case 0x20:	errno=ENODEV;	break;		\
++ 	case 0x21:	if ((s)[13]==0)	errno=ENOSPC;	\
++ 			else		errno=EINVAL;	\
++ 			break;				\
++ 	case 0x30:	errno=EMEDIUMTYPE;  break;	\
++ 	case 0x3A:	errno=ENOMEDIUM;    break;	\
++     }							\
++ } while(0)
++ #include <unistd.h>
++ #include <kdebug.h>
++ 
++ #include <string.h>
++ #include <sys/ioctl.h>
++ 
++ K3bCdDevice::ScsiCommand::ScsiCommand( const K3bCdDevice::CdDevice* dev )
++   : closecam(true), m_device(dev)
++ {
++    cam = cam_open_pass (m_device->m_passDevice.latin1(),O_RDWR,NULL);
++    kdDebug() << "(K3bCdDevice::ScsiCommand) open device " << m_device->m_passDevice << ((cam)?" succeeded.":" failed.") << endl;
++    clear();
++ }
++ 
++ K3bCdDevice::ScsiCommand::ScsiCommand( const K3bCdDevice::CdDevice* dev, struct cam_device * c)
++   : closecam(false), cam(c), m_device(dev)
++ {
++    clear();
++ }
++ 
++ K3bCdDevice::ScsiCommand::~ScsiCommand()
++ {
++    if(cam && closecam)
++    {
++        cam_close_device(cam);
++        kdDebug() << "(K3bCdDevice::ScsiCommand) device " << m_device->m_passDevice << " closed." << endl;
++    }
++ }
++ 
++ 
++ void K3bCdDevice::ScsiCommand::clear()
++ {
++    memset (&ccb,0,sizeof(ccb));
++    if (!cam)
++       return;
++    ccb.ccb_h.path_id    = cam->path_id;
++    ccb.ccb_h.target_id  = cam->target_id;
++    ccb.ccb_h.target_lun = cam->target_lun;
++ }
++ 
++ unsigned char& K3bCdDevice::ScsiCommand::operator[]( size_t i )
++ {
++    ccb.csio.cdb_len = i+1;
++    return ccb.csio.cdb_io.cdb_bytes[i];
++ }
++ 
++ 
++ int K3bCdDevice::ScsiCommand::transport( TransportDirection dir,
++ 					 void* data,
++ 					 size_t len )
++ {
++    if (!cam)
++       return -1;
++    kdDebug() << "(K3bCdDevice::ScsiCommand) transport command " << QString::number((int)ccb.csio.cdb_io.cdb_bytes[0], 16) << ", length: " << (int)ccb.csio.cdb_len << endl;
++    int ret=0;
++    unsigned char command = ccb.csio.cdb_io.cdb_bytes[0];
++    int direction = CAM_DEV_QFRZDIS;
++    if (!len)
++       direction |= CAM_DIR_NONE;
++    else
++       direction |= (dir & TR_DIR_READ)?CAM_DIR_IN : CAM_DIR_OUT;
++    cam_fill_csio (&(ccb.csio), 1, NULL, direction | CAM_DEV_QFRZDIS, MSG_SIMPLE_Q_TAG, (u_int8_t *)data, len, sizeof(ccb.csio.sense_data), ccb.csio.cdb_len, 30*1000);
++    unsigned char * sense = (unsigned char *)&ccb.csio.sense_data;
++    if ((ret = cam_send_ccb(cam, &ccb)) < 0)
++    {
++       kdDebug() << "(K3bCdDevice::ScsiCommand) transport failed: " << ret << endl;
++       goto dump_error;
++   }
++    if ((ccb.ccb_h.status & CAM_STATUS_MASK) == CAM_REQ_CMP)
++       return 0;
++    
++    errno = EIO;
++    // FreeBSD 5-CURRENT since 2003-08-24, including 5.2 fails to
++    // pull sense data automatically, at least for ATAPI transport,
++    // so I reach for it myself...
++    if ((ccb.csio.scsi_status==SCSI_STATUS_CHECK_COND) &&
++       !(ccb.ccb_h.status&CAM_AUTOSNS_VALID))
++    {   
++       u_int8_t  _sense[18];
++       u_int32_t resid=ccb.csio.resid;
++ 
++       memset(_sense,0,sizeof(_sense));
++ 
++       operator[](0)      = 0x03;	// REQUEST SENSE
++       ccb.csio.cdb_io.cdb_bytes[4] = sizeof(_sense);
++       ccb.csio.cdb_len   = 6;
++       ccb.csio.ccb_h.flags |= CAM_DIR_IN|CAM_DIS_AUTOSENSE;
++       ccb.csio.data_ptr  = _sense;
++       ccb.csio.dxfer_len = sizeof(_sense);
++       ccb.csio.sense_len = 0;
++       ret = cam_send_ccb(cam, &ccb);
++ 
++       ccb.csio.resid = resid;
++       if (ret<0)
++       {
++          kdDebug() << "(K3bCdDevice::ScsiCommand) transport failed (2): " << ret << endl;
++          ret = -1;
++          goto dump_error;
++       }
++       if ((ccb.ccb_h.status&CAM_STATUS_MASK) != CAM_REQ_CMP)
++       {
++          kdDebug() << "(K3bCdDevice::ScsiCommand) transport failed (3): " << ret << endl;
++          errno=EIO,-1;
++          ret = -1;
++          goto dump_error;
++       } 
++ 
++       memcpy(sense,_sense,sizeof(_sense));
++    }
++ 
++    ret = ERRCODE(sense);
++    kdDebug() << "(K3bCdDevice::ScsiCommand) transport failed (4): " << ret << endl;
++    if (ret == 0)
++       ret = -1;
++    else
++       CREAM_ON_ERRNO(((unsigned char *)&ccb.csio.sense_data));
++ dump_error:
++     kdDebug() << "(K3bCdDevice::ScsiCommand) failed: " << endl
++               << "                           command:    " << QString("%1 (%2)")
++       .arg( MMC::commandString( ccb.csio.cdb_io.cdb_bytes[0] ) )
++       .arg( QString::number(ccb.csio.cdb_io.cdb_bytes[0], 16) ) << endl
++               << "                           errorcode:  " << QString::number(((struct scsi_sense_data *)sense)->error_code & SSD_ERRCODE, 16) << endl
++               << "                           sense key:  " << senseKeyToString(((struct scsi_sense_data *)sense)->flags & SSD_KEY) << endl
++               << "                           asc:        " << QString::number(((struct scsi_sense_data *)sense)->add_sense_code, 16) << endl
++               << "                           ascq:       " << QString::number(((struct scsi_sense_data *)sense)->add_sense_code_qual, 16) << endl;
++    
++    return ret;
++ }
++ #endif
+  
+  QString K3bCdDevice::MMC::commandString( const unsigned char& command )
+  {
+*** ./src/device/k3bdevicemanager.cpp.osr6 Wed May 11 01:57:37 2005
+--- ./src/device/k3bdevicemanager.cpp Thu May 19 16:45:36 2005
+***************
+*** 35,41 ****
+  #include <fstab.h>
+  #include <limits.h>
+  
+! #ifdef __FreeBSD__
+  #include <sys/param.h>
+  #include <sys/ucred.h>
+  #include <sys/mount.h>
+--- 35,41 ----
+  #include <fstab.h>
+  #include <limits.h>
+  
+! #if defined(__FreeBSD__) || defined(__USLC__)
+  #include <sys/param.h>
+  #include <sys/ucred.h>
+  #include <sys/mount.h>
+***************
+*** 49,54 ****
+  #include <sys/stat.h>
+  #include <sys/ioctl.h>
+  
+  
+  #ifdef Q_OS_LINUX
+  
+--- 49,59 ----
+  #include <sys/stat.h>
+  #include <sys/ioctl.h>
+  
++ #if defined(__FreeBSD__) || defined(__USLC__)
++ #include <osreldate.h>
++ #include <ktempfile.h>
++ #include <sys/param.h>
++ #endif
+  
+  
+  #ifdef Q_OS_LINUX
+***************
+*** 50,55 ****
+  #include <sys/ioctl.h>
+  
+  
+  #ifdef Q_OS_LINUX
+  
+  /* Fix definitions for 2.5 kernels */
+--- 55,61 ----
+  #include <sys/param.h>
+  #endif
+  
++ 
+  #ifdef Q_OS_LINUX
+  
+  /* Fix definitions for 2.5 kernels */
+***************
+*** 196,201 ****
+  {
+    m_foundDevices = 0;
+  
+    QFile info("/proc/sys/dev/cdrom/info");
+    QString line,devstring;
+    info.open(IO_ReadOnly);
+--- 202,214 ----
+  {
+    m_foundDevices = 0;
+  
++ #if defined(__FreeBSD__) || defined(__USLC__)
++ // What k3b does here is the following: it takes a list of device point, which are good candidates for cd drives
++ // and asks their properties. If they are indeed cd drives, they are added to a device list. This does not work
++ // on FreeBSD (no corresponding ioctls). Here cdrecord is asked for a list of scsi device, which work as cd
++ // drives. The device points of those devices are added to the device list.
++   bsd_scan_devices();
++ #else
+    QFile info("/proc/sys/dev/cdrom/info");
+    QString line,devstring;
+    info.open(IO_ReadOnly);
+***************
+*** 269,274 ****
+    // FIXME: also scan /dev/scsi/hostX.... for devfs without symlinks
+  #endif
+  
+    scanFstab();
+  
+    return m_foundDevices;
+--- 282,288 ----
+    // FIXME: also scan /dev/scsi/hostX.... for devfs without symlinks
+  #endif
+  
++ #endif
+    scanFstab();
+  
+    return m_foundDevices;
+***************
+*** 412,417 ****
+  bool K3bCdDevice::DeviceManager::testForCdrom(const QString& devicename)
+  {
+    bool ret = false;
+    int cdromfd = K3bCdDevice::openDevice( devicename.ascii() );
+    if (cdromfd < 0) {
+      kdDebug() << "could not open device " << devicename << " (" << strerror(errno) << ")" << endl;
+--- 426,432 ----
+  bool K3bCdDevice::DeviceManager::testForCdrom(const QString& devicename)
+  {
+    bool ret = false;
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+    int cdromfd = K3bCdDevice::openDevice( devicename.ascii() );
+    if (cdromfd < 0) {
+      kdDebug() << "could not open device " << devicename << " (" << strerror(errno) << ")" << endl;
+***************
+*** 452,457 ****
+    }
+  
+    ::close( cdromfd );
+    return ret;
+  }
+  
+--- 467,473 ----
+    }
+  
+    ::close( cdromfd );
++ #endif
+    return ret;
+  }
+  
+***************
+*** 457,462 ****
+  
+  K3bDevice* K3bCdDevice::DeviceManager::addDevice( const QString& devicename )
+  {
+    K3bDevice* device = 0;
+  
+    // resolve all symlinks
+--- 473,502 ----
+  
+  K3bDevice* K3bCdDevice::DeviceManager::addDevice( const QString& devicename )
+  {
++ #if defined(__FreeBSD__) || defined(__USLC__)
++ // this piece of code extracts some device parameter, like scsi or ide device. The whole process
++ // fails on FreeBSD. Here the device name is simply looked up in a list of devices found by a
++ // call of cdrecord --scanbus.
++   K3bDevice* device = findDevice(devicename);
++   if (device)
++      return 0;
++   // resolve all symlinks
++       QString resolved = resolveSymLink( devicename );
++       kdDebug() << "(K3bDeviceManager) " << devicename << " resolved to " << resolved << endl;
++       if( K3bDevice* oldDev = findDevice( resolved ) )
++       {
++         kdDebug() << "(K3bDeviceManager) dev already found" << endl;
++         oldDev->addDeviceNode( resolved );
++         return 0;
++       }
++   device = new K3bDevice(resolved.latin1());
++   return addDevice( device );
++ }
++ 
++ K3bDevice* K3bCdDevice::DeviceManager::addDevice( CdDevice* device )
++ {
++   const QString devicename = device->devicename();
++ #else
+    K3bDevice* device = 0;
+  
+    // resolve all symlinks
+***************
+*** 488,493 ****
+      device->m_target = target;
+      device->m_lun = lun;
+    }
+  
+    if( !device->init() ) {
+      kdDebug() << "Could not initialize device " << devicename << endl;
+--- 528,534 ----
+      device->m_target = target;
+      device->m_lun = lun;
+    }
++ #endif
+  
+    if( !device->init() ) {
+      kdDebug() << "Could not initialize device " << devicename << endl;
+***************
+*** 563,568 ****
+  
+      if( K3bDevice* dev = findDevice( resolveSymLink(md) ) )
+      {
+        kdDebug() << "(K3bDeviceManager) found device for " << md << ": " << resolveSymLink(md) << endl;
+        if( dev->mountDevice().isEmpty() ) {
+          dev->setMountPoint( mountInfo->fs_file );
+--- 604,610 ----
+  
+      if( K3bDevice* dev = findDevice( resolveSymLink(md) ) )
+      {
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
+        kdDebug() << "(K3bDeviceManager) found device for " << md << ": " << resolveSymLink(md) << endl;
+        if( dev->mountDevice().isEmpty() ) {
+          dev->setMountPoint( mountInfo->fs_file );
+***************
+*** 566,571 ****
+        kdDebug() << "(K3bDeviceManager) found device for " << md << ": " << resolveSymLink(md) << endl;
+        if( dev->mountDevice().isEmpty() ) {
+          dev->setMountPoint( mountInfo->fs_file );
+          dev->setMountDevice( md );
+  	dev->m_supermount = supermount;
+        }
+--- 608,623 ----
+        kdDebug() << "(K3bDeviceManager) found device for " << md << ": " << resolveSymLink(md) << endl;
+        if( dev->mountDevice().isEmpty() ) {
+          dev->setMountPoint( mountInfo->fs_file );
++ #else
++       kdDebug() << "(K3bDeviceManager) found device for " << md << " (" << resolveSymLink(md) << "): " << mountInfo->fs_file << endl;
++ // Several mount points for one device might exist. If more than one are found, the one with
++ // user permission should have a higher priority.
++       struct stat filestat;
++       if( dev->mountDevice().isEmpty() || (mountInfo->fs_file && !stat(mountInfo->fs_file, &filestat) && filestat.st_uid == geteuid()))
++       {
++         kdDebug() << "(K3bDeviceManager) setting mount point for device " << md << ": " << mountInfo->fs_file << endl;
++         dev->setMountPoint( mountInfo->fs_file );
++ #endif
+          dev->setMountDevice( md );
+  	dev->m_supermount = supermount;
+        }
+***************
+*** 574,579 ****
+      {
+        // compare bus, id, lun since the same device can for example be
+        // determined as /dev/srX or /dev/scdX
+        int bus = -1, id = -1, lun = -1;
+        if( determineBusIdLun( mountInfo->fs_spec, bus, id, lun ) ) {
+          if( K3bDevice* dev = findDevice( bus, id, lun ) ) {
+--- 626,633 ----
+      {
+        // compare bus, id, lun since the same device can for example be
+        // determined as /dev/srX or /dev/scdX
++ #if !defined(__FreeBSD__) && !defined(__USLC__)
++ // On FreeBSD scsi parameters can not be extracted from a file handle
+        int bus = -1, id = -1, lun = -1;
+        if( determineBusIdLun( mountInfo->fs_spec, bus, id, lun ) ) {
+          if( K3bDevice* dev = findDevice( bus, id, lun ) ) {
+***************
+*** 584,589 ****
+            }
+          }
+        }
+  
+  
+      }
+--- 638,654 ----
+            }
+          }
+        }
++ #else
++ // Therefore they are looked up in the device list.
++           kdDebug() << "(K3bDeviceManager) device:  " << mountInfo->fs_spec << endl;
++ 	  if( K3bDevice* dev = findDevice( mountInfo->fs_spec ) ) {
++             kdDebug() << " found! " << endl;
++ 	    if( dev->mountDevice().isEmpty() ) {
++ 	      dev->setMountPoint( mountInfo->fs_file );
++ 	      dev->setMountDevice( md );
++ 	    }
++ 	  }
++ #endif
+  
+  
+      }
+***************
+*** 659,663 ****
+    return QString::fromLatin1( resolved );
+  }
+  
+  
+  #include "k3bdevicemanager.moc"
+--- 724,861 ----
+    return QString::fromLatin1( resolved );
+  }
+  
++ 
++ #if defined(__FreeBSD__) || defined(__USLC__)
++ #include <cam/cam.h>
++ #include <cam/scsi/scsi_pass.h>
++ #include <camlib.h>
++ void K3bCdDevice::DeviceManager::bsd_scan_devices()
++ {
++ 	union ccb ccb;
++ 	int fd, i;
++ 	int need_close = 0;
++ 	int skip_device = 0;
++ 	int bus, target, lun;
++ 	QString dev1 = "", dev2 = "";
++ 
++ 	if ((fd = open(XPT_DEVICE, O_RDWR)) == -1) 
++ 	{
++ 		kdDebug() << "couldn't open %s " << XPT_DEVICE << endl;
++ 		return;
++ 	}
++ 	
++ 	memset(&ccb, 0, sizeof(ccb));
++ 
++ 	ccb.ccb_h.func_code = XPT_DEV_MATCH;
++ 	char buffer[100*sizeof(struct dev_match_result)];
++ 	ccb.cdm.match_buf_len = 100*sizeof(struct dev_match_result);
++ 	ccb.cdm.matches = (struct dev_match_result *)buffer;
++ 	ccb.cdm.num_matches = 0;
++ 	ccb.cdm.num_patterns = 0;
++ 	ccb.cdm.pattern_buf_len = 0;
++ 	do {
++ 		if (ioctl(fd, CAMIOCOMMAND, &ccb) == -1) {
++ 			kdDebug() << "(bsd_scan_devices) error sending CAMIOCOMMAND ioctl: " << errno << endl;
++ 			break;
++ 		}
++ 
++ 		if ((ccb.ccb_h.status != CAM_REQ_CMP)
++ 		 || ((ccb.cdm.status != CAM_DEV_MATCH_LAST) && (ccb.cdm.status != CAM_DEV_MATCH_MORE))) {
++ 			kdDebug() << "(bsd_scan_devices) got CAM error " << ccb.ccb_h.status << ", CDM error %d" << ccb.cdm.status << endl;
++ 			break;
++ 		}
++ 		kdDebug() << "(bsd_scan_devices) number of matches " << (int)ccb.cdm.num_matches << endl;
++ 		for (int i = 0; i < (int)ccb.cdm.num_matches; i++) {
++ 			switch (ccb.cdm.matches[i].type) {
++ 			case DEV_MATCH_DEVICE: {
++ 				struct device_match_result *dev_result = &ccb.cdm.matches[i].result.device_result;
++ 
++ 				if (dev_result->flags & DEV_RESULT_UNCONFIGURED)
++ 				{
++ 					skip_device = 1;
++ 					break;
++ 				} 
++ 				else
++ 					skip_device = 0;
++ 				if (need_close) 
++ 				{
++ 					QString pass = dev1;
++ 					QString dev = "/dev/" + dev2;
++ 					if (dev2.startsWith("pass"))
++ 					{
++ 						pass = dev2;
++ 						dev = "/dev/" + dev1;
++ 					}
++ #if __FreeBSD_version < 500100
++ 					dev += "c";
++ #endif
++ 					if (dev1 != "" && dev2 != "" && dev.startsWith("/dev/cd"))
++ 					{
++ 						K3bDevice* device = new K3bDevice(dev.latin1());
++ 						device->m_bus = bus;
++ 						device->m_target = target;
++ 						device->m_lun = lun;
++ 						device->m_passDevice = "/dev/" + pass;
++ 						kdDebug() << "(bsd_scan_devices) add device " << dev << ":" << bus << ":" << target << ":" << lun << endl;
++ 						addDevice(device);
++ 					}
++ 					need_close = 0;
++ 					dev1="";
++ 					dev2="";
++ 				}
++ 				bus = dev_result->path_id;
++ 				target = dev_result->target_id;
++ 				lun = dev_result->target_lun;
++ 
++ 				need_close = 1;
++ 
++ 				break;
++ 			}
++ 			case DEV_MATCH_PERIPH: {
++ 				struct periph_match_result *periph_result = &ccb.cdm.matches[i].result.periph_result;
++ 
++ 				if (skip_device != 0)
++ 					break;
++ 
++ 				if (need_close > 1)
++ 					dev1 = periph_result->periph_name + QString::number(periph_result->unit_number);
++ 				else
++ 					dev2 = periph_result->periph_name + QString::number(periph_result->unit_number);
++ 
++ 				need_close++;
++ 				break;
++ 			}
++ 			}
++ 		}
++ 
++ 	} while ((ccb.ccb_h.status == CAM_REQ_CMP)
++ 		&& (ccb.cdm.status == CAM_DEV_MATCH_MORE));
++ 
++ 	if (need_close)
++ 	{
++ 					QString pass = dev1;
++ 					QString dev = "/dev/" + dev2;
++ 					if (dev2.startsWith("pass"))
++ 					{
++ 						pass = dev2;
++ 						dev = "/dev/" + dev1;
++ 					}
++ #if __FreeBSD_version < 500100
++ 					dev += "c";
++ #endif
++ 					if (dev1 != "" && dev2 != "" && dev.startsWith("/dev/cd"))
++ 					{
++ 						K3bDevice* device = new K3bDevice(dev.latin1());
++ 						device->m_bus = bus;
++ 						device->m_target = target;
++ 						device->m_lun = lun;
++ 						device->m_passDevice = "/dev/" + pass;
++ 						kdDebug() << "(bsd_scan_devices) add device " << dev << ":" << bus << ":" << target << ":" << lun << endl;
++ 						addDevice(device);
++ 					}
++ 	}
++ 	close(fd);
++ }
++ #endif
+  
+  #include "k3bdevicemanager.moc"
+*** ./src/Makefile.in.osr6 Fri May 13 02:11:42 2005
+--- ./src/Makefile.in Thu May 19 16:20:21 2005
+***************
+*** 296,302 ****
+  #>+ 1
+  k3b_SOURCES=k3bwelcomewidget.cpp k3bapplication.cpp k3bdiroperator.cpp kdndfileview.cpp k3bfiletreeview.cpp k3bcddbmultientriesdialog.cpp k3baudioplayer.cpp k3bprojecttabbar.cpp k3bprojecttabwidget.cpp k3bsplash.cpp k3bblankingdialog.cpp k3bfileview.cpp k3bdirview.cpp k3btoolbox.cpp k3b.cpp main.cpp k3bstatusbarmanager.cpp k3bfiletreecombobox.cpp k3breadcdreader.cpp k3binterface.cpp  k3bprojectinterface.cpp  k3bsystemproblemdialog.cpp k3bcdcontentsview.cpp k3bwriterspeedverificationdialog.cpp k3bdatatrackreader.cpp k3binterface_skel.cpp k3bprojectinterface_skel.cpp
+  
+! k3b_LDADD = ./cdinfo/libcdinfo.la ./option/liboption.la ./rip/librip.la ./cdcopy/libcdcopy.la ./dvdcopy/libdvdcopy.la ./videoEncoding/libvideoEncoding.la ./plugin/libk3bplugin.la $(ARTS_LIBS) -lkio -lkparts ./device/libk3bdevice.la ./core/libk3bcore.la ./tools/libk3btools.la ./projects/libk3bproject.la ./images/libimagewriting.la
+  
+  SUBDIRS = device core tools plugin projects cddb cdinfo option rip cdcopy images dvdcopy videoEncoding pics icons konqi mimetypes tests audiodecoding audioencoding sounds $(K3BSETUP1_BUILD)
+  
+--- 296,302 ----
+  #>+ 1
+  k3b_SOURCES=k3bwelcomewidget.cpp k3bapplication.cpp k3bdiroperator.cpp kdndfileview.cpp k3bfiletreeview.cpp k3bcddbmultientriesdialog.cpp k3baudioplayer.cpp k3bprojecttabbar.cpp k3bprojecttabwidget.cpp k3bsplash.cpp k3bblankingdialog.cpp k3bfileview.cpp k3bdirview.cpp k3btoolbox.cpp k3b.cpp main.cpp k3bstatusbarmanager.cpp k3bfiletreecombobox.cpp k3breadcdreader.cpp k3binterface.cpp  k3bprojectinterface.cpp  k3bsystemproblemdialog.cpp k3bcdcontentsview.cpp k3bwriterspeedverificationdialog.cpp k3bdatatrackreader.cpp k3binterface_skel.cpp k3bprojectinterface_skel.cpp
+  
+! k3b_LDADD = ./cdinfo/libcdinfo.la ./option/liboption.la ./rip/librip.la ./cdcopy/libcdcopy.la ./dvdcopy/libdvdcopy.la ./videoEncoding/libvideoEncoding.la ./plugin/libk3bplugin.la $(ARTS_LIBS) -lkio -lkparts -lcam ./device/libk3bdevice.la ./core/libk3bcore.la ./tools/libk3btools.la ./projects/libk3bproject.la ./images/libimagewriting.la
+  
+  SUBDIRS = device core tools plugin projects cddb cdinfo option rip cdcopy images dvdcopy videoEncoding pics icons konqi mimetypes tests audiodecoding audioencoding sounds $(K3BSETUP1_BUILD)
+  
+*** ./configure.osr6 Fri May 13 02:11:25 2005
+--- ./configure Thu May 19 14:48:33 2005
+***************
+*** 2227,2233 ****
+     { (exit 1); exit 1; }; }
+    fi
+    kde_libs_htmldir=`$KDECONFIG --install html --expandvars`
+-   kde_libs_suffix=`$KDECONFIG --libsuffix`
+  
+    echo "$as_me:$LINENO: checking where to install" >&5
+  echo $ECHO_N "checking where to install... $ECHO_C" >&6
+--- 2227,2232 ----
+     { (exit 1); exit 1; }; }
+    fi
+    kde_libs_htmldir=`$KDECONFIG --install html --expandvars`
+  
+    echo "$as_me:$LINENO: checking where to install" >&5
+  echo $ECHO_N "checking where to install... $ECHO_C" >&6
+***************
+*** 3230,3243 ****
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+-   for ac_declaration in \
+-    '' \
+-    'extern "C" void std::exit (int) throw (); using std::exit;' \
+-    'extern "C" void std::exit (int); using std::exit;' \
+-    'extern "C" void exit (int) throw ();' \
+-    'extern "C" void exit (int);' \
+-    'void exit (int);'
+- do
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 3229,3234 ----
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 3244,3250 ****
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+- $ac_declaration
+  #include <stdlib.h>
+  int
+  main ()
+--- 3235,3240 ----
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <stdlib.h>
+  int
+  main ()
+***************
+*** 3290,3296 ****
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+- $ac_declaration
+  int
+  main ()
+  {
+--- 3280,3285 ----
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  int
+  main ()
+  {
+***************
+*** 3328,3334 ****
+  
+  fi
+  rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+- done
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+--- 3317,3322 ----
+  
+  fi
+  rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+***************
+*** 3957,3970 ****
+      CXXFLAGS=
+    fi
+  fi
+- for ac_declaration in \
+-    '' \
+-    'extern "C" void std::exit (int) throw (); using std::exit;' \
+-    'extern "C" void std::exit (int); using std::exit;' \
+-    'extern "C" void exit (int) throw ();' \
+-    'extern "C" void exit (int);' \
+-    'void exit (int);'
+- do
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 3945,3950 ----
+      CXXFLAGS=
+    fi
+  fi
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 3971,3977 ****
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+- $ac_declaration
+  #include <stdlib.h>
+  int
+  main ()
+--- 3951,3956 ----
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <stdlib.h>
+  int
+  main ()
+***************
+*** 4017,4023 ****
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+- $ac_declaration
+  int
+  main ()
+  {
+--- 3996,4001 ----
+  cat confdefs.h >>conftest.$ac_ext
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  int
+  main ()
+  {
+***************
+*** 4055,4061 ****
+  
+  fi
+  rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+- done
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+--- 4033,4038 ----
+  
+  fi
+  rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+***************
+*** 6884,6893 ****
+    enable_static=no
+  fi;
+  
+- 
+- 
+- 
+-     kdelibsuff="$kde_libs_suffix"
+      if test -z "$kdelibsuff"; then
+         kdelibsuff=no
+      fi
+--- 6861,6866 ----
+    enable_static=no
+  fi;
+  
+      if test -z "$kdelibsuff"; then
+         kdelibsuff=no
+      fi
+***************
+*** 11587,11596 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 11560,11565 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 11685,11694 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 11654,11659 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 15249,15258 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 15214,15219 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 15347,15356 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 15308,15313 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 20629,20638 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 20586,20591 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 20727,20736 ****
+  #  endif
+  #endif
+  
+- #ifdef __cplusplus
+- extern "C" void exit (int);
+- #endif
+- 
+  void fnord() { int i=42;}
+  int main ()
+  {
+--- 20680,20685 ----
+  #  endif
+  #endif
+  
+  void fnord() { int i=42;}
+  int main ()
+  {
+***************
+*** 36991,36997 ****
+    # And if so, warn when they don't match
+    if test "$kde_libs_prefix" != "$given_prefix"; then
+      # And if kde doesn't know about the prefix yet
+!     echo ":"`kde-config --path exe`":" | grep ":$given_prefix/bin/:" 2>&1 >/dev/null
+      if test $? -ne 0; then
+        echo ""
+        echo "Warning: you chose to install this package in $given_prefix,"
+--- 36940,36946 ----
+    # And if so, warn when they don't match
+    if test "$kde_libs_prefix" != "$given_prefix"; then
+      # And if kde doesn't know about the prefix yet
+!     echo ":"`$KDECONFIG --path exe`":" | grep ":$given_prefix/bin/:" 2>&1 >/dev/null
+      if test $? -ne 0; then
+        echo ""
+        echo "Warning: you chose to install this package in $given_prefix,"
+*** ./Configure-OSR6.osr6 Thu May 19 14:48:33 2005
+--- ./Configure-OSR6 Thu May 19 16:19:51 2005
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ 
++ # Apply BSD patches from BSD ports collection
++ for p in bsd-patches/*
++ do
++   /usr/gnu/bin/patch -b -z .bsd -p0 -i $p
++ done
++ 
++ rm -f mout-configure
++ ./configure $* --prefix=/opt/kde --program-prefix="" \
++                --without-oggvorbis --without-libmad --with-qt-dir=/opt/kde \
++                --with-qt-includes=/opt/kde/include --with-qt-libraries=/opt/kde/lib \
++                --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

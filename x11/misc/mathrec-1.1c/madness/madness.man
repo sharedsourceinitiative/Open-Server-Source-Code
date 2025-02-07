@@ -1,0 +1,22 @@
+Usage: madness [-uAELRS] [-C parm] [-n steps] [-I size]
+	[-N pics] [-T div] [-W width] [-H height]
+		[-abczefgh num] [-s ncols]
+	where :
+	-u	displays this message
+	-E	doesn't erase each picture
+	-A	draws the earthquake relief logo
+	-L	draws logarithmic spirals (r,@) where r = exp(a*@)
+	-S	draws spirals of the form (r,@) where r = a*@
+	-C parm increments the specified parameter (a-h) each picture
+	-R	rotates each successive picture by pi/12
+	-T div	sets to angle of rotation to M_PI/div
+	steps	indicates the number of steps in each picture
+	pics	indicates the number of pictures in each run
+	size indicates the parametric increment at each step
+	ncols indicates the number of colors to use (2, 4, or 8)
+	-abczefgh followed by num sets the parameter value to num
+		in the system of parametric equations
+
+		x = a*sin(b*t) + c*cos(z*t) and
+		y = e*sin(f*t) + g*cos(h*t)
+

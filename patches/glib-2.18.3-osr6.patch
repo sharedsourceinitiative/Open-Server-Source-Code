@@ -1,0 +1,254 @@
+--- ./gio/Makefile.in.00	2008-11-23 21:49:56.000000000 -0800
++++ ./gio/Makefile.in	2009-01-05 09:33:24.470000011 -0800
+@@ -398,7 +398,7 @@
+ TEST_PROGS = 
+ NULL = 
+ SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
+-	$(am__append_9) . $(am__append_12) tests
++	$(am__append_9) . $(am__append_12)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gio-2.0.lib
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib
+--- ./gio/glocalfileinfo.c.00	2008-11-23 21:45:19.000000000 -0800
++++ ./gio/glocalfileinfo.c	2009-01-05 09:42:16.250000040 -0800
+@@ -23,6 +23,9 @@
+  */
+ 
+ #include "config.h"
++#ifndef _XOPEN_SOURCE
++#define _XOPEN_SOURCE 500
++#endif
+ 
+ #ifdef HAVE_SYS_TIME_H
+ #include <sys/time.h>
+--- ./glib/gstrfuncs.c.00	2008-11-23 21:45:23.000000000 -0800
++++ ./glib/gstrfuncs.c	2009-01-05 09:38:27.170000048 -0800
+@@ -36,6 +36,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ #include <locale.h>
+ #include <errno.h>
+ #include <ctype.h>		/* For tolower() */
+--- ./Configure-OSR6.00	2009-01-05 09:33:24.470000032 -0800
++++ ./Configure-OSR6	2009-01-05 09:33:50.440000017 -0800
+@@ -0,0 +1,28 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  LIBS=""
++fi
++LDFLAGS="-L/usr/local/lib"
++PATH=/usr/local/bin:/usr/bin:/usr/gnu/bin:$PATH
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL LIBS LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --disable-shared --enable-static \
++            --with-threads=posix --with-libiconv=gnu \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2009-01-05 09:33:24.470000046 -0800
++++ ./Install-OSR6	2009-01-05 09:33:24.470000043 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/glib
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./configure.00	2008-11-23 21:50:01.000000000 -0800
++++ ./configure	2009-01-05 09:33:24.510000005 -0800
+@@ -3660,7 +3660,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3739,7 +3739,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3796,9 +3796,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -5205,7 +5205,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5284,7 +5284,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5341,9 +5341,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -5852,7 +5852,7 @@
+   ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+    ac_cxx_werror_flag=yes
+    ac_cv_prog_cxx_g=no
+-   CXXFLAGS="-g"
++   CXXFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5931,7 +5931,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+-	 CXXFLAGS="-g"
++	 CXXFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5988,9 +5988,9 @@
+   CXXFLAGS=$ac_save_CXXFLAGS
+ elif test $ac_cv_prog_cxx_g = yes; then
+   if test "$GXX" = yes; then
+-    CXXFLAGS="-g -O2"
++    CXXFLAGS="-O2"
+   else
+-    CXXFLAGS="-g"
++    CXXFLAGS=""
+   fi
+ else
+   if test "$GXX" = yes; then
+@@ -6585,7 +6585,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6664,7 +6664,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6721,9 +6721,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -16346,11 +16346,11 @@
+       runpath_var='LD_RUN_PATH'
+ 
+       if test "$GCC" = yes; then
+-	archive_cmds='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_cmds='$CC -shared ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+       else
+-	archive_cmds='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_cmds='$CC -G ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+       fi
+       ;;
+ 
+@@ -19565,12 +19565,12 @@
+ 
+ 	case $cc_basename in
+           CC*)
+-	    archive_cmds_CXX='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	    archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_cmds_CXX='$CC -G ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	    ;;
+ 	  *)
+-	    archive_cmds_CXX='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	    archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_cmds_CXX='$CC -shared ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	    ;;
+ 	esac
+       ;;
+@@ -36695,6 +36695,10 @@
+         G_THREAD_CFLAGS="-D_REENTRANT -D_PTHREADS"
+         G_THREAD_LIBS="-lpthread -lthread"
+         ;;
++      *-sysv5*)
++        G_THREAD_CFLAGS="-D_PTHREADS"
++        G_THREAD_LIBS=""
++        ;;
+       *)
+         for flag in pthread pthreads mt; do
+           glib_save_CFLAGS="$CFLAGS"
+@@ -36843,7 +36847,7 @@
+ 		G_THREAD_CFLAGS="-threads"
+ 		G_THREAD_LIBS=$G_THREAD_CFLAGS
+ 		;;
+-	*-sysv5uw7*) # UnixWare 7
++	*-sysv5*) # UnixWare 7
+ 		# We are not using gcc with -pthread. Catched above.
+ 		G_THREAD_CFLAGS="-Kthread"
+ 		G_THREAD_LIBS=$G_THREAD_CFLAGS

@@ -1,0 +1,34 @@
+*** ./src/buffer.c.00 Wed Mar  9 07:42:19 2005
+--- ./src/buffer.c Mon May  9 18:11:35 2005
+***************
+*** 12,17 ****
+  # include <sys/socket.h>
+  #endif
+  
+  /* OS/2 doesn't have EIO.  FIXME: this whole notion of turning
+     a different error into EIO strikes me as pretty dubious.  */
+  #if !defined (EIO)
+--- 12,21 ----
+  # include <sys/socket.h>
+  #endif
+  
++ #ifdef shutdown
++ #undef shutdown
++ #endif
++ 
+  /* OS/2 doesn't have EIO.  FIXME: this whole notion of turning
+     a different error into EIO strikes me as pretty dubious.  */
+  #if !defined (EIO)
+*** ./Configure-OSR6.00 Mon May  9 18:12:32 2005
+--- ./Configure-OSR6 Mon May  9 18:13:02 2005
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

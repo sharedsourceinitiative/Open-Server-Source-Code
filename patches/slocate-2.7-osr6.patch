@@ -1,0 +1,285 @@
+*** ./Configure-OSR6.osr6 Mon May 23 16:00:24 2005
+--- ./Configure-OSR6 Mon May 23 16:00:24 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ 
++ aclocal --force
++ automake -a -c -f
++ autoconf
++ rm -f mout-configure
++ ./configure $* --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./sl_fts.h.osr6 Wed Feb 21 21:21:51 2001
+--- ./sl_fts.h Mon May 23 16:00:24 2005
+***************
+*** 38,44 ****
+  
+  #include "config.h"
+  
+! # ifdef __SunOS__
+  #include "cdefs.h"
+  # endif 
+  
+--- 38,44 ----
+  
+  #include "config.h"
+  
+! # if defined(__SunOS__) || defined(__USLC__)
+  #include "cdefs.h"
+  # endif 
+  
+*** ./main.c.osr6 Fri Jan 24 20:39:48 2003
+--- ./main.c Mon May 23 16:05:58 2005
+***************
+*** 135,140 ****
+  char *SLOCATEDB_DIR = "/var/db/slocate/";
+  #undef MTAB_FILE
+  #define MTAB_FILE "/etc/mnttab"
+  #else
+  char *SLOCATEDB = "/var/lib/slocate/slocate.db";
+  char *TMPSLOCATEDB = "/var/lib/slocate/slocate.db.tmp";
+--- 135,148 ----
+  char *SLOCATEDB_DIR = "/var/db/slocate/";
+  #undef MTAB_FILE
+  #define MTAB_FILE "/etc/mnttab"
++ #elif defined(__USLC__)
++ char *SLOCATEDB = "/var/lib/slocate/slocate.db";
++ char *TMPSLOCATEDB = "/var/lib/slocate/slocate.db.tmp";
++ char *SLOCATEDB_DIR = "/var/lib/slocate/";
++ #undef MTAB_FILE
++ #define MTAB_FILE "/etc/mnttab"
++ #undef SLOC_GRP
++ #define SLOC_GRP "nogroup"
+  #else
+  char *SLOCATEDB = "/var/lib/slocate/slocate.db";
+  char *TMPSLOCATEDB = "/var/lib/slocate/slocate.db.tmp";
+***************
+*** 163,168 ****
+  #ifdef __SunOS__
+  unsigned short SLOC_GID=60001; /* Seems to be the default nobody gid */
+  #else
+  unsigned short SLOC_GID=65534; /* Seems to be the default nobody gid */
+  #endif
+  int max_queries=0;
+--- 171,179 ----
+  #ifdef __SunOS__
+  unsigned short SLOC_GID=60001; /* Seems to be the default nobody gid */
+  #else
++ #ifdef __USLC__
++ unsigned short SLOC_GID=28;    /* the default nogroup gid */
++ #else
+  unsigned short SLOC_GID=65534; /* Seems to be the default nobody gid */
+  #endif
+  #endif
+***************
+*** 164,169 ****
+  unsigned short SLOC_GID=60001; /* Seems to be the default nobody gid */
+  #else
+  unsigned short SLOC_GID=65534; /* Seems to be the default nobody gid */
+  #endif
+  int max_queries=0;
+  int ADD_SLOCATEDB = 1;
+--- 175,181 ----
+  unsigned short SLOC_GID=28;    /* the default nogroup gid */
+  #else
+  unsigned short SLOC_GID=65534; /* Seems to be the default nobody gid */
++ #endif
+  #endif
+  int max_queries=0;
+  int ADD_SLOCATEDB = 1;
+*** ./sl_fts.c.osr6 Wed Feb 21 17:36:44 2001
+--- ./sl_fts.c Mon May 23 16:00:25 2005
+***************
+*** 50,55 ****
+  /* Largest alignment size needed, minus one.
+     Usually long double is the worst case.  */
+  #ifndef ALIGNBYTES
+  #define ALIGNBYTES	(__alignof__ (long double) - 1)
+  #endif
+  /* Align P to that size.  */
+--- 50,58 ----
+  /* Largest alignment size needed, minus one.
+     Usually long double is the worst case.  */
+  #ifndef ALIGNBYTES
++ #ifdef __USLC__
++ #define ALIGNBYTES	3
++ #else
+  #define ALIGNBYTES	(__alignof__ (long double) - 1)
+  #endif
+  #endif
+***************
+*** 52,57 ****
+  #ifndef ALIGNBYTES
+  #define ALIGNBYTES	(__alignof__ (long double) - 1)
+  #endif
+  /* Align P to that size.  */
+  #ifndef ALIGN
+  #define	ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
+--- 55,61 ----
+  #else
+  #define ALIGNBYTES	(__alignof__ (long double) - 1)
+  #endif
++ #endif
+  /* Align P to that size.  */
+  #ifndef ALIGN
+  #define	ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
+***************
+*** 69,74 ****
+  static u_short	 fts_stat __P((FTS *, struct dirent *, FTSENT *, int));
+  
+  #ifndef MAX
+  #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+  			   __typeof__ (b) _b = (b); \
+  			   _a > _b ? _a : _b; })
+--- 73,81 ----
+  static u_short	 fts_stat __P((FTS *, struct dirent *, FTSENT *, int));
+  
+  #ifndef MAX
++ #ifdef __USLC__
++ #define MAX(a, b)        a > b ? a : b
++ #else
+  #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+  			   __typeof__ (b) _b = (b); \
+  			   _a > _b ? _a : _b; })
+***************
+*** 72,77 ****
+  #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+  			   __typeof__ (b) _b = (b); \
+  			   _a > _b ? _a : _b; })
+  #endif
+  
+  #define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+--- 79,85 ----
+  #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+  			   __typeof__ (b) _b = (b); \
+  			   _a > _b ? _a : _b; })
++ #endif
+  #endif
+  
+  #define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+*** ./Makefile.am.osr6 Fri Jan 24 20:41:49 2003
+--- ./Makefile.am Mon May 23 16:07:09 2005
+***************
+*** 11,21 ****
+  #CFLAGS = -g3
+  
+  install-exec-hook:
+- if FREEBSD
+- 	-/usr/sbin/pw groupadd slocate	
+- else
+- 	-/usr/sbin/groupadd slocate
+- endif	
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+  	chown root.slocate $(DESTDIR)$(bindir)/slocate
+  	chown root.slocate $(DESTDIR)$(datadir)/slocate
+--- 11,16 ----
+  #CFLAGS = -g3
+  
+  install-exec-hook:
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+  	chown bin:nogroup $(DESTDIR)$(bindir)/slocate
+  	chown bin:nogroup $(DESTDIR)$(datadir)/slocate
+***************
+*** 17,24 ****
+  	-/usr/sbin/groupadd slocate
+  endif	
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+! 	chown root.slocate $(DESTDIR)$(bindir)/slocate
+! 	chown root.slocate $(DESTDIR)$(datadir)/slocate
+  	chmod 2755 $(DESTDIR)$(bindir)/slocate
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+--- 12,19 ----
+  
+  install-exec-hook:
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+! 	chown bin:nogroup $(DESTDIR)$(bindir)/slocate
+! 	chown bin:nogroup $(DESTDIR)$(datadir)/slocate
+  	chmod 2755 $(DESTDIR)$(bindir)/slocate
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+***************
+*** 23,35 ****
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/locate
+- if CRON
+- 	$(mkinstalldirs) $(DESTDIR)/etc/cron.daily/
+- 	$(INSTALL) -m 755 slocate.cron $(DESTDIR)/etc/cron.daily/slocate
+- else
+- 	./install-cron.sh
+- 	
+- endif
+  	$(INSTALL) -m 644 doc/slocate.1.linux.gz $(DESTDIR)$(mandir)/man1/slocate.1.gz
+  	$(INSTALL) -m 644 doc/updatedb.1.gz $(DESTDIR)$(mandir)/man1/updatedb.1.gz
+  	-ln -f -s $(DESTDIR)$(mandir)/man1/slocate.1.gz $(DESTDIR)$(mandir)/man1/locate.1.gz
+--- 18,23 ----
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/locate
+  	$(INSTALL) -m 644 doc/slocate.1.linux.gz $(DESTDIR)$(mandir)/man1/slocate.1.gz
+  	$(INSTALL) -m 644 doc/updatedb.1.gz $(DESTDIR)$(mandir)/man1/updatedb.1.gz
+  	-ln -f -s $(DESTDIR)$(mandir)/man1/slocate.1.gz $(DESTDIR)$(mandir)/man1/locate.1.gz
+*** ./Makefile.in.osr6 Fri Jan 24 15:15:03 2003
+--- ./Makefile.in Mon May 23 16:04:36 2005
+***************
+*** 387,394 ****
+  
+  
+  install-exec-hook:
+- @FREEBSD_TRUE@	-/usr/sbin/pw groupadd slocate	
+- @FREEBSD_FALSE@	-/usr/sbin/groupadd slocate
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+  	chown root.slocate $(DESTDIR)$(bindir)/slocate
+  	chown root.slocate $(DESTDIR)$(datadir)/slocate
+--- 387,392 ----
+  
+  
+  install-exec-hook:
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+  	chown bin:nogroup $(DESTDIR)$(bindir)/slocate
+  	chown bin:nogroup $(DESTDIR)$(datadir)/slocate
+***************
+*** 390,397 ****
+  @FREEBSD_TRUE@	-/usr/sbin/pw groupadd slocate	
+  @FREEBSD_FALSE@	-/usr/sbin/groupadd slocate
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+! 	chown root.slocate $(DESTDIR)$(bindir)/slocate
+! 	chown root.slocate $(DESTDIR)$(datadir)/slocate
+  	chmod 2755 $(DESTDIR)$(bindir)/slocate
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+--- 388,395 ----
+  
+  install-exec-hook:
+  	$(INSTALL) -d $(DESTDIR)$(datadir)/slocate
+! 	chown bin:nogroup $(DESTDIR)$(bindir)/slocate
+! 	chown bin:nogroup $(DESTDIR)$(datadir)/slocate
+  	chmod 2755 $(DESTDIR)$(bindir)/slocate
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+***************
+*** 396,404 ****
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/locate
+- @CRON_TRUE@	$(mkinstalldirs) $(DESTDIR)/etc/cron.daily/
+- @CRON_TRUE@	$(INSTALL) -m 755 slocate.cron $(DESTDIR)/etc/cron.daily/slocate
+- @CRON_FALSE@	./install-cron.sh
+  
+  	$(INSTALL) -m 644 doc/slocate.1.linux.gz $(DESTDIR)$(mandir)/man1/slocate.1.gz
+  	$(INSTALL) -m 644 doc/updatedb.1.gz $(DESTDIR)$(mandir)/man1/updatedb.1.gz
+--- 394,399 ----
+  	chmod 0750 $(DESTDIR)$(datadir)/slocate
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/updatedb
+  	-ln -f -s $(DESTDIR)$(bindir)/slocate $(DESTDIR)$(bindir)/locate
+  
+  	$(INSTALL) -m 644 doc/slocate.1.linux.gz $(DESTDIR)$(mandir)/man1/slocate.1.gz
+  	$(INSTALL) -m 644 doc/updatedb.1.gz $(DESTDIR)$(mandir)/man1/updatedb.1.gz

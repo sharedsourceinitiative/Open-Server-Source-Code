@@ -1,0 +1,1604 @@
+*** ./source/smbwrapper/smbw.c.osr6	Mon Apr 18 09:38:13 2005
+--- ./source/smbwrapper/smbw.c	Wed Sep 21 21:31:41 2005
+***************
+*** 21,26 ****
+--- 21,32 ----
+  #include "includes.h"
+  #include "realcalls.h"
+  
++ #if defined(HAVE_UNIXWARE_ACLS)
++ #define SETACL          ACL_SET
++ #define GETACL          ACL_GET
++ #define GETACLCNT       ACL_CNT
++ #endif
++ 
+  pstring smbw_cwd;
+  
+  static struct smbw_file *smbw_files;
+***************
+*** 1444,1450 ****
+  /***************************************************** 
+  say no to acls
+  *******************************************************/
+!  int smbw_acl(const char *pathp, int cmd, int nentries, aclent_t *aclbufp)
+  {
+  	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+  	errno = ENOSYS;
+--- 1450,1456 ----
+  /***************************************************** 
+  say no to acls
+  *******************************************************/
+!  int smbw_acl(const char *pathp, int cmd, int nentries, void *aclbufp)
+  {
+  	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+  	errno = ENOSYS;
+***************
+*** 1456,1462 ****
+  /***************************************************** 
+  say no to acls
+  *******************************************************/
+!  int smbw_facl(int fd, int cmd, int nentries, aclent_t *aclbufp)
+  {
+  	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+  	errno = ENOSYS;
+--- 1462,1468 ----
+  /***************************************************** 
+  say no to acls
+  *******************************************************/
+!  int smbw_facl(int fd, int cmd, int nentries, void *aclbufp)
+  {
+  	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+  	errno = ENOSYS;
+*** ./source/smbd/notify_hash.c.osr6	Thu Jul 28 06:19:43 2005
+--- ./source/smbd/notify_hash.c	Wed Sep 21 21:31:41 2005
+***************
+*** 23,35 ****
+  
+  struct change_data {
+  	time_t last_check_time; /* time we last checked this entry */
+- #ifdef HAVE_STAT_HIRES_TIMESTAMPS
+- 	struct timespec modify_time;
+- 	struct timespec status_time;
+- #else
+  	time_t modify_time; /* Info from the directory we're monitoring. */ 
+  	time_t status_time; /* Info from the directory we're monitoring. */
+- #endif
+  	time_t total_time; /* Total time of all directory entries - don't care if it wraps. */
+  	unsigned int num_entries; /* Zero or the number of files in the directory. */
+  	unsigned int mode_sum;
+--- 23,30 ----
+***************
+*** 37,49 ****
+  };
+  
+  
+- #ifdef HAVE_STAT_HIRES_TIMESTAMPS
+- /* Compare struct timespec. */
+- #define TIMESTAMP_NEQ(x, y) (((x).tv_sec != (y).tv_sec) || ((x).tv_nsec != (y).tv_nsec))
+- #else
+  /* Compare time_t . */
+  #define TIMESTAMP_NEQ(x, y) ((x) != (y))
+- #endif
+  
+  /****************************************************************************
+   Create the hash we will use to determine if the contents changed.
+--- 32,39 ----
+***************
+*** 66,78 ****
+  	if(SMB_VFS_STAT(conn,path, &st) == -1)
+  		return False;
+  
+- #ifdef HAVE_STAT_HIRES_TIMESTAMPS
+- 	data->modify_time = st.st_mtim;
+- 	data->status_time = st.st_ctim;
+- #else
+  	data->modify_time = st.st_mtime;
+  	data->status_time = st.st_ctime;
+- #endif
+  
+  	if (old_data) {
+  		/*
+--- 56,63 ----
+*** ./source/auth/pass_check.c.osr6	Fri Feb 25 09:59:29 2005
+--- ./source/auth/pass_check.c	Wed Sep 21 21:31:41 2005
+***************
+*** 23,28 ****
+--- 23,38 ----
+  
+  #include "includes.h"
+  
++ #ifdef OSR6
++ #define AUTH_MAX_PASSWD_LENGTH          80
++ #define AUTH_SALT_SIZE                  2
++ #define AUTH_CLEARTEXT_SEG_CHARS        8
++ #define AUTH_CIPHERTEXT_SEG_CHARS       11
++ #define AUTH_SEGMENTS(len) ((((int)len)-1)/AUTH_CLEARTEXT_SEG_CHARS+1)
++ #define AUTH_CIPHERTEXT_SIZE(segments) (AUTH_SALT_SIZE+(segments)*AUTH_CIPHERTEXT_SEG_CHARS+1)
++ #define AUTH_MAX_PW_SEG (AUTH_MAX_PASSWD_LENGTH/AUTH_CLEARTEXT_SEG_CHARS)
++ #endif
++ 
+  #undef DBGC_CLASS
+  #define DBGC_CLASS DBGC_AUTH
+  
+***************
+*** 397,403 ****
+  }
+  #endif
+  
+! #ifdef OSF1_ENH_SEC
+  /****************************************************************************
+  an enhanced crypt for OSF1
+  ****************************************************************************/
+--- 407,413 ----
+  }
+  #endif
+  
+! #if defined(OSF1_ENH_SEC) || defined(OSR6)
+  /****************************************************************************
+  an enhanced crypt for OSF1
+  ****************************************************************************/
+***************
+*** 502,508 ****
+  		return NT_STATUS_OK;
+  #endif /* WITH_DFS */
+  
+! #ifdef OSF1_ENH_SEC
+  	
+  	ret = (strcmp(osf1_bigcrypt(password, this_salt),
+  		      this_crypted) == 0);
+--- 512,518 ----
+  		return NT_STATUS_OK;
+  #endif /* WITH_DFS */
+  
+! #if defined(OSF1_ENH_SEC) || defined(OSR6)
+  	
+  	ret = (strcmp(osf1_bigcrypt(password, this_salt),
+  		      this_crypted) == 0);
+*** ./source/param/loadparm.c.osr6	Thu Jul 28 06:19:44 2005
+--- ./source/param/loadparm.c	Wed Sep 21 21:31:41 2005
+***************
+*** 1566,1572 ****
+  	Globals.bAllowTrustedDomains = True;
+  
+  	string_set(&Globals.szTemplateShell, "/bin/false");
+! 	string_set(&Globals.szTemplateHomedir, "/home/%D/%U");
+  	string_set(&Globals.szWinbindSeparator, "\\");
+  	string_set(&Globals.szAclCompat, "");
+  	string_set(&Globals.szCupsServer, "");
+--- 1566,1572 ----
+  	Globals.bAllowTrustedDomains = True;
+  
+  	string_set(&Globals.szTemplateShell, "/bin/false");
+! 	string_set(&Globals.szTemplateHomedir, "/u/%D/%U");
+  	string_set(&Globals.szWinbindSeparator, "\\");
+  	string_set(&Globals.szAclCompat, "");
+  	string_set(&Globals.szCupsServer, "");
+*** ./source/nsswitch/winbind_nss.h.osr6	Fri Feb 25 09:59:29 2005
+--- ./source/nsswitch/winbind_nss.h	Wed Sep 21 21:31:41 2005
+***************
+*** 58,63 ****
+--- 58,68 ----
+  
+  #else /* Nothing's defined. Neither gnu nor sun nor hp */
+  
++ #include "nss.h"
++ typedef enum nss_status NSS_STATUS;
++ 
++ /*
++ 
+  typedef enum
+  {
+    NSS_STATUS_SUCCESS=0,
+***************
+*** 65,70 ****
+--- 70,76 ----
+    NSS_STATUS_UNAVAIL=2,
+    NSS_STATUS_TRYAGAIN=3
+  } NSS_STATUS;
++ */
+  
+  #endif
+  
+*** ./source/nsswitch/wb_common.c.osr6	Thu Jul 28 06:19:44 2005
+--- ./source/nsswitch/wb_common.c	Wed Sep 21 21:31:41 2005
+***************
+*** 234,240 ****
+  		struct timeval tv;
+  		fd_set w_fds;
+  		int ret;
+! 		int connect_errno = 0, errnosize;
+  
+  		if (wait_time >= CONNECT_TIMEOUT)
+  			goto error_out;
+--- 234,241 ----
+  		struct timeval tv;
+  		fd_set w_fds;
+  		int ret;
+!         int connect_errno = 0;
+!         size_t errnosize;
+  
+  		if (wait_time >= CONNECT_TIMEOUT)
+  			goto error_out;
+***************
+*** 249,255 ****
+  				ret = select(fd + 1, NULL, &w_fds, NULL, &tv);
+  
+  				if (ret > 0) {
+! 					errnosize = sizeof(connect_errno);
+  
+  					ret = getsockopt(fd, SOL_SOCKET,
+  							SO_ERROR, &connect_errno, &errnosize);
+--- 250,256 ----
+  				ret = select(fd + 1, NULL, &w_fds, NULL, &tv);
+  
+  				if (ret > 0) {
+!                     errnosize = (size_t)sizeof(connect_errno);
+  
+  					ret = getsockopt(fd, SOL_SOCKET,
+  							SO_ERROR, &connect_errno, &errnosize);
+*** ./source/nsswitch/nss.h.osr6	Wed Sep 21 21:31:41 2005
+--- ./source/nsswitch/nss.h	Wed Sep 21 21:31:41 2005
+***************
+*** 0 ****
+--- 1,58 ----
++ /*-
++  * Copyright (c) 2003 Networks Associates Technology, Inc.
++  * All rights reserved.
++  *
++  * This software was developed for the FreeBSD Project by
++  * Jacques A. Vidrine, Safeport Network Services, and Network
++  * Associates Laboratories, the Security Research Division of Network
++  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035
++  * ("CBOSS"), as part of the DARPA CHATS research program.
++  *
++  * Redistribution and use in source and binary forms, with or without
++  * modification, are permitted provided that the following conditions
++  * are met:
++  * 1. Redistributions of source code must retain the above copyright
++  *    notice, this list of conditions and the following disclaimer.
++  * 2. Redistributions in binary form must reproduce the above copyright
++  *    notice, this list of conditions and the following disclaimer in the
++  *    documentation and/or other materials provided with the distribution.
++  *
++  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++  * SUCH DAMAGE.
++  *
++  * $FreeBSD: /repoman/r/ncvs/src/include/nss.h,v 1.2 2004/01/09 13:43:49 nectar Exp $
++  *
++  * Compatibility header for the GNU C Library-style nsswitch interface.
++  */
++ #ifndef _NSS_H_
++ #define _NSS_H_
++ 
++ #include <nsswitch.h>
++ 
++ enum nss_status {
++ 	NSS_STATUS_TRYAGAIN = -2,
++ 	NSS_STATUS_UNAVAIL,
++ 	NSS_STATUS_NOTFOUND,
++ 	NSS_STATUS_SUCCESS,
++ 	NSS_STATUS_RETURN
++ };
++ 
++ #define __nss_compat_result(rv, err)		\
++ ((rv == NSS_STATUS_TRYAGAIN && err == ERANGE) ? NS_RETURN : \
++  (rv == NSS_STATUS_TRYAGAIN) ? NS_TRYAGAIN :	\
++  (rv == NSS_STATUS_UNAVAIL)  ? NS_UNAVAIL  :	\
++  (rv == NSS_STATUS_NOTFOUND) ? NS_NOTFOUND :	\
++  (rv == NSS_STATUS_SUCCESS)  ? NS_SUCCESS  :	\
++  (rv == NSS_STATUS_RETURN)   ? NS_RETURN   : 0)
++ 
++ #endif
++ 
+*** ./source/nsswitch/nss_compat.c.osr6	Wed Sep 21 21:31:41 2005
+--- ./source/nsswitch/nss_compat.c	Wed Sep 21 21:31:41 2005
+***************
+*** 0 ****
+--- 1,272 ----
++ /*-
++  * Copyright (c) 2003 Networks Associates Technology, Inc.
++  * All rights reserved.
++  *
++  * This software was developed for the FreeBSD Project by
++  * Jacques A. Vidrine, Safeport Network Services, and Network
++  * Associates Laboratories, the Security Research Division of Network
++  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035
++  * ("CBOSS"), as part of the DARPA CHATS research program.
++  *
++  * Redistribution and use in source and binary forms, with or without
++  * modification, are permitted provided that the following conditions
++  * are met:
++  * 1. Redistributions of source code must retain the above copyright
++  *    notice, this list of conditions and the following disclaimer.
++  * 2. Redistributions in binary form must reproduce the above copyright
++  *    notice, this list of conditions and the following disclaimer in the
++  *    documentation and/or other materials provided with the distribution.
++  *
++  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++  * SUCH DAMAGE.
++  *
++  * Compatibility shims for the GNU C Library-style nsswitch interface.
++  */
++ #include <sys/cdefs.h>
++ //__FBSDID("$FreeBSD: /repoman/r/ncvs/src/lib/libc/net/nss_compat.c,v 1.3 2004/03/30 15:56:15 nectar Exp $");
++ 
++ //#include "namespace.h"
++ #include <sys/param.h>
++ #include <errno.h>
++ #include "nss.h"
++ #include <stdio.h>
++ #include "nsswitch.h"
++ //#include <pthread.h>
++ //#include <pthread_np.h>
++ //#include "un-namespace.h"
++ //#include "libc_private.h"
++ 
++ 
++ struct group;
++ struct passwd;
++ 
++ //static int	terminator;
++ 
++ /*#define DECLARE_TERMINATOR(x)					\
++ //static pthread_key_t	 _term_key_##x;				\
++ //static void							\
++ //_term_create_##x(void)						\
++ //{								\
++ //	(void)_pthread_key_create(&_term_key_##x, NULL);	\
++ //}								\
++ //static void		*_term_main_##x;			\
++ //static pthread_once_t	 _term_once_##x = PTHREAD_ONCE_INIT
++ 
++ //#define SET_TERMINATOR(x, y)						\
++ //do {									\
++ //	if (!__isthreaded || _pthread_main_np())			\
++ //		_term_main_##x = (y);					\
++ //	else {								\
++ //			(void)_pthread_once(&_term_once_##x, _term_create_##x);	\
++ //			(void)_pthread_setspecific(_term_key_##x, y);		\
++ //	}								\
++ } while (0)
++ //
++ //#define CHECK_TERMINATOR(x)					\
++ //(!__isthreaded || _pthread_main_np() ?				\
++ //   (_term_main_##x) :						\
++ //  ((void)_pthread_once(&_term_once_##x, _term_create_##x),	\
++ //    _pthread_getspecific(_term_key_##x)))
++ 
++ 
++ 
++ //DECLARE_TERMINATOR(group);*/
++ 
++ int __nss_compat_getgrnam_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(const char *, struct group *, char *, size_t, int *);
++ 	const char	*name;
++ 	struct group	*grp;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 
++ 	fn = mdata;
++ 	name = va_arg(ap, const char *);
++ 	grp = va_arg(ap, struct group *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(name, grp, buffer, bufsize, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 	if (status == NS_SUCCESS)
++ 		*(struct group **)retval = grp;
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_getgrgid_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(gid_t, struct group *, char *, size_t, int *);
++ 	gid_t		 gid;
++ 	struct group	*grp;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 	
++ 	fn = mdata;
++ 	gid = va_arg(ap, gid_t);
++ 	grp = va_arg(ap, struct group *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(gid, grp, buffer, bufsize, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 	if (status == NS_SUCCESS)
++ 		*(struct group **)retval = grp;
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_getgrent_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(struct group *, char *, size_t, int *);
++ 	struct group	*grp;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 
++ 	//if (CHECK_TERMINATOR(group))
++ 	//	return (NS_NOTFOUND);
++ 	fn = mdata;
++ 	grp = va_arg(ap, struct group *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(grp, buffer, bufsize, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 	if (status == NS_SUCCESS)
++ 		*(struct group **)retval = grp;
++ 	//else if (status != NS_RETURN)
++ 	//	SET_TERMINATOR(group, &terminator);
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_setgrent(void *retval, void *mdata, va_list ap)
++ {
++ 
++ 	//SET_TERMINATOR(group, NULL);
++ 	((int (*)(void))mdata)();
++ 	return (NS_UNAVAIL);
++ }
++ 
++ 
++ int __nss_compat_endgrent(void *retval, void *mdata, va_list ap)
++ {
++ 
++ 	//SET_TERMINATOR(group, NULL);
++ 	((int (*)(void))mdata)();
++ 	return (NS_UNAVAIL);
++ }
++ 
++ 
++ 
++ //DECLARE_TERMINATOR(passwd);
++ 
++ 
++ int __nss_compat_getpwnam_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(const char *, struct passwd *, char *, size_t, int *);
++ 	const char	*name;
++ 	struct passwd	*pwd;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 
++ 	fn = mdata;
++ 	name = va_arg(ap, const char *);
++ 	pwd = va_arg(ap, struct passwd *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(name, pwd, buffer, bufsize, errnop);
++ 	fprintf(stderr, "compat_r=%d\n", status);
++ 	status = __nss_compat_result(status, *errnop);
++ 	fprintf(stderr, "compat_r2=%d\n", status);
++ 	if (status == NS_SUCCESS)
++ 		*(struct passwd **)retval = pwd;
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_getpwuid_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(uid_t, struct passwd *, char *, size_t, int *);
++ 	uid_t		 uid;
++ 	struct passwd	*pwd;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 	
++ 	fn = mdata;
++ 	uid = va_arg(ap, uid_t);
++ 	pwd = va_arg(ap, struct passwd *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(uid, pwd, buffer, bufsize, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 	if (status == NS_SUCCESS)
++ 		*(struct passwd **)retval = pwd;
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_getpwent_r(void *retval, void *mdata, va_list ap)
++ {
++ 	int (*fn)(struct passwd *, char *, size_t, int *);
++ 	struct passwd	*pwd;
++ 	char		*buffer;
++ 	int		*errnop;
++ 	size_t		 bufsize;
++ 	enum nss_status	 status;
++ 
++ 	//if (CHECK_TERMINATOR(passwd))
++ 	//	return (NS_NOTFOUND);
++ 	fn = mdata;
++ 	pwd = va_arg(ap, struct passwd *);
++ 	buffer = va_arg(ap, char *);
++ 	bufsize = va_arg(ap, size_t);
++ 	errnop = va_arg(ap, int *);
++ 	status = fn(pwd, buffer, bufsize, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 	if (status == NS_SUCCESS)
++ 		*(struct passwd **)retval = pwd;
++ 	//else if (status != NS_RETURN)
++ 	//	SET_TERMINATOR(passwd, &terminator);
++ 	return (status);
++ }
++ 
++ 
++ int __nss_compat_setpwent(void *retval, void *mdata, va_list ap)
++ {
++ 
++ 	//SET_TERMINATOR(passwd, NULL);
++ 	((int (*)(void))mdata)();
++ 	return (NS_UNAVAIL);
++ }
++ 
++ 
++ int __nss_compat_endpwent(void *retval, void *mdata, va_list ap)
++ {
++ 
++ 	//SET_TERMINATOR(passwd, NULL);
++ 	((int (*)(void))mdata)();
++ 	return (NS_UNAVAIL);
++ }
++ 
+*** ./source/nsswitch/winbind_nss_uw7.c.osr6	Wed Sep 21 21:31:41 2005
+--- ./source/nsswitch/winbind_nss_uw7.c	Wed Sep 21 21:31:41 2005
+***************
+*** 0 ****
+--- 1,160 ----
++ /* 
++    Unix SMB/CIFS implementation.
++ 
++    AIX loadable authentication module, providing identification 
++    routines against Samba winbind/Windows NT Domain
++ 
++    Copyright (C) Aaron Collins 2003
++    
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License as published by the Free Software Foundation; either
++    version 2 of the License, or (at your option) any later version.
++    
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++    
++    You should have received a copy of the GNU Library General Public
++    License along with this library; if not, write to the
++    Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++    Boston, MA  02111-1307, USA.   
++ */
++ 
++ #include "winbind_client.h"
++ #include <nsswitch.h>
++ #include <sys/iaf.h>
++ #include <ia.h>
++ 
++ 
++ #define NSDB_GROUP		"group"
++ #define NSDB_PASSWD		"passwd"
++ 
++ #define NSS_METHOD_PROTOTYPE(method) \
++ 	int method(void *, void *, va_list)
++ 
++ /* Make sure that the module gets registered needed by freebsd 5.1 */
++ 
++ extern enum nss_status _nss_winbind_getgrent_r(struct group *, char *, size_t,
++     int *);
++ extern enum nss_status _nss_winbind_getgrnam_r(const char *, struct group *,
++     char *, size_t, int *);
++ extern enum nss_status _nss_winbind_getgrgid_r(gid_t gid, struct group *, char *,
++     size_t, int *);
++ extern enum nss_status _nss_winbind_setgrent(void);
++ extern enum nss_status _nss_winbind_endgrent(void);
++ 
++ extern enum nss_status _nss_winbind_getpwent_r(struct passwd *, char *, size_t,
++     int *);
++ extern enum nss_status _nss_winbind_getpwnam_r(const char *, struct passwd *,
++     char *, size_t, int *);
++ extern enum nss_status _nss_winbind_getpwuid_r(gid_t gid, struct passwd *, char *,
++     size_t, int *);
++ extern enum nss_status _nss_winbind_setpwent(void);
++ extern enum nss_status _nss_winbind_endpwent(void);
++ 
++ NSS_METHOD_PROTOTYPE(__nss_compat_getgrnam_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_getgrgid_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_getgrent_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_setgrent);
++ NSS_METHOD_PROTOTYPE(__nss_compat_endgrent);
++ 
++ NSS_METHOD_PROTOTYPE(__nss_compat_getpwnam_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_getpwuid_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_getpwent_r);
++ NSS_METHOD_PROTOTYPE(__nss_compat_setpwent);
++ NSS_METHOD_PROTOTYPE(__nss_compat_endpwent);
++ 
++ NSS_METHOD_PROTOTYPE(_nss_winbind_openinfo);
++ 
++ static ns_mtab methods[] = {
++ { NSDB_GROUP, "getgrnam_r", __nss_compat_getgrnam_r, (void *) _nss_winbind_getgrnam_r },
++ { NSDB_GROUP, "getgrgid_r", __nss_compat_getgrgid_r, _nss_winbind_getgrgid_r },
++ { NSDB_GROUP, "getgrent_r", __nss_compat_getgrent_r, _nss_winbind_getgrent_r },
++ { NSDB_GROUP, "endgrent",   __nss_compat_setgrent,   _nss_winbind_setgrent },
++ { NSDB_GROUP, "setgrent",   __nss_compat_endgrent,   _nss_winbind_endgrent },
++ 
++ { NSDB_PASSWD, "getpwnam_r", __nss_compat_getpwnam_r, _nss_winbind_getpwnam_r },
++ { NSDB_PASSWD, "getpwuid_r", __nss_compat_getpwuid_r, _nss_winbind_getpwuid_r },
++ { NSDB_PASSWD, "getpwent_r", __nss_compat_getpwent_r, _nss_winbind_getpwent_r },
++ { NSDB_PASSWD, "endpwent",   __nss_compat_setpwent,   _nss_winbind_setpwent },
++ { NSDB_PASSWD, "setpwent",   __nss_compat_endpwent,   _nss_winbind_endpwent },
++ 
++ { "iaf",	"ia_openinfo",	_nss_winbind_openinfo, 0},
++ };
++ 
++ ns_mtab *
++ nss_module_register(const char *source, unsigned int *mtabsize,
++     nss_module_unregister_fn *unreg)
++ {
++         *mtabsize = sizeof(methods)/sizeof(methods[0]);
++         *unreg = NULL;
++         return (methods);
++ }
++ 
++ /* int ia_openinfo(const char  * logname, uinfo_t  * uinfo); */
++ int 
++ _nss_winbind_openinfo(void *rv, void *mdata, va_list ap)
++ {
++ 	const char *name;
++ 	struct passwd p;
++ 	char buf[512];
++ 	int *errnop, *ret = rv;
++ 	enum nss_status status;
++ 	int n, dlen, slen;
++ 	uinfo_t *uipp = NULL;
++ 	uinfo_t uip;
++ 
++ 	name = va_arg(ap, const char *);
++ 	uipp = va_arg(ap, uinfo_t *);
++ 
++ 	*uipp = 0;
++ 	
++ 	status = _nss_winbind_getpwnam_r(name, &p, buf, 512, errnop);
++ 	status = __nss_compat_result(status, *errnop);
++ 
++ 	if (status == NS_SUCCESS) {
++ 		dlen = strlen(p.pw_dir);
++ 		slen = strlen(p.pw_shell);
++ 
++ 		/* struct + 1 group + dir + shell */
++ 		n = sizeof(*uip) + 1 + sizeof(gid_t) + dlen + 1 + slen + 1;
++ 
++ 		if ((uip = malloc(n)) == NULL) {
++ 			return NS_TRYAGAIN;
++ 		}
++ 
++ 		bzero(uip, n);
++ 
++ 		strncpy(uip->ia_name, p.pw_name, sizeof(uip->ia_name));
++ 		strncpy(uip->ia_pwdp, p.pw_passwd, sizeof(uip->ia_pwdp));
++ 		uip->ia_uid = p.pw_uid;
++ 		uip->ia_gid = p.pw_gid;
++ 		uip->ia_lstchg = -1;
++ 		uip->ia_min = -1;
++ 		uip->ia_max = -1;
++ 		uip->ia_warn = -1;
++ 		uip->ia_inact = -1;
++ 		uip->ia_expire = -1;
++ 
++ 		uip->ia_dirsz = dlen;
++ 		uip->ia_shsz = slen;
++ 		uip->ia_lvlcnt = 0;
++ 		uip->ia_sgidcnt = 1;
++ 
++ 		uip->ia_lvlp = (level_t *)&uip[1];
++ 		uip->ia_sgidp = (gid_t *)&uip[1];
++ 		uip->ia_dirp = (char *)&uip->ia_sgidp[1];
++ 		uip->ia_shellp = &uip->ia_dirp[dlen + 1];
++ 		*uip->ia_sgidp = p.pw_gid;
++ 		strcpy(uip->ia_dirp, p.pw_dir);
++ 		strcpy(uip->ia_shellp, p.pw_shell);
++ 
++ 		*ret = 0;
++ 		*uipp = uip;
++ 	}
++ 
++ 	fprintf(stderr, "ia_openinfo: status=%d\n", status);
++ 	return status;
++ }
+*** ./source/lib/charcnv.c.osr6	Mon Apr 18 09:38:18 2005
+--- ./source/lib/charcnv.c	Wed Sep 21 21:31:41 2005
+***************
+*** 70,76 ****
+  		setlocale(LC_ALL, "");
+  #endif
+  		ln = nl_langinfo(CODESET);
+! 		if (ln) {
+  			/* Check whether the charset name is supported
+  			   by iconv */
+  			smb_iconv_t handle = smb_iconv_open(ln,"UCS-2LE");
+--- 70,76 ----
+  		setlocale(LC_ALL, "");
+  #endif
+  		ln = nl_langinfo(CODESET);
+!         if (ln && ln[0] != '\0') {
+  			/* Check whether the charset name is supported
+  			   by iconv */
+  			smb_iconv_t handle = smb_iconv_open(ln,"UCS-2LE");
+*** ./source/lib/iconv.c.osr6	Thu Jul 28 06:19:45 2005
+--- ./source/lib/iconv.c	Wed Sep 21 21:31:41 2005
+***************
+*** 642,656 ****
+  
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+! 	*inbuf = c;
+! 	*outbuf = uc;	
+  	return 0;
+  
+  error:
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+! 	*inbuf = c;
+! 	*outbuf = uc;
+  	return -1;
+  }
+  
+--- 642,656 ----
+  
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+!     *inbuf = (const char *)c;
+!     *outbuf = (char *)uc;
+  	return 0;
+  
+  error:
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+!     *inbuf = (const char *)c;
+!     *outbuf = (char *)uc;
+  	return -1;
+  }
+  
+***************
+*** 755,770 ****
+  
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+! 	*inbuf  = uc;
+! 	*outbuf = c;
+  	
+  	return 0;
+  
+  error:
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+! 	*inbuf  = uc;
+! 	*outbuf = c;
+  	return -1;
+  }
+  
+--- 755,770 ----
+  
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+!     *inbuf  = (const char *)uc;
+!     *outbuf = (char *)c;
+  	
+  	return 0;
+  
+  error:
+  	*inbytesleft = in_left;
+  	*outbytesleft = out_left;
+!     *inbuf  = (const char *)uc;
+!     *outbuf = (char *)c;
+  	return -1;
+  }
+  
+*** ./source/include/vfs.h.osr6	Sun Aug  7 16:09:56 2005
+--- ./source/include/vfs.h	Wed Sep 21 21:31:41 2005
+***************
+*** 503,509 ****
+  
+  #define SMB_VFS_HANDLE_SET_DATA(handle, datap, free_fn, type, ret) { \
+  	if (!(handle)) { \
+! 		DEBUG(0,("%s() failed to set handle->data!\n",FUNCTION_MACRO)); \
+  		ret; \
+  	} else { \
+  		if ((handle)->free_data) { \
+--- 503,509 ----
+  
+  #define SMB_VFS_HANDLE_SET_DATA(handle, datap, free_fn, type, ret) { \
+  	if (!(handle)) { \
+!         DEBUG(0,("%s() failed to set vfs_handle->data!\n",FUNCTION_MACRO)); \
+  		ret; \
+  	} else { \
+  		if ((handle)->free_data) { \
+*** ./source/include/local.h.osr6	Fri Mar 11 05:47:05 2005
+--- ./source/include/local.h	Wed Sep 21 21:31:41 2005
+***************
+*** 98,104 ****
+  
+  /* the default guest account - normally set in the Makefile or smb.conf */
+  #ifndef GUEST_ACCOUNT
+! #define GUEST_ACCOUNT "nobody"
+  #endif
+  
+  /* user to test password server with as invalid in security=server mode. */
+--- 98,104 ----
+  
+  /* the default guest account - normally set in the Makefile or smb.conf */
+  #ifndef GUEST_ACCOUNT
+! #define GUEST_ACCOUNT "nouser"
+  #endif
+  
+  /* user to test password server with as invalid in security=server mode. */
+*** ./source/tdb/Makefile.osr6	Fri Feb 25 09:59:44 2005
+--- ./source/tdb/Makefile	Wed Sep 21 21:31:41 2005
+***************
+*** 3,9 ****
+  #
+  
+  CFLAGS = -DSTANDALONE -DTDB_DEBUG -g -DHAVE_MMAP=1
+! CC = gcc
+  
+  ADMINPROGS = tdbdump tdbbackup
+  PROGS = tdbtest tdbtool tdbtorture
+--- 3,9 ----
+  #
+  
+  CFLAGS = -DSTANDALONE -DTDB_DEBUG -g -DHAVE_MMAP=1
+! CC = cc
+  
+  ADMINPROGS = tdbdump tdbbackup
+  PROGS = tdbtest tdbtool tdbtorture
+***************
+*** 14,32 ****
+  admintools: $(ADMINPROGS)
+  
+  tdbtest: tdbtest.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtest tdbtest.o $(TDB_OBJ) -lgdbm
+  
+  tdbtool: tdbtool.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtool tdbtool.o $(TDB_OBJ)
+  
+  tdbtorture: tdbtorture.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtorture tdbtorture.o $(TDB_OBJ)
+  
+  tdbdump: tdbdump.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbdump tdbdump.o $(TDB_OBJ)
+  
+  tdbbackup: tdbbackup.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbbackup tdbbackup.o $(TDB_OBJ)
+  
+  clean:
+  	rm -f $(PROGS) *.o *~ *% core test.db test.tdb test.gdbm
+--- 14,33 ----
+  admintools: $(ADMINPROGS)
+  
+  tdbtest: tdbtest.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtest tdbtest.o $(TDB_OBJ) -lgdbm ../bin/libsmbclient.a
+  
+  tdbtool: tdbtool.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtool tdbtool.o $(TDB_OBJ) ../bin/libsmbclient.a
+  
+  tdbtorture: tdbtorture.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbtorture tdbtorture.o $(TDB_OBJ) ../bin/libsmbclient.a
+  
+  tdbdump: tdbdump.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbdump tdbdump.o $(TDB_OBJ) ../bin/libsmbclient.a
+  
+  tdbbackup: tdbbackup.o $(TDB_OBJ)
+! 	$(CC) $(CFLAGS) -o tdbbackup tdbbackup.o $(TDB_OBJ) ../bin/libsmbclient.a
+! 
+  
+  clean:
+  	rm -f $(PROGS) *.o *~ *% core test.db test.tdb test.gdbm
+*** ./source/script/installswat.sh.osr6	Thu Jul 28 10:44:16 2005
+--- ./source/script/installswat.sh	Wed Sep 21 21:31:41 2005
+***************
+*** 103,108 ****
+--- 103,109 ----
+                fi
+            fi
+            for f in $SRCDIR../docs/$dir/images/*.png; do
++               if [ "$f" = "$SRCDIR../docs/$dir/images/*.png" ]; then break; fi
+                FNAME=$INSTALLDIR/images/`basename $f`
+                echo $FNAME
+                cp $f $FNAME || echo Cannot install $FNAME. Does $USER have privileges?
+*** ./source/configure.in.osr6	Fri Aug 19 10:16:29 2005
+--- ./source/configure.in	Wed Sep 21 21:31:41 2005
+***************
+*** 872,880 ****
+  
+  ],
+  	samba_cv_optimize_out_funcation_calls=yes,samba_cv_optimize_out_funcation_calls=no)])
+! if test x"$samba_cv_optimize_out_funcation_calls" = x"yes"; then
+!    AC_DEFINE(HAVE_COMPILER_WILL_OPTIMIZE_OUT_FNS,1,[Whether the compiler will optimize out function calls])
+! fi
+  
+  ############################################
+  # check for unix domain sockets
+--- 872,880 ----
+  
+  ],
+  	samba_cv_optimize_out_funcation_calls=yes,samba_cv_optimize_out_funcation_calls=no)])
+! #if test x"$samba_cv_optimize_out_funcation_calls" = x"yes"; then
+! #   AC_DEFINE(HAVE_COMPILER_WILL_OPTIMIZE_OUT_FNS,1,[Whether the compiler will optimize out function calls])
+! #fi
+  
+  ############################################
+  # check for unix domain sockets
+***************
+*** 1435,1448 ****
+  			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+  			AC_DEFINE(BROKEN_GETGRNAM,1,[Does getgrnam work correctly])
+  			;;
+! 		*sco*) AC_DEFINE(SCO,1,[Whether the host os is sco unix])
+! 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+! 			;;
+! 		*unixware*) AC_DEFINE(UNIXWARE,1,[Whether the host os is unixware])
+  			BLDSHARED="true"
+! 			LDSHFLAGS="-shared"
+! 			SONAMEFLAG="-Wl,-soname,"
+  			PICFLAGS="-KPIC"
+  			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+  			;;
+  		*next2*) AC_DEFINE(NEXT2,1,[Whether the host os is NeXT v2])
+--- 1435,1451 ----
+  			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+  			AC_DEFINE(BROKEN_GETGRNAM,1,[Does getgrnam work correctly])
+  			;;
+! 		*unixware*|*UnixWare*|*sysv5*)
+  			BLDSHARED="true"
+! 			LDSHFLAGS="-G"
+! 			SONAMEFLAG="-Wl,-h,"
+  			PICFLAGS="-KPIC"
++ 			AC_DEFINE(UNIXWARE,1,[Whether the host os is unixware])
++ 			AC_DEFINE(SYSV,1,[Whether this is a system V system])
++ 			AC_DEFINE(HAVE_MEMSET,1,[Whether memset() is available])
++ 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
++ 			;;
++ 		*sco*)  AC_DEFINE(SCO,1,[Whether the host os is sco unix])
+  			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+  			;;
+  		*next2*) AC_DEFINE(NEXT2,1,[Whether the host os is NeXT v2])
+***************
+*** 1464,1476 ****
+  			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+  			;;
+  
+- 		*sysv5*) AC_DEFINE(SYSV,1,[Whether this is a system V system])
+- 			if [ test "$GCC" != yes ]; then
+- 				AC_DEFINE(HAVE_MEMSET,1,[Whether memset() is available])
+- 			fi
+- 			LDSHFLAGS="-G"
+- 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+- 			;;
+  		*vos*) AC_DEFINE(STAT_ST_BLOCKSIZE,4096)
+  			BLDSHARED="false"
+  			LDSHFLAGS=""
+--- 1467,1472 ----
+***************
+*** 4068,4074 ****
+    yes)
+  
+  	case "$host_os" in
+! 	*sysv5*)
+  		AC_MSG_RESULT(Using UnixWare ACLs)
+  		AC_DEFINE(HAVE_UNIXWARE_ACLS,1,[Whether UnixWare ACLs are available])
+  		;;
+--- 4064,4070 ----
+    yes)
+  
+  	case "$host_os" in
+! 	*unixware*|*UnixWare*|*sysv5*)
+  		AC_MSG_RESULT(Using UnixWare ACLs)
+  		AC_DEFINE(HAVE_UNIXWARE_ACLS,1,[Whether UnixWare ACLs are available])
+  		;;
+***************
+*** 4599,4604 ****
+--- 4595,4608 ----
+  		    nsswitch/winbind_nss_linux.o"
+  		WINBIND_NSS_EXTRA_LIBS="-lsocket"
+  		;;
++ 	*unixware*|*sysv5*|*UnixWare*)
++                 # UW714+ winbind client is implemented as a wrapper around
++                 # the Linux version.
++                 WINBIND_NSS_EXTRA_OBJS="nsswitch/winbind_nss_uw7.o \
++                     nsswitch/nss_compat.o \
++                     nsswitch/winbind_nss_linux.o"
++                 WINBIND_NSS_EXTA_LIBS="-lsocket -lnsl"
++                 ;;
+  	*hpux11*)
+  		WINBIND_NSS_EXTRA_OBJS="nsswitch/winbind_nss_solaris.o"
+  		;;
+*** ./source/config.guess.osr6	Fri Feb 25 09:59:28 2005
+--- ./source/config.guess	Wed Sep 21 21:31:41 2005
+***************
+*** 1013,1018 ****
+--- 1013,1023 ----
+          # Use sysv4.2uw... so that sysv4* matches it.
+  	echo ${UNAME_MACHINE}-pc-sysv4.2uw${UNAME_VERSION}
+  	exit 0 ;;
++     i*86:5:UnixWare:7.*)
++         # Additional variants of Unixware.
++         # Use sysv4.2uw... so that sysv4* matches it.
++         echo ${UNAME_MACHINE}-pc-sysv4.2uw${UNAME_VERSION}
++         exit 0 ;;
+      i*86:OS/2:*:*)
+  	# If we were able to find `uname', then EMX Unix compatibility
+  	# is probably installed.
+*** ./source/Makefile.in.osr6	Sun Aug  7 16:09:57 2005
+--- ./source/Makefile.in	Wed Sep 21 21:31:41 2005
+***************
+*** 1166,1172 ****
+  bin/CP850.@SHLIBEXT@: $(CP850_OBJ:.o=.@PICSUFFIX@)
+  	@echo "Building plugin $@"
+  	@$(SHLD) $(LDSHFLAGS) -o $@ $(CP850_OBJ:.o=.@PICSUFFIX@) \
+! 		@SONAMEFLAG@`basename $@`
+  
+  bin/CP437.@SHLIBEXT@: $(CP437_OBJ:.o=.@PICSUFFIX@)
+  	@echo "Building plugin $@"
+--- 1166,1172 ----
+  bin/CP850.@SHLIBEXT@: $(CP850_OBJ:.o=.@PICSUFFIX@)
+  	@echo "Building plugin $@"
+  	@$(SHLD) $(LDSHFLAGS) -o $@ $(CP850_OBJ:.o=.@PICSUFFIX@) \
+! 		@SONAMEFLAG@`basename $@` -L./bin -lsmbclient
+  
+  bin/CP437.@SHLIBEXT@: $(CP437_OBJ:.o=.@PICSUFFIX@)
+  	@echo "Building plugin $@"
+*** ./examples/VFS/configure.in.osr6	Fri Feb 25 09:59:51 2005
+--- ./examples/VFS/configure.in	Wed Sep 21 21:31:41 2005
+***************
+*** 175,181 ****
+  
+  # these are the defaults, good for lots of systems
+  HOST_OS="$host_os"
+! LDSHFLAGS="-shared"
+  SONAMEFLAG="#"
+  SHLD="\${CC}"
+  PICFLAGS=""
+--- 175,181 ----
+  
+  # these are the defaults, good for lots of systems
+  HOST_OS="$host_os"
+! LDSHFLAGS="-G"
+  SONAMEFLAG="#"
+  SHLD="\${CC}"
+  PICFLAGS=""
+***************
+*** 304,309 ****
+--- 304,310 ----
+  
+  		*sysv5*)
+  			LDSHFLAGS="-G"
++                         DYNEXP="-Wl,-Bexport"
+  			;;
+  		*vos*)
+  			BLDSHARED="false"
+*** ./examples/VFS/autogen.sh.osr6	Fri Feb 25 09:59:51 2005
+--- ./examples/VFS/autogen.sh	Wed Sep 21 21:31:41 2005
+***************
+*** 49,56 ****
+  
+  rm -rf autom4te*.cache
+  
+! echo "$0: running $AUTOHEADER"
+! $AUTOHEADER || exit 1
+  
+  echo "$0: running $AUTOCONF"
+  $AUTOCONF || exit 1
+--- 49,56 ----
+  
+  rm -rf autom4te*.cache
+  
+! #echo "$0: running $AUTOHEADER"
+! #$AUTOHEADER || exit 1
+  
+  echo "$0: running $AUTOCONF"
+  $AUTOCONF || exit 1
+*** ./examples/VFS/skel_opaque.c.osr6	Thu Jul 28 06:19:54 2005
+--- ./examples/VFS/skel_opaque.c	Wed Sep 21 21:31:41 2005
+***************
+*** 83,89 ****
+  
+  static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+  {
+! 	return vfswrap_seekdir(NULL, conn, dirp, offset);
+  }
+  
+  static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+--- 83,89 ----
+  
+  static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+  {
+! 	vfswrap_seekdir(NULL, conn, dirp, offset);
+  }
+  
+  static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+***************
+*** 93,99 ****
+  
+  static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+  {
+! 	return vfswrap_rewinddir(NULL, conn, dirp);
+  }
+  
+  static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- 93,99 ----
+  
+  static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+  {
+! 	vfswrap_rewinddir(NULL, conn, dirp);
+  }
+  
+  static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+*** ./examples/VFS/skel_transparent.c.osr6	Thu Jul 28 06:19:54 2005
+--- ./examples/VFS/skel_transparent.c	Wed Sep 21 21:31:41 2005
+***************
+*** 82,88 ****
+  
+  static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+  {
+! 	return SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
+  }
+  
+  static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+--- 82,88 ----
+  
+  static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+  {
+! 	SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
+  }
+  
+  static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+***************
+*** 92,98 ****
+  
+  static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+  {
+! 	return SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
+  }
+  
+  static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- 92,98 ----
+  
+  static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+  {
+! 	SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
+  }
+  
+  static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+*** ./examples/VFS/Makefile.in.osr6	Thu Jul 28 06:19:54 2005
+--- ./examples/VFS/Makefile.in	Wed Sep 21 21:31:41 2005
+***************
+*** 7,13 ****
+  SAMBA_SOURCE	= @SAMBA_SOURCE@
+  SHLIBEXT	= @SHLIBEXT@
+  OBJEXT		= @OBJEXT@ 
+! FLAGS		=  $(CFLAGS) -Iinclude -I$(SAMBA_SOURCE)/include -I$(SAMBA_SOURCE)/ubiqx -I$(SAMBA_SOURCE)/smbwrapper  -I. $(CPPFLAGS) -I$(SAMBA_SOURCE) -fPIC
+  
+  
+  prefix		= @prefix@
+--- 7,13 ----
+  SAMBA_SOURCE	= @SAMBA_SOURCE@
+  SHLIBEXT	= @SHLIBEXT@
+  OBJEXT		= @OBJEXT@ 
+! FLAGS		=  $(CFLAGS) -Iinclude -I$(SAMBA_SOURCE)/include -I$(SAMBA_SOURCE)/ubiqx -I$(SAMBA_SOURCE)/smbwrapper  -I. $(CPPFLAGS) -I$(SAMBA_SOURCE) -KPIC
+  
+  
+  prefix		= @prefix@
+*** ./examples/pdb/Makefile.osr6	Fri Feb 25 09:59:51 2005
+--- ./examples/pdb/Makefile	Wed Sep 21 21:31:41 2005
+***************
+*** 1,24 ****
+  # Makefile for samba-pdb examples
+  # Variables
+  
+! CC = gcc
+  LIBTOOL = libtool
+  
+  SAMBA_SRC = ../../source
+  SAMBA_INCL = ../../source/include
+  UBIQX_SRC = ../../source/ubiqx
+  SMBWR_SRC = ../../source/smbwrapper
+! CFLAGS = -I$(SAMBA_SRC) -I$(SAMBA_INCL) -I$(UBIQX_SRC) -I$(SMBWR_SRC) -Wall -g -I/usr/include/heimdal -fPIC
+  PDB_OBJS = test.la
+  
+  # Default target
+  
+  default: $(PDB_OBJS)
+  
+  # Pattern rules
+  
+  %.la: %.lo
+! 	$(LIBTOOL) --mode=link $(CC) -module -o $@ $< $(LDFLAGS) -rpath /usr/lib/samba/pdb/
+  
+  %.lo: %.c
+  	$(LIBTOOL) --mode=compile $(CC) $(CPPFLAGS) $(CFLAGS) -c $<
+--- 1,30 ----
+  # Makefile for samba-pdb examples
+  # Variables
+  
+! CC = cc
+  LIBTOOL = libtool
+  
+  SAMBA_SRC = ../../source
+  SAMBA_INCL = ../../source/include
+  UBIQX_SRC = ../../source/ubiqx
+  SMBWR_SRC = ../../source/smbwrapper
+! CFLAGS = -I$(SAMBA_SRC) -I$(SAMBA_INCL) -I$(UBIQX_SRC) -I$(SMBWR_SRC) -I/usr/include/heimdal -KPIC
+  PDB_OBJS = test.la
+  
+  # Default target
+  
+  default: $(PDB_OBJS)
+  
++ test.la: libtest.la
++ 	cp libtest.la test.la
++ 
++ libtest.la: test.lo
++ 	$(LIBTOOL) --mode=link $(CC) -G -o $@ test.lo $(LDFLAGS)
++ 
+  # Pattern rules
+  
+  %.la: %.lo
+! 	$(LIBTOOL) --mode=link $(CC) -G -o $@ $< $(LDFLAGS)
+  
+  %.lo: %.c
+  	$(LIBTOOL) --mode=compile $(CC) $(CPPFLAGS) $(CFLAGS) -c $<
+*** ./Build-OSR6.osr6	Wed Sep 21 21:31:41 2005
+--- ./Build-OSR6	Wed Sep 21 21:31:41 2005
+***************
+*** 0 ****
+--- 1,110 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ export NM M4 INSTALL
++ CC=cc
++ CXX=CC
++ CFLAGS="-Kthread -Kalloca -O2 -D_GNU_SOURCE -D_LARGEFILE64_SOURCE"
++ CXXFLAGS="$CFLAGS"
++ XML2_CONFIG=/usr/bin/libxml-2.0-config
++ export CC CXX CFLAGS CXXFLAGS XML2_CONFIG
++ RANLIB=true
++ VISUAL=
++ CUPS_CONFIG=/usr/bin/cups-config
++ MAKE=/usr/gnu/bin/make
++ export RANLIB VISUAL CUPS_CONFIG MAKE
++ # make sure we have a chance to find krb5-config
++ PATH="$PATH:/usr/lib/heimdal/bin"
++ export PATH
++ 
++ VENDOR_FILES=`pwd`/../vendor-files.tar.bz2
++ 
++ vscan_ver=0.3.6b
++ VSCAN_SRC=`pwd`/../vscan-$vscan_ver.tar.bz2
++ export VSCAN_SRC
++ 
++ defaultdocdir=/usr/share/doc/packages
++ name=samba
++ datadir=/usr/share
++ localstatedir=/var
++ libdir=/usr/lib
++ sbindir=/usr/sbin
++ mandir=/usr/man
++ sysconfdir=/etc
++ DOCDIR=${defaultdocdir}/${name}
++ DOCBOOKDIR=${defaultdocdir}/${name}/docbook
++ SWATDIR=${datadir}/samba/swat
++ LOGDIR=${localstatedir}/log/samba
++ LIBDIR=${libdir}/samba
++ LOCKDIR=${localstatedir}/lib/samba
++ CONFIGDIR=${sysconfdir}/samba
++ INITDIR=${sysconfdir}/init.d
++ PIDDIR=${localstatedir}/run/samba
++ SPOOLDIR=${localstatedir}/spool/samba
++ 
++ [ -f $VENDOR_FILES ] && bzcat $VENDOR_FILES | tar xf -
++ 
++ [ -f $VSCAN_SRC ] && {
++     (cd examples/VFS; bzcat $VSCAN_SRC | tar xf -)
++ }
++ 
++ cd source
++ ./autogen.sh
++ rm -f ../mout-configure
++ CONFIGURE_OPTIONS="--prefix=/usr --sysconfdir=/etc \
++             --sbindir=${sbindir} \
++             --localstatedir=${LOCKDIR} \
++             --sysconfdir=${CONFIGDIR} \
++             --with-configdir=${CONFIGDIR} \
++             --with-libdir=${LIBDIR} \
++             --with-lockdir=${LOCKDIR} \
++             --with-logfilebase=${LOGDIR} \
++             --with-mandir=${mandir} \
++             --enable-cups \
++             --with-acl-support \
++             --with-automount \
++             --with-libiconv=/usr \
++             --with-msdfs \
++             --without-pam \
++             --without-pam_smbpass \
++             --with-piddir=${PIDDIR} \
++             --with-privatedir=${CONFIGDIR} \
++             --without-quotas \
++             --without-smbmount \
++             --with-swatdir=${SWATDIR} \
++             --with-syslog \
++             --with-tdbsam \
++             --with-utmp \
++             --with-vfs \
++             --with-winbind \
++             --with-shared-modules=idmap_rid \
++             --with-expsam=xml,mysql,pgsql \
++             --with-smbwrapper \
++             --host=$HOST --target=$HOST --build=$HOST"
++ ./configure $CONFIGURE_OPTIONS 2>&1 | tee ../mout-configure
++ 
++ $MAKE proto 2>&1 | tee ../mout-proto
++ $MAKE all \
++ 	torture \
++ 	wins \
++ 	libsmbclient \
++ 	everything \
++ 	modules \
++ 	talloctort \
++ 	bin/smbget 2>&1 | tee ../mout
++ $MAKE -C tdb tdbdump tdbtest tdbtool tdbtorture 2>&1 | tee ../mout-tdb
++ # make examples in PDB
++ $MAKE -C ../examples/pdb 2>&1 | tee ../mout-pdb
++ # make examples in VFS
++ cd ../examples/VFS
++ sh -x autogen.sh
++ CFLAGS="$CFLAGS -KPIC" ./configure ${CONFIGURE_OPTIONS} 2>&1 | tee ../../mout-configure-VFS
++ $MAKE 2>&1 | tee ../../mout-VFS
++ cd samba-vscan-${vscan_ver}
++ autoreconf --force --install
++ ./configure --host=$HOST --target=$HOST --build=$HOST 2>&1 | \
++             tee ../../../mout-configure-vscan
++ $MAKE 2>&1 | tee ../../../mout-vscan
+*** ./Install-OSR6.osr6	Wed Sep 21 21:31:41 2005
+--- ./Install-OSR6	Wed Sep 21 21:34:27 2005
+***************
+*** 0 ****
+--- 1,199 ----
++ #!/bin/sh
++ 
++ RPMBUILDROOT=/u/tmp/samba
++ MAKE=/usr/gnu/bin/make
++ export MAKE RPMBUILDROOT RPMBUILDDIR
++ vscan_ver=0.3.6b
++ defaultdocdir=/usr/share/doc/packages
++ name=samba
++ datadir=/usr/share
++ includedir=/usr/include
++ localstatedir=/var
++ var=/var
++ lib=/usr/lib
++ libdir=/usr/lib
++ bindir=/usr/bin
++ sbindir=/usr/sbin
++ mandir=/usr/man
++ sysconfdir=/etc
++ DOCDIR=${defaultdocdir}/${name}
++ DOCBOOKDIR=${defaultdocdir}/${name}/docbook
++ SWATDIR=${datadir}/samba/swat
++ LOGDIR=${localstatedir}/log/samba
++ LIBDIR=${libdir}/samba
++ LOCKDIR=${localstatedir}/lib/samba
++ CONFIGDIR=${sysconfdir}/samba
++ INITDIR=${sysconfdir}/init.d
++ PIDDIR=${localstatedir}/run/samba
++ SPOOLDIR=${localstatedir}/spool/samba
++ VENDOR=SCO
++ 
++ [ x"${RPMBUILDROOT}" = x"/" ] && ( echo "your buildroot is /" && exit 0)
++ rm -rf ${RPMBUILDROOT}
++ 
++ mkdir -p \
++ 	${RPMBUILDROOT}/${DOCDIR} \
++ 	${RPMBUILDROOT}/${DOCDIR}-vscan \
++ 	${RPMBUILDROOT}/${DOCBOOKDIR} \
++ 	${RPMBUILDROOT}/${sysconfdir}/pam.d \
++ 	${RPMBUILDROOT}/${sysconfdir}/xinetd.d \
++ 	${RPMBUILDROOT}/${sysconfdir}/logrotate.d \
++ 	${RPMBUILDROOT}/${sysconfdir}/openldap/schema \
++ 	${RPMBUILDROOT}/${sysconfdir}/sysconfig/network/if-up.d \
++ 	${RPMBUILDROOT}/${sysconfdir}/sysconfig/network/scripts \
++ 	${RPMBUILDROOT}/${CONFIGDIR} \
++ 	${RPMBUILDROOT}/${INITDIR} \
++ 	${RPMBUILDROOT}/sbin \
++ 	${RPMBUILDROOT}/${includedir} \
++ 	${RPMBUILDROOT}/${libdir}/python/lib-dynload \
++ 	${RPMBUILDROOT}/${LIBDIR}/config \
++ 	${RPMBUILDROOT}/${LIBDIR}/vfs \
++ 	${RPMBUILDROOT}/${LIBDIR}/pdb \
++ 	${RPMBUILDROOT}/${LIBDIR}/rpc \
++ 	${RPMBUILDROOT}/${LIBDIR}/auth \
++ 	${RPMBUILDROOT}/${LIBDIR}/charset \
++ 	${RPMBUILDROOT}/${LIBDIR}/idmap \
++ 	${RPMBUILDROOT}/${mandir}/man1 \
++ 	${RPMBUILDROOT}/${mandir}/man5 \
++ 	${RPMBUILDROOT}/${mandir}/man7 \
++ 	${RPMBUILDROOT}/${mandir}/man8 \
++ 	${RPMBUILDROOT}/${SWATDIR} \
++ 	${RPMBUILDROOT}/${bindir} \
++ 	${RPMBUILDROOT}/${sbindir} \
++ 	${RPMBUILDROOT}/${localstatedir}/adm \
++ 	${RPMBUILDROOT}/${LOCKDIR}/netlogon \
++ 	${RPMBUILDROOT}/${LOCKDIR}/drivers/W32X86 \
++ 	${RPMBUILDROOT}/${LOCKDIR}/drivers/WIN40 \
++ 	${RPMBUILDROOT}/${LOCKDIR}/drivers/W32ALPHA \
++ 	${RPMBUILDROOT}/${LOCKDIR}/drivers/W32MIPS \
++ 	${RPMBUILDROOT}/${LOCKDIR}/drivers/W32PPC \
++ 	${RPMBUILDROOT}/${LOCKDIR}/printing \
++ 	${RPMBUILDROOT}/${LOCKDIR}/profiles \
++ 	${RPMBUILDROOT}/${LOGDIR} \
++ 	${RPMBUILDROOT}/${PIDDIR} \
++ 	${RPMBUILDROOT}/${SPOOLDIR} \
++ 	${RPMBUILDROOT}/${libdir}/cups/backend/ \
++ 	${RPMBUILDROOT}/${var}/adm/fillup-templates \
++ 	${RPMBUILDROOT}/${var}/lock/subsys
++ ${MAKE} -C source/ DESTDIR=${RPMBUILDROOT} install \
++ 	BINDIR=${bindir} \
++ 	CONFIGFILE=${CONFIGDIR}/smb.conf \
++ 	DRIVERFILE=${CONFIGDIR}/printers.def \
++ 	LIBDIR=$libdir/samba \
++ 	LMHOSTSFILE=${CONFIGDIR}/lmhosts \
++ 	LOCKDIR=${LOCKDIR} \
++ 	LOGFILEBASE=${LOGDIR} \
++ 	MANDIR=${mandir} \
++ 	SBINDIR=${sbindir} \
++ 	SMB_PASSWD_FILE=${CONFIGDIR}/smbpasswd \
++ 	SWATDIR=${SWATDIR}
++ ${MAKE} -C source/ DESTDIR=${RPMBUILDROOT} installmodules \
++ 	LIBDIR=${libdir}/samba 
++ # utility scripts
++ scripts="creategroup mksmbpasswd.sh"
++ mkdir -p examples/scripts
++ for i in $scripts; do
++ 	cp -p "source/script/${i}" examples/scripts
++ done
++ # configuration files
++ cd vendor-files
++ echo "# smb.conf is the main Samba configuration file. You find a full commented" >smb.conf
++ echo "# version at ${DOCDIR}/examples/smb.conf.${VENDOR}" >>config/smb.conf
++ echo "# Date: $( date -I)" >>config/smb.conf
++ grep -v "\(^#\|^;\|^$\)" config/smb.conf.vendor >>config/smb.conf
++ cp -p config/smb.conf.vendor ../examples/smb.conf.${VENDOR}
++ for file in smb.conf lmhosts smbusers smbpasswd smbfstab smbusers; do
++ 	cp -p "config/${file}" ${RPMBUILDROOT}/${CONFIGDIR}/
++ done
++ # start scripts
++ startScripts="smb nmb smbfs winbind"
++ for script in ${startScripts}; do
++ 	cp -p "init/${script}" ${RPMBUILDROOT}/${INITDIR}/
++ 	ln -sf "../../${INITDIR}/${script}" "${RPMBUILDROOT}/${sbindir}/rc${script}"
++ done
++ cp -p tools/nmbstatus ${RPMBUILDROOT}/${bindir}/
++ pod2man tools/nmbstatus >${RPMBUILDROOT}/${mandir}/man1/nmbstatus.1
++ # PDF generator
++ cp -p tools/smbprngenpdf ${RPMBUILDROOT}/${bindir}/
++ touch ${RPMBUILDROOT}/var/lock/subsys/smbfs
++ cp -p config/swat.xinetd ${RPMBUILDROOT}/${sysconfdir}/xinetd.d/swat
++ cp -p config/samba.pamd ${RPMBUILDROOT}/${sysconfdir}/pam.d/samba
++ cp -p config/dhcp.conf ${RPMBUILDROOT}/${var}/adm/fillup-templates/samba-client-dhcp.conf
++ cp -p config/sysconfig.dhcp-samba-client ${RPMBUILDROOT}/${var}/adm/fillup-templates/
++ cp -p tools/dhcpcd-hook-samba ${RPMBUILDROOT}/${sysconfdir}/sysconfig/network/scripts
++ ln -s ../scripts/dhcpcd-hook-samba ${RPMBUILDROOT}/${sysconfdir}/sysconfig/network/if-up.d/
++ LOGROTATE_FILES="samba samba-winbind"
++ for file in ${LOGROTATE_FILES}; do
++ 	cp -p logrotate/${file} ${RPMBUILDROOT}/${sysconfdir}/logrotate.d/${file}
++ done
++ cp -p docu/README.vendor ${RPMBUILDROOT}/${DOCDIR}/README.${VENDOR}
++ sed -e "s/VENDOR/${VENDOR}/g" docu/htmldocs.html >../docs/htmldocs/index.html
++ cp -p docu/manpages.html ../docs/htmldocs
++ cp -p docu/welcome-en-no-samba-doc.html ${RPMBUILDROOT}/${SWATDIR}/help
++ # Update message handling
++ cd ..
++ cp -p packaging/Debian/debian-unstable/samba-common.dhcp ${RPMBUILDROOT}/${sysconfdir}/sysconfig/network/scripts/dhcpcd-hook-samba-functions
++ # libnss_wins.so
++ install -m 0755 source/nsswitch/libnss_wins.so ${RPMBUILDROOT}/${lib}/libnss_wins.so.2
++ # winbind stuff
++ install -m 0755 source/nsswitch/libnss_winbind.so ${RPMBUILDROOT}/${lib}/libnss_winbind.so.2
++ # smbfilter
++ cp -p source/bin/smbfilter ${RPMBUILDROOT}/${bindir}/
++ # editreg
++ #cp -p source/bin/editreg ${RPMBUILDROOT}/${bindir}/
++ # smbget
++ cp -p source/bin/smbget ${RPMBUILDROOT}/${bindir}/
++ # workaround for broken Makefile
++ rm "${RPMBUILDROOT}/${LIBDIR}/libsmbclient.so"
++ # install libsmbclient
++ install -m 0755 source/bin/libsmbclient.a ${RPMBUILDROOT}/${libdir}
++ install -m 0755 source/bin/libsmbclient.so ${RPMBUILDROOT}/${libdir}/libsmbclient.so.0
++ ln -s ${libdir}/libsmbclient.so.0 ${RPMBUILDROOT}/${libdir}/libsmbclient.so
++ install -m 0644 source/include/libsmbclient.h ${RPMBUILDROOT}/${includedir}
++ # install nsswitch-headers (for squid, etc. #FIXME)
++ mkdir -p ${RPMBUILDROOT}/${includedir}/samba/nsswitch
++ for i in winbind_client.h winbind_nss.h winbind_nss_config.h winbind_nss_linux.h winbindd.h winbindd_nss.h winbindd_proto.h; do
++ 	cp -p "source/nsswitch/${i}" ${RPMBUILDROOT}/${includedir}/samba/nsswitch/
++ done
++ # install smbtorture and other test-programs
++ install -m 0755 source/bin/debug2html ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/log2pcap ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/smbtorture ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/talloctort ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/msgtest ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/masktest ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/locktest* ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/nsstest ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/bin/vfstest ${RPMBUILDROOT}/${bindir}/
++ # install tdb tools
++ install -m 0755 source/tdb/tdbdump ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/tdb/tdbtest ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/tdb/tdbtool ${RPMBUILDROOT}/${bindir}/
++ install -m 0755 source/tdb/tdbtorture ${RPMBUILDROOT}/${bindir}/
++ # install VFS-modules
++ install -m 0755 examples/VFS/*.so ${RPMBUILDROOT}/${LIBDIR}/vfs/
++ # install PDB-modules
++ #libtool --mode=install install -m 0755  examples/pdb/pdb_test.so ${RPMBUILDROOT}/${LIBDIR}/pdb/
++ # install VSCAN-vfs-modules
++ ${MAKE} -C examples/VFS/samba-vscan-${vscan_ver} install DESTDIR="${RPMBUILDROOT}"
++ # cups SMB support
++ ln -sf ../../../bin/smbspool ${RPMBUILDROOT}/${libdir}/cups/backend/smb
++ # install smbwrapper
++ install -m 0755 source/bin/smbwrapper.so ${RPMBUILDROOT}/${LIBDIR}/
++ install -m 0755 source/bin/smbsh ${RPMBUILDROOT}/${bindir}/
++ cp -p source/smbwrapper/README ${RPMBUILDROOT}/${DOCDIR}/README.smbwrapper
++ # this is empty
++ rm -rf docs/yodldocs
++ mv examples/VFS/samba-vscan-${vscan_ver} .
++ rm -rf docs/manpages
++ cp -pR docs/* ${RPMBUILDROOT}/${DOCDIR}
++ rm -rf "${RPMBUILDROOT}/${DOCBOOKDIR}"
++ cp -pR examples/ ${RPMBUILDROOT}/${DOCDIR}
++ # using-samba book is part of the samba-doc package
++ if [ -e ${RPMBUILDROOT}/${SWATDIR}/using_samba ]; then
++ 	rm -rf "${RPMBUILDROOT}/${SWATDIR}/using_samba"
++ 	ln -s "${DOCDIR}/htmldocs/using_samba" "${RPMBUILDROOT}/${SWATDIR}"
++ fi
++ # copy the schema
++ cp -p examples/LDAP/samba.schema ${RPMBUILDROOT}/${sysconfdir}/openldap/schema/samba3.schema
++ mv samba-vscan-${vscan_ver} examples/VFS/samba-vscan-${vscan_ver}

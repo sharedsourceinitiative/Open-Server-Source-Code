@@ -1,0 +1,246 @@
+*** ./include/smcommon.h.osr6	Tue Oct 10 11:50:31 2000
+--- ./include/smcommon.h	Tue Oct 25 18:25:56 2005
+***************
+*** 501,509 ****
+--- 501,513 ----
+  
+  #ifndef FSYNC__COMMIT			/* Windows uses _commit (io.h)	*/
+  #ifndef FSYNC_FSYNC			/* use the fsync function	*/
++ #ifdef __USLC__
++ #define FSYNC_FSYNC 1
++ #else
+  #define FSYNC_FDATASYNC			/* use the fdatasync function	*/
+  #endif
+  #endif
++ #endif
+  
+  /*======================================================================*/
+  /* Thread macros                                        		*/
+*** ./makevars/makevars.inc.osr6	Tue Oct 10 11:51:30 2000
+--- ./makevars/makevars.inc	Tue Oct 25 19:28:58 2005
+***************
+*** 12,18 ****
+  
+  # After you edit this file you should comment out the following line
+  
+! $(error "Edit makevars/makevars.inc before running make")
+  
+  #
+  #
+--- 12,18 ----
+  
+  # After you edit this file you should comment out the following line
+  
+! #$(error "Edit makevars/makevars.inc before running make")
+  
+  #
+  #
+***************
+*** 37,44 ****
+  # add -g if you want a debuggable version
+  ########################################################################
+  
+! CC=gcc
+! CFLAGS=-D$(PLAT_NAME) -O -fPIC
+  
+  #
+  # HINCS is used by all files, individual
+--- 37,44 ----
+  # add -g if you want a debuggable version
+  ########################################################################
+  
+! CC=cc
+! CFLAGS=-DUSE_LOCKF -D$(PLAT_NAME) -O -KPIC
+  
+  #
+  # HINCS is used by all files, individual
+***************
+*** 56,62 ****
+  ########################################################################
+  
+  SO=ld
+! SOFLAGS=-shared -o		# -o must be last!
+  
+  ########################################################################
+  # Static libraries
+--- 56,62 ----
+  ########################################################################
+  
+  SO=ld
+! SOFLAGS=-G -h/usr/panther/lib/$@ -o		# -o must be last!
+  
+  ########################################################################
+  # Static libraries
+***************
+*** 70,83 ****
+  # Executables
+  ########################################################################
+  
+! LD=gcc
+  
+  #
+  # libsti.a has business graphics support
+  # libdl.so has shared library support
+  #
+  
+! LIBRARIES=-L$(LPATH) -ldl -ljpeg
+  
+  ########################################################################
+  # Miscellaneous commands
+--- 70,83 ----
+  # Executables
+  ########################################################################
+  
+! LD=cc
+  
+  #
+  # libsti.a has business graphics support
+  # libdl.so has shared library support
+  #
+  
+! LIBRARIES=-L$(LPATH) -ldl -ljpeg -lsocket
+  
+  ########################################################################
+  # Miscellaneous commands
+***************
+*** 94,100 ****
+  # installed.
+  ########################################################################
+  
+! #NO_GRAFSMAN = -DNO_GRAFSMAN
+  
+  ifdef NO_GRAFSMAN
+  CFLAGS += $(NO_GRAFSMAN)
+--- 94,100 ----
+  # installed.
+  ########################################################################
+  
+! NO_GRAFSMAN = -DNO_GRAFSMAN
+  
+  ifdef NO_GRAFSMAN
+  CFLAGS += $(NO_GRAFSMAN)
+***************
+*** 117,128 ****
+  # comment out JAVA_HOME if java support is not wanted
+  ########################################################################
+  
+! JAVA_HOME=/usr/jdk118
+  
+  ############################################################
+  ifdef JAVA_HOME
+! JAVAINCS=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+! JAVALIBS=-L$(JAVA_HOME)/lib/i386/native_threads -ljava
+  JAVABIN=$(JAVA_HOME)/bin/
+  endif
+  
+--- 117,128 ----
+  # comment out JAVA_HOME if java support is not wanted
+  ########################################################################
+  
+! JAVA_HOME=/usr/java
+  
+  ############################################################
+  ifdef JAVA_HOME
+! JAVAINCS=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/unixware
+! JAVALIBS=-L$(JAVA_HOME)/jre/lib/i386 -ljava
+  JAVABIN=$(JAVA_HOME)/bin/
+  endif
+  
+***************
+*** 137,143 ****
+  # comment out WAS_HOME if WebSphere support is not wanted
+  ########################################################################
+  
+! WAS_HOME=/opt/IBMWebAS
+  
+  #####################################
+  ifdef WAS_HOME
+--- 137,143 ----
+  # comment out WAS_HOME if WebSphere support is not wanted
+  ########################################################################
+  
+! #WAS_HOME=/opt/IBMWebAS
+  
+  #####################################
+  ifdef WAS_HOME
+***************
+*** 155,161 ****
+  # different than shown below.
+  ########################################################################
+  
+! SERVLET_HOME=$(WAS_HOME)/lib
+  
+  ###############################################
+  ifdef SERVLET_HOME
+--- 155,161 ----
+  # different than shown below.
+  ########################################################################
+  
+! #SERVLET_HOME=$(WAS_HOME)/lib
+  
+  ###############################################
+  ifdef SERVLET_HOME
+***************
+*** 196,202 ****
+  # Do not define MOTIF_HOME to compile with Motif support
+  ########################################################################
+  
+! MOTIF_HOME=/usr/X11R6
+  
+  ifdef MOTIF_HOME
+  MOTIFINCS=-I$(MOTIF_HOME)/include -I$(MOTIF_HOME)/include/X11
+--- 196,202 ----
+  # Do not define MOTIF_HOME to compile with Motif support
+  ########################################################################
+  
+! #MOTIF_HOME=/usr/X11R6
+  
+  ifdef MOTIF_HOME
+  MOTIFINCS=-I$(MOTIF_HOME)/include -I$(MOTIF_HOME)/include/X11
+***************
+*** 323,332 ****
+  
+  PIINCS = $(PHINCS) $(PMHINCS) $(MOTIFINCS) 
+  
+! LLIBS		= -L$(LPATH) -lsm
+  LELIBS		= -L$(LEPATH) -lPanSmEJB
+  FLIBS		= -L$(FPATH) -ljx
+! DLIBS		= -L$(DPATH) -lsmdb
+  RWLIBS		= -L$(RWLPATH) -lrw
+  RWMLIBS		= -L$(RWMPATH) -lrwpixm
+  RWDVLIBS	= -L$(RWEPATH) -lrwdv
+--- 323,332 ----
+  
+  PIINCS = $(PHINCS) $(PMHINCS) $(MOTIFINCS) 
+  
+! LLIBS		= -L$(LPATH) -lsm -lm
+  LELIBS		= -L$(LEPATH) -lPanSmEJB
+  FLIBS		= -L$(FPATH) -ljx
+! DLIBS		= -L$(DPATH) -lsmdb -lm
+  RWLIBS		= -L$(RWLPATH) -lrw
+  RWMLIBS		= -L$(RWMPATH) -lrwpixm
+  RWDVLIBS	= -L$(RWEPATH) -lrwdv
+*** ./Build-OSR6.osr6	Tue Oct 25 18:25:56 2005
+--- ./Build-OSR6	Tue Oct 25 18:25:56 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Tue Oct 25 18:43:57 2005
+--- ./Install-OSR6	Tue Oct 25 18:43:48 2005
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ DISTBASE=/usr/panther
++ export DISTBASE
++ 
++ MOUT=mout-install
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install 2>&1 | tee $MOUT

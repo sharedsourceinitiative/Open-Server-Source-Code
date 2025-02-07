@@ -1,0 +1,288 @@
+*** ./ext/curses/extconf.rb.osr6	Mon Feb 12 15:01:19 2007
+--- ./ext/curses/extconf.rb	Thu Nov  8 14:26:04 2007
+***************
+*** 14,20 ****
+  elsif have_header(*curses=%w"curses_colr/curses.h") and have_library("cur_colr", "initscr")
+    curses.unshift("varargs.h")
+    make=true
+! elsif have_header(*curses=%w"curses.h") and have_library("curses", "initscr")
+    make=true
+  end
+  
+--- 14,20 ----
+  elsif have_header(*curses=%w"curses_colr/curses.h") and have_library("cur_colr", "initscr")
+    curses.unshift("varargs.h")
+    make=true
+! elsif have_header(*curses=%w"curses.h") and have_header(*term=%w"term.h") and have_library("curses", "initscr")
+    make=true
+  end
+  
+***************
+*** 23,30 ****
+      have_func(f)
+    end
+    flag = "-D_XOPEN_SOURCE_EXTENDED"
+!   src = "int test_var[(sizeof(char*)>sizeof(int))*2-1];"
+!   if try_compile(cpp_include(%w[stdio.h stdlib.h]+curses)+src , flag)
+      $defs << flag
+    end
+    create_makefile("curses")
+--- 23,30 ----
+      have_func(f)
+    end
+    flag = "-D_XOPEN_SOURCE_EXTENDED"
+!   src = "int test_var[(sizeof(char*))*2-1];"
+!   if try_compile(cpp_include(%w[stdio.h stdlib.h]+curses+term)+src , flag)
+      $defs << flag
+    end
+    create_makefile("curses")
+*** ./ext/socket/socket.c.osr6	Mon Feb 19 01:34:19 2007
+--- ./ext/socket/socket.c	Thu Nov  8 14:26:04 2007
+***************
+*** 176,181 ****
+--- 176,239 ----
+  #define getaddrinfo(node,serv,hints,res) ruby_getaddrinfo((node),(serv),(hints),(res))
+  #endif
+  
++ #if defined(__USLC__)
++ static int
++ ruby_getaddrinfo__sco(nodename, servname, hints, res)
++      char *nodename;
++      char *servname;
++      struct addrinfo *hints;
++      struct addrinfo **res;
++ {
++     int error = getaddrinfo(nodename, servname, hints, res);
++     struct addrinfo *r;
++     if (error)
++ 	return error;
++     for (r = *res; r != NULL; r = r->ai_next) {
++ 	if (r->ai_addr->sa_family == 0)
++ 	    r->ai_addr->sa_family = r->ai_family;
++ 	if (r->ai_addr->sa_len == 0)
++ 	    r->ai_addr->sa_len = r->ai_addrlen;
++     }
++     return 0;
++ }
++ #undef getaddrinfo
++ #define getaddrinfo(node,serv,hints,res) ruby_getaddrinfo__sco((node),(serv),(hints),(res))
++ static int
++ ruby_getnameinfo__sco(sa, salen, host, hostlen, serv, servlen, flags)
++      const struct sockaddr *sa;
++      size_t salen;
++      char *host;
++      size_t hostlen;
++      char *serv;
++      size_t servlen;
++      int flags;
++ {
++   struct sockaddr_in6 *sa6;
++   u_int32_t *a6;
++ 
++   if (sa->sa_family == AF_INET6) {
++     sa6 = (struct sockaddr_in6 *)sa;
++     a6 = sa6->sin6_addr.S6_un.S6_l;
++ 
++     if (a6[0] == 0 && a6[1] == 0 && a6[2] == 0 && a6[3] == 0) {
++       strncpy(host, "::", hostlen);
++       snprintf(serv, servlen, "%d", sa6->sin6_port);
++       return 0;
++     }
++   }
++   return getnameinfo(sa, salen, host, hostlen, serv, servlen, flags);
++ }
++ #undef getnameinfo
++ #define getnameinfo(sa, salen, host, hostlen, serv, servlen, flags) \
++             ruby_getnameinfo__sco((sa), (salen), (host), (hostlen), (serv), (servlen), (flags))
++ #ifndef CMSG_SPACE
++ # define CMSG_SPACE(len) (_CMSG_ALIGN(sizeof(struct cmsghdr)) + _CMSG_ALIGN(len))
++ #endif
++ #ifndef CMSG_LEN
++ # define CMSG_LEN(len) (_CMSG_ALIGN(sizeof(struct cmsghdr)) + (len))
++ #endif
++ #endif
++ 
+  #if defined(_AIX)
+  static int
+  ruby_getaddrinfo__aix(nodename, servname, hints, res)
+***************
+*** 1045,1051 ****
+  	    return 0;
+  	}
+  	else if (FD_ISSET(fd, &fds_e)) {
+! 	    sockerrlen = sizeof(sockerr);
+  	    if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr,
+  			   &sockerrlen) == 0) {
+  		if (sockerr == 0)
+--- 1103,1109 ----
+  	    return 0;
+  	}
+  	else if (FD_ISSET(fd, &fds_e)) {
+! 	    sockerrlen = (size_t)sizeof(sockerr);
+  	    if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr,
+  			   &sockerrlen) == 0) {
+  		if (sockerr == 0)
+***************
+*** 1128,1134 ****
+  	      case EINPROGRESS:
+  #endif
+  #if WAIT_IN_PROGRESS > 0
+! 		sockerrlen = sizeof(sockerr);
+  		status = getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr, &sockerrlen);
+  		if (status) break;
+  		if (sockerr) {
+--- 1186,1192 ----
+  	      case EINPROGRESS:
+  #endif
+  #if WAIT_IN_PROGRESS > 0
+! 		sockerrlen = (size_t)sizeof(sockerr);
+  		status = getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr, &sockerrlen);
+  		if (status) break;
+  		if (sockerr) {
+***************
+*** 1158,1164 ****
+  		     * some platforms, need to check true error
+  		     * status.
+  		     */
+! 		    sockerrlen = sizeof(sockerr);
+  		    status = getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr, &sockerrlen);
+  		    if (!status && !sockerr) {
+  			struct timeval tv = {0, 100000};
+--- 1216,1222 ----
+  		     * some platforms, need to check true error
+  		     * status.
+  		     */
+! 		    sockerrlen = (size_t)sizeof(sockerr);
+  		    status = getsockopt(fd, SOL_SOCKET, SO_ERROR, (void *)&sockerr, &sockerrlen);
+  		    if (!status && !sockerr) {
+  			struct timeval tv = {0, 100000};
+*** ./file.c.osr6	Sun Mar  4 06:51:31 2007
+--- ./file.c	Thu Nov  8 14:38:27 2007
+***************
+*** 22,27 ****
+--- 22,31 ----
+  #include "util.h"
+  #include "dln.h"
+  
++ #if defined(__USLC__)
++ # include <fcntl.h>
++ #endif
++ 
+  #ifdef HAVE_UNISTD_H
+  #include <unistd.h>
+  #endif
+***************
+*** 3179,3184 ****
+--- 3183,3193 ----
+  #ifdef __CYGWIN__
+  # undef flock
+  #endif
++ #ifdef __USLC__
++ #ifdef flock
++ # undef flock
++ #endif
++ #endif
+  #define flock(fd, op) rb_thread_flock(fd, op, fptr)
+  
+  /*
+*** ./Configure-OSR6.osr6	Thu Nov  8 14:26:04 2007
+--- ./Configure-OSR6	Thu Nov  8 14:26:04 2007
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -D_FILE_OFFSET_BITS=64"
++ NM="/usr/ccs/bin/nm -p"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ ac_cv_func_isinf=yes
++ export CC CXX CFLAGS NM ac_cv_func_isinf
++ rm -f mout-configure
++ ./configure --prefix=/usr --enable-install-doc \
++             --with-tcl-dir=/usr/gnu --with-tk-dir=/usr/gnu \
++             --disable-ipv6 --enable-largefile --enable-shared \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Mon Mar 12 12:19:03 2007
+--- ./configure	Thu Nov  8 14:26:04 2007
+***************
+*** 12731,12736 ****
+--- 12731,12737 ----
+  #else
+  # include <assert.h>
+  #endif
++ # include <fcntl.h>
+  
+  #undef $ac_func
+  
+***************
+*** 15905,15910 ****
+--- 15906,15912 ----
+  	hpux*)		CCDLFLAGS="$CCDLFLAGS +Z";;
+  	solaris*|irix*)	CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	sunos*)		CCDLFLAGS="$CCDLFLAGS -PIC" ;;
++ 	sysv5*)		CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	esix*|uxpds*)   CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	*)		: ${CCDLFLAGS=""} ;;
+      esac
+***************
+*** 15929,15935 ****
+  			rb_cv_dlopen=yes;;
+  	irix*)		: ${LDSHARED='ld -shared'}
+  			rb_cv_dlopen=yes;;
+! 	sysv4*) 	: ${LDSHARED='ld -G'}
+  			rb_cv_dlopen=yes;;
+          nto-qnx*)       : ${LDSHARED="qcc -shared"}
+                          rb_cv_dlopen=yes ;;
+--- 15931,15937 ----
+  			rb_cv_dlopen=yes;;
+  	irix*)		: ${LDSHARED='ld -shared'}
+  			rb_cv_dlopen=yes;;
+! 	sysv5*|sysv4*) 	: ${LDSHARED='$(CC) -Wl,-G'}
+  			rb_cv_dlopen=yes;;
+          nto-qnx*)       : ${LDSHARED="qcc -shared"}
+                          rb_cv_dlopen=yes ;;
+***************
+*** 16621,16626 ****
+--- 16623,16631 ----
+    cygwin*|mingw*|beos*|openstep*|nextstep*|rhapsody*|darwin*|os2-emx*)
+      : ${DLDLIBS=""}
+      ;;
++   sysv5*)
++     DLDLIBS="$DLDLIBS"
++     ;;
+    *)
+      DLDLIBS="$DLDLIBS -lc"
+      ;;
+***************
+*** 16651,16656 ****
+--- 16656,16666 ----
+      sunos4*)
+  	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'
+  	;;
++     sysv5*)
++ 	SOLIBS='$(LIBS)'
++ 	LIBRUBY_DLDFLAGS='-Wl,-h,/usr/lib/lib$(RUBY_SO_NAME).so'
++ 	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'
++ 	;;
+      linux* | gnu* | k*bsd*-gnu | atheos*)
+  	LIBRUBY_DLDFLAGS='-Wl,-soname,lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR)'
+  	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'
+*** ./Install-OSR6.osr6	Thu Nov  8 14:26:04 2007
+--- ./Install-OSR6	Thu Nov  8 14:26:04 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/ruby
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

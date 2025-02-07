@@ -1,0 +1,53 @@
+This program is designed to read and write from standard input and
+output to a raw TCP socket.  The specific application is sending data
+to printers attached to a terminal server's serial or parallel ports,
+or stuffing a file at a gateway or terminal server.
+
+Syntax:
+	tcpf <switches> hostname port-number
+
+	Switches:
+		-d	debugging output
+		-e	convert eof in input to ^D on output
+		-r      convert LF on input to CRLF on output
+		-t[nn]	timeout mode
+		-w[nn]	wait for open mode
+
+This program may be used in a shell script.  The following example is
+of a "print" command that sends text to a PostScript printer.
+
+ /usr/local/bin/lptops -2 -o -ntr $* | /usr/local/bin/tcpf -e chaff 4008 &
+
+In a shared printer environment, multiple systems may be trying to connect
+to a particular printer.  In this case, you may wish to use the -w switch
+to cause tcpf to NOT give up immediately if a connection attempt fails.
+Instead, tcpf will continue to try every second to open connection,
+until the full timeout (defaults to 5 minutes) has elapsed.
+
+It may also be used to drive our boxes from scripts running on dustbin.
+The switch, -t ("timeout"), is used to do this.  With -t specified, it no
+longer gives up when eof in either direction is encountered, but will give
+up when eof in both directions, or after 5 minutes of inactivity.
+
+To use it to stuff a file at wilma, for instance, use the command line:
+
+	tcpf -t5 wilma 23 <doit
+
+where the file doit contains, for instance:
+
+	floozy^M
+	ena
+	floozy^M
+	ping
+	ip^Mnit^M100^M^M^M^M
+	disa
+	exit
+
+This script will log onto wilma, get into enable mode, then send 100 pings
+aimed at nit.  Output from wilma will be delivered back to the initiator.
+
+Note that the ^M's in this message must be actuall control-M's in the file --
+most of the parsing uses 015 as the line terminator, and I haven't trained
+tcpf to do anything exotic like deal with NVT or CRLF issues.  It turns
+out the exec.c uses 015 or 012 as a line terminator, so the some of the
+commands can have normal newlines at the end.

@@ -1,0 +1,52 @@
+*** ./Build-UW7.uw7	Sun Feb  3 12:09:40 2008
+--- ./Build-UW7	Sun Feb  3 12:49:06 2008
+***************
+*** 0 ****
+--- 1,30 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CPPFLAGS="-O2 -I/usr/local/include -D_REENTRANT -DFD_SETSIZE=16384"
++ CFLAGS="-O2 -I/usr/local/include -D_REENTRANT -DFD_SETSIZE=16384"
++ CXXFLAGS="-O2 -I/usr/local/include -D_REENTRANT -DFD_SETSIZE=16384"
++ LDFLAGS="-L/usr/local/lib"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CPPFLAGS CFLAGS CXXFLAGS LDFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --sysconfdir=/etc --disable-cpp \
++             --mandir=/usr/local/man --enable-unicode-properties \
++             --with-threads=posix --disable-shared --enable-static \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ gmake $* 2>&1 | tee $MOUT
+*** ./Install-UW7.uw7	Sun Feb  3 12:09:40 2008
+--- ./Install-UW7	Sun Feb  3 12:09:40 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pcre
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ gmake install DESTDIR=$D 2>&1 | tee $MOUT
++ 

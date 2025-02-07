@@ -1,0 +1,82 @@
+--- ./Build-OSR6.osr6	2005-06-03 14:43:32.115292002 -0700
++++ ./Build-OSR6	2005-06-03 14:43:32.095292009 -0700
+@@ -0,0 +1,12 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS
++
++MOUT=mout
++[ "$1" ] && MOUT=mout-$1
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make 2>&1 | tee $MOUT
+--- ./Makefile.osr6	2005-01-12 22:16:20.000000000 -0800
++++ ./Makefile	2005-06-03 16:02:01.068572000 -0700
+@@ -1,21 +1,16 @@
+-# C compiler to use
+-CC=gcc
+-
+ # Set PREFIX to the root of where you want to install gtklife
+-PREFIX=/usr/local
++PREFIX=/usr/X11R6
++INSTALL=/usr/gnu/bin/install
+ 
+ # Installation points for the gtklife binary, data, and documentation.
+-BINDIR=$(PREFIX)/games
++BINDIR=$(PREFIX)/bin
+ DATADIR=$(PREFIX)/share/gtklife
+-DOCDIR=$(PREFIX)/doc/gtklife
+-
+-# Optimization and debug flags
+-CFLAGS=-O3 -Wall # -g
++DOCDIR=$(DATADIR)/doc
+ 
+ ########## No user-serviceable parts below ##########
+ 
+-CPPFLAGS=`gtk-config --cflags` -DDATADIR=\"$(DATADIR)\" -DDOCDIR=\"$(DOCDIR)\"
+-LDFLAGS=`gtk-config --libs`
++CPPFLAGS=`gtk-1.2-config --cflags` -DDATADIR=\"$(DATADIR)\" -DDOCDIR=\"$(DOCDIR)\"
++LDFLAGS=`gtk-1.2-config --libs`
+ 
+ OBJS=gtklife.o life.o loadsave.o ewmh.o util.o icons.o ul_lookup.o ur_lookup.o ll_lookup.o lr_lookup.o
+ CL_OBJS=create_lookup.o util.o
+@@ -25,15 +20,15 @@
+ all: gtklife
+ 
+ install: all
+-	install -d $(BINDIR)
+-	install -s gtklife $(BINDIR)
+-	install -d $(DATADIR)
+-	install -d $(DATADIR)/graphics
+-	install -m 0644 graphics/* $(DATADIR)/graphics
++	$(INSTALL) -d $(BINDIR)
++	$(INSTALL) -s gtklife $(BINDIR)
++	$(INSTALL) -d $(DATADIR)
++	$(INSTALL) -d $(DATADIR)/graphics
++	$(INSTALL) -m 0644 graphics/* $(DATADIR)/graphics
+ 	rm -rf $(DATADIR)/patterns
+ 	umask 022; cp -r patterns $(DATADIR)
+-	install -d $(DOCDIR)
+-	install -m 0644 doc/* $(DOCDIR)
++	$(INSTALL) -d $(DOCDIR)
++	$(INSTALL) -m 0644 doc/* $(DOCDIR)
+ 
+ gtklife: $(OBJS)
+ 	$(CC) -o gtklife $(OBJS) $(LDFLAGS)
+--- Install-OSR6.osr6	2005-07-05 11:03:41.410000003 -0700
++++ Install-OSR6	2005-07-05 11:04:57.300000003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gtklife
++PREFIX=$D/usr/X11R6
++export PREFIX
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $PREFIX
++make install PREFIX=$D/usr/X11R6 2>&1 | tee $MOUT

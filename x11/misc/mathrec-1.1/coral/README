@@ -1,0 +1,62 @@
+
+
+Written by Ronald Joe Record (rr@sco.com) 05 Apr 1993
+
+INTRO
+-----
+
+The idea here is to calculate and display aggregating particles.
+In order to accomplish this, a modified random walk algorithm is used.
+Initial particles are "seeded" at the "bottom" or the "sea". Particles
+are then "dropped" randomly from above. When a particle comes within a
+pixel of an already existent particle, it "sticks". After N particles 
+have "stuck", the color is incremented. Thus, color indicates "age".
+
+ACKNOWLEDGEMENTS
+----------------
+
+The algorithm was derived from lectures given by Dietmar Saupe at the 
+University of California at Santa Cruz. Assistance with colormaps and 
+spinning color wheels and X was gleaned from Hiram Clawson and Stacey Campbell.
+
+BUILD
+-----
+
+To build the coral binary, either use the Imakefile or the sample makefile,
+Makefile.std. If your system doesn't support prototypes, uncomment the 
+PROTODEFINE line of the Imakefile.
+
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile coral.
+
+The manual page can be formatted by typing "nroff -man coral.man > coral.6X".
+
+INSTALL
+-------
+
+To install coral, copy the coral binary to the desired location (the sample
+makefile puts it in /usr/games/X11)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/games/X11/doc for games and imaging software), then add that location
+to your MANPATH.
+
+TEST
+----
+
+You can test coral by just invoking it with no arguments. It should display
+a 512x480 image. Some workstations may be slow to calculate and display the
+coral growth as there are many calculations involved.
+
+Some "interesting" ways to run coral are as follows :
+% coral -F -n 10 -d
+(use the full screen, calculate 10 maps in demo mode)
+% coral -R
+(display on the root window)
+% coral -o coralgrowth.ppm
+(calculate and display with default parameters and save the resulting image
+ as a PPM file called coralgrowth.ppm. this can be viewed later using xv or 
+ any PPM viewing utility)
+
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com or ...uunet!sco!rr.
+

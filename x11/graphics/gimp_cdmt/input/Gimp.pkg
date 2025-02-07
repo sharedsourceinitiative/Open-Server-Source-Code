@@ -1,0 +1,2719 @@
+
+PKG:Gimp:
+description        = "Gimp Character Based Browser"
+dependencies       = 
+distTreeRootSHARED = $Gimp_DIR
+distTreeRootCLIENT = $Gimp_DIR
+
+DIR:Gimp:SHARED:./usr:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:./usr/local:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:./usr/local/bin:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:./usr/local/bin/gimp:
+mode  = 0555
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/bin/gimp
+
+FILE:Gimp:SHARED:usr/local/bin/gimp.real:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/bin/gimp.real
+
+DIR:Gimp:SHARED:usr/local/include:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/glib.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/include/glib.h
+
+FILE:Gimp:SHARED:usr/local/include/glibconfig.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/include/glibconfig.h
+
+DIR:Gimp:SHARED:usr/local/include/gdk:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/include/gdk
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdk.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdkcursors.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdkkeysyms.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdkprivate.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdktypes.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gdk/gdkx.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/include/gtk:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/include/gtk
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtk.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkaccelerator.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkadjustment.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkaspectframe.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkalignment.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkarrow.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkbin.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkbox.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkbutton.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkcheckbutton.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkcheckmenuitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkcolorsel.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkcontainer.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkcurve.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkdata.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkdialog.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkdrawingarea.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkentry.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkenums.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkfilesel.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkframe.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkgc.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkhbox.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkhruler.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkhscale.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkhscrollbar.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkhseparator.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkimage.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtklabel.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtklist.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtklistitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmain.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmenu.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmenubar.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmenufactory.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmenuitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmenushell.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkmisc.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtknotebook.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkobject.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkoptionmenu.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkpixmap.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkpreview.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkprogressbar.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkradiobutton.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkradiomenuitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkrange.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkrc.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkruler.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkscale.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkscrollbar.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkscrolledwindow.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkseparator.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtksignal.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkstyle.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktable.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktext.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktogglebutton.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktooltips.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktree.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktreeitem.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtktypeutils.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkvbox.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkviewport.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkvruler.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkvscale.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkvscrollbar.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkvseparator.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkwidget.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/gtk/gtkwindow.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/include/libgimp:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/include/libgimp
+
+FILE:Gimp:SHARED:usr/local/include/libgimp/gimp.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/libgimp/gimpenums.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/libgimp/gimpmenu.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/include/libgimp/gimpui.h:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/info:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/info/gdk.info:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gdk.info
+
+FILE:Gimp:SHARED:usr/local/info/gtk.info:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gtk.info
+
+FILE:Gimp:SHARED:usr/local/info/gtk.info-1:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gtk.info-1
+
+FILE:Gimp:SHARED:usr/local/info/gtk.info-2:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gtk.info-2
+
+FILE:Gimp:SHARED:usr/local/info/gtk.info-3:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gtk.info-3
+
+FILE:Gimp:SHARED:usr/local/info/gtk.info-4:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/gtk.info-4
+
+FILE:Gimp:SHARED:usr/local/info/pdb.info:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/pdb.info
+
+FILE:Gimp:SHARED:usr/local/info/pdb.info-1:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/pdb.info-1
+
+FILE:Gimp:SHARED:usr/local/info/pdb.info-2:
+mode  = 0444
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/info/pdb.info-2
+
+DIR:Gimp:SHARED:usr/local/lib:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/libglib.so.1.0.0:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libglib.so.1.0.0
+exportPath = /usr/local/lib/libglib.so.1
+exportPath = /usr/local/lib/libglib.so
+
+FILE:Gimp:SHARED:usr/local/lib/libglib.la:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libglib.la
+
+FILE:Gimp:SHARED:usr/local/lib/libglib.a:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libglib.a
+
+FILE:Gimp:SHARED:usr/local/lib/libgdk.so.1.0.0:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgdk.so.1.0.0
+exportPath = /usr/local/lib/libgdk.so.1
+exportPath = /usr/local/lib/libgdk.so
+
+FILE:Gimp:SHARED:usr/local/lib/libgdk.la:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgdk.la
+
+FILE:Gimp:SHARED:usr/local/lib/libgdk.a:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgdk.a
+
+FILE:Gimp:SHARED:usr/local/lib/libgtk.so.1.0.0:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgtk.so.1.0.0
+exportPath = /usr/local/lib/libgtk.so.1
+exportPath = /usr/local/lib/libgtk.so
+
+FILE:Gimp:SHARED:usr/local/lib/libgtk.la:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgtk.la
+
+FILE:Gimp:SHARED:usr/local/lib/libgtk.a:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgtk.a
+
+FILE:Gimp:SHARED:usr/local/lib/libgimp.so.1.0.0:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimp.so.1.0.0
+exportPath = /usr/local/lib/libgimp.so.1
+exportPath = /usr/local/lib/libgimp.so
+
+FILE:Gimp:SHARED:usr/local/lib/libgimp.la:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimp.la
+
+FILE:Gimp:SHARED:usr/local/lib/libgimp.a:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimp.a
+
+FILE:Gimp:SHARED:usr/local/lib/libgimpui.so.1.0.0:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimpui.so.1.0.0
+exportPath = /usr/local/lib/libgimpui.so.1
+exportPath = /usr/local/lib/libgimpui.so
+
+FILE:Gimp:SHARED:usr/local/lib/libgimpui.la:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimpui.la
+
+FILE:Gimp:SHARED:usr/local/lib/libgimpui.a:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/libgimpui.a
+
+DIR:Gimp:SHARED:usr/local/lib/gimp:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/lib/gimp
+
+DIR:Gimp:SHARED:usr/local/lib/gimp/0.99.10:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/script-fu:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/CML_explorer:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/autocrop:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/blinds:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/blur:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/bumpmap:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/c_astretch:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/checkerboard:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/cubism:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/diffraction:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/displace:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/edge:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/emboss:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/figures:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/fits:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/fp:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gauss_iir:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gauss_rle:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gbr:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gicon:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gif:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gradmap:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/grid:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/gz:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/header:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/holes:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/hot:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/hrz:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/ifscompose:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/laplace:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/mosaic:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/nlfilt:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/noisify:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/nova:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/oilify:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/normalize:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/pat:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/pcx:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/pixelize:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/plasma:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/pnm:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/ps:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/ripple:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/shift:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/sinus:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/snoise:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/sobel:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/sparkle:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/spread:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/sunras:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/tile:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/tileit:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/video:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/url:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/vinvert:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/waves:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/whirlpinch:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/xwd:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/zealouscrop:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/jpeg:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/tiff:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/lib/gimp/0.99.10/plug-ins/xpm:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+exportPath = /usr/local/share/gimp
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/alien-glow-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/basic1-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/basic2-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/beavis.jpg:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/blended-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/carve-it.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/carved-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/chrome-it.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/chrome-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/circle-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/clothify.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/coolmetal-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/crystal-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/font-map.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/frosty-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/glowing-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/gradient-example.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/neon-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/ripply-anim.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/sota-chrome-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/sphere.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/starburst-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/starscape-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/swirltile.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/swirly-pattern.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/t-o-p-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/texture.jpg:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/texture1.jpg:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/texture2.jpg:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/texture3.jpg:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/textured-logo.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/scripts/weave.scm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/user_install:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gimprc:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gtkrc:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gimp_logo.ppm:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/10x10square.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/10x10squareBlur.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/11circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/11fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/13circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/13fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/15circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/15fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/17circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/17fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/19circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/19fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/1circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/20x20square.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/20x20squareBlur.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/3circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/3fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/50x50cone.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/50x50square.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/50x50squareBlur.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/50x50squareBlur2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/5circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/5fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/5x5square.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/5x5squareBlur.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/7circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/7fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/9circle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/9fcircle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/WindozeSux.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/airplane.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/bigGalaxy.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/bird.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/bush.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/cloth.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/confetti.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/cross.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/cross_large.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/cross_small.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/diamond.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/duck.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/dunes.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/elk.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/flags.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/flower.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/flower_large.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/galaxy.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/galaxy_small.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/gecko.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/glyph.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/grid.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/grid2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/guitar.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/hash.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/jack.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/manta.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/nova.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/pixel.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/qbert2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/qbert3Blur.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/ribbon.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings1.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings3.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings4.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings5.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/xcf.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings6.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/rings7.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/sball.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/slope.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/snake.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/snowflake.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/sparkle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/sparkle2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/star_medium.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/star_small.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/swirl.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/swirl2.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/thegimp.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/therefore.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/tictactoe.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/tile.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/triangle.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/brushes/tulip.gbr:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Blinds:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Brushed_Aluminium:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Cold_Steel:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Crown_molding:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Deep_Sea:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Default:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Four_bars:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/French_flag:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/French_flag_smooth:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Full_saturation_spectrum_CCW:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Full_saturation_spectrum_CW:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/German_flag:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/German_flag_smooth:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Horizon_1:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Incandescent:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Mexican_flag:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Mexican_flag_smooth:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Neon_Cyan:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Neon_Green:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Neon_Yellow:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Skyline:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Pastel_Rainbow:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Radial_Eyeball_Blue:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Radial_Eyeball_Brown:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Radial_Eyeball_Green:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Radial_Glow_1:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Radial_Rainbow_Hoop:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Rounded_edge:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Skyline_polluted:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/Three_bars_sin:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/gradients/untitled:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Blues:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Browns_And_Yellows:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Cool_Colors:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Default:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Grays:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Greens:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Lights:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Muted:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Pastels:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Reds_And_Purples:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/palettes/Warm_Colors:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+DIR:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns:
+mode  = 0755
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/3dgreen.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/Craters.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/Moonfoot.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/amethyst.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/bark.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/blackwhitefloor.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/blue.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/bluebar.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/blueweb.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/brick.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/burlap.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/burlwood.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/bwcubes.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/chains.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/choc_swirl.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/circuit.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/clouds.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/clovers.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/coins.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/color.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/colorwhirl.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/corkboard.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pj.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/cracked.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/crazytile.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/crinklepaper.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/diffpat.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/drymud.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/dunes.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/eggcarton.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/electric.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/fibers.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/floor_tile.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/granite1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/granite2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/green_curtains.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/ground1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/horiz.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/java.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/krinkle.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/lathe.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leather.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leaves.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leaves3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leaves4.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leaves6.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/leopard.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/lightning.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/lumps.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/marble1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/marble2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/marble3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/mhuerock.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/money.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/oooh.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/oooh3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/orangebrown.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/paper.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/parque1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/parque2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/parque3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pastel.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pastel2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pine.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pink_marble.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/pool.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/qube1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/recessed.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/redcube.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/rock.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/sky.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/slate.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/sm_squares.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/spectbar.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/startile.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/stone33.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/swirl.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/swirl2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/terra.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/torrents.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/walnut.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/warning.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/water3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/waves.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wax.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/whirledstuff.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wood1.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wood2.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wood3.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wood4.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 
+
+FILE:Gimp:SHARED:usr/local/share/gimp/0.99.10/patterns/wood5.pat:
+mode  = 0644
+owner = bin
+group = bin
+flags = 

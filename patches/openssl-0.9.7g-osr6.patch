@@ -1,0 +1,134 @@
+*** ./config.00 Sat May  7 07:56:50 2005
+--- ./config Sat May  7 07:55:41 2005
+***************
+*** 84,90 ****
+  	    4.2)
+  		echo "i386-whatever-unixware1"; exit 0
+  		;;
+! 	    5)
+  		case "x${VERSION}" in
+  		    # We hardcode i586 in place of ${MACHINE} for the
+  		    # following reason. The catch is that even though Pentium
+--- 84,90 ----
+  	    4.2)
+  		echo "i386-whatever-unixware1"; exit 0
+  		;;
+! 	    5v6* | 5)
+  		case "x${VERSION}" in
+  		    # We hardcode i586 in place of ${MACHINE} for the
+  		    # following reason. The catch is that even though Pentium
+***************
+*** 93,98 ****
+  		    # with i386 is that it makes ./config pass 386 to
+  		    # ./Configure, which in turn makes make generate
+  		    # inefficient SHA-1 (for this moment) code.
+  		    x7*)  echo "i586-sco-unixware7";           exit 0 ;;
+  		    x8*)  echo "i586-unkn-OpenUNIX${VERSION}"; exit 0 ;;
+  		esac
+--- 93,99 ----
+  		    # with i386 is that it makes ./config pass 386 to
+  		    # ./Configure, which in turn makes make generate
+  		    # inefficient SHA-1 (for this moment) code.
++ 		    x6*)  echo "i386-sco-sysv5";               exit 0 ;;
+  		    x7*)  echo "i586-sco-unixware7";           exit 0 ;;
+  		    x8*)  echo "i586-unkn-OpenUNIX${VERSION}"; exit 0 ;;
+  		esac
+***************
+*** 696,701 ****
+  	  OUT="OpenUNIX-8" 
+  	fi
+  	;;
+    *-*-unixware7) OUT="unixware-7" ;;
+    *-*-UnixWare7) OUT="unixware-7" ;;
+    *-*-Unixware7) OUT="unixware-7" ;;
+--- 697,703 ----
+  	  OUT="OpenUNIX-8" 
+  	fi
+  	;;
++   *-*-sysv5)     OUT="unixware-7" ;;
+    *-*-unixware7) OUT="unixware-7" ;;
+    *-*-UnixWare7) OUT="unixware-7" ;;
+    *-*-Unixware7) OUT="unixware-7" ;;
+*** ./Makefile.00 Sat May  7 07:56:50 2005
+--- ./Makefile Sun May  8 13:08:35 2005
+***************
+*** 13,20 ****
+  SHLIB_MINOR=9.7
+  SHLIB_EXT=.so.$(SHLIB_MAJOR).$(SHLIB_MINOR)
+  PLATFORM=unixware-7
+! OPTIONS=386 no-krb5
+! CONFIGURE_ARGS=unixware-7 386
+  SHLIB_TARGET=svr5-shared
+  
+  # HERE indicates where this Makefile lives.  This can be used to indicate
+--- 13,20 ----
+  SHLIB_MINOR=9.7
+  SHLIB_EXT=.so.$(SHLIB_MAJOR).$(SHLIB_MINOR)
+  PLATFORM=unixware-7
+! OPTIONS=shared 386 no-krb5
+! CONFIGURE_ARGS=unixware-7 shared 386
+  SHLIB_TARGET=svr5-shared
+  
+  # HERE indicates where this Makefile lives.  This can be used to indicate
+***************
+*** 61,67 ****
+  
+  CC= cc
+  #CFLAG= -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -m486 -Wall -Wuninitialized -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+! CFLAG= -DOPENSSL_THREADS -Kthread -DDSO_DLFCN -DHAVE_DLFCN_H -DOPENSSL_NO_KRB5 -O -DFILIO_H -Kalloca -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+  DEPFLAG= 
+  PEX_LIBS= 
+  EX_LIBS= -lsocket -lnsl
+--- 61,67 ----
+  
+  CC= cc
+  #CFLAG= -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -m486 -Wall -Wuninitialized -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+! CFLAG= -Kpic -DOPENSSL_THREADS -Kthread -DDSO_DLFCN -DHAVE_DLFCN_H -DOPENSSL_NO_KRB5 -O -DFILIO_H -Kalloca -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+  DEPFLAG= 
+  PEX_LIBS= 
+  EX_LIBS= -lsocket -lnsl
+***************
+*** 122,128 ****
+  
+  # Set CAST_ENC to c_enc.o if you want to use the C version
+  #There are 4 x86 assember options.
+! CAST_ENC= asm/cx86-elf.o
+  #CAST_ENC= c_enc.o
+  #CAST_ENC= asm/cx86-elf.o # elf
+  #CAST_ENC= asm/cx86-sol.o # solaris
+--- 122,128 ----
+  
+  # Set CAST_ENC to c_enc.o if you want to use the C version
+  #There are 4 x86 assember options.
+! CAST_ENC= c_enc.o
+  #CAST_ENC= c_enc.o
+  #CAST_ENC= asm/cx86-elf.o # elf
+  #CAST_ENC= asm/cx86-sol.o # solaris
+***************
+*** 210,216 ****
+  SIGS=	libcrypto.a.sha1
+  SHARED_CRYPTO=libcrypto$(SHLIB_EXT)
+  SHARED_SSL=libssl$(SHLIB_EXT)
+! SHARED_LIBS=
+  SHARED_LIBS_LINK_EXTS=.so.$(SHLIB_MAJOR) .so
+  SHARED_LDFLAGS=
+  
+--- 210,216 ----
+  SIGS=	libcrypto.a.sha1
+  SHARED_CRYPTO=libcrypto$(SHLIB_EXT)
+  SHARED_SSL=libssl$(SHLIB_EXT)
+! SHARED_LIBS=$(SHARED_CRYPTO) $(SHARED_SSL)
+  SHARED_LIBS_LINK_EXTS=.so.$(SHLIB_MAJOR) .so
+  SHARED_LDFLAGS=
+  
+*** ./Build-OSR6.00 Thu May 12 21:35:13 2005
+--- ./Build-OSR6 Thu May 12 21:35:05 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ rm -f mout mout-configure mout-install
++ ./config shared 2>&1 | tee mout-configure
++ make 2>&1 | tee mout
++ #make install 2>&1 | tee mout-install

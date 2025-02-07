@@ -1,0 +1,186 @@
+*** ./configure.00	Mon Jan 29 11:45:30 2007
+--- ./configure	Wed Jul 18 16:08:47 2007
+***************
+*** 1881,1887 ****
+  
+  
+  # Checks for programs.
+! CFLAGS="-Wno-long-long"
+  
+  echo "$as_me:$LINENO: checking whether ln -s works" >&5
+  echo $ECHO_N "checking whether ln -s works... $ECHO_C" >&6
+--- 1881,1887 ----
+  
+  
+  # Checks for programs.
+! CFLAGS=""
+  
+  echo "$as_me:$LINENO: checking whether ln -s works" >&5
+  echo $ECHO_N "checking whether ln -s works... $ECHO_C" >&6
+***************
+*** 3779,3789 ****
+  
+  
+  # Check for the compiler support
+! if test "${GCC}" != "yes" ; then
+!    { { echo "$as_me:$LINENO: error: Valgrind relies on GCC to be compiled" >&5
+! echo "$as_me: error: Valgrind relies on GCC to be compiled" >&2;}
+!    { (exit 1); exit 1; }; }
+! fi
+  
+  # figure out where perl lives
+  # Extract the first word of "perl", so it can be a program name with args.
+--- 3779,3789 ----
+  
+  
+  # Check for the compiler support
+! #if test "${GCC}" != "yes" ; then
+! #   { { echo "$as_me:$LINENO: error: Valgrind relies on GCC to be compiled" >&5
+! #echo "$as_me: error: Valgrind relies on GCC to be compiled" >&2;}
+! #   { (exit 1); exit 1; }; }
+! #fi
+  
+  # figure out where perl lives
+  # Extract the first word of "perl", so it can be a program name with args.
+***************
+*** 4155,4160 ****
+--- 4155,4166 ----
+          VG_OS="freebsd"
+          ;;
+  
++      *sysv*)
++         echo "$as_me:$LINENO: result: ok (${host_os})" >&5
++ echo "${ECHO_T}ok (${host_os})" >&6
++         VG_OS="linux"
++         ;;
++ 
+       *)
+  	echo "$as_me:$LINENO: result: no (${host_os})" >&5
+  echo "${ECHO_T}no (${host_os})" >&6
+***************
+*** 4390,4451 ****
+  rm -f conftest*
+  
+  
+! echo "$as_me:$LINENO: checking the glibc version" >&5
+! echo $ECHO_N "checking the glibc version... $ECHO_C" >&6
+! 
+! case "${glibc}" in
+!      2.2)
+! 	echo "$as_me:$LINENO: result: 2.2 family" >&5
+! echo "${ECHO_T}2.2 family" >&6
+! 
+! cat >>confdefs.h <<\_ACEOF
+! #define GLIBC_2_2 1
+! _ACEOF
+! 
+! 	DEFAULT_SUPP="glibc-2.2.supp ${DEFAULT_SUPP}"
+! 	;;
+! 
+!      2.3)
+! 	echo "$as_me:$LINENO: result: 2.3 family" >&5
+! echo "${ECHO_T}2.3 family" >&6
+! 
+! cat >>confdefs.h <<\_ACEOF
+! #define GLIBC_2_3 1
+! _ACEOF
+! 
+! 	DEFAULT_SUPP="glibc-2.3.supp ${DEFAULT_SUPP}"
+! 	;;
+! 
+!      2.4)
+! 	echo "$as_me:$LINENO: result: 2.4 family" >&5
+! echo "${ECHO_T}2.4 family" >&6
+! 
+! cat >>confdefs.h <<\_ACEOF
+! #define GLIBC_2_4 1
+! _ACEOF
+! 
+! 	DEFAULT_SUPP="glibc-2.4.supp ${DEFAULT_SUPP}"
+! 	;;
+! 
+!      2.5)
+! 	echo "$as_me:$LINENO: result: 2.5 family" >&5
+! echo "${ECHO_T}2.5 family" >&6
+! 
+! cat >>confdefs.h <<\_ACEOF
+! #define GLIBC_2_5 1
+! _ACEOF
+! 
+! 	DEFAULT_SUPP="glibc-2.5.supp ${DEFAULT_SUPP}"
+! 	;;
+  
+!      *)
+! 	echo "$as_me:$LINENO: result: unsupported version" >&5
+! echo "${ECHO_T}unsupported version" >&6
+! 	{ { echo "$as_me:$LINENO: error: Valgrind requires glibc version 2.2 - 2.5" >&5
+! echo "$as_me: error: Valgrind requires glibc version 2.2 - 2.5" >&2;}
+!    { (exit 1); exit 1; }; }
+! 	;;
+! esac
+  
+  
+  # We don't know how to detect the X client library version
+--- 4396,4457 ----
+  rm -f conftest*
+  
+  
+! #echo "$as_me:$LINENO: checking the glibc version" >&5
+! #echo $ECHO_N "checking the glibc version... $ECHO_C" >&6
+  
+! #case "${glibc}" in
+! #     2.2)
+! #	echo "$as_me:$LINENO: result: 2.2 family" >&5
+! #echo "${ECHO_T}2.2 family" >&6
+! 
+! #cat >>confdefs.h <<\_ACEOF
+! ##define GLIBC_2_2 1
+! #_ACEOF
+! #
+! #	DEFAULT_SUPP="glibc-2.2.supp ${DEFAULT_SUPP}"
+! #	;;
+! #
+! #     2.3)
+! #	echo "$as_me:$LINENO: result: 2.3 family" >&5
+! #echo "${ECHO_T}2.3 family" >&6
+! #
+! #cat >>confdefs.h <<\_ACEOF
+! ##define GLIBC_2_3 1
+! #_ACEOF
+! #
+! #	DEFAULT_SUPP="glibc-2.3.supp ${DEFAULT_SUPP}"
+! #	;;
+! #
+! #     2.4)
+! #	echo "$as_me:$LINENO: result: 2.4 family" >&5
+! #echo "${ECHO_T}2.4 family" >&6
+! #
+! #cat >>confdefs.h <<\_ACEOF
+! ##define GLIBC_2_4 1
+! #_ACEOF
+! #
+! #	DEFAULT_SUPP="glibc-2.4.supp ${DEFAULT_SUPP}"
+! #	;;
+! #
+! #     2.5)
+! #	echo "$as_me:$LINENO: result: 2.5 family" >&5
+! #echo "${ECHO_T}2.5 family" >&6
+! #
+! #cat >>confdefs.h <<\_ACEOF
+! ##define GLIBC_2_5 1
+! #_ACEOF
+! #
+! #	DEFAULT_SUPP="glibc-2.5.supp ${DEFAULT_SUPP}"
+! #	;;
+! #
+! #     *)
+! #	echo "$as_me:$LINENO: result: unsupported version" >&5
+! #echo "${ECHO_T}unsupported version" >&6
+! #	{ { echo "$as_me:$LINENO: error: Valgrind requires glibc version 2.2 - 2.5" >&5
+! #echo "$as_me: error: Valgrind requires glibc version 2.2 - 2.5" >&2;}
+! #   { (exit 1); exit 1; }; }
+! #	;;
+! #esac
+  
+  
+  # We don't know how to detect the X client library version

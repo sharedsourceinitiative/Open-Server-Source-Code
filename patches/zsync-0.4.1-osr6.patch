@@ -1,0 +1,252 @@
+*** ./librcksum/md4.h.osr6	Tue Mar 15 12:44:51 2005
+--- ./librcksum/md4.h	Wed Jul 13 18:39:54 2005
+***************
+*** 35,56 ****
+  } MD4_CTX;
+  
+  void	 MD4Init(MD4_CTX *);
+! void	 MD4Update(MD4_CTX *, const uint8_t *, size_t)
+! 		__attribute__((__bounded__(__string__,2,3)));
+  void	 MD4Pad(MD4_CTX *);
+! void	 MD4Final(uint8_t [MD4_DIGEST_LENGTH], MD4_CTX *)
+! 		__attribute__((__bounded__(__minbytes__,1,MD4_DIGEST_LENGTH)));
+! void	 MD4Transform(uint32_t [4], const uint8_t [MD4_BLOCK_LENGTH])
+! 		__attribute__((__bounded__(__minbytes__,1,4)))
+! 		__attribute__((__bounded__(__minbytes__,2,MD4_BLOCK_LENGTH)));
+! char	*MD4End(MD4_CTX *, char *)
+! 		__attribute__((__bounded__(__minbytes__,2,MD4_DIGEST_STRING_LENGTH)));
+! char	*MD4File(const char *, char *)
+! 		__attribute__((__bounded__(__minbytes__,2,MD4_DIGEST_STRING_LENGTH)));
+! char	*MD4FileChunk(const char *, char *, off_t, off_t)
+! 		__attribute__((__bounded__(__minbytes__,2,MD4_DIGEST_STRING_LENGTH)));
+! char	*MD4Data(const uint8_t *, size_t, char *)
+! 		__attribute__((__bounded__(__string__,1,2)))
+! 		__attribute__((__bounded__(__minbytes__,3,MD4_DIGEST_STRING_LENGTH)));
+  
+  #endif /* _MD4_H_ */
+--- 35,47 ----
+  } MD4_CTX;
+  
+  void	 MD4Init(MD4_CTX *);
+! void	 MD4Update(MD4_CTX *, const uint8_t *, size_t);
+  void	 MD4Pad(MD4_CTX *);
+! void	 MD4Final(uint8_t [MD4_DIGEST_LENGTH], MD4_CTX *);
+! void	 MD4Transform(uint32_t [4], const uint8_t [MD4_BLOCK_LENGTH]);
+! char	*MD4End(MD4_CTX *, char *);
+! char	*MD4File(const char *, char *);
+! char	*MD4FileChunk(const char *, char *, off_t, off_t);
+! char	*MD4Data(const uint8_t *, size_t, char *);
+  
+  #endif /* _MD4_H_ */
+*** ./librcksum/rcksum.h.osr6	Tue Mar 15 12:44:51 2005
+--- ./librcksum/rcksum.h	Wed Jul 13 18:39:54 2005
+***************
+*** 25,31 ****
+  struct rsum {
+  	unsigned short	a;
+  	unsigned short	b;
+! } __attribute__((packed));
+  
+  #define CHECKSUM_SIZE 16
+  
+--- 25,31 ----
+  struct rsum {
+  	unsigned short	a;
+  	unsigned short	b;
+! };
+  
+  #define CHECKSUM_SIZE 16
+  
+***************
+*** 56,61 ****
+  int rcksum_blocks_todo(const struct rcksum_state*);
+  
+  /* For preparing rcksum control files - in both cases len is the block size. */
+! struct rsum __attribute__((pure)) rcksum_calc_rsum_block(const unsigned char* data, size_t len);
+  void rcksum_calc_checksum(unsigned char *c, const unsigned char* data, size_t len);
+  
+--- 56,61 ----
+  int rcksum_blocks_todo(const struct rcksum_state*);
+  
+  /* For preparing rcksum control files - in both cases len is the block size. */
+! struct rsum rcksum_calc_rsum_block(const unsigned char* data, size_t len);
+  void rcksum_calc_checksum(unsigned char *c, const unsigned char* data, size_t len);
+  
+*** ./librcksum/rsum.c.osr6	Tue Mar 15 13:25:42 2005
+--- ./librcksum/rsum.c	Wed Jul 13 18:39:54 2005
+***************
+*** 28,34 ****
+  
+  #define UPDATE_RSUM(a, b, oldc, newc, bshift) do { (a) += ((unsigned char)(newc)) - ((unsigned char)(oldc)); (b) += (a) - ((oldc) << (bshift)); } while (0)
+  
+! struct rsum  __attribute__((pure)) rcksum_calc_rsum_block(const unsigned char* data, size_t len)
+  {
+    register unsigned short a = 0;
+    register unsigned short b = 0;
+--- 28,34 ----
+  
+  #define UPDATE_RSUM(a, b, oldc, newc, bshift) do { (a) += ((unsigned char)(newc)) - ((unsigned char)(oldc)); (b) += (a) - ((oldc) << (bshift)); } while (0)
+  
+! struct rsum  rcksum_calc_rsum_block(const unsigned char* data, size_t len)
+  {
+    register unsigned short a = 0;
+    register unsigned short b = 0;
+*** ./libzsync/sha1.h.osr6	Tue Mar 15 12:44:51 2005
+--- ./libzsync/sha1.h	Wed Jul 13 18:39:54 2005
+***************
+*** 29,50 ****
+  
+  void SHA1Init(SHA1_CTX *);
+  void SHA1Pad(SHA1_CTX *);
+! void SHA1Transform(uint32_t [5], const uint8_t [SHA1_BLOCK_LENGTH])
+! 	__attribute__((__bounded__(__minbytes__,1,5)))
+! 	__attribute__((__bounded__(__minbytes__,2,SHA1_BLOCK_LENGTH)));
+! void SHA1Update(SHA1_CTX *, const uint8_t *, size_t)
+! 	__attribute__((__bounded__(__string__,2,3)));
+! void SHA1Final(uint8_t [SHA1_DIGEST_LENGTH], SHA1_CTX *)
+! 	__attribute__((__bounded__(__minbytes__,1,SHA1_DIGEST_LENGTH)));
+! char *SHA1End(SHA1_CTX *, char *)
+! 	__attribute__((__bounded__(__minbytes__,2,SHA1_DIGEST_STRING_LENGTH)));
+! char *SHA1File(const char *, char *)
+! 	__attribute__((__bounded__(__minbytes__,2,SHA1_DIGEST_STRING_LENGTH)));
+! char *SHA1FileChunk(const char *, char *, off64_t, off64_t)
+! 	__attribute__((__bounded__(__minbytes__,2,SHA1_DIGEST_STRING_LENGTH)));
+! char *SHA1Data(const uint8_t *, size_t, char *)
+! 	__attribute__((__bounded__(__string__,1,2)))
+! 	__attribute__((__bounded__(__minbytes__,3,SHA1_DIGEST_STRING_LENGTH)));
+  
+  #define HTONDIGEST(x) do {                                              \
+          x[0] = htonl(x[0]);                                             \
+--- 29,41 ----
+  
+  void SHA1Init(SHA1_CTX *);
+  void SHA1Pad(SHA1_CTX *);
+! void SHA1Transform(uint32_t [5], const uint8_t [SHA1_BLOCK_LENGTH]);
+! void SHA1Update(SHA1_CTX *, const uint8_t *, size_t);
+! void SHA1Final(uint8_t [SHA1_DIGEST_LENGTH], SHA1_CTX *);
+! char *SHA1End(SHA1_CTX *, char *);
+! char *SHA1File(const char *, char *);
+! char *SHA1FileChunk(const char *, char *, off64_t, off64_t);
+! char *SHA1Data(const uint8_t *, size_t, char *);
+  
+  #define HTONDIGEST(x) do {                                              \
+          x[0] = htonl(x[0]);                                             \
+*** ./libzsync/zmap.h.osr6	Sun Mar 20 09:07:09 2005
+--- ./libzsync/zmap.h	Wed Jul 13 18:39:54 2005
+***************
+*** 18,24 ****
+  struct gzblock {
+    uint16_t inbitoffset;
+    uint16_t outbyteoffset;
+! } __attribute__((packed));
+  
+  #define GZB_NOTBLOCKSTART 0x8000
+  
+--- 18,24 ----
+  struct gzblock {
+    uint16_t inbitoffset;
+    uint16_t outbyteoffset;
+! };
+  
+  #define GZB_NOTBLOCKSTART 0x8000
+  
+*** ./url.c.osr6	Tue Jul 12 09:27:08 2005
+--- ./url.c	Wed Jul 13 18:39:54 2005
+***************
+*** 60,66 ****
+  
+  static const char special[] = { ":/?" };
+  
+! char* __attribute__((pure)) make_url_absolute(const char* base, const char* url) {
+    int n = strcspn(url,special);
+  
+    if (n == 0 && *url == '/' && base) {
+--- 60,66 ----
+  
+  static const char special[] = { ":/?" };
+  
+! char* make_url_absolute(const char* base, const char* url) {
+    int n = strcspn(url,special);
+  
+    if (n == 0 && *url == '/' && base) {
+*** ./url.h.osr6	Tue Mar 15 12:44:51 2005
+--- ./url.h	Wed Jul 13 18:39:54 2005
+***************
+*** 15,18 ****
+  
+  char* get_host_port(const char* url, char* hostn, int hnlen, char** port);
+  
+! char* __attribute__((pure)) make_url_absolute(const char* base, const char* url);
+--- 15,18 ----
+  
+  char* get_host_port(const char* url, char* hostn, int hnlen, char** port);
+  
+! char* make_url_absolute(const char* base, const char* url);
+*** ./configure.osr6	Tue Jul 12 05:11:05 2005
+--- ./configure	Wed Jul 13 18:39:54 2005
+***************
+*** 3024,3034 ****
+  fi
+  
+  
+! CFLAGS="$CFLAGS -g -Wall -I\$(top_srcdir)"
+  
+  
+  NEW_CFLAGS="$CFLAGS"
+! for ac_flag in -Wwrite-strings -Winline -W -Wunreachable-code -Winline -ffast-math
+  do
+   echo "$as_me:$LINENO: checking whether compiler supports $ac_flag" >&5
+  echo $ECHO_N "checking whether compiler supports $ac_flag... $ECHO_C" >&6
+--- 3024,3034 ----
+  fi
+  
+  
+! CFLAGS="$CFLAGS -O2 -I\$(top_srcdir)"
+  
+  
+  NEW_CFLAGS="$CFLAGS"
+! for ac_flag in -Kinline
+  do
+   echo "$as_me:$LINENO: checking whether compiler supports $ac_flag" >&5
+  echo $ECHO_N "checking whether compiler supports $ac_flag... $ECHO_C" >&6
+*** ./Install-OSR6.osr6	Wed Jul 13 18:40:18 2005
+--- ./Install-OSR6	Wed Jul 13 18:40:42 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/zsync
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
+*** ./Configure-OSR6.osr6	Wed Jul 13 18:42:46 2005
+--- ./Configure-OSR6	Wed Jul 13 18:42:40 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

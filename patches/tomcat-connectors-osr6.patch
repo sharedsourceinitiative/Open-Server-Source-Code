@@ -1,0 +1,88 @@
+*** ./native/jni/Makefile.sco.osr6	Thu Aug 30 10:38:06 2007
+--- ./native/jni/Makefile.sco	Thu Aug 30 10:38:06 2007
+***************
+*** 0 ****
+--- 1,35 ----
++ # Defines for example NSAPI programs running under SOLARIS
++ 
++ CC_CMD=cc -O2 -D_REENTRANT -Kpthread -KPIC
++ LD_SHAREDCMD=cc -G
++ 
++ all:
++ 
++ prepare:
++ 
++ OS_TYPE=sco
++ INCLUDEDIR=../common
++ JAVA_HOME=/usr/java
++ JAVA_INCLUDE=$(JAVA_HOME)/include
++ 
++ JK_OBJS =  ../common/jk_map.o ../common/jk_util.o ../common/jk_pool.o jk_jnicb.o
++ 
++ INCLUDE_FLAGS=-I$(INCLUDEDIR) -I$(JAVA_INCLUDE) -I$(JAVA_INCLUDE)/$(OS_TYPE)
++ COMMON_DEFS=
++ 
++ 
++ all: jni_connect.so 
++ 
++ 
++ jni_connect.so: $(JK_OBJS)
++ 	$(LD_SHAREDCMD) $(JK_OBJS) -o jni_connect.so $(EXTRA_LDDEFINES)
++ 
++ .c.o:
++ 	$(CC_CMD) $(COMMON_DEFS) $(INCLUDE_FLAGS) -c $< 
++ 
++ install: all
++ 	-mkdir -p $(DESTDIR)/usr/lib/apache/libexec
++ 	cp jni_connect.so $(DESTDIR)/usr/lib/apache/libexec
++ 
++ clean:
++ 	rm $(JK_OBJS)
+*** ./Build-OSR6.osr6	Thu Aug 30 10:38:06 2007
+--- ./Build-OSR6	Thu Aug 30 10:39:57 2007
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ 
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ cd native
++ rm -f ../mout-configure
++ ./configure --with-apxs=/usr/lib/apache/bin/apxs \
++             --enable-EAPI \
++             --with-java-home=/usr/java 2>&1 | tee ../mout-configure
++ 
++ rm -f ../mout
++ make $* 2>&1 | tee ../mout
++ 
++ #cd jni
++ #rm -f ../../mout-jni
++ #make -f Makefile.sco 2>&1 | tee ../../mout-jni
+*** ./Install-OSR6.osr6	Thu Aug 30 10:38:06 2007
+--- ./Install-OSR6	Thu Aug 30 10:38:06 2007
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/mod_jk
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ cd native
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ #cd jni
++ #make -f Makefile.sco install DESTDIR=$D 2>&1 | tee ../../mout-install-jni
++ 

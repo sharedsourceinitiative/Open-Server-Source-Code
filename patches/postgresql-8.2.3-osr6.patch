@@ -1,0 +1,162 @@
+*** ./src/port/exec.c.osr6	Mon Sep 11 13:10:30 2006
+--- ./src/port/exec.c	Tue Feb 27 09:44:37 2007
+***************
+*** 282,287 ****
+--- 282,290 ----
+  static int
+  resolve_symlinks(char *path)
+  {
++ #ifdef _NO_FOLLOW_SYMLINKS
++ return 0;
++ #endif
+  #ifdef HAVE_READLINK
+  	struct stat buf;
+  	char		orig_wd[MAXPGPATH],
+*** ./src/Makefile.shlib.osr6	Tue Sep 19 08:36:07 2006
+--- ./src/Makefile.shlib	Tue Feb 27 09:44:37 2007
+***************
+*** 233,239 ****
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+--- 233,239 ----
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,/usr/lib/postgresql/$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+*** ./Install-OSR6.osr6	Tue Feb 27 09:44:37 2007
+--- ./Install-OSR6	Tue Feb 27 09:44:37 2007
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgsql
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ make -C src/pl install DESTDIR=$D 2>&1 | tee $MOUT-pl
++ make -C contrib install DESTDIR=$D 2>&1 | tee $MOUT-contrib
++ make -C contrib/xml2 install DESTDIR=$D 2>&1 | tee $MOUT-contrib.xml2
++ make -C src/tutorial NO_PGXS=1 install DESTDIR=$D 2>&1 | tee $MOUT-tutorial
+--- src/backend/port/dynloader/unixware.h.osr6	2007-04-17 16:06:09.235688007 -0700
++++ src/backend/port/dynloader/unixware.h	2007-04-17 16:07:54.626088002 -0700
+@@ -39,7 +39,7 @@
+ #endif
+ 
+ #define pg_dlopen(f)	dlopen((f), RTLD_NOW | RTLD_GLOBAL)
+-#define pg_dlsym		dlsym
++#define pg_dlsym(h, f)  ((PGFunction) dlsym(h, f))
+ #define pg_dlclose		dlclose
+ #define pg_dlerror		dlerror
+ 
+--- src/interfaces/ecpg/test/preproc/comment.pgc.osr6	2007-04-17 16:17:17.469328023 -0700
++++ src/interfaces/ecpg/test/preproc/comment.pgc	2007-04-17 16:17:36.069328017 -0700
+@@ -3,7 +3,7 @@
+ exec sql include ../regression;
+ 
+ /* just a test comment */ int i;
+-/* just a test comment int j*/;
++/* just a test comment */ int j;
+ 
+ /****************************************************************************/
+ /* Test comment                                                             */
+--- src/bin/psql/tab-complete.c.osr6	2007-04-17 16:26:41.219328011 -0700
++++ src/bin/psql/tab-complete.c	2007-04-17 16:28:56.749328016 -0700
+@@ -493,7 +493,7 @@
+ initialize_readline(void)
+ {
+ 	rl_readline_name = (char *) pset.progname;
+-	rl_attempted_completion_function = (void *) psql_completion;
++	rl_attempted_completion_function = (rl_completion_func_t *) psql_completion;
+ 
+ 	rl_basic_word_break_characters = "\t\n@$><=;|&{( ";
+ 
+--- src/pl/tcl/Makefile.osr6	2007-04-18 10:00:08.346920019 -0700
++++ src/pl/tcl/Makefile	2007-04-18 10:00:20.116920002 -0700
+@@ -30,7 +30,7 @@
+ 
+ 
+ ifneq ($(PORTNAME), win32)
+-SHLIB_LINK = $(BE_DLLLIBS) $(TCL_LIB_SPEC) $(TCL_LIBS) -lc
++SHLIB_LINK = $(BE_DLLLIBS) $(TCL_LIB_SPEC) $(TCL_LIBS)
+ else
+ SHLIB_LINK = $(TCL_LIB_SPEC) $(BE_DLLLIBS)
+ endif
+--- Build-OSR6.osr6	2007-04-18 09:59:46.747480021 -0700
++++ Build-OSR6	2007-04-18 10:06:10.167320007 -0700
+@@ -0,0 +1,62 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2 -D_NO_FOLLOW_SYMLINKS"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM M4 INSTALL
++ac_cv_type_struct_sockaddr_in6=no
++export ac_cv_type_struct_sockaddr_in6
++
++DEBUG=
++#DEBUG="--enable-cassert --enable-debug"
++rm -f mout-configure
++./configure --prefix=/usr --disable-rpath --with-perl $DEBUG \
++            --with-tcl --with-tk --with-tclconfig=/usr/gnu/lib \
++            --with-python --with-readline \
++            --with-openssl --sysconfdir=/etc/sysconfig/pgsql \
++            --datadir=/usr/share/postgresql \
++            --with-docdir=/usr/share/doc/packages \
++            --without-gnu-ld --without-pam --without-krb5 \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++
++make all 2>&1 | tee mout
++make -C contrib all 2>&1 | tee mout-contrib
++make -C contrib/xml2 all 2>&1 | tee mout-contrib.xml2
++
++# Have to hack makefile to put correct path into tutorial scripts
++sed "s|C=\`pwd\`;|C=/usr/lib/postgresql/tutorial;|" < src/tutorial/Makefile > src/tutorial/GNUmakefile
++make -C src/tutorial NO_PGXS=1 all 2>&1 | tee mout-tutorial
++rm -f src/tutorial/GNUmakefile
++
++#  PYTHON=/usr/bin/python
++#  python_version=`${PYTHON} -c "import sys; print sys.version[:3]"`
++#  python_prefix=`${PYTHON} -c "import sys; print sys.prefix"`
++#  python_includespec="-I${python_prefix}/include/python${python_version}"
++
++#  pushd PyGreSQL
++
++#  cc $CFLAGS -Kpic -G -o _pgmodule.so ${python_includespec} -I../src/interfaces/libpq -I../src/include -L../src/interfaces/libpq -lpq pgmodule.c
++
++#  popd
++
++#  pushd Pgtcl
++   # pgtcl's configure only handles one include directory :-(
++#  ./configure --prefix=/usr \
++#    --libdir=%{_libdir} \
++#    --with-tcl=%{_libdir} \
++#    --with-postgres-include="../src/interfaces/libpq -I../src/include" \
++#    --with-postgres-lib=../src/interfaces/libpq
++   # note: as of pgtcl 1.5.2, its makefile is not parallel-safe
++#  make all
++#  popd

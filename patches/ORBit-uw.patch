@@ -1,0 +1,22 @@
+--- ./src/orb/Makefile.in.uw	2002-06-06 11:34:48.000000000 +0000
++++ ./src/orb/Makefile.in	2003-12-12 03:49:52.490000020 +0000
+@@ -869,7 +869,7 @@
+ interface_repository-stubs.c: my_ir_stuff
+ 
+ my_ir_stuff: $(IRIDL) $(IDL)
+-	$(IDL) --noskels $(IRIDL)
++	$(IDL) $(IRIDL)
+ 	touch my_ir_stuff
+ 
+ $(IDL):
+--- ./src/daemons/interface_repository/Makefile.in.uw	2002-06-06 11:34:55.000000000 +0000
++++ ./src/daemons/interface_repository/Makefile.in	2003-12-12 03:55:26.490000013 +0000
+@@ -431,7 +431,7 @@
+ 
+ 
+ $(orbit_ird_built): $(IRIDL) $(IDL)
+-	$(IDL) --noheaders --nostubs --nocommon $(IRIDL)
++	$(IDL) $(IRIDL)
+ 
+ dist-hook:
+ 	cd $(distdir); rm -f $(BUILT_SOURCES)

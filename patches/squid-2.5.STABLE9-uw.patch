@@ -1,0 +1,64 @@
+--- ./include/config.h.uw	2001-11-13 21:27:47.000000000 +0000
++++ ./include/config.h	2004-07-23 21:33:39.380000063 +0000
+@@ -58,6 +58,15 @@
+ #define _SQUID_SUNOS_
+ #endif
+ 
++#elif defined(__USLC__)		/* UnixWare - SysV */
++#define _SQUID_UW_
++#define _SQUID_SYSV_
++#define _SQUID_SOLARIS_
++#define SOLARIS
++#if !defined(__SVR4)
++#define __SVR4
++#endif
++
+ #elif defined(__hpux)		/* HP-UX - SysV-like? */
+ #define _SQUID_HPUX_
+ #define _SQUID_SYSV_
+--- ./src/protos.h.uw	2004-07-23 21:33:38.940000042 +0000
++++ ./src/protos.h	2004-07-23 21:33:39.480000023 +0000
+@@ -1309,8 +1309,10 @@
+ #ifdef _SQUID_SOLARIS_
+ extern int getrusage(int, struct rusage *);
+ extern int getpagesize(void);
++#ifndef __USLC__
+ extern int gethostname(char *, int);
+ #endif
++#endif
+ 
+ #if URL_CHECKSUM_DEBUG
+ extern unsigned int url_checksum(const char *url);
+--- ./src/tools.c.uw	2004-07-23 21:33:38.000000000 +0000
++++ ./src/tools.c	2004-07-23 21:39:53.060000016 +0000
+@@ -172,12 +172,12 @@
+ {
+     memset(r, '\0', sizeof(struct rusage));
+ #if HAVE_GETRUSAGE && defined(RUSAGE_SELF)
+-#ifdef _SQUID_SOLARIS_
++#if defined(_SQUID_SOLARIS_) && !defined(__USLC__)
+     /* Solaris 2.5 has getrusage() permission bug -- Arjan de Vet */
+     enter_suid();
+ #endif
+     getrusage(RUSAGE_SELF, r);
+-#ifdef _SQUID_SOLARIS_
++#if defined(_SQUID_SOLARIS_)  && !defined(__USLC__)
+     leave_suid();
+ #endif
+ #endif
+@@ -266,6 +266,7 @@
+     }
+ #endif /* _SQUID_HPUX_ */
+ #ifdef _SQUID_SOLARIS_
++#ifndef __USLC__
+     {				/* get ftp://opcom.sun.ca/pub/tars/opcom_stack.tar.gz and */
+ 	extern void opcom_stack_trace(void);	/* link with -lopcom_stack */
+ 	fflush(debug_log);
+@@ -273,6 +274,7 @@
+ 	opcom_stack_trace();
+ 	fflush(stdout);
+     }
++#endif /* __USLC__ */
+ #endif /* _SQUID_SOLARIS_ */
+ #if HAVE_BACKTRACE_SYMBOLS_FD
+     {

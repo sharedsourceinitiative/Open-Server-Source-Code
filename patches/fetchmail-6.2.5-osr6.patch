@@ -1,0 +1,129 @@
+--- ./daemon.c.00	2003-07-16 18:03:20.000000000 -0700
++++ ./daemon.c	2005-06-04 12:27:33.253772013 -0700
+@@ -8,7 +8,7 @@
+ 
+ #include <stdio.h>
+ #include <errno.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <string.h>
+ #include <sys/types.h>
+ #ifdef HAVE_SYS_WAIT_H
+--- ./smbdes.c.00	2003-07-16 18:03:21.000000000 -0700
++++ ./smbdes.c	2005-06-04 12:24:44.067372032 -0700
+@@ -150,9 +150,11 @@
+ 
+ static void permute(char *out, char *in, uchar *p, int n)
+ {
+-	int i;
+-	for (i=0;i<n;i++)
+-		out[i] = in[p[i]-1];
++	int i, j;
++	for (i=0;i<n;i++) {
++		j = p[i]-1;
++		out[i] = in[j];
++	}
+ }
+ 
+ static void lshift(char *d, int count, int n)
+--- ./Configure-OSR6.00	2005-06-04 12:25:53.000000000 -0700
++++ ./Configure-OSR6	2005-06-04 12:25:39.812892011 -0700
+@@ -0,0 +1,10 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="gcc -D_REENTRANT"
++CXX="g++ -D_REENTRANT"
++export CC CXX CFLAGS
++rm -f mout-configure
++./configure --prefix=/usr --disable-nls \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./fetchmail.c.00	2003-10-15 12:22:31.000000000 -0700
++++ ./fetchmail.c	2005-06-04 12:27:36.113612031 -0700
+@@ -14,7 +14,7 @@
+ #endif
+ #include <fcntl.h>
+ #include <string.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #if defined(HAVE_SYSLOG)
+ #include <syslog.h>
+ #endif
+--- ./getpass.c.00	2003-07-16 18:03:20.000000000 -0700
++++ ./getpass.c	2005-06-04 12:27:39.123372007 -0700
+@@ -15,7 +15,7 @@
+ #include "config.h"
+ 
+ #include <stdio.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+ #if defined(HAVE_UNISTD_H)
+--- ./idle.c.00	2003-07-16 18:03:22.000000000 -0700
++++ ./idle.c	2005-06-04 12:27:41.863132008 -0700
+@@ -19,7 +19,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <errno.h>
+ #include <sys/time.h>
+ #include <fetchmail.h>	/* for ROOT_UID */
+--- ./ipv6-connect.c.00	2003-07-16 18:03:22.000000000 -0700
++++ ./ipv6-connect.c	2005-06-04 12:27:45.262812005 -0700
+@@ -42,7 +42,7 @@
+ #include <netinet/in.h>
+ #include <errno.h>
+ #include <netdb.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ 
+ /* This patch, supplying SA_LEN if it's undefined, is from Red Hat */
+ #ifndef SA_LEN
+--- ./lock.c.00	2003-08-13 01:08:17.000000000 -0700
++++ ./lock.c	2005-06-04 12:27:48.042652005 -0700
+@@ -16,7 +16,7 @@
+ #include <unistd.h>
+ #endif
+ #include <fcntl.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ 
+ #include "fetchmail.h"
+ #include "i18n.h"
+--- ./smtp.c.00	2003-08-05 20:30:18.000000000 -0700
++++ ./smtp.c	2005-06-04 12:27:50.562412013 -0700
+@@ -11,7 +11,7 @@
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <string.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include "fetchmail.h"
+ #include "socket.h"
+ #include "smtp.h"
+--- ./driver.c.00	2003-10-15 12:22:31.000000000 -0700
++++ ./driver.c	2005-06-04 12:28:26.609532000 -0700
+@@ -24,7 +24,7 @@
+ #include <sys/itimer.h>
+ #endif
+ #include  <sys/time.h>
+-#include  <signal.h>
++#include  <sys/signal.h>
+ #ifdef HAVE_SYS_WAIT_H
+ #include <sys/wait.h>
+ #endif
+--- ./sink.c.00	2003-10-10 15:06:36.000000000 -0700
++++ ./sink.c	2005-06-04 12:28:29.889292008 -0700
+@@ -14,7 +14,7 @@
+ #include  <stdio.h>
+ #include  <errno.h>
+ #include  <string.h>
+-#include  <signal.h>
++#include  <sys/signal.h>
+ #include  <time.h>
+ #ifdef HAVE_MEMORY_H
+ #include  <memory.h>

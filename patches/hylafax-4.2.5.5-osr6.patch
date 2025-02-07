@@ -1,0 +1,409 @@
+*** ./hfaxd/HylaFAXServer.c++.osr6	Wed Mar  8 16:30:16 2006
+--- ./hfaxd/HylaFAXServer.c++	Thu Mar 30 10:28:46 2006
+***************
+*** 98,107 ****
+--- 98,109 ----
+      tzname[1] = NULL;
+  #endif
+  
++ #ifndef sco
+      // Latest glibc will revert to UTC in the chroot if it can't
+      // find the zoneinfo file and no TZ is set in the environment.
+      fxStr tz = fxStr::format("%s%d:%02d%s", tzname[0], (gmtoff / 3600), ((gmtoff / 60) % 60), tzname[1]);
+      setenv("TZ", tz, 0);
++ #endif
+  
+      cachedTIFF = NULL;
+  }
+*** ./etc/faxsetup.sh.in.osr6	Wed Mar  8 16:30:16 2006
+--- ./etc/faxsetup.sh.in	Thu Mar 30 10:28:46 2006
+***************
+*** 46,52 ****
+  test -d /usr/bsd  && PATH=$PATH:/usr/bsd		# Silicon Graphics
+  test -d /usr/5bin && PATH=/usr/5bin:$PATH:/usr/etc	# Sun and others
+  test -d /usr/sbin && PATH=/usr/sbin:$PATH		# 4.4BSD-derived
+! test -d /usr/local/bin && PATH=$PATH:/usr/local/bin	# for GNU tools
+  
+  AWK=@AWK@			# awk for use below
+  CAT=@CAT@			# cat command for use below
+--- 46,52 ----
+  test -d /usr/bsd  && PATH=$PATH:/usr/bsd		# Silicon Graphics
+  test -d /usr/5bin && PATH=/usr/5bin:$PATH:/usr/etc	# Sun and others
+  test -d /usr/sbin && PATH=/usr/sbin:$PATH		# 4.4BSD-derived
+! test -d /usr/gnu/bin && PATH=$PATH:/usr/gnu/bin		# for GNU tools
+  
+  AWK=@AWK@			# awk for use below
+  CAT=@CAT@			# cat command for use below
+*** ./etc/hylafax.in.osr6	Wed Mar  8 16:30:16 2006
+--- ./etc/hylafax.in	Thu Mar 30 10:28:46 2006
+***************
+*** 42,47 ****
+--- 42,54 ----
+  # TARGET:	@TARGET@
+  #
+  
++ CAT=hylafax.cat
++ SCRIPTDIR="/etc/init.d"
++ SCRIPT="hylafax"
++ HYLAFAX_LABEL="hylafax"
++ STOPNUM="K05"
++ STARTNUM="S80"
++ 
+  #
+  # fax server control
+  #
+***************
+*** 143,148 ****
+--- 150,198 ----
+  	test "$pid" && kill $1 $pid; return
+  }
+  
++ #############################################################################
++ #
++ # hylafax_enable
++ #
++ # add a link to this script into the /etc/rc2.d directory, then start
++ # the server
++ #
++ #############################################################################
++ hylafax_enable() {
++   # create the /etc/rc2.d startup file
++   if [ -f /etc/rc2.d/$STARTNUM$SCRIPT ]; then
++     # file already exists
++     test -z "$ISL" && dspmsg $CAT 15 "%s is already enabled.\n" $HYLAFAX_LABEL
++   else
++     # link in the file
++     test -z "$ISL" && dspmsg $CAT 16 "Enabling %s ... " $HYLAFAX_LABEL
++     ln $SCRIPTDIR/$SCRIPT /etc/rc2.d/$STARTNUM$SCRIPT
++     ln $SCRIPTDIR/$SCRIPT /etc/rc0.d/$STOPNUM$SCRIPT
++     test -z "$ISL" && dspmsg $CAT 17 "done.\n"
++   fi
++ }
++ 
++ #############################################################################
++ #
++ # hylafax_disable
++ #
++ # remove any links to this script in /etc/rc2.d
++ #
++ #############################################################################
++ hylafax_disable() {
++   # remove the /etc/rc2.d startup file
++   if [ -f /etc/rc2.d/$STARTNUM$SCRIPT ]; then
++     # unlink the file
++     test -z "$ISL" && dspmsg $CAT 18 "Disabling %s ... " $HYLAFAX_LABEL
++     rm -f /etc/rc2.d/$STARTNUM$SCRIPT
++     rm -f /etc/rc0.d/$STOPNUM$SCRIPT
++     test -z "$ISL" && dspmsg $CAT 19 "done.\n"
++   else
++     # file does not exist
++     test -z "$ISL" && dspmsg $CAT 20 "%s is already disabled.\n" $HYLAFAX_LABEL
++   fi
++ }
++ 
+  case $1 in
+  'start')
+  	if $IS_ON fax && test -x $FAXQ; then
+***************
+*** 184,189 ****
+--- 234,245 ----
+  	$FAXQUIT >/dev/null 2>&1
+  	killall -15 hfaxd
+  	;;
++ 'enable')
++ 	hylafax_enable
++ 	;;
++ 'disable')
++ 	hylafax_disable
++ 	;;
+  'start_msg')
+  	$ECHO "Starting HylaFAX Servers."
+  	;;
+***************
+*** 191,196 ****
+  	$ECHO "Stopping HylaFAX Servers."
+  	;;
+  *)
+! 	$ECHO "usage: hylafax {start|stop|start_msg|stop_msg}"
+  	;;
+  esac
+--- 247,252 ----
+  	$ECHO "Stopping HylaFAX Servers."
+  	;;
+  *)
+! 	$ECHO "usage: hylafax {start|stop|enable|disable|start_msg|stop_msg}"
+  	;;
+  esac
+*** ./etc/Makefile.in.osr6	Wed Mar  8 16:30:16 2006
+--- ./etc/Makefile.in	Thu Mar 30 10:28:46 2006
+***************
+*** 101,118 ****
+  installSysVInit: hylafax
+  	if [ "@SYSVINIT@" = yes ]; then \
+  	    ${PUTSERVER} -F ${DIR_SYSVINIT} -m 755 -O hylafax; \
+- 	    echo "checking ${DIR_SYSVINITSTART} directories"; \
+- 	    for i in ${DIR_SYSVINITSTART}; do \
+- 		if test -d ${DIR_SYSVINIT}/$$i; then \
+- 		    ${PUTSERVER} -F ${DIR_SYSVINIT}/$$i -lns ../`basename ${DIR_SYSVINIT}`/hylafax ${NAME_SYSVINITSTART}; \
+- 		fi; \
+- 	    done; \
+- 	    echo "checking ${DIR_SYSVINITSTOP} directories"; \
+- 	    for i in ${DIR_SYSVINITSTOP}; do \
+- 		if test -d ${DIR_SYSVINIT}/$$i; then \
+- 		    ${PUTSERVER} -F ${DIR_SYSVINIT}/$$i -lns ../`basename ${DIR_SYSVINIT}`/hylafax ${NAME_SYSVINITSTOP}; \
+- 		fi; \
+- 	    done; \
+  	else \
+  	    ${PUTSERVER} -F ${SBIN} -m 755 hylafax; \
+  	fi
+--- 101,106 ----
+*** ./util/RE.c++.osr6	Wed Mar  8 16:30:16 2006
+--- ./util/RE.c++	Thu Mar 30 10:28:46 2006
+***************
+*** 27,33 ****
+  /*
+   * Regular expression support.
+   */
+! #include <RE.h>
+  
+  RE::RE(const char* pat, int len, int flags)
+      : _pattern(pat, len == 0 ? strlen(pat) : len)
+--- 27,33 ----
+  /*
+   * Regular expression support.
+   */
+! #include "RE.h"
+  
+  RE::RE(const char* pat, int len, int flags)
+      : _pattern(pat, len == 0 ? strlen(pat) : len)
+*** ./util/Makefile.SYSV5dso.osr6	Thu Mar 30 10:28:46 2006
+--- ./util/Makefile.SYSV5dso	Thu Mar 30 10:28:46 2006
+***************
+*** 0 ****
+--- 1,45 ----
++ #	$Id: Makefile.SOLARISdso,v 1.3 2006/01/31 19:31:26 faxguy Exp $
++ #
++ # HylaFAX Facsimile Software
++ #
++ # Copyright (c) 1990-1996 Sam Leffler
++ # Copyright (c) 1991-1996 Silicon Graphics, Inc.
++ # HylaFAX is a trademark of Silicon Graphics
++ # 
++ # Permission to use, copy, modify, distribute, and sell this software and 
++ # its documentation for any purpose is hereby granted without fee, provided
++ # that (i) the above copyright notices and this permission notice appear in
++ # all copies of the software and related documentation, and (ii) the names of
++ # Sam Leffler and Silicon Graphics may not be used in any advertising or
++ # publicity relating to the software without the specific, prior written
++ # permission of Sam Leffler and Silicon Graphics.
++ # 
++ # THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
++ # EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
++ # WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
++ # 
++ # IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
++ # ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
++ # OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
++ # WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
++ # LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
++ # OF THIS SOFTWARE.
++ #
++ 
++ #
++ # DSO-specific rules for the util directory.
++ #
++ 
++ libfaxutil.${DSO}: ${OBJECTS}
++ 	CC ${DSOOPTS} -o libfaxutil.${DSO}.${LIBVERSION} ${OBJECTS}
++ 	ln -s libfaxutil.${DSO}.${LIBVERSION} libfaxutil.${DSO}
++ 
++ ../util/libfaxutil.${DSO}: libfaxutil.${DSO}
++ 
++ installDSO: libfaxutil.${DSO}
++ 	${PUTCLIENT} -F ${LIBDIR} -m 755 -O libfaxutil.${DSO}.${LIBVERSION}
++ 	(cd ${LIBDIR}; ln -s libfaxutil.${DSO}.${LIBVERSION} libfaxutil.${DSO})
++ 
++ cleanDSO::
++ 	-${RM} -f libfaxutil.${DSO}.${LIBVERSION} libfaxutil.${DSO}
++ 
+*** ./faxd/Makefile.SYSV5dso.osr6	Thu Mar 30 10:28:46 2006
+--- ./faxd/Makefile.SYSV5dso	Thu Mar 30 10:28:46 2006
+***************
+*** 0 ****
+--- 1,45 ----
++ #	$Id: Makefile.SOLARISdso,v 1.3 2006/01/31 19:31:26 faxguy Exp $
++ #
++ # HylaFAX Facsimile Software
++ #
++ # Copyright (c) 1990-1996 Sam Leffler
++ # Copyright (c) 1991-1996 Silicon Graphics, Inc.
++ # HylaFAX is a trademark of Silicon Graphics
++ # 
++ # Permission to use, copy, modify, distribute, and sell this software and 
++ # its documentation for any purpose is hereby granted without fee, provided
++ # that (i) the above copyright notices and this permission notice appear in
++ # all copies of the software and related documentation, and (ii) the names of
++ # Sam Leffler and Silicon Graphics may not be used in any advertising or
++ # publicity relating to the software without the specific, prior written
++ # permission of Sam Leffler and Silicon Graphics.
++ # 
++ # THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
++ # EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
++ # WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
++ # 
++ # IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
++ # ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
++ # OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
++ # WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
++ # LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
++ # OF THIS SOFTWARE.
++ #
++ 
++ #
++ # DSO-specific rules for the faxd directory.
++ #
++ #LDIRT	+= libfaxserver.a
++ 
++ libfaxserver.${DSO}: ${SERVER_OBJS} ${MODEM_OBJS}
++ 	CC ${DSOOPTS} -o libfaxserver.${DSO}.${LIBVERSION} \
++ 	    ${SERVER_OBJS} ${MODEM_OBJS} ${LLDLIBS}
++ 	ln -s libfaxserver.${DSO}.${LIBVERSION} libfaxserver.${DSO}
++ 
++ installDSO: libfaxserver.${DSO}
++ 	${PUTSERV} -F ${LIBDIR} -m 755 -O libfaxserver.${DSO}.${LIBVERSION}
++ 	(cd ${LIBDIR}; ln -s libfaxserver.${DSO}.${LIBVERSION} libfaxserver.${DSO})
++ 
++ cleanDSO::
++ 	-${RM} -f libfaxserver.${DSO}.${LIBVERSION} libfaxserver.${DSO}
++ 
+*** ./Configure-OSR6.osr6	Thu Mar 30 10:28:46 2006
+--- ./Configure-OSR6	Thu Mar 30 10:28:46 2006
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --nointeractive --disable-pam --target=$HOST \
++             --with-DIR_BIN=/usr/bin \
++             --with-DIR_SBIN=/usr/sbin \
++             --with-DIR_LIBEXEC=/usr/sbin \
++             --with-DIR_LIBDATA=/usr/lib/fax \
++             --with-DIR_LIB=/usr/lib \
++             --with-DIR_MAN=/usr/man \
++             --with-LIBTIFF="-ltiff" \
++             --with-TIFFINC="/usr/include" \
++             --with-LIBDB="-ldb" \
++             --with-DBLIBINC=/usr/include \
++             2>&1 | tee mout-configure
+*** ./configure.osr6	Wed Mar  8 16:30:16 2006
+--- ./configure	Thu Mar 30 10:28:46 2006
+***************
+*** 3463,3468 ****
+--- 3463,3510 ----
+  	    "t:t.o; \${C++F} ${DSOOPTS} -o t.${DSOSUF} t.o"
+  	}
+  	;;
++     *-sysv5*)
++ 	if [ "X${DIR_LIB}" != "X/usr/lib" ]; then
++ 	    USE_RPATH=' -R${LIBDIR}'
++ 	else
++ 	    USE_RPATH=''
++ 	fi
++ 	DSOSUF=so
++ #	LIBUTIL=''
++ 	FAXD='${DEPTH}/faxd'
++ 	LIBFAXSERVER='-L${FAXD} -lfaxserver'
++ 	# options here are passed to CC, not directly to ld
++ 	DSOOPTS='-G -Wl,-h,$@'
++ 	if [ ${ISGCC} = "yes" ] ; then
++ 	    LLDOPTS='-L${UTIL} -L${FAXD} -R${LIBDIR} -lfaxutil -lstdc++'
++ 	    GCOPTS="${GCOPTS} -fpic"
++ 	    GCXXOPTS="${GCXXOPTS} -fpic"
++ 	else
++ 	    LLDOPTS='-L${UTIL} -L${FAXD} -R${LIBDIR} -lfaxutil'
++ 	    GCOPTS="${GCOPTS} -Kpic"
++ 	    GCXXOPTS="${GCXXOPTS} -Kpic"
++ 	fi
++ 	#LLDOPTS='-L${UTIL} -L${FAXD} -R${LIBDIR} -lfaxutil'
++ 	DSO=SYSV5
++ 	CheckCCDSO()
++ 	{
++ 	$RM t.c t.o t.${DSOSUF}
++ 	echo 'int f() { return 0; }'>t.c
++ 	capture cat t.c
++ 	runMake t \
++ 	    't.o:; ${CCF} -c t.c' \
++ 	    "t: t.o; \${CCF} ${DSOOPTS} -o t.${DSOSUF} t.o"
++ 	}
++ 	CheckCXXDSO()
++ 	{
++ 	$RM t.c++ t.o t.${DSOSUF}
++ 	echo 'int f() { return 0; }'>t.c++
++ 	capture cat t.c++
++ 	runMake t \
++ 	    "t.o:; \${C++F} -c \${C++FILE} t.c++${MAKECXXOVERRIDE}" \
++ 	    "t:t.o; \${C++F} ${DSOOPTS} -o t.${DSOSUF} t.o"
++ 	}
++ 	;;
+      *)	Note "There is no support for building HylaFAX as DSOs on your system."
+  	DSO=no
+  	;;
+***************
+*** 4125,4131 ****
+      *-linux*)			MANSCHEME=bsd-source-cat;;
+      *-ultrix*)			MANSCHEME=bsd-source-cat;;
+      *-sunos*)			MANSCHEME=bsd-source-cat-strip;;
+!     *-sysv[234]*)		MANSCHEME=sysv-source-cat-strip;;
+      *-hpux*)			MANSCHEME=sysv-source-cat-strip;;
+      *-solaris*)			MANSCHEME=sysv-source-cat-strip;;
+      *-aix*)			MANSCHEME=sysv-source-strip;;
+--- 4167,4173 ----
+      *-linux*)			MANSCHEME=bsd-source-cat;;
+      *-ultrix*)			MANSCHEME=bsd-source-cat;;
+      *-sunos*)			MANSCHEME=bsd-source-cat-strip;;
+!     *-sysv[2345]*)		MANSCHEME=sysv-source-cat-strip;;
+      *-hpux*)			MANSCHEME=sysv-source-cat-strip;;
+      *-solaris*)			MANSCHEME=sysv-source-cat-strip;;
+      *-aix*)			MANSCHEME=sysv-source-strip;;
+*** ./Install-OSR6.osr6	Thu Mar 30 10:28:46 2006
+--- ./Install-OSR6	Thu Mar 30 10:28:46 2006
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/hylafax
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/etc/init.d
++ mkdir -p $D/etc/rc0.d
++ mkdir -p $D/etc/rc2.d
++ mkdir -p $D/usr/lib
++ mkdir -p $D/var/spool
++ make install \
++      BIN=$D/usr/bin \
++      LIBDATA=$D/usr/lib/fax \
++      LIBEXEC=$D/usr/sbin \
++      SBIN=$D/usr/sbin \
++      SPOOL=$D/var/spool/hylafax \
++      MAN=$D/usr/man \
++      DIR_SYSVINIT=$D/etc/init.d \
++      LIBDIR=$D/usr/lib 2>&1 | tee $MOUT
++ 
++ rm -f $D/var/spool/hylafax/FIFO

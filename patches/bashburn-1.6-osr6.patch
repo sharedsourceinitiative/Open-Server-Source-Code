@@ -1,0 +1,19 @@
+*** ./Install.sh.00 Sat May  7 08:00:16 2005
+--- ./Install.sh Sat May  7 08:00:16 2005
+***************
+*** 74,80 ****
+  echo "Installation script for BashBurn 1.3+"
+  echo
+  
+! if whoami | grep root > /dev/null ; then
+  	
+  	echo "Where do you want to install BashBurn?"
+  	echo " (Default is /usr/local/BashBurn)"
+--- 74,80 ----
+  echo "Installation script for BashBurn 1.3+"
+  echo
+  
+! if [ `id -u` -eq 0 ]  ; then
+  	
+  	echo "Where do you want to install BashBurn?"
+  	echo " (Default is /usr/local/BashBurn)"

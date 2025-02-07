@@ -1,0 +1,45 @@
+*** ./Configure-OSR6.osr6	Fri Mar 14 10:07:36 2008
+--- ./Configure-OSR6	Fri Mar 14 10:07:36 2008
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -L/usr/X11R6/lib"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ #GTK_CONFIG="/usr/bin/pkg-config gtk+-2.0"
++ GTK_CONFIG="/usr/bin/gtk-config"
++ export CC CXX CFLAGS NM M4 INSTALL GTK_CONFIG
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --disable-gtktest \
++             --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Fri Mar 14 10:08:06 2008
+--- ./Install-OSR6	Fri Mar 14 10:08:19 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/MToolsFM
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

@@ -1,0 +1,573 @@
+*** ./intl/localealias.c.osr6	Sun Nov 18 07:58:42 2001
+--- ./intl/localealias.c	Mon Oct 23 13:47:35 2006
+***************
+*** 50,55 ****
+--- 50,56 ----
+  #include <stdlib.h>
+  
+  #include <string.h>
++ #include <strings.h>
+  #if !HAVE_STRCHR && !defined _LIBC
+  # ifndef strchr
+  #  define strchr index
+*** ./src/xitk/xine-toolkit/config.c.osr6	Sun Jul 25 17:43:47 2004
+--- ./src/xitk/xine-toolkit/config.c	Mon Oct 23 13:47:58 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <strings.h>
+  
+  #include "_xitk.h"
+  
+*** ./src/xitk/xine-toolkit/font.c.osr6	Thu Jan  6 09:46:56 2005
+--- ./src/xitk/xine-toolkit/font.c	Mon Oct 23 13:48:06 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <pthread.h>
+  
+  #ifdef WITH_XMB
+*** ./src/xitk/xine-toolkit/inputtext.c.osr6	Wed Dec 15 00:15:56 2004
+--- ./src/xitk/xine-toolkit/inputtext.c	Mon Oct 23 13:48:18 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+*** ./src/xitk/xine-toolkit/labelbutton.c.osr6	Sat Jun 12 19:36:35 2004
+--- ./src/xitk/xine-toolkit/labelbutton.c	Mon Oct 23 13:48:24 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  
+  #include "_xitk.h"
+  
+*** ./src/xitk/xine-toolkit/mrlbrowser.c.osr6	Wed Apr 27 17:57:58 2005
+--- ./src/xitk/xine-toolkit/mrlbrowser.c	Mon Oct 23 13:48:33 2006
+***************
+*** 30,35 ****
+--- 30,36 ----
+  #include <stdlib.h>
+  #include <errno.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <sys/types.h>
+  #include <unistd.h>                                                      
+  
+*** ./src/xitk/xine-toolkit/skin.c.osr6	Mon Nov 22 00:45:26 2004
+--- ./src/xitk/xine-toolkit/skin.c	Mon Oct 23 13:48:39 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <ctype.h>
+  #include <pthread.h>
+  #include <errno.h>
+*** ./src/xitk/xine-toolkit/xitk.c.osr6	Fri May 20 15:02:05 2005
+--- ./src/xitk/xine-toolkit/xitk.c	Mon Oct 23 13:48:45 2006
+***************
+*** 33,38 ****
+--- 33,39 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <pthread.h>
+  #include <pwd.h>
+  #include <errno.h>
+*** ./src/xitk/xine-toolkit/browser.c.osr6	Wed Dec 15 13:10:47 2004
+--- ./src/xitk/xine-toolkit/browser.c	Mon Oct 23 13:47:52 2006
+***************
+*** 27,32 ****
+--- 27,34 ----
+  #include <stdio.h>
+  #include <sys/time.h>
+  #include <unistd.h>
++ #include <string.h>
++ #include <strings.h>
+  
+  #include "_xitk.h"
+  
+*** ./src/xitk/xine-toolkit/getdeskroot.c.osr6	Mon Apr 26 14:31:50 2004
+--- ./src/xitk/xine-toolkit/getdeskroot.c	Mon Oct 23 13:48:12 2006
+***************
+*** 99,104 ****
+--- 99,105 ----
+  
+  #include <stdio.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xatom.h>
+  #include <X11/Xproto.h>
+*** ./src/xitk/Imlib-light/misc.c.osr6	Mon Jul 14 15:44:10 2003
+--- ./src/xitk/Imlib-light/misc.c	Mon Oct 23 13:52:23 2006
+***************
+*** 6,11 ****
+--- 6,13 ----
+  #include "Imlib.h"
+  #include "Imlib_private.h"
+  #include <locale.h>
++ #include <string.h>
++ #include <strings.h>
+  
+  #ifdef HAVE_SHM
+  #include <X11/extensions/XShm.h>
+*** ./src/xitk/oxine/oxine.c.osr6	Tue Feb 15 12:09:32 2005
+--- ./src/xitk/oxine/oxine.c	Mon Oct 23 13:52:35 2006
+***************
+*** 28,33 ****
+--- 28,34 ----
+  #include <ctype.h>
+  #include <dirent.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <getopt.h>
+*** ./src/xitk/oxine/mediamarks.c.osr6	Tue Feb 15 12:09:28 2005
+--- ./src/xitk/oxine/mediamarks.c	Mon Oct 23 13:52:30 2006
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #include <stdio.h>
+  #include <unistd.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <ctype.h>
+  #include <dirent.h>
+  #include <sys/stat.h>
+*** ./src/xitk/Makefile.in.osr6	Tue Jul 26 11:37:02 2005
+--- ./src/xitk/Makefile.in	Sun Oct 22 19:00:55 2006
+***************
+*** 391,397 ****
+  	     $(top_builddir)/src/xitk/oxine/liboxine.la \
+  	     $(X_PRE_LIBS) @XINE_LIBS@ $(LIRC_LIBS) $(DYNAMIC_LD_LIBS) \
+  	     $(X_LIBS) $(XTEST_LIBS) $(CURL_LIBS) $(NVTVSIMPLE_LIBS) \
+! 	     -lX11 -lm $(DBG_LIBS)
+  
+  xine_remote_SOURCES = xine-remote.c
+  xine_remote_DEPENDENCIES = $(top_builddir)/src/common/libcommon.la \
+--- 391,397 ----
+  	     $(top_builddir)/src/xitk/oxine/liboxine.la \
+  	     $(X_PRE_LIBS) @XINE_LIBS@ $(LIRC_LIBS) $(DYNAMIC_LD_LIBS) \
+  	     $(X_LIBS) $(XTEST_LIBS) $(CURL_LIBS) $(NVTVSIMPLE_LIBS) \
+! 	     -L/usr/local/lib -lgetline -lX11 -lm $(DBG_LIBS)
+  
+  xine_remote_SOURCES = xine-remote.c
+  xine_remote_DEPENDENCIES = $(top_builddir)/src/common/libcommon.la \
+*** ./src/xitk/actions.c.osr6	Sat Jul 23 19:40:36 2005
+--- ./src/xitk/actions.c	Mon Oct 23 13:49:37 2006
+***************
+*** 31,36 ****
+--- 31,38 ----
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <unistd.h>
++ #include <string.h>
++ #include <strings.h>
+  
+  #ifdef HAVE_ALLOCA_H
+  #include <alloca.h>
+*** ./src/xitk/event.c.osr6	Sat Jul 23 19:40:37 2005
+--- ./src/xitk/event.c	Mon Oct 23 13:49:51 2006
+***************
+*** 27,32 ****
+--- 27,34 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <sys/time.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+*** ./src/xitk/file_browser.c.osr6	Sun May 29 03:43:40 2005
+--- ./src/xitk/file_browser.c	Mon Oct 23 13:50:05 2006
+***************
+*** 26,31 ****
+--- 26,33 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+  #include <X11/keysym.h>
+*** ./src/xitk/kbindings.c.osr6	Sat Jul 16 12:05:31 2005
+--- ./src/xitk/kbindings.c	Mon Oct 23 13:50:18 2006
+***************
+*** 25,30 ****
+--- 25,32 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+  #include <X11/keysym.h>
+*** ./src/xitk/lirc.c.osr6	Mon Apr 26 14:31:44 2004
+--- ./src/xitk/lirc.c	Mon Oct 23 13:50:31 2006
+***************
+*** 32,37 ****
+--- 32,38 ----
+  #include <sys/types.h>
+  #include <unistd.h>
+  #include <string.h>
++ #include <strings.h>
+  
+  #include "common.h"
+  
+*** ./src/xitk/main.c.osr6	Sat Jul 23 19:40:37 2005
+--- ./src/xitk/main.c	Mon Oct 23 13:50:38 2006
+***************
+*** 38,43 ****
+--- 38,44 ----
+  #include <stdarg.h>
+  #include <unistd.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <math.h>
+  #include <fcntl.h>
+  #include <errno.h>
+*** ./src/xitk/mediamark.c.osr6	Sat Jul 23 19:40:37 2005
+--- ./src/xitk/mediamark.c	Mon Oct 23 13:50:43 2006
+***************
+*** 28,33 ****
+--- 28,34 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <sys/types.h>
+  #include <dirent.h>
+  #include <sys/stat.h>
+*** ./src/xitk/network.c.osr6	Sat Jul 16 12:05:32 2005
+--- ./src/xitk/network.c	Mon Oct 23 14:01:29 2006
+***************
+*** 46,51 ****
+--- 46,52 ----
+  #include <strings.h>
+  #else
+  #include <string.h>
++ #include <strings.h>
+  #endif
+  
+  #include <stdarg.h>
+***************
+*** 58,64 ****
+  #include <sys/ioctl.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+! #include <sys/signal.h>
+  #include <sys/time.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+--- 59,65 ----
+  #include <sys/ioctl.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+! #include <signal.h>
+  #include <sys/time.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+*** ./src/xitk/playlist.c.osr6	Sat Feb  5 18:09:42 2005
+--- ./src/xitk/playlist.c	Mon Oct 23 13:51:20 2006
+***************
+*** 28,33 ****
+--- 28,35 ----
+  
+  #include <stdio.h>
+  #include <errno.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+  #include <X11/keysym.h>
+*** ./src/xitk/post.c.osr6	Sat Jul 16 12:05:33 2005
+--- ./src/xitk/post.c	Mon Oct 23 13:51:30 2006
+***************
+*** 25,30 ****
+--- 25,32 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
++ #include <strings.h>
+  
+  #ifdef HAVE_ALLOCA_H   
+  #include <alloca.h>
+*** ./src/xitk/session.c.osr6	Wed Sep  8 14:13:27 2004
+--- ./src/xitk/session.c	Mon Oct 23 13:51:42 2006
+***************
+*** 36,41 ****
+--- 36,42 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
++ #include <string.h>
+  #include <strings.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+*** ./src/xitk/skins.c.osr6	Mon Nov 22 00:45:26 2004
+--- ./src/xitk/skins.c	Mon Oct 23 13:51:51 2006
+***************
+*** 29,34 ****
+--- 29,35 ----
+  #include <sys/stat.h>
+  #include <errno.h>
+  #include <string.h>
++ #include <strings.h>
+  
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+*** ./src/xitk/xine-remote.c.osr6	Sat Jul 16 12:05:32 2005
+--- ./src/xitk/xine-remote.c	Mon Oct 23 14:01:39 2006
+***************
+*** 46,51 ****
+--- 46,52 ----
+  #include <strings.h>
+  #else
+  #include <string.h>
++ #include <strings.h>
+  #endif
+  
+  #include <stdarg.h>
+***************
+*** 58,64 ****
+  #include <sys/ioctl.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+! #include <sys/signal.h>
+  #include <sys/time.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+--- 59,65 ----
+  #include <sys/ioctl.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+! #include <signal.h>
+  #include <sys/time.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+*** ./src/xitk/kbindings_man.c.osr6	Sat Jul 16 12:05:31 2005
+--- ./src/xitk/kbindings_man.c	Mon Oct 23 13:49:04 2006
+***************
+*** 25,30 ****
+--- 25,32 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <X11/Xlib.h>
+  #include <X11/Xutil.h>
+  #include <X11/keysym.h>
+*** ./src/xitk/session_ctrl.c.osr6	Wed Sep  8 14:13:27 2004
+--- ./src/xitk/session_ctrl.c	Mon Oct 23 13:49:17 2006
+***************
+*** 36,41 ****
+--- 36,42 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
++ #include <string.h>
+  #include <strings.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+*** ./src/xitk/tvout.c.osr6	Tue Apr 13 12:55:49 2004
+--- ./src/xitk/tvout.c	Mon Oct 23 13:52:03 2006
+***************
+*** 25,30 ****
+--- 25,31 ----
+  #endif
+  
+  #include <stdio.h>
++ #include <string.h>
+  #include <strings.h>
+  #include <X11/Xlib.h>
+  
+*** ./src/common/utils.c.osr6	Thu Apr 15 13:55:36 2004
+--- ./src/common/utils.c	Mon Oct 23 13:52:40 2006
+***************
+*** 28,33 ****
+--- 28,34 ----
+  #include <stdlib.h>
+  #include <errno.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <unistd.h>
+  #include <ctype.h>
+  #include <sys/types.h>
+*** ./src/aaui/main.c.osr6	Sun Dec 12 13:57:10 2004
+--- ./src/aaui/main.c	Mon Oct 23 13:52:45 2006
+***************
+*** 42,47 ****
+--- 42,48 ----
+  #include <stdlib.h>
+  #include <stdarg.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <unistd.h>
+  #include <errno.h>
+  #include <sys/types.h>
+*** ./src/fb/post.c.osr6	Sat Jul 16 12:05:30 2005
+--- ./src/fb/post.c	Mon Oct 23 13:53:08 2006
+***************
+*** 20,25 ****
+--- 20,28 ----
+   * The code is taken from xine-ui/src/xitk/post.c at changed to work with fbxine
+   */
+  
++ #include <string.h>
++ #include <strings.h>
++ 
+  #include "post.h"
+  #include "main.h"
+  
+*** ./src/fb/actions.c.osr6	Wed Aug 11 04:45:37 2004
+--- ./src/fb/actions.c	Mon Oct 23 13:53:00 2006
+***************
+*** 26,31 ****
+--- 26,34 ----
+  #endif
+  #define _BSD_SOURCE 1
+  
++ #include <string.h>
++ #include <strings.h>
++ 
+  #ifdef HAVE_CONFIG_H
+  #include "config.h"
+  #endif
+*** ./configure.osr6	Tue Jul 26 11:37:16 2005
+--- ./configure	Sun Oct 22 19:00:55 2006
+***************
+*** 24007,24012 ****
+--- 24007,24014 ----
+  if eval "test \"\${$as_ac_var+set}\" = set"; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
++   ac_check_lib_save_LIBS=$LIBS
++ LIBS="$LIBS /usr/lib/heimdal/lib/libroken.a"
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 24186,24198 ****
+      ;;
+  
+    *)
+!     echo "$as_me:$LINENO: checking for pthread_create in -lpthread" >&5
+! echo $ECHO_N "checking for pthread_create in -lpthread... $ECHO_C" >&6
+  if test "${ac_cv_lib_pthread_pthread_create+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpthread  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 24188,24200 ----
+      ;;
+  
+    *)
+!     echo "$as_me:$LINENO: checking for pthread_create in -lthread" >&5
+! echo $ECHO_N "checking for pthread_create in -lthread... $ECHO_C" >&6
+  if test "${ac_cv_lib_pthread_pthread_create+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lthread  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 24251,24257 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   THREAD_LIBS="-lpthread"
+  else
+    { { echo "$as_me:$LINENO: error: pthread needed" >&5
+  echo "$as_me: error: pthread needed" >&2;}
+--- 24253,24259 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   THREAD_LIBS="-lthread"
+  else
+    { { echo "$as_me:$LINENO: error: pthread needed" >&5
+  echo "$as_me: error: pthread needed" >&2;}
+*** ./Build-OSR6.osr6	Sun Oct 22 19:00:55 2006
+--- ./Build-OSR6	Sun Oct 22 19:00:55 2006
+***************
+*** 0 ****
+--- 1,35 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ AS="/usr/gnu/bin/gas"
++ NM="/usr/ccs/bin/nm -p"
++ 
++ # Xinelib uses GNU assembler syntax so we're using gcc for now
++ if [ "$1" = "-c" ]
++ then
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ else
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ fi
++ export AS CC CXX CFLAGS NM
++ #[ -f xine-lib-configure-osr6.patch ] && {
++ #  patch -p0 -b -i xine-lib-configure-osr6.patch
++ #  chmod 755 configure
++ #}
++ rm -f mout-configure
++ if [ -x configure ]
++ then
++     ./configure --prefix=/usr --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ else
++     [ -f Makefile.PL ] && perl Makefile.PL 2>&1 | tee mout-configure
++ fi
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Sun Oct 22 19:04:28 2006
+--- ./Install-OSR6	Sun Oct 22 19:04:44 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/xine
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

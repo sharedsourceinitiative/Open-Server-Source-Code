@@ -1,0 +1,57 @@
+*** ./Makefile.uw7	Tue Oct 20 17:06:11 1998
+--- ./Makefile	Fri Mar 14 11:21:29 2008
+***************
+*** 1,7 ****
+! CC = gcc
+! CFLAGS = -Wall -I.
+  LDFLAGS =
+! PREFIX = /usr/local
+  
+  SRCS = getopt.c getopt1.c
+  OBJS = getopt.o getopt1.o
+--- 1,9 ----
+! CC = cc
+! CFLAGS = -O2 -I.
+  LDFLAGS =
+! DESTDIR=
+! PREFIX = $(DESTDIR)/usr
+! INSTALL = /usr/gnu/bin/install
+  
+  SRCS = getopt.c getopt1.c
+  OBJS = getopt.o getopt1.o
+***************
+*** 12,17 ****
+--- 14,21 ----
+  	$(AR) cq $@ $(OBJS)
+  
+  install: $(OBJS) libgetopt.a
++ 	-mkdir -p $(PREFIX)/include
++ 	-mkdir -p $(PREFIX)/lib
+  	$(INSTALL) getopt.h $(PREFIX)/include
+  	$(INSTALL) libgetopt.a $(PREFIX)/lib
+  
+*** ./Build-UW7.uw7	Fri Mar 14 11:21:29 2008
+--- ./Build-UW7	Fri Mar 14 11:22:00 2008
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ gmake $* 2>&1 | tee $MOUT
+*** ./Install-UW7.uw7	Fri Mar 14 11:21:29 2008
+--- ./Install-UW7	Fri Mar 14 11:22:53 2008
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/getopt
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ gmake install DESTDIR=$D 2>&1 | tee $MOUT

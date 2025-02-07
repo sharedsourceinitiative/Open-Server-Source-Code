@@ -1,0 +1,355 @@
+*** ./src/hd/rhdisp.c.osr6	Fri Apr  9 19:54:06 2004
+--- ./src/hd/rhdisp.c	Tue Jul  5 11:18:22 2005
+***************
+*** 27,33 ****
+  #elif defined(__GNUC__)
+  #define fbufcnt(f)	((f)->_IO_read_end - (f)->_IO_read_ptr)
+  #else
+! #define fbufcnt(f)	((f)->_cnt)
+  #endif
+  
+  HOLO	*hdlist[HDMAX+1];	/* global holodeck list */
+--- 27,33 ----
+  #elif defined(__GNUC__)
+  #define fbufcnt(f)	((f)->_IO_read_end - (f)->_IO_read_ptr)
+  #else
+! #define fbufcnt(f)	((f)->__cnt)
+  #endif
+  
+  HOLO	*hdlist[HDMAX+1];	/* global holodeck list */
+*** ./src/px/Rmakefile.osr6	Wed Oct 27 16:23:47 2004
+--- ./src/px/Rmakefile	Tue Jul  5 11:20:00 2005
+***************
+*** 198,204 ****
+  
+  ../lib/libtiff.a:	tiff/config.local
+  	cd tiff ; sh configure -quiet -noninteractive -with-CC=$(CC) \
+! 		"-with-ENVOPTS=$(OPT)" ; \
+  	cd libtiff ; make install
+  
+  ra_pixar:	ra_pixar.o ra_pixar.c
+--- 198,204 ----
+  
+  ../lib/libtiff.a:	tiff/config.local
+  	cd tiff ; sh configure -quiet -noninteractive -with-CC=$(CC) \
+! 		"-with-ENVOPTS=$(OPT)" i386-sco-sysv5 ; \
+  	cd libtiff ; make install
+  
+  ra_pixar:	ra_pixar.o ra_pixar.c
+*** ./src/px/SConscript.osr6	Mon Oct 25 09:54:16 2004
+--- ./src/px/SConscript	Tue Jul  5 11:21:14 2005
+***************
+*** 100,106 ****
+  		'tiff/config.local',
+  	[('cd "%s"; '
+  	'sh ./configure -quiet -noninteractive '
+! 		'-with-CC="$CC" -with-ENVOPTS="$CCFLAGS"; '
+  	'cd libtiff; '
+  	'make install;') % os.path.join(cwd, 'tiff')])
+  
+--- 100,106 ----
+  		'tiff/config.local',
+  	[('cd "%s"; '
+  	'sh ./configure -quiet -noninteractive '
+! 		'-with-CC="$CC" -with-ENVOPTS="$CCFLAGS" i386-sco-sysv5 ; '
+  	'cd libtiff; '
+  	'make install;') % os.path.join(cwd, 'tiff')])
+  
+*** ./installib.osr6	Fri Oct 31 09:11:57 2003
+--- ./installib	Tue Jul  5 11:18:22 2005
+***************
+*** 1,26 ****
+! #!/bin/csh -f
+  # RCSid $Id: installib,v 1.3 2003/10/30 15:41:23 greg Exp $
+  #
+  # Install library files
+  #
+! again2:
+! echo -n "Where do you want the library files [/usr/local/lib/ray]? "
+! set ldir=$<
+! (echo $ldir) >/dev/null
+! if ( $status ) goto again2
+! set ldir=$ldir
+! if ( "$ldir" == "" ) then
+! 	set ldir=/usr/local/lib/ray
+! else if ( "$ldir" !~ /* ) then
+! 	echo "Directory must be relative to root, please reenter"
+! 	goto again2
+! endif
+  if ( ! -d $ldir ) then
+! 	mkdir $ldir
+! 	if ( $status ) then
+! 		echo "Cannot create directory, please reenter"
+! 		goto again2
+! 	endif
+  endif
+  if (! -d lib) then
+  	echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+--- 1,11 ----
+! #!/bin/tcsh -f
+  # RCSid $Id: installib,v 1.3 2003/10/30 15:41:23 greg Exp $
+  #
+  # Install library files
+  #
+! set ldir=/usr/lib/ray
+  if ( ! -d $ldir ) then
+! 	mkdir -p $ldir
+  endif
+  if (! -d lib) then
+  	echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+***************
+*** 33,41 ****
+  set d1=(`ls -Lid lib`)
+  set d2=(`ls -Lid $ldir`)
+  if ($d1[1] != $d2[1]) then
+! 	echo -n "Install library files now [n]? "
+  	if ( "$<" =~ [yY]* ) then
+! 		echo -n "Copying library files to $ldir... "
+  		(cd lib ; tar -cf - *) | (cd $ldir ; tar -xf -)
+  		echo "Done."
+  	endif
+--- 18,26 ----
+  set d1=(`ls -Lid lib`)
+  set d2=(`ls -Lid $ldir`)
+  if ($d1[1] != $d2[1]) then
+! 	echo "Install library files now [n]? "
+  	if ( "$<" =~ [yY]* ) then
+! 		echo "Copying library files to $ldir... "
+  		(cd lib ; tar -cf - *) | (cd $ldir ; tar -xf -)
+  		echo "Done."
+  	endif
+*** ./makeall.osr6	Sun Dec 14 09:24:09 2003
+--- ./makeall	Tue Jul  5 11:18:22 2005
+***************
+*** 1,4 ****
+! #!/bin/csh -f
+  # RCSid $Id: makeall,v 1.11 2003/12/11 23:42:54 greg Exp $
+  # 
+  # Make all the Radiance programs
+--- 1,4 ----
+! #!/bin/tcsh -f
+  # RCSid $Id: makeall,v 1.11 2003/12/11 23:42:54 greg Exp $
+  # 
+  # Make all the Radiance programs
+***************
+*** 32,76 ****
+  them on your system.  You should read the file README before running
+  this script.  You can type ^C (followed by return) at any time to abort.
+  
+- You must first answer the following questions.
+- 
+  _EOF_
+  if ( ! $?EDITOR ) then
+! 	echo -n "What is your preferred editor [vi]? "
+! 	set ans="$<"
+! 	if ( "$ans" != "" ) then
+! 		setenv EDITOR "$ans"
+! 	else
+! 		setenv EDITOR vi
+! 	endif
+! endif
+! again1:
+! echo -n "Where do you want the executables [/usr/local/bin]? "
+! set idir=$<
+! (echo $idir) >/dev/null
+! if ( $status ) then
+! 	goto again1
+! endif
+! set idir=$idir
+! if ( "$idir" == "" ) then
+! 	set idir=/usr/local/bin
+! else if ( "$idir" !~ /* ) then
+! 	echo "Directory must be relative to root, please reenter"
+! 	goto again1
+! endif
+! if ( ! -d $idir ) then
+! 	mkdir $idir
+! 	if ( $status ) then
+! 		echo "Cannot create directory, please reenter"
+! 		goto again1
+! 	endif
+  endif
+  if ( ! -d $idir/dev ) then
+! 	mkdir $idir/dev
+! 	if ( $status ) then
+! 		echo "Cannot create subdirectory, please reenter"
+! 		goto again1
+! 	endif
+  endif
+  set inpath=0
+  foreach i ( $path )
+--- 32,44 ----
+  them on your system.  You should read the file README before running
+  this script.  You can type ^C (followed by return) at any time to abort.
+  
+  _EOF_
+  if ( ! $?EDITOR ) then
+! 	setenv EDITOR vi
+  endif
++ set idir=/usr/bin/radiance
+  if ( ! -d $idir/dev ) then
+! 	mkdir -p $idir/dev
+  endif
+  set inpath=0
+  foreach i ( $path )
+***************
+*** 84,93 ****
+  	goto gotrmake
+  endif
+  set newrmake
+- more src/common/copyright.h
+- echo -n "Do you understand and accept the terms of this agreement [n]? "
+- set ans="$<"
+- if ( "$ans" !~ [yY]* ) exit
+  set special=
+  set arch=
+  set opt=
+--- 52,57 ----
+***************
+*** 104,118 ****
+  	3)	Silicon Graphics
+  	4)	AIX (RS/6000)
+  	5)	BSDI BSD/386
+! 	6)	Linux
+  	7)	MacOS X
+  	8)	FreeBSD
+  	9)	Cygwin
+! 	10)	Other
+  
+  _EOF_
+! echo -n "Choice? "
+! set arch="$<"
+  switch ("$arch")
+  case 1:			# SPARC Station
+  	set arch=sun
+--- 68,82 ----
+  	3)	Silicon Graphics
+  	4)	AIX (RS/6000)
+  	5)	BSDI BSD/386
+! 	6)	OpenServer 6
+  	7)	MacOS X
+  	8)	FreeBSD
+  	9)	Cygwin
+! 	10)	Linux
+! 	11)	Other
+  
+  _EOF_
+! set arch=6
+  switch ("$arch")
+  case 1:			# SPARC Station
+  	set arch=sun
+***************
+*** 162,173 ****
+  	set arch=IBMPC
+  	set compat="malloc.o erf.o strcmp.o"
+  	breaksw
+! case 6:			# Linux
+! 	set mach="-Dlinux -D_FILE_OFFSET_BITS=64 -L/usr/X11R6/lib -I/usr/include/X11 -DNOSTEREO"
+  	set opt="-O2 -DSPEED=200"
+  	set arch=IBMPC
+  	set compat="bmalloc.o erf.o getpagesize.o"
+! 	set extras=CC=gcc
+  	breaksw
+  case 7:			# MacOS X
+  	set mach="-DBSD -DNOSTEREO -Dfreebsd -I/usr/X11R6/include -L/usr/X11R6/lib"
+--- 126,137 ----
+  	set arch=IBMPC
+  	set compat="malloc.o erf.o strcmp.o"
+  	breaksw
+! case 6:			# OpenServer 6
+! 	set mach="-DOSR6 -D_FILE_OFFSET_BITS=64 -L/usr/X11R6/lib -I/usr/X11R6/include -DNOSTEREO"
+  	set opt="-O2 -DSPEED=200"
+  	set arch=IBMPC
+  	set compat="bmalloc.o erf.o getpagesize.o"
+! 	set extras=CC=cc
+  	breaksw
+  case 7:			# MacOS X
+  	set mach="-DBSD -DNOSTEREO -Dfreebsd -I/usr/X11R6/include -L/usr/X11R6/lib"
+***************
+*** 193,199 ****
+  	set special="ogl"
+  	set esuffix=".exe"
+  	breaksw
+! case 10:			# Other
+  	set opt="-O"
+  	set compat="bmalloc.o erf.o strcmp.o"
+  	echo -n "Are you using the GNU C compiler [n]? "
+--- 157,170 ----
+  	set special="ogl"
+  	set esuffix=".exe"
+  	breaksw
+! case 10:		# Linux
+! 	set mach="-Dlinux -D_FILE_OFFSET_BITS=64 -L/usr/X11R6/lib -I/usr/include/X11 -DNOSTEREO"
+! 	set opt="-O2 -DSPEED=200"
+! 	set arch=IBMPC
+! 	set compat="bmalloc.o erf.o getpagesize.o"
+! 	set extras=CC=gcc
+! 	breaksw
+! case 11:			# Other
+  	set opt="-O"
+  	set compat="bmalloc.o erf.o strcmp.o"
+  	echo -n "Are you using the GNU C compiler [n]? "
+***************
+*** 225,244 ****
+  gotrmake:
+  echo "Current rmake command is:"
+  cat $rmake
+- echo -n "Do you want to change it? "
+- set ans="$<"
+- if ( "$ans" =~ [yY]* ) then
+- 	cp $rmake /tmp/rmake$$
+- 	$EDITOR $rmake
+- 	if ( `cat $rmake /tmp/rmake$$ | grep OPT= | uniq | wc -l` == 2 ) set newrmake
+- 	rm -f /tmp/rmake$$
+- endif
+  if ( ! -d src/lib ) then
+! 	mkdir src/lib
+  endif
+  if ( $?newrmake ) then
+  	echo 'New rmake command -- running "makeall clean"...'
+! 	csh -f $0 clean
+  endif
+  cd src
+  echo "Making programs..."
+--- 196,207 ----
+  gotrmake:
+  echo "Current rmake command is:"
+  cat $rmake
+  if ( ! -d src/lib ) then
+! 	mkdir -p src/lib
+  endif
+  if ( $?newrmake ) then
+  	echo 'New rmake command -- running "makeall clean"...'
+! 	tcsh -f $0 clean
+  endif
+  cd src
+  echo "Making programs..."
+*** ./Build-OSR6.osr6	Tue Jul  5 11:18:22 2005
+--- ./Build-OSR6	Tue Jul  5 11:18:22 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM
++ 
++ ./makeall install 2>&1 | tee mout
+--- src/hd/rhd_x11.c.00	2004-01-01 08:42:13.000000000 -0800
++++ src/hd/rhd_x11.c	2005-07-05 11:25:47.500000013 -0700
+@@ -661,7 +661,11 @@
+ 	struct timespec	ts;
+ 	ts.tv_sec = 0;
+ 	ts.tv_nsec = 100000000;
++#ifdef __USLC__
++    usleep(100000);
++#else
+ 	nanosleep(&ts, NULL);
++#endif
+ }
+ 
+ 

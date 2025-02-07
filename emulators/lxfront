@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# This is a front-end for "lxrun".
+#
+# To use lxfront:
+#   1. Put all your linux binaries in /usr/local/linux/bin.  
+#   2. Put lxrun in /usr/local/bin.
+#   3. Create a bunch of links to lxfront with the same names as your
+#      Linux binaries.
+#
+# Executing these links should invoke lxrun on your Linux program.
+#
+# If you have any problems with this script, please E-Mail
+# lxrun@dontask.foo.net and/or skunkware@sco.com
+#
+
+if [ `basename $0` = lxfront ]; then
+	prog=$1
+	shift
+else
+	prog=$0
+fi
+
+# This code moved into lxrun binary thanks to a patch by John Temples.
+#if [ "z$DISPLAY" = "z:0.0" ]; then
+#	DISPLAY=:0.0
+#	export DISPLAY
+#fi
+
+if [ "z$LINUX_ROOT" = "z" ]; then
+	LINUX_ROOT=/usr/local/linux
+	export LINUX_ROOT
+fi
+
+# Should no longer be necessary, thanks to Robert Lipe's termio patches.
+# If you find your stty settings getting screwed up after running a Linux
+# binary, please do the following:
+#	1) Uncomment this line and the /bin/stty line below.
+#	2) Remove the 'exec' from the beginning of the lxrun line.
+#	3) Mail lxrun@dontask.foo.net and tell me what went wrong.
+# -Steve
+# term=`/bin/stty -g`
+
+exec /usr/local/bin/lxrun /usr/local/linux/bin/`basename $prog` $@
+
+# /bin/stty $term < /dev/tty > /dev/null 2>&1

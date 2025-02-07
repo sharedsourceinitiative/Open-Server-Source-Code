@@ -1,0 +1,23 @@
+*** ./Build-OSR6.00 Fri May 20 17:34:53 2005
+--- ./Build-OSR6 Fri May 20 17:49:58 2005
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ KDEDIR=/opt/kde
++ G_PREFIX=$KDEDIR
++ export KDEDIR G_PREFIX
++ 
++ [ -x $KDEDIR/bin/qmake ] || {
++     echo "$KDEDIR/bin/qmake does not exist or is not executable. Exiting."
++     exit 1
++ }
++ 
++ rm -f mout-compile mout-docs-all mout-docs-api mout-install
++ 
++ ./scripts/compile 2>&1 | tee mout-compile
++ ./scripts/makedocs -a all 2>&1 | tee mout-docs-all
++ ./scripts/makedocs api 2>&1 | tee mout-docs-api
++ ./scripts/makeinstall 2>&1 | tee mout-install
++ 

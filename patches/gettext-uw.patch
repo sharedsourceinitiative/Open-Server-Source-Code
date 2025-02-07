@@ -1,0 +1,84 @@
+--- ./lib/mbswidth.c.uw	2001-09-22 14:43:52.000000000 +0000
++++ ./lib/mbswidth.c	2003-09-11 01:38:03.760000003 +0000
+@@ -87,7 +87,7 @@
+    With flags = MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE, this is
+    the multibyte analogon of the wcswidth function.  */
+ int
+-mbswidth (string, flags)
++gnu_mbswidth (string, flags)
+      const char *string;
+      int flags;
+ {
+--- ./lib/xerror.c.uw	2002-03-01 12:21:12.000000000 +0000
++++ ./lib/xerror.c	2003-09-11 01:38:03.760000022 +0000
+@@ -78,10 +78,10 @@
+       if (error_with_progname)
+ 	{
+ 	  fprintf (stderr, "%s: ", program_name);
+-	  width += mbswidth (program_name, 0) + 2;
++	  width += gnu_mbswidth (program_name, 0) + 2;
+ 	}
+       fputs (prefix, stderr);
+-      width += mbswidth (prefix, 0);
++      width += gnu_mbswidth (prefix, 0);
+       free (prefix);
+       goto after_indent;
+     }
+--- ./lib/mbswidth.h.uw	2001-11-10 00:13:19.000000000 +0000
++++ ./lib/mbswidth.h	2003-09-11 01:38:03.760000042 +0000
+@@ -37,8 +37,7 @@
+ #define MBSW_REJECT_UNPRINTABLE	2
+ 
+ /* Returns the number of screen columns needed for STRING.  */
+-#define mbswidth gnu_mbswidth  /* avoid clash with UnixWare 7.1.1 function */
+-extern int mbswidth PARAMS ((const char *string, int flags));
++extern int gnu_mbswidth PARAMS ((const char *string, int flags));
+ 
+ /* Returns the number of screen columns needed for the NBYTES bytes
+    starting at BUF.  */
+--- ./configure.uw	2002-08-06 13:57:16.000000000 +0000
++++ ./configure	2003-09-11 01:43:27.990000912 +0000
+@@ -3601,11 +3601,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -5811,18 +5811,6 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
+-  sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-    hardcode_libdir_flag_spec=
+-    hardcode_shlibpath_var=no
+-    runpath_var='LD_RUN_PATH'
+-    ;;
+-
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec='-L$libdir'
+@@ -5854,8 +5842,8 @@
+     runpath_var=LD_RUN_PATH
+     ;;
+ 
+-  sysv5uw7* | unixware7*)
+-    no_undefined_flag='${wl}-z ${wl}text'
++  sysv5* | unixware7*)
++    no_undefined_flag=''
+     if test "$GCC" = yes; then
+       archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     else

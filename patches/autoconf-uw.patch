@@ -1,0 +1,15 @@
+--- ./configure.00	2002-12-03 08:01:20.000000000 +0000
++++ ./configure	2003-11-03 19:40:52.040000025 +0000
+@@ -1786,9 +1786,9 @@
+ echo "$as_me: error: perl is not found" >&2;}
+    { (exit 1); exit 1; }; }
+ fi
+-$PERL -e 'require 5.005_03;' || {
+-   { { echo "$as_me:$LINENO: error: Perl 5.005_03 or better is required" >&5
+-echo "$as_me: error: Perl 5.005_03 or better is required" >&2;}
++$PERL -e 'require 5.004_04;' || {
++   { { echo "$as_me:$LINENO: error: Perl 5.004_04 or better is required" >&5
++echo "$as_me: error: Perl 5.004_04 or better is required" >&2;}
+    { (exit 1); exit 1; }; }
+ }
+ 

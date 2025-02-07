@@ -1,0 +1,114 @@
+*** ./Tgif.tmpl-osr6.00	Sun Apr  9 22:28:32 2006
+--- ./Tgif.tmpl-osr6	Sun Apr  9 22:31:04 2006
+***************
+*** 0 ****
+--- 1,74 ----
++ XCOMM 
++ XCOMM  Author:      William Chia-Wei Cheng (bill.cheng@acm.org)
++ XCOMM 
++ XCOMM  Copyright (C) 2001-2003, William Chia-Wei Cheng.
++ XCOMM 
++ XCOMM  This file may be distributed under the terms of the Q Public License
++ XCOMM  as defined by Trolltech AS of Norway and appearing in the file
++ XCOMM  LICENSE.QPL included in the packaging of this file.
++ XCOMM 
++ XCOMM  THIS FILE IS PROVIDED AS IS WITH NO WARRANTY OF ANY KIND, INCLUDING
++ XCOMM  THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ XCOMM  PURPOSE.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL,
++ XCOMM  INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING
++ XCOMM  FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
++ XCOMM  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
++ XCOMM  WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ XCOMM 
++ XCOMM  @(#)$Header: /mm2/home/cvs/bc-src/tgif/Tgif.tmpl-uw7,v 1.2 2005/01/15 00:23:22 william Exp $
++ XCOMM 
++ 
++ #if ProjectX == 5
++ #if BuildXimp
++ XIMPDEFINES      =
++ #else
++ XIMPDEFINES      = -D_NO_XIMP
++ #endif
++ #elif ProjectX > 5
++ XIMPDEFINES      =
++ #endif
++ 
++ CC		= cc
++ PREPROCESSCMD	= cc -E $(STD_CPP_DEFINES)
++ EXTRA_LDOPTIONS	=
++ EXTRA_LIBRARIES	= -lsocket -lnsl -lgen
++ LDCOMBINEFLAGS	= -r
++ CCOPTIONS	=
++ 
++ PROGRAMS	= tgif XCOMM prtgif frontend11.o testdrive
++ TGIFDIR		= $(LIBDIR)/tgif
++ XCOMM CDEBUGFLAGS= -g
++ XCOMM INSTPGMFLAGS= -s
++ BINDIR	= /usr/bin
++ MANPATH	= /usr/man
++ TGIFDIR	= /usr/X11R6/lib/X11/tgif
++ LOCALEDIR	= /usr/share/locale
++ DIRDEFINES	= -DTGIF_PATH=\"$(TGIFDIR)\" -DPSFILE_MOD=0664 \@@\
++                   -DLOCALEDIR=\"$(LOCALEDIR)\" \@@\
++                   -DTELEPORT_ATTR=\"warp_to=\" -DTMP_DIR=\"/tmp/\" \@@\
++                   -DLAUNCH_ATTR=\"launch=\" -DEXEC_ATTR=\"exec=\"
++ EXTDEFINES	= -DEPSF_FILE_EXT=\"eps\" -DPS_FILE_EXT=\"ps\" \@@\
++                   -DXBM_FILE_EXT=\"xbm\" -DXPM_FILE_EXT=\"xpm\" \@@\
++                   -DOBJ_FILE_EXT=\"obj\" -DSYM_FILE_EXT=\"sym\" \@@\
++                   -DTEXT_FILE_EXT=\"txt\" -DPIN_FILE_EXT=\"pin\" \@@\
++                   -DNETLIST_FILE_EXT=\"net\" -DCOMP_FILE_EXT=\"cmp\"
++ MISCDEFINES	= -D_BACKGROUND_DONT_FORK -D_USE_XDRAWPOINT_TO_PUT_A_POINT \@@\
++                   -D_USE_PS_ADOBE_STRING=\"3.0/3.0\" \@@\
++ 		  -D_DONT_REENCODE=\"FFDingbests:ZapfDingbats\"
++ MOREDEFINES	= -D_HAS_STREAMS_SUPPORT
++ 
++ XCOMM ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++ XCOMM Please see Imakefile for more defines to be added to MOREDEFINES above
++ XCOMM ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++ 
++ DEPLIBS		= $(DEPXLIB)
++ LOCAL_LIBRARIES	= $(XLIB)
++ XCOMM LOCAL_LIBRARIES	= $(XMULIB) $(XTOOLLIB) $(XLIB)
++ SYS_LIBRARIES	= -ldl -lm
++ XCOMM SYS_LIBRARIES	= -lm
++ 
++ XCOMM ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^	XCOMM
++ XCOMM This file has been tested under (uname -s -r):	XCOMM
++ XCOMM		SCO_SV 5				XCOMM
++ XCOMM ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^	XCOMM
++ 
+*** ./Build-OSR6.00	Sun Apr  9 22:36:04 2006
+--- ./Build-OSR6	Sun Apr  9 22:35:55 2006
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ cp Tgif.tmpl-osr6 Tgif.tmpl
++ xmkmf 2>&1 | tee mout-xmkmf
++ make tgif 2>&1 | tee mout
+*** ./Install-OSR6.00	Sun Apr  9 22:38:39 2006
+--- ./Install-OSR6	Sun Apr  9 22:38:35 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/tgif
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

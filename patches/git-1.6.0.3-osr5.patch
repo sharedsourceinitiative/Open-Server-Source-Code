@@ -1,0 +1,132 @@
+--- ./Makefile.00	2008-10-21 21:19:18.000000000 -0700
++++ ./Makefile	2008-12-17 21:42:13.000000000 -0800
+@@ -588,7 +588,7 @@
+ 	SHELL_PATH = /usr/local/bin/bash
+ 	NO_IPV6 = YesPlease
+ 	NO_HSTRERROR = YesPlease
+-	BASIC_CFLAGS += -Kthread
++	BASIC_CFLAGS += -Kpthread
+ 	BASIC_CFLAGS += -I/usr/local/include
+ 	BASIC_LDFLAGS += -L/usr/local/lib
+ 	INSTALL = ginstall
+@@ -597,13 +597,9 @@
+ 	NO_MEMMEM = YesPlease
+ endif
+ ifeq ($(uname_S),SCO_SV)
+-	ifeq ($(uname_R),3.2)
+-		CFLAGS = -O2
+-	endif
+-	ifeq ($(uname_R),5)
+-		CC = cc
+-		BASIC_CFLAGS += -Kthread
+-	endif
++	CC = gcc
++	CFLAGS = -O2
++	mandir = $(prefix)/man
+ 	NEEDS_SOCKET = YesPlease
+ 	NEEDS_NSL = YesPlease
+ 	NEEDS_SSL_WITH_CRYPTO = YesPlease
+@@ -611,9 +607,9 @@
+ 	SHELL_PATH = /usr/bin/bash
+ 	NO_IPV6 = YesPlease
+ 	NO_HSTRERROR = YesPlease
+-	BASIC_CFLAGS += -I/usr/local/include
+-	BASIC_LDFLAGS += -L/usr/local/lib
++	NO_PREAD = YesPlease
+ 	NO_STRCASESTR = YesPlease
++	NO_STRTOULL = YesPlease
+ 	NO_MEMMEM = YesPlease
+ 	INSTALL = ginstall
+ 	TAR = gtar
+@@ -809,7 +805,7 @@
+ 	BUILTIN_OBJS += builtin-http-fetch.o
+ 	EXTLIBS += $(CURL_LIBCURL)
+ 	LIB_OBJS += http.o http-walker.o
+-	curl_check := $(shell (echo 070908; curl-config --vernum) | sort -r | sed -ne 2p)
++	curl_check := $(shell (echo 070908; curl-config --version) | sort -r | sed -ne 2p)
+ 	ifeq "$(curl_check)" "070908"
+ 		ifndef NO_EXPAT
+ 			PROGRAMS += git-http-push$X
+--- ./Configure-OSR5.00	2008-12-17 21:40:48.000000000 -0800
++++ ./Configure-OSR5	2008-12-17 21:40:48.000000000 -0800
+@@ -0,0 +1,16 @@
++#!/bin/sh
++#
++HOST=i386-sco-sco3.2v5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=/usr/gnu/bin/nm
++M4=/usr/gnu/bin/m4
++CC="/usr/gnu/bin/gcc"
++CXX="/usr/gnu/bin/g++"
++PATH=/usr/gnu/bin:$PATH
++ac_cv_func_getaddrinfo=no
++export CC CXX CFLAGS NM M4 INSTALL PATH ac_cv_func_getaddrinfo
++rm -f mout-configure
++./configure --prefix=/usr --mandir=/usr/man --infodir=/usr/gnu/info \
++            --without-openssl \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./git.c.00	2008-10-21 21:19:18.000000000 -0700
++++ ./git.c	2008-12-17 21:40:48.000000000 -0800
+@@ -248,7 +248,7 @@
+ 	if (fstat(fileno(stdout), &st))
+ 		return 0;
+ 	/* Ignore write errors for pipes and sockets.. */
+-	if (S_ISFIFO(st.st_mode) || S_ISSOCK(st.st_mode))
++	if (S_ISFIFO(st.st_mode))
+ 		return 0;
+ 
+ 	/* Check for ENOSPC and EIO errors.. */
+--- ./daemon.c.00	2008-10-21 21:19:18.000000000 -0700
++++ ./daemon.c	2008-12-17 21:40:48.000000000 -0800
+@@ -5,6 +5,11 @@
+ 
+ #include <syslog.h>
+ 
++#ifndef _SOCKLEN_T
++#define _SOCKLEN_T
++typedef u_int32_t socklen_t;
++#endif /* _SOCKLEN_T */
++
+ #ifndef HOST_NAME_MAX
+ #define HOST_NAME_MAX 256
+ #endif
+--- ./Install-OSR5.00	2008-12-17 21:40:48.000000000 -0800
++++ ./Install-OSR5	2008-12-17 21:40:48.000000000 -0800
+@@ -0,0 +1,36 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/git
++DESTDIR=$D
++DOC=$D/usr/share/doc/packages/git
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++[ -d $DOC ] || mkdir -p $DOC
++cp README COPYING $DOC
++
++H=`pwd`
++[ -d $D/usr/man ] || mkdir -p $D/usr/man
++cd $D/usr/share
++[ -d man ] && {
++  for i in man/*
++  do
++    [ -d $i ] && mv $i ../$i
++  done
++  rm -f man/*
++  rmdir man
++}
++cd ../man
++bzcat $H/../git-manpages-1.6.0.3.tar.bz2 | tar xf -
++cd $DOC
++bzcat $H/../git-htmldocs-1.6.0.3.tar.bz2 | tar xf -
++
++cd $D
++/usr/gnu/bin/find usr -type f -name .packlist -exec rm -f {} ';'
++/usr/gnu/bin/find usr -type f -name '*.bs' -empty -exec rm -f {} ';' 
++/usr/gnu/bin/find usr -type f -name perllocal.pod -exec rm -f {} ';'
++/usr/gnu/bin/find usr -print | xargs chown root:sys

@@ -1,0 +1,61 @@
+*** ./ext/fox16/extconf.rb.osr6	Fri Nov  9 06:50:20 2007
+--- ./ext/fox16/extconf.rb	Fri Nov 16 11:14:30 2007
+***************
+*** 120,126 ****
+  end
+  
+  def do_unix_setup
+!   $libs = append_library($libs, "stdc++")
+  # $libs = append_library($libs, "supc++")
+    have_header("sys/time.h")
+    have_header("signal.h")
+--- 120,126 ----
+  end
+  
+  def do_unix_setup
+! # $libs = append_library($libs, "stdc++")
+  # $libs = append_library($libs, "supc++")
+    have_header("sys/time.h")
+    have_header("signal.h")
+*** ./Build-OSR6.osr6	Fri Nov 16 11:14:30 2007
+--- ./Build-OSR6	Fri Nov 16 11:21:14 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ ruby install.rb config -- --with-fxscintilla-include=/usr/include/fxscintilla --with-fxscintilla-lib=/usr/lib 2>&1 | tee mout-config
++ ruby install.rb setup 2>&1 | tee mout-setup
+*** ./Install-OSR6.osr6	Fri Nov 16 11:14:30 2007
+--- ./Install-OSR6	Fri Nov 16 11:14:30 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/FXRuby
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ ruby install.rb install --prefix=$D 2>&1 | tee $MOUT
++ 

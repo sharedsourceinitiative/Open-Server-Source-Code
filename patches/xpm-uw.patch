@@ -1,0 +1,65 @@
+--- ./lib/Imakefile.uw	2003-09-08 21:40:28.690000012 +0000
++++ ./lib/Imakefile	2003-09-08 21:40:28.700000056 +0000
+@@ -138,6 +138,10 @@
+ #undef USRLIBDIR
+ #undef SHLIBDIR
+ #endif
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd /usr/ucb/install
+ 
+ #if (ProjectX < 6)
+ 
+--- ./lib/Imakefile.shlib.uw	1998-03-19 19:50:59.000000000 +0000
++++ ./lib/Imakefile.shlib	2003-09-08 21:44:12.780000008 +0000
+@@ -138,6 +138,10 @@
+ #undef USRLIBDIR
+ #undef SHLIBDIR
+ #endif
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd /usr/ucb/install
+ 
+ #if (ProjectX < 6)
+ 
+--- ./sxpm/Imakefile.uw	2003-09-08 21:40:28.690000032 +0000
++++ ./sxpm/Imakefile	2003-09-08 21:40:28.700000075 +0000
+@@ -43,6 +43,10 @@
+ #ifndef XpmIncDir
+ #define XpmIncDir $(BUILDINCTOP)
+ #endif
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd /usr/ucb/install
+ 
+       XPMLIBDIR = XpmLibDir
+       XPMBINDIR = XpmBinDir
+--- ./cxpm/Imakefile.uw	1998-03-19 19:51:01.000000000 +0000
++++ ./cxpm/Imakefile	2003-09-08 21:40:28.710000013 +0000
+@@ -40,6 +40,10 @@
+ #ifndef XpmIncDir
+ #define XpmIncDir $(BUILDINCTOP)
+ #endif
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd /usr/ucb/install
+ 
+       XPMBINDIR = XpmBinDir
+       XPMMANDIR = XpmManDir
+--- ./Imakefile.uw	1998-03-19 19:50:59.000000000 +0000
++++ ./Imakefile	2003-09-08 21:40:28.710000033 +0000
+@@ -67,6 +67,10 @@
+ 
+ #define IHaveSubdirs
+ #define PassCDebugFlags "CDEBUGFLAGS=$(CDEBUGFLAGS)" "DEFINES=$(DEFINES)"
++#ifdef InstallCmd
++#undef InstallCmd
++#endif
++#define InstallCmd /usr/ucb/install
+ 
+      SUBDIRS = lib sxpm cxpm
+ 

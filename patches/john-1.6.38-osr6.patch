@@ -1,0 +1,70 @@
+*** ./src/Makefile.00 Wed May  4 10:49:31 2005
+--- ./src/Makefile Wed May 11 21:45:53 2005
+***************
+*** 3,12 ****
+  # Copyright (c) 1996-2005 by Solar Designer
+  #
+  
+! CPP = gcc
+! CC = gcc
+! AS = gcc
+! LD = gcc
+  CP = cp
+  LN = ln -sf
+  RM = rm -f
+--- 3,12 ----
+  # Copyright (c) 1996-2005 by Solar Designer
+  #
+  
+! CPP = cc
+! CC = cc
+! AS = cc
+! LD = cc
+  CP = cp
+  LN = ln -sf
+  RM = rm -f
+***************
+*** 367,374 ****
+  		SHELL=/bin/sh \
+  		JOHN_OBJS="$(JOHN_OBJS) sco-x86.o" \
+  		CPP=cc CC=cc AS=cc LD=cc \
+! 		CFLAGS="-c -b elf -O3" \
+! 		ASFLAGS="-c -b elf" \
+  		OPT_NORMAL="-K loop_unroll,no_inline" \
+  		OPT_INLINE="-K inline"
+  
+--- 367,374 ----
+  		SHELL=/bin/sh \
+  		JOHN_OBJS="$(JOHN_OBJS) sco-x86.o" \
+  		CPP=cc CC=cc AS=cc LD=cc \
+! 		CFLAGS="-c -O3" \
+! 		ASFLAGS="-c" \
+  		OPT_NORMAL="-K loop_unroll,no_inline" \
+  		OPT_INLINE="-K inline"
+  
+***************
+*** 372,378 ****
+  		OPT_NORMAL="-K loop_unroll,no_inline" \
+  		OPT_INLINE="-K inline"
+  
+- # SCO is even worse than Solaris x86
+  sco-x86.o: x86.S
+  	$(CPP) $(CPPFLAGS) -DDUMBAS x86.S | \
+  		$(TR) \; \\n | $(SED) 's/\([%.]\) /\1/g' > tmp.s
+--- 372,377 ----
+  		OPT_NORMAL="-K loop_unroll,no_inline" \
+  		OPT_INLINE="-K inline"
+  
+  sco-x86.o: x86.S
+  	$(CPP) $(CPPFLAGS) -DDUMBAS x86.S | \
+  		$(TR) \; \\n | $(SED) 's/\([%.]\) /\1/g' > tmp.s
+*** ./Build-OSR6.00 Wed May 11 21:48:07 2005
+--- ./Build-OSR6 Wed May 11 21:48:01 2005
+***************
+*** 0 ****
+--- 1,5 ----
++ #!/bin/sh
++ 
++ cd src
++ [ -f mout ] && mv mout mout-prev
++ make clean sco-x86-any-cc 2>&1 | tee mout

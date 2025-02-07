@@ -1,0 +1,27 @@
+*** ./Configure-OSR6.00	Mon Jul  4 23:04:24 2005
+--- ./Configure-OSR6	Mon Jul  4 23:04:13 2005
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --with-qt-dir=/opt/kde \
++             --with-qt-includes=/opt/kde/include \
++             --with-qt-libraries=/opt/kde/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

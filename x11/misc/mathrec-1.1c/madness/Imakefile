@@ -1,0 +1,32 @@
+#
+#	Imakefile for madness, by Ron Record
+#
+# Comment out the next line if you don't want/need the delay functionality
+# (e.g. your system isn't fast enough to make inserting a nap() useful)
+          DELAY = -DUSE_DELAY
+# If you are using the delay functionality (above line uncommented), then
+# comment out the next line if you want to use nap() rather than itimers
+          SLEEP = -DHAS_ITIMER
+# and uncomment the next line if you're using nap() on an SCO system
+#        NAPLIB = -lx
+        DEPLIBS = $(DEPXLIB)
+#		 BINDIR = /usr/local/bin
+  MADS_INST_DIR = $(DESTDIR)/usr/local/mathrec/madness
+#         MANDIR = /usr/local/man/man1
+      MANSUFFIX = 1
+LOCAL_LIBRARIES = ../libXrr/libXrr.a XmClientLibs 
+  SYS_LIBRARIES = -lm $(NAPLIB)
+       INCLUDES = -I.
+         CFLAGS = -O $(INCLUDES) $(SLEEP) $(DELAY)
+           SRCS = madness.c
+           OBJS = madness.o
+
+ComplexProgramTarget(madness)
+
+InstallAppDefaults(Madness)
+
+install:: install.man
+	@if [ ! -d $(MADS_INST_DIR) ]; then mkdir -p $(MADS_INST_DIR); fi
+	@cd ./params; set -x; for file in *; do \
+		$(INSTALL) -c $(INSTBINFLAGS) $$file $(MADS_INST_DIR); \
+	done

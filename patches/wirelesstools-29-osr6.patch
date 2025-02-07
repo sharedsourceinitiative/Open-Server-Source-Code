@@ -1,0 +1,393 @@
+*** ./Makefile.osr6	Mon Sep 17 16:56:46 2007
+--- ./Makefile	Sun Oct 12 17:13:56 2008
+***************
+*** 9,18 ****
+  endif
+  
+  ## Compiler to use (modify this for cross compile).
+! CC = gcc
+  ## Other tools you need to modify for cross compile (static lib only).
+  AR = ar
+! RANLIB = ranlib
+  
+  ## Uncomment this to build tools using static version of the library.
+  ## Mostly useful for embedded platforms without ldd, or to create
+--- 9,18 ----
+  endif
+  
+  ## Compiler to use (modify this for cross compile).
+! CC = cc
+  ## Other tools you need to modify for cross compile (static lib only).
+  AR = ar
+! RANLIB = true
+  
+  ## Uncomment this to build tools using static version of the library.
+  ## Mostly useful for embedded platforms without ldd, or to create
+***************
+*** 48,55 ****
+  # Targets to build
+  STATIC=libiw.a
+  DYNAMIC=libiw.so.$(WT_VERSION)
+! PROGS= iwconfig iwlist iwpriv iwspy iwgetid iwevent ifrename
+! MANPAGES8=iwconfig.8 iwlist.8 iwpriv.8 iwspy.8 iwgetid.8 iwevent.8 ifrename.8
+  MANPAGES7=wireless.7
+  MANPAGES5=iftab.5
+  EXTRAPROGS= macaddr iwmulticall
+--- 48,55 ----
+  # Targets to build
+  STATIC=libiw.a
+  DYNAMIC=libiw.so.$(WT_VERSION)
+! PROGS= iwconfig iwlist iwspy iwgetid
+! MANPAGES8=iwconfig.8 iwlist.8 iwspy.8 iwgetid.8
+  MANPAGES7=wireless.7
+  MANPAGES5=iftab.5
+  EXTRAPROGS= macaddr iwmulticall
+***************
+*** 83,92 ****
+  
+  # Do we want to build with or without libm ?
+  ifdef BUILD_NOLIBM
+!   LIBS=
+    WELIB_FLAG= -DWE_NOLIBM=y
+  else
+!   LIBS= -lm
+  endif
+  
+  # Stripping or not ?
+--- 83,92 ----
+  
+  # Do we want to build with or without libm ?
+  ifdef BUILD_NOLIBM
+!   LIBS= -lgetopt -lsocket -lnsl
+    WELIB_FLAG= -DWE_NOLIBM=y
+  else
+!   LIBS= -lgetopt -lsocket -lnsl -lm
+  endif
+  
+  # Stripping or not ?
+***************
+*** 102,113 ****
+  endif
+  
+  # Other flags
+! CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+! 	-Wpointer-arith -Wcast-qual -Winline -I.
+  #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
+  DEPFLAGS=-MMD
+! XCFLAGS=$(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG) $(WEDEF_FLAG)
+! PICFLAG=-fPIC
+  
+  # Standard compilation targets
+  all:: $(IWLIB) $(PROGS)
+--- 102,114 ----
+  endif
+  
+  # Other flags
+! CFLAGS=-O -Kpthread -Kinline -I.
+! #CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+! #	-Wpointer-arith -Wcast-qual -Winline -I.
+  #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
+  DEPFLAGS=-MMD
+! XCFLAGS=$(CFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG) $(WEDEF_FLAG)
+! PICFLAG=-KPIC
+  
+  # Standard compilation targets
+  all:: $(IWLIB) $(PROGS)
+***************
+*** 145,151 ****
+  
+  # Compilation of the dynamic library
+  $(DYNAMIC): $(OBJS:.o=.so)
+! 	$(CC) -shared -o $@ -Wl,-soname,$@ $(STRIPFLAGS) $(LIBS) -lc $^
+  
+  # Compilation of the static library
+  $(STATIC): $(OBJS:.o=.so)
+--- 146,152 ----
+  
+  # Compilation of the dynamic library
+  $(DYNAMIC): $(OBJS:.o=.so)
+! 	$(CC) -G -o $@ -Wl,-h,/usr/local/lib/$@ $(STRIPFLAGS) $(LIBS) $^
+  
+  # Compilation of the static library
+  $(STATIC): $(OBJS:.o=.so)
+***************
+*** 161,169 ****
+  install-dynamic:: $(DYNAMIC)
+  	install -m 755 -d $(INSTALL_LIB)
+  	install -m 755 $(DYNAMIC) $(INSTALL_LIB)
+! 	ln -sfn $(DYNAMIC) $(INSTALL_LIB)/$(DYNAMIC_LINK)
+! 	@echo "*** Don't forget to add $(INSTALL_LIB) to /etc/ld.so.conf, and run ldconfig as root. ***"
+! 	@$(LDCONFIG) || echo "*** Could not run ldconfig ! ***"
+  
+  # Install the static library
+  install-static:: $(STATIC)
+--- 162,168 ----
+  install-dynamic:: $(DYNAMIC)
+  	install -m 755 -d $(INSTALL_LIB)
+  	install -m 755 $(DYNAMIC) $(INSTALL_LIB)
+! 	ln -s $(INSTALL_LIB)/$(DYNAMIC) $(INSTALL_LIB)/$(DYNAMIC_LINK)
+  
+  # Install the static library
+  install-static:: $(STATIC)
+***************
+*** 196,202 ****
+  	( cd $(INSTALL_DIR) ; \
+  	  ln -f -s iwconfig iwlist ; \
+  	  ln -f -s iwconfig iwspy ; \
+- 	  ln -f -s iwconfig iwpriv ; \
+  	  ln -f -s iwconfig iwgetid )
+  
+  clean::
+--- 195,200 ----
+*** ./iwlib.h.osr6	Fri Jun 22 11:01:04 2007
+--- ./iwlib.h	Sun Oct 12 17:06:59 2008
+***************
+*** 28,34 ****
+--- 28,36 ----
+  #include <string.h>
+  #include <unistd.h>
+  #include <netdb.h>		/* gethostbyname, getnetbyname */
++ #if !defined(__USLC__)
+  #include <net/ethernet.h>	/* struct ether_addr */
++ #endif
+  #include <sys/time.h>		/* struct timeval */
+  #include <unistd.h>
+  
+***************
+*** 42,47 ****
+--- 44,52 ----
+  /* Set of headers proposed by Dr. Michael Rietz <rietz@mail.amps.de>, 27.3.2 */
+  #include <net/if_arp.h>		/* For ARPHRD_ETHER */
+  #include <sys/socket.h>		/* For AF_INET & struct sockaddr */
++ #if defined(__USLC__)
++ #include <sys/sockio.h>
++ #endif
+  #include <netinet/in.h>         /* For struct sockaddr_in */
+  #include <netinet/if_ether.h>
+  
+***************
+*** 51,57 ****
+--- 56,64 ----
+  #define __user
+  #endif
+  
++ #if !defined(__USLC__)
+  #include <linux/types.h>		/* for "caddr_t" et al		*/
++ #endif
+  
+  /* Glibc systems headers are supposedly less problematic than kernel ones */
+  #include <sys/socket.h>			/* for "struct sockaddr" et al	*/
+***************
+*** 87,93 ****
+  #ifdef inline
+  #undef inline
+  #endif	/* inline */
+! #define inline		inline		__attribute__((always_inline))
+  #endif	/* IW_GCC_HAS_BROKEN_INLINE */
+  
+  #ifdef __cplusplus
+--- 94,100 ----
+  #ifdef inline
+  #undef inline
+  #endif	/* inline */
+! #define inline		inline		
+  #endif	/* IW_GCC_HAS_BROKEN_INLINE */
+  
+  #ifdef __cplusplus
+***************
+*** 136,153 ****
+  #define IW_EV_QUAL_PK_LEN	(IW_EV_LCP_PK_LEN + sizeof(struct iw_quality))
+  #define IW_EV_POINT_PK_LEN	(IW_EV_LCP_PK_LEN + 4)
+  
+  struct iw_pk_event
+  {
+  	__u16		len;			/* Real lenght of this stuff */
+  	__u16		cmd;			/* Wireless IOCTL */
+  	union iwreq_data	u;		/* IOCTL fixed payload */
+! } __attribute__ ((packed));
+  struct	iw_pk_point
+  {
+    void __user	*pointer;	/* Pointer to the data  (in user space) */
+    __u16		length;		/* number of fields or size in bytes */
+    __u16		flags;		/* Optional params */
+! } __attribute__ ((packed));
+  
+  #define IW_EV_LCP_PK2_LEN	(sizeof(struct iw_pk_event) - sizeof(union iwreq_data))
+  #define IW_EV_POINT_PK2_LEN	(IW_EV_LCP_PK2_LEN + sizeof(struct iw_pk_point) - IW_EV_POINT_OFF)
+--- 143,170 ----
+  #define IW_EV_QUAL_PK_LEN	(IW_EV_LCP_PK_LEN + sizeof(struct iw_quality))
+  #define IW_EV_POINT_PK_LEN	(IW_EV_LCP_PK_LEN + 4)
+  
++ #ifndef ETH_ALEN
++ #define ETH_ALEN 6
++ #endif
++ 
++ #ifndef SIOCGIFHWADDR
++ #ifdef SIOCGIFADDR
++ #define SIOCGIFHWADDR SIOCGIFADDR
++ #endif
++ #endif
++ 
+  struct iw_pk_event
+  {
+  	__u16		len;			/* Real lenght of this stuff */
+  	__u16		cmd;			/* Wireless IOCTL */
+  	union iwreq_data	u;		/* IOCTL fixed payload */
+! };
+  struct	iw_pk_point
+  {
+    void __user	*pointer;	/* Pointer to the data  (in user space) */
+    __u16		length;		/* number of fields or size in bytes */
+    __u16		flags;		/* Optional params */
+! };
+  
+  #define IW_EV_LCP_PK2_LEN	(sizeof(struct iw_pk_event) - sizeof(union iwreq_data))
+  #define IW_EV_POINT_PK2_LEN	(IW_EV_LCP_PK2_LEN + sizeof(struct iw_pk_point) - IW_EV_POINT_OFF)
+*** ./iwlib.c.osr6	Fri Jun 29 16:43:31 2007
+--- ./iwlib.c	Sun Oct 12 17:06:59 2008
+***************
+*** 153,159 ****
+  iw_sockets_open(void)
+  {
+    static const int families[] = {
+!     AF_INET, AF_IPX, AF_AX25, AF_APPLETALK
+    };
+    unsigned int	i;
+    int		sock;
+--- 153,159 ----
+  iw_sockets_open(void)
+  {
+    static const int families[] = {
+!     AF_INET, AF_APPLETALK
+    };
+    unsigned int	i;
+    int		sock;
+***************
+*** 611,617 ****
+        newpriv = realloc(priv, maxpriv * sizeof(priv[0]));
+        if(newpriv == NULL)
+  	{
+! 	  fprintf(stderr, "%s: Allocation failed\n", __FUNCTION__);
+  	  break;
+  	}
+        priv = newpriv;
+--- 611,617 ----
+        newpriv = realloc(priv, maxpriv * sizeof(priv[0]));
+        if(newpriv == NULL)
+  	{
+! 	  fprintf(stderr, "%s: Allocation failed\n", __func__);
+  	  break;
+  	}
+        priv = newpriv;
+***************
+*** 1937,1957 ****
+--- 1937,1963 ----
+  
+    /* Get the type of hardware address */
+    strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
++ #if !defined(__USLC__)
+    if((ioctl(skfd, SIOCGIFHWADDR, &ifr) < 0) ||
+       ((ifr.ifr_hwaddr.sa_family != ARPHRD_ETHER)
+        && (ifr.ifr_hwaddr.sa_family != ARPHRD_IEEE80211)))
+      {
++ #endif
+        /* Deep trouble... */
+        fprintf(stderr, "Interface %s doesn't support MAC addresses\n",
+  	     ifname);
+        return(-1);
++ #if !defined(__USLC__)
+      }
++ #endif
+  
+  #ifdef DEBUG
+    {
++ #if !defined(__USLC__)
+      char buf[20];
+      printf("Hardware : %d - %s\n", ifr.ifr_hwaddr.sa_family,
+  	   iw_saether_ntop(&ifr.ifr_hwaddr, buf));
++ #endif
+    }
+  #endif
+  
+***************
+*** 2258,2264 ****
+--- 2264,2272 ----
+        arp_query.arp_flags = 0;
+        /* The following restrict the search to the interface only */
+        /* For old kernels which complain, just comment it... */
++ #if !defined(__USLC__)
+        strncpy(arp_query.arp_dev, ifname, IFNAMSIZ);
++ #endif
+        if((ioctl(skfd, SIOCGARP, &arp_query) < 0) ||
+  	 !(arp_query.arp_flags & ATF_COM))
+  	{
+*** ./wireless.21.h.osr6	Fri Jun 29 16:04:24 2007
+--- ./wireless.21.h	Sun Oct 12 17:06:59 2008
+***************
+*** 661,666 ****
+--- 661,689 ----
+  #define IW_BITRATE_UNICAST	0x0001	/* Maximum/Fixed unicast bitrate */
+  #define IW_BITRATE_BROADCAST	0x0002	/* Fixed broadcast bitrate */
+  
++ #ifdef __USLC__
++ #ifndef __s32
++ #define __s32 int32_t
++ #endif // __s32
++ 
++ #ifndef __u32
++ #define __u32 u_int32_t
++ #endif // __u32
++ 
++ #ifndef __s16
++ #define __s16 int16_t
++ #endif // __s16
++ 
++ #ifndef __u16
++ #define __u16 u_int16_t
++ #endif // __u16
++ 
++ #ifndef __u8
++ #define __u8 u_int8_t
++ #endif // __u8
++ 
++ #endif // __USLC__
++ 
+  /****************************** TYPES ******************************/
+  
+  /* --------------------------- SUBTYPES --------------------------- */
+*** ./iwlist.c.osr6	Fri Jun 29 18:11:09 2007
+--- ./iwlist.c	Sun Oct 12 17:06:59 2008
+***************
+*** 787,793 ****
+  	    {
+  	      if(buffer)
+  		free(buffer);
+! 	      fprintf(stderr, "%s: Allocation failed\n", __FUNCTION__);
+  	      return(-1);
+  	    }
+  	  buffer = newbuf;
+--- 787,793 ----
+  	    {
+  	      if(buffer)
+  		free(buffer);
+! 	      fprintf(stderr, "%s: Allocation failed\n", __func__);
+  	      return(-1);
+  	    }
+  	  buffer = newbuf;
+*** ./Install-OSR6.osr6	Sun Oct 12 17:08:34 2008
+--- ./Install-OSR6	Sun Oct 12 17:14:10 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/wirelesstools
++ PREFIX=$D/usr/local
++ export PREFIX
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install PREFIX=$D/usr/local 2>&1 | tee $MOUT
++ 

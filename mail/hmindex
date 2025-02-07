@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+#    hmindex
+#
+#    Testing create wais index of html documents on gruntsco, 
+#        using wais-sf-1.1
+#
+#    This worked 12 May 1995 and as well the
+#        script: /usr/local/etc/httpd/cgi-bin/kidsf1.1.pl
+#
+#    Modified 30-Apr-96 by rr@sco.com
+#        index html documents on johndoe.pdev.sco.com
+#
+#    Modified 05-Nov-97 by rr@sco.com
+#        index HyperNews documents on johndoe.pdev.sco.com
+#
+#    Modified 19-Nov-97 by rr@sco.com
+#        index Hypermail documents on johndoe.pdev.sco.com
+#
+WAIS_SOURCES=/home/ftp/pub/wais/sources
+WAISINDEX=/usr/local/bin/waisindex
+#
+#
+set_trap()  {
+    trap 'echo "Interrupted! Giving up..."; cleanup 1' 1 2 3 15
+}
+
+cleanup() {
+    trap '' 1 2 3 15
+    cd $HERE
+    exit $1
+}
+
+#
+#
+#
+umask 002
+HERE=`pwd`
+set_trap
+cd $WAIS_SOURCES
+[ -f hypermail.cat ] && rm -f hypermail.*
+FirstTime=1
+
+HTML_DOC=/usr/local/lib/apache/htdocs/hypermail
+
+find $HTML_DOC -name *.html -print | while read FName
+do
+    URL_trim=$HTML_DOC
+    URL_prefix=http://johndoe.pdev.sco.com
+    if [ $FirstTime -eq 1 ]; then
+        echo $FName | $WAISINDEX -d hypermail -stdin -e -mem 10 -contents -t URL $URL_trim $URL_prefix 2> /dev/null
+        FirstTime=0
+    else
+        echo $FName | $WAISINDEX -d hypermail -a -stdin -e -mem 10 -contents -t URL $URL_trim $URL_prefix 2> /dev/null
+    fi
+done
+
+cd $HERE
+cleanup 0
+

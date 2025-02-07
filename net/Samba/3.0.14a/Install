@@ -1,0 +1,15 @@
+#!/bin/sh
+
+platform=`uname`
+
+if [ "$platform" = "UnixWare" ]
+then
+   rm -f Install-UW7.out
+   ./Install-UW7 2>&1 | tee Install-UW7.out
+fi
+
+if [ "$platform" = "SCO_SV" ]
+then
+   rm -f Install-OSR5.out
+   ./Install-OSR5 2>&1 | tee Install-OSR5.out
+fi

@@ -1,0 +1,383 @@
+*** ./BuildUnix/Gzip/Makefile.in.osr6	Fri Mar 29 05:11:22 2002
+--- ./BuildUnix/Gzip/Makefile.in	Sun Jul 10 21:16:12 2005
+***************
+*** 231,252 ****
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  info-am:
+  info: info-am
+  dvi-am:
+--- 231,242 ----
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -c $<
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -c $<
+! 
+  info-am:
+  info: info-am
+  dvi-am:
+*** ./BuildUnix/jpeg/Makefile.in.osr6	Fri Mar 29 05:11:22 2002
+--- ./BuildUnix/jpeg/Makefile.in	Sun Jul 10 21:16:12 2005
+***************
+*** 249,270 ****
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  info-am:
+  info: info-am
+  dvi-am:
+--- 249,260 ----
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -c $<
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -c $<
+! 
+  info-am:
+  info: info-am
+  dvi-am:
+*** ./BuildUnix/espws-2.0/Makefile.in.osr6	Fri Mar 29 05:11:23 2002
+--- ./BuildUnix/espws-2.0/Makefile.in	Sun Jul 10 21:16:12 2005
+***************
+*** 235,275 ****
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  
+  %.o: %.cxx
+  	@echo '$(CXXCOMPILE) -c $<'; \
+! 	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.cxx
+  	@echo '$(LTCXXCOMPILE) -c $<'; \
+! 	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  info-am:
+  info: info-am
+  dvi-am:
+--- 235,254 ----
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -c $<
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -c $<
+  
+  %.o: %.cxx
+  	@echo '$(CXXCOMPILE) -c $<'; \
+! 	$(CXXCOMPILE) -c $<
+  
+  %.lo: %.cxx
+  	@echo '$(LTCXXCOMPILE) -c $<'; \
+! 	$(LTCXXCOMPILE) -c $<
+! 
+  info-am:
+  info: info-am
+  dvi-am:
+*** ./BuildUnix/configure.osr6	Fri Mar 29 05:11:20 2002
+--- ./BuildUnix/configure	Sun Jul 10 21:16:54 2005
+***************
+*** 3141,3153 ****
+  
+  
+  AR='ar'
+! FLAGS_COMMON="-DPLATFORM_UNIX=1 -D__PALMOS_TRAPS__=0 -DEMULATION_LEVEL=EMULATION_UNIX"
+  
+  
+  
+- _WARNINGS_CFLAGS="${_WARNINGS_CFLAGS} -fexceptions -Wall -Wno-multichar -Wno-unknown-pragmas -Wno-conversion"
+- _WARNINGS_CXXFLAGS="${_WARNINGS_CXXFLAGS} -fexceptions -Wall -Wno-multichar -Wno-unknown-pragmas -Wno-conversion"
+- 
+  _COMPILER_CFLAGS="${_COMPILER_CFLAGS}"
+  _COMPILER_CXXFLAGS="${_COMPILER_CXXFLAGS}"
+  
+--- 3141,3150 ----
+  
+  
+  AR='ar'
+! FLAGS_COMMON="-DPLATFORM_UNIX=1 -D__PALMOS_TRAPS__=0"
+  
+  
+  
+  _COMPILER_CFLAGS="${_COMPILER_CFLAGS}"
+  _COMPILER_CXXFLAGS="${_COMPILER_CXXFLAGS}"
+  
+***************
+*** 3214,3219 ****
+--- 3211,3224 ----
+  	USE_SOLARIS_CPP="true"
+  	;;
+  
++ *-sysv5*)
++ 	THREAD_FLAGS="-Kpthread -D_THREAD_SAFE -DPthreadDraftVersion=10"
++ 	THREAD_LIBS=
++         FLAGS_COMMON="$FLAGS_COMMON -Kinline -DHAVE_SYS_BYTEORDER_H -D__svr4__"
++ 	POSER_CFLAGS="$POSER_CFLAGS -DFLTK_1_0_COMPAT"
++ 	POSER_CXXFLAGS="$POSER_CFLAGS"
++ 	;;
++ 
+  *-freebsd*)
+  	THREAD_FLAGS="-pthread -D_THREAD_SAFE -D_REENTRANT -DPthreadDraftVersion=10"
+  	THREAD_LIBS=
+*** ./BuildUnix/Makefile.in.osr6	Fri Mar 29 05:11:21 2002
+--- ./BuildUnix/Makefile.in	Sun Jul 10 21:16:12 2005
+***************
+*** 525,565 ****
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  
+  %.o: %.cpp
+  	@echo '$(CXXCOMPILE) -c $<'; \
+! 	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm .deps/$(*F).pp
+  
+  %.lo: %.cpp
+  	@echo '$(LTCXXCOMPILE) -c $<'; \
+! 	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+! 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+! 	  < .deps/$(*F).pp > .deps/$(*F).P; \
+! 	tr ' ' '\012' < .deps/$(*F).pp \
+! 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+! 	    >> .deps/$(*F).P; \
+! 	rm -f .deps/$(*F).pp
+  info-am:
+  info: info-recursive
+  dvi-am:
+--- 525,544 ----
+  
+  %.o: %.c
+  	@echo '$(COMPILE) -c $<'; \
+! 	$(COMPILE) -c $<
+  
+  %.lo: %.c
+  	@echo '$(LTCOMPILE) -c $<'; \
+! 	$(LTCOMPILE) -c $<
+  
+  %.o: %.cpp
+  	@echo '$(CXXCOMPILE) -c $<'; \
+! 	$(CXXCOMPILE) -c $<
+  
+  %.lo: %.cpp
+  	@echo '$(LTCXXCOMPILE) -c $<'; \
+! 	$(LTCXXCOMPILE) -c $<
+! 
+  info-am:
+  info: info-recursive
+  dvi-am:
+*** ./SrcShared/Palm/Platform/Incs/Core/System/OverlayMgr.h.osr6	Fri Mar 29 05:11:07 2002
+--- ./SrcShared/Palm/Platform/Incs/Core/System/OverlayMgr.h	Sun Jul 10 21:16:12 2005
+***************
+*** 147,153 ****
+  	UInt32				baseDBCreateDate; // Date base DB was created
+  	UInt32				baseDBModDate;		// Date base DB was last modified
+  	UInt16				numOverlays;		// Number of resources to overlay
+! 	OmOverlayRscType	overlays[0];		// Descriptions of resources to overlay
+  } OmOverlaySpecType;
+  
+  
+--- 147,153 ----
+  	UInt32				baseDBCreateDate; // Date base DB was created
+  	UInt32				baseDBModDate;		// Date base DB was last modified
+  	UInt16				numOverlays;		// Number of resources to overlay
+! 	OmOverlayRscType	*overlays;		// Descriptions of resources to overlay
+  } OmOverlaySpecType;
+  
+  
+*** ./SrcShared/Switches.h.osr6	Fri Mar 29 05:11:17 2002
+--- ./SrcShared/Switches.h	Sun Jul 10 21:16:12 2005
+***************
+*** 36,41 ****
+--- 36,43 ----
+  	// This should handle both Solaris/Sparc and Solaris/Intel
+  	#include <sys/isa_defs.h>	// Defines either _BIG_ENDIAN or _LITTLE_ENDIAN
+  
++ #elif defined(HAVE_SYS_BYTEORDER_H)
++ 	#include <sys/byteorder.h>
+  #else
+  
+  	#error "You need to define __BYTE_ORDER for this platform."
+*** ./SrcUnix/espws-2.0/FileIcon.cxx.osr6	Fri Mar 29 05:11:11 2002
+--- ./SrcUnix/espws-2.0/FileIcon.cxx	Sun Jul 10 21:16:12 2005
+***************
+*** 45,50 ****
+--- 45,51 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <ctype.h>
+  #include <errno.h>
+  #include <sys/types.h>
+*** ./SrcUnix/espws-2.0/HelpView.cxx.osr6	Fri Mar 29 05:11:11 2002
+--- ./SrcUnix/espws-2.0/HelpView.cxx	Sun Jul 10 21:16:12 2005
+***************
+*** 53,58 ****
+--- 53,59 ----
+  #include <stdlib.h>
+  #include <ctype.h>
+  #include <string.h>
++ #include <strings.h>
+  #include <errno.h>
+  
+  #if defined(WIN32)
+*** ./SrcUnix/Platform_Unix.cpp.osr6	Fri Mar 29 05:11:19 2002
+--- ./SrcUnix/Platform_Unix.cpp	Sun Jul 10 21:16:12 2005
+***************
+*** 25,30 ****
+--- 25,31 ----
+  #include <unistd.h>
+  #include <sys/time.h>
+  #include <sys/stat.h>			// mkdir
++ #include <strings.h>
+  #include <time.h>
+  #include <ctype.h>
+  
+*** ./SrcUnix/EmTransportSerialUnix.cpp.osr6	Fri Mar 29 05:11:19 2002
+--- ./SrcUnix/EmTransportSerialUnix.cpp	Sun Jul 10 21:16:12 2005
+***************
+*** 410,416 ****
+  		when hardware handshaking is off.
+  	*/
+  
+! #if 1
+  	if (config.fHwrHandshake)
+  	{
+  		io.c_cflag |= CRTSCTS;
+--- 410,416 ----
+  		when hardware handshaking is off.
+  	*/
+  
+! #if 0
+  	if (config.fHwrHandshake)
+  	{
+  		io.c_cflag |= CRTSCTS;
+***************
+*** 420,426 ****
+  		io.c_cflag &= ~CRTSCTS;
+  	}
+  #else
+! 	io.c_cflag |= CRTSCTS;
+  #endif
+  
+  	// Write out the changed settings.
+--- 420,426 ----
+  		io.c_cflag &= ~CRTSCTS;
+  	}
+  #else
+! 	io.c_cflag = CS8 | B9600 | CLOCAL | CREAD;
+  #endif
+  
+  	// Write out the changed settings.
+*** ./Build-OSR6.osr6	Sun Jul 10 21:16:12 2005
+--- ./Build-OSR6	Sun Jul 10 21:17:42 2005
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ CC="cc"
++ CXX="CC"
++ export CC CXX CFLAGS NM M4 INSTALL
++ cd BuildUnix
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT

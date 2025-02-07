@@ -1,0 +1,361 @@
+--- ./src/protocols/gg/common.c.osr6	2004-06-10 20:58:48.000000000 -0700
++++ ./src/protocols/gg/common.c	2005-06-10 19:54:36.690896005 -0700
+@@ -39,7 +39,7 @@
+ #endif
+ #include <stdarg.h>
+ #include <time.h>
+-#ifdef sun
++#if defined(sun) || defined(__USLC__) || defined(__svr4__)
+   #include <sys/filio.h>
+ #endif
+ #include "config.h"
+--- ./src/protocols/gg/libgg.h.osr6	2004-08-24 20:09:08.000000000 -0700
++++ ./src/protocols/gg/libgg.h	2005-06-10 19:54:36.880896009 -0700
+@@ -25,9 +25,11 @@
+ extern "C" {
+ #endif
+ 
+-#if defined(sun) && !defined(INADDR_NONE)
++#if !defined(INADDR_NONE)
++#if defined(sun) || defined(__USLC__) || defined(__svr4__)
+   #define INADDR_NONE 0xffffffff
+ #endif
++#endif
+ 
+ #ifdef HAVE_STDINT_H
+ #  include <stdint.h>
+--- ./src/protocols/gg/libgg.c.osr6	2005-03-02 03:53:57.000000000 -0800
++++ ./src/protocols/gg/libgg.c	2005-06-10 19:54:37.180896016 -0700
+@@ -42,7 +42,7 @@
+ #endif
+ #include <stdarg.h>
+ #include <time.h>
+-#ifdef sun
++#if defined(sun) || defined(__USLC__) || defined(__svr4__)
+   #include <sys/filio.h>
+ #endif
+ #include <glib.h>
+@@ -940,7 +940,7 @@
+ 		return -1;
+ 	}
+ 
+-	p = (void *)h + sizeof(struct gg_header);
++	p = (char *)h + sizeof(struct gg_header);
+ 
+ 
+ 	switch (h->type) {
+@@ -1486,7 +1486,7 @@
+ 				break;
+ 			}
+ 	
+-			w = (struct gg_welcome *)((void *)h + sizeof(struct gg_header));
++			w = (struct gg_welcome *)((char *)h + sizeof(struct gg_header));
+ 			w->key = fix32(w->key);
+ 			
+ 			hash = gg_login_hash(password, w->key);
+--- ./src/protocols/zephyr/ZAsyncLocate.c.osr6	2004-04-24 02:00:35.000000000 -0700
++++ ./src/protocols/zephyr/ZAsyncLocate.c	2005-06-10 19:54:37.470896005 -0700
+@@ -90,7 +90,7 @@
+     if (notice->z_kind != ACKED)
+ 	return (ZERR_INTERNAL);
+ 
+-    end = notice->z_message+notice->z_message_len;
++    end = (char *)((int)(notice->z_message) + (int)(notice->z_message_len));
+ 
+     __locate_num = 0;
+ 	
+--- ./src/protocols/zephyr/ZRetSubs.c.osr6	2004-04-24 02:02:28.000000000 -0700
++++ ./src/protocols/zephyr/ZRetSubs.c	2005-06-10 19:54:37.650896005 -0700
+@@ -130,7 +130,7 @@
+ 
+ 		nrecv++;
+ 
+-		end = retnotice.z_message+retnotice.z_message_len;
++		end = (char *)((int)(retnotice.z_message) + (int)(retnotice.z_message_len));
+ 
+ 		__subscriptions_num = 0;
+ 		for (ptr=retnotice.z_message;ptr<end;ptr++)
+--- ./src/protocols/zephyr/Zinternal.c.osr6	2004-04-24 02:02:28.000000000 -0700
++++ ./src/protocols/zephyr/Zinternal.c	2005-06-10 19:54:37.880896009 -0700
+@@ -884,7 +884,7 @@
+ 			  sizeof(__My_addr));
+ 	}
+ 	message_len = min(notice->z_message_len-offset, fragsize);
+-	partnotice.z_message = notice->z_message+offset;
++	partnotice.z_message = (void *)((int)(notice->z_message) + (int)(offset));
+ 	partnotice.z_message_len = message_len;
+ 	if ((retval = Z_FormatAuthHeader(&partnotice, buffer, Z_MAXHEADERLEN,
+ 					 &ret_len, cert_func)) != ZERR_NONE) {
+--- ./src/protocols/zephyr/zephyr.c.osr6	2005-02-09 16:07:37.000000000 -0800
++++ ./src/protocols/zephyr/zephyr.c	2005-06-10 19:54:38.150896005 -0700
+@@ -730,7 +730,7 @@
+ 		char *send_inst;
+ 		GaimConversation *gconv1;
+ 		GaimConvChat *gcc;
+-		char *ptr = notice.z_message + strlen(notice.z_message) + 1;
++		char *ptr=(char *)((int)(notice.z_message)+(int)(strlen(notice.z_message))+1);
+ 		int len; 
+ 		char *sendertmp = g_strdup_printf("%s", zephyr->username);
+ 		int signature_length = strlen(notice.z_message);
+--- ./src/proxy.c.osr6	2005-05-14 12:33:56.000000000 -0700
++++ ./src/proxy.c	2005-06-10 19:54:38.350896011 -0700
+@@ -39,6 +39,9 @@
+ 
+ #include "gaim.h"
+ 
++#include <signal.h>
++#include <sys/signal.h>
++
+ static GaimProxyInfo *global_proxy_info = NULL;
+ 
+ struct PHB {
+--- ./src/main.c.osr6	2005-01-02 20:58:03.000000000 -0800
++++ ./src/main.c	2005-06-10 19:54:38.520896011 -0700
+@@ -60,6 +60,7 @@
+ 
+ #if HAVE_SIGNAL_H
+ # include <signal.h>
++# include <sys/signal.h>
+ #endif
+ 
+ #include <getopt.h>
+--- ./src/signals.c.osr6	2005-03-05 17:27:10.000000000 -0800
++++ ./src/signals.c	2005-06-10 19:54:38.870896007 -0700
+@@ -30,6 +30,11 @@
+ 
+ /* must include this to use G_VA_COPY */
+ #include <string.h>
++#include <stdarg.h>
++
++#ifndef va_copy
++#define va_copy(na, oa) (na = oa)
++#endif
+ 
+ typedef struct
+ {
+--- ./src/Makefile.in.osr6	2005-06-09 19:37:23.000000000 -0700
++++ ./src/Makefile.in	2005-06-10 19:54:38.960896016 -0700
+@@ -40,7 +40,7 @@
+ build_triplet = @build@
+ host_triplet = @host@
+ target_triplet = @target@
+-bin_PROGRAMS = gaim$(EXEEXT) gaim-remote$(EXEEXT)
++bin_PROGRAMS = gaim$(EXEEXT)
+ subdir = src
+ DIST_COMMON = $(gaiminclude_HEADERS) $(srcdir)/Makefile.am \
+ 	$(srcdir)/Makefile.in getopt.c getopt1.c
+--- ./plugins/gaim-remote/Makefile.am.osr6	2005-04-29 10:02:01.000000000 -0700
++++ ./plugins/gaim-remote/Makefile.am	2005-06-10 19:54:36.140896008 -0700
+@@ -18,7 +18,7 @@
+ plugin_LTLIBRARIES = gaim-remote.la
+ 
+ gaim_remote_la_SOURCES = remote.c
+-gaim_remote_la_LIBADD = libgaim-remote.la $(GTK_LIBS)
++gaim_remote_la_LIBADD = $(GTK_LIBS)
+ 
+ endif
+ 
+--- ./plugins/gaim-remote/Makefile.in.osr6	2005-06-09 19:37:19.000000000 -0700
++++ ./plugins/gaim-remote/Makefile.in	2005-06-10 19:54:36.340896009 -0700
+@@ -367,7 +367,7 @@
+ gaim_remote_la_LDFLAGS = -module -avoid-version
+ @PLUGINS_TRUE@plugin_LTLIBRARIES = gaim-remote.la
+ @PLUGINS_TRUE@gaim_remote_la_SOURCES = remote.c
+-@PLUGINS_TRUE@gaim_remote_la_LIBADD = libgaim-remote.la $(GTK_LIBS)
++@PLUGINS_TRUE@gaim_remote_la_LIBADD = $(GTK_LIBS)
+ AM_CPPFLAGS = \
+ 	-DDATADIR=\"$(datadir)\" \
+ 	-DVERSION=\"$(VERSION)\" \
+--- ./plugins/perl/perl-common.c.osr6	2004-04-20 18:34:21.000000000 -0700
++++ ./plugins/perl/perl-common.c	2005-06-10 19:54:35.910896002 -0700
+@@ -159,9 +159,10 @@
+ execute_perl(const char *function, int argc, char **args)
+ {
+ 	int count = 0, i, ret_value = 1;
+-	SV *sv_args[argc];
++	SV **sv_args;
+ 	STRLEN na;
+ 
++	sv_args = (SV **)g_malloc(argc + 1);
+ 	/*
+ 	 * Set up the perl environment, push arguments onto the
+ 	 * perl stack, then call the given function
+@@ -227,6 +228,7 @@
+ 	FREETMPS;
+ 	LEAVE;
+ 
++	g_free((char *)sv_args);
+ 	return ret_value;
+ }
+ 
+--- ./plugins/Makefile.in.osr6	2005-06-09 19:37:18.000000000 -0700
++++ ./plugins/Makefile.in	2005-06-10 19:54:36.500896011 -0700
+@@ -409,7 +409,7 @@
+ @USE_PERL_TRUE@PERL_DIR = perl
+ @USE_TCL_TRUE@TCL_DIR = tcl
+ SUBDIRS = \
+-	docklet gaim-remote $(GEVOLUTION_DIR) gestures \
++	docklet $(GEVOLUTION_DIR) gestures \
+ 	$(PERL_DIR) $(TCL_DIR) ssl ticker
+ 
+ plugindir = $(libdir)/gaim
+--- ./Configure-OSR6.osr6	2005-06-10 19:54:39.220896006 -0700
++++ ./Configure-OSR6	2005-06-10 19:54:39.220896003 -0700
+@@ -0,0 +1,24 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++#CC="gcc -D_REENTRANT"
++#CXX="g++ -D_REENTRANT"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++NM="/usr/ccs/bin/nm -p"
++export CC CXX CFLAGS NM
++libtoolize -c -f
++autoconf -f
++rm -f mout-configure
++./configure --prefix=/usr --disable-audio --with-libintl-prefix=/usr/gnu --program-prefix="" \
++            --with-nspr-includes=/usr/include/mozilla-1.7.8/nspr \
++            --with-nspr-libs=/usr/lib/mozilla \
++            --enable-nss=yes \
++            --with-nss-includes=/usr/include/mozilla-1.7.8/nss \
++            --with-nss-libs=/usr/lib/mozilla \
++            --enable-tcl \
++            --with-tclconfig=/usr/gnu/lib \
++            --enable-tk \
++            --with-tkconfig=/usr/gnu/lib \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./aclocal.m4.osr6	2005-06-09 19:36:39.000000000 -0700
++++ ./aclocal.m4	2005-06-10 19:54:39.390896004 -0700
+@@ -3447,6 +3447,7 @@
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
++  sys_lib_search_path_spec='/usr/lib /usr/ccs/lib'
+   case $host_vendor in
+     sni)
+       shlibpath_overrides_runpath=no
+@@ -4101,7 +4102,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib) M[[0-9]][[0-9]]* Version [[0-9]]'
+@@ -4125,7 +4126,7 @@
+   esac
+   ;;
+ 
+-sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[[78]]* | unixware7* | sysv4*uw2*)
++sysv5* | unixware7* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ esac
+@@ -5342,7 +5343,7 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[[78]]* | unixware7*)
++  sysv5* | unixware7*)
+     _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
+     ;;
+   tandem*)
+@@ -7163,7 +7164,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	_LT_AC_TAGVAR(ld_shlibs, $1)=no
+ 	cat <<EOF 1>&2
+@@ -7738,9 +7739,9 @@
+       _LT_AC_TAGVAR(no_undefined_flag, $1)=' -z text'
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      _LT_AC_TAGVAR(archive_cmds, $1)='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      _LT_AC_TAGVAR(archive_cmds, $1)='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      _LT_AC_TAGVAR(export_dynamic_flag_spec, $1)='-Wl,-Bexport'
+       _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)=
+       _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
+       runpath_var='LD_RUN_PATH'
+--- ./configure.ac.osr6	2005-06-09 19:28:13.000000000 -0700
++++ ./configure.ac	2005-06-10 19:54:39.660896027 -0700
+@@ -907,7 +907,8 @@
+ if test "$enable_tcl" = yes; then
+ 	AC_MSG_CHECKING([for tclConfig.sh])
+         TCLCONFIG=no
+-	TCLCONFIGDIRS="/usr/lib \
++	TCLCONFIGDIRS="/usr/gnu/lib \
++		       /usr/lib \
+ 		       /usr/lib/tcl8.4 \
+ 		       /usr/lib/tcl8.3 \
+ 		       /usr/lib/tcl8.2 \
+@@ -917,6 +918,7 @@
+ 		if test -f $dir/tclConfig.sh; then
+ 			TCLCONFIG=$dir/tclConfig.sh
+ 			AC_MSG_RESULT([yes ($TCLCONFIG)])
++			break
+ 		fi
+ 	done
+ 	if test "$TCLCONFIG" = "no"; then
+@@ -935,7 +937,7 @@
+ 			oldCPPFLAGS=$CPPFLAGS
+ 			CPPFLAGS="$CPPFLAGS $TCL_INCLUDE_SPEC -I$TCL_PREFIX/include"
+ 			oldLIBS=$LIBS
+-			LIBS="$LIBS $TCL_LIB_SPEC"
++			LIBS="$LIBS $TCL_LIB_SPEC -lm"
+ 			AC_TRY_LINK([#include <tcl.h>],
+ 				    [Tcl_Interp *interp; Tcl_Init(interp)],
+ 				    [AC_MSG_RESULT([yes]);enable_tcl=yes],
+@@ -948,7 +950,7 @@
+ 
+ if test "$enable_tcl" = yes; then
+ 	AM_CONDITIONAL(USE_TCL, true)
+-	TCL_LIBS=$TCL_LIB_SPEC
++	TCL_LIBS="$TCL_LIB_SPEC -lm"
+ 	AC_SUBST(TCL_LIBS)
+ 	AC_DEFINE(HAVE_TCL, [1], [Compile with support for the Tcl toolkit])
+ 	TCL_CFLAGS="$TCL_INCLUDE_SPEC -I$TCL_PREFIX/include"
+@@ -964,7 +966,8 @@
+ if test "$enable_tcl" = yes -a "$enable_tk" = yes; then
+ 	AC_MSG_CHECKING([for tkConfig.sh])
+ 	TKCONFIG=no
+-	TKCONFIGDIRS="/usr/lib \
++	TKCONFIGDIRS="/usr/gnu/lib \
++	              /usr/lib \
+ 	              /usr/lib/tk8.4 \
+ 		      /usr/lib/tk8.3 \
+ 		      /usr/lib/tk8.2 \
+@@ -973,6 +976,7 @@
+ 		if test -f $dir/tkConfig.sh; then
+ 			TKCONFIG=$dir/tkConfig.sh
+ 			AC_MSG_RESULT([yes ($TKCONFIG)])
++			break
+ 		fi
+ 	done
+ 	if test "$TKCONFIG" = "no"; then
+@@ -985,7 +989,7 @@
+ 		oldCPPFLAGS=$CPPFLAGS
+ 		CPPFLAGS="$CPPFLAGS $TCL_CFLAGS"
+ 		oldLIBS=$LIBS
+-		LIBS="$LIBS $TCL_LIB_SPEC $TK_LIB_SPEC"
++		LIBS="$LIBS $TCL_LIB_SPEC $TK_LIB_SPEC -lX11 -lm"
+ 		AC_TRY_LINK([#include <tk.h>], [Tcl_Interp *interp; Tcl_Init(interp); Tk_Init(interp);],
+ 			    [AC_MSG_RESULT([yes]);enable_tk=yes],
+ 			    [AC_MSG_RESULT([no]);enable_tk=no])
+@@ -999,7 +1003,7 @@
+ if test "$enable_tk" = yes; then
+ 	AM_CONDITIONAL(USE_TK, true)
+ 	AC_DEFINE(HAVE_TK, [1], [Compile with support for the Tk toolkit])
+-	TK_LIBS=$TK_LIB_SPEC
++	TK_LIBS="$TK_LIB_SPEC -lX11 -lm"
+ 	AC_SUBST(TK_LIBS)
+ else
+ 	AM_CONDITIONAL(USE_TK, false)

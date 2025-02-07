@@ -1,0 +1,47 @@
+--- ./Configure-OSR6.00	2009-01-06 09:06:32.170000003 -0800
++++ ./Configure-OSR6	2009-01-06 09:06:32.170000000 -0800
+@@ -0,0 +1,29 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -O2 -Wall"
++  LIBS=""
++fi
++PATH=/usr/local/bin:/usr/gnu/bin:$PATH
++LDFLAGS="-L/usr/local/lib"
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PATH PKG_CONFIG_PATH LIBS LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --disable-shared --enable-static \
++            --mandir=/usr/local/man --infodir=/usr/local/share/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2009-01-06 09:06:32.170000011 -0800
++++ ./Install-OSR6	2009-01-06 09:06:47.330000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gtkhtml
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++

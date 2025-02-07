@@ -1,0 +1,41 @@
+Sccs2rcs is a script to convert an existing SCCS
+history into an RCS history without losing any of
+the information contained therein.
+It has been tested under the following OS's:
+    SunOS 3.5, 4.0.3, 4.1
+    Ultrix-32 2.0, 3.1
+
+Things to note:
+  + It will NOT delete or alter your ./SCCS history under any
+circumstances.
+
+  + Run in a directory where ./SCCS exists and where you can
+      create ./RCS
+
+  + /usr/local/bin is put in front of the default path.
+    (SCCS under Ultrix is set-uid sccs, bad bad bad, so
+    /usr/local/bin/sccs here fixes that)
+
+  + Date, time, author, comments, branches, are all preserved.
+
+  + If a command fails somewhere in the middle, it bombs with
+    a message -- remove what it's done so far and try again.
+        "rm -rf RCS; sccs unedit `sccs tell`; sccs clean"
+    There is no recovery and exit is far from graceful.
+    If a particular module is hanging you up, consider
+    doing it separately; move it from the current area so that
+    the next run will have a better chance or working.
+    Also (for the brave only) you might consider hacking
+    the s-file for simpler problems:  I've successfully changed
+    the date of a delta to be in sync, then run "sccs admin -z"
+    on the thing.
+
+  + After everything finishes, ./SCCS will be moved to ./old-SCCS.
+
+This file may be copied, processed, hacked, mutilated, and
+even destroyed as long as you don't tell anyone you wrote it.
+
+Ken Cox
+Viewlogic Systems, Inc.
+kenstir@viewlogic.com
+...!harvard!cg-atla!viewlog!kenstir

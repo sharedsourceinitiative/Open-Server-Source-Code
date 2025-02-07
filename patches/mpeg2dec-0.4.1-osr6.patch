@@ -1,0 +1,33 @@
+*** ./src/mpeg2dec.c.osr6	Thu Feb 19 04:32:48 2004
+--- ./src/mpeg2dec.c	Wed Oct 25 09:59:28 2006
+***************
+*** 63,69 ****
+--- 63,73 ----
+  {
+      sigint = 1;
+      signal (sig, SIG_DFL);
++ #ifdef __USLC__
++     return ;
++ #else
+      return (RETSIGTYPE)0;
++ #endif
+  }
+  
+  static void print_fps (int final)
+*** ./Install-OSR6.osr6	Wed Oct 25 09:59:40 2006
+--- ./Install-OSR6	Wed Oct 25 09:59:56 2006
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/mpeg2dec
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

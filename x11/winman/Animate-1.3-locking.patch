@@ -1,0 +1,55 @@
+diff -u Animate-1.3~/Animate.c Animate-1.3/Animate.c
+--- Animate-1.3~/Animate.c	Mon Dec  9 21:58:32 1996
++++ Animate-1.3/Animate.c	Tue Dec 10 15:06:35 1996
+@@ -92,10 +92,12 @@
+         points[3].y = cy+sin(angle+a+PI)*d;
+         points[4].x = cx+cos(angle-a)*d;
+         points[4].y = cy+sin(angle-a)*d;
++	XGrabServer(dpy);
+ 	XDrawLines(dpy, root, DrawGC, &points, 5, CoordModeOrigin);
+ 	XFlush(dpy);
+ 	usleep(Animate.delay*1000);
+ 	XDrawLines(dpy, root, DrawGC, &points, 5, CoordModeOrigin);
++	XUngrabServer(dpy);
+ 	cx+=xstep;
+ 	cy+=ystep;
+ 	cw+=wstep;
+@@ -193,6 +195,7 @@
+     char *temp;
+     XGCValues gcv;
+     unsigned long color;
++    char mask_mesg[20];
+     
+     ProgName = rindex(argv[0], '/')?rindex(argv[0], '/')+1:argv[0];
+     if (argc != 6) {
+@@ -213,6 +216,14 @@
+     }
+     root = DefaultRootWindow(dpy);
+     scr = DefaultScreen(dpy);
++
++    sprintf(mask_mesg,"SET_MASK %lu\n",(unsigned long)(M_CONFIGURE_WINDOW|
++            M_ICONIFY|
++            M_DEICONIFY|
++	    M_LOCKONSEND));
++
++    SendInfo(Channel, mask_mesg, 0);
++
+     ParseOptions(argv[3]);
+     color = WhitePixel(dpy,scr);
+     if (Animate.color) {
+@@ -280,6 +291,7 @@
+ 		hf = 64;
+ 		free(body);
+ 
++                SendInfo(Channel, "UNLOCK 1\n", 0);
+ 		c=ReadASPacket(Channel[1], header, &body);
+ 		if (c<=0) break;
+ 		if (header[1]!=M_CONFIGURE_WINDOW) break;
+@@ -292,6 +304,7 @@
+ 	    }
+ 	    free(body);	    
+ 	}
++        SendInfo(Channel, "UNLOCK 1\n", 0);
+     }
+ }
+ 

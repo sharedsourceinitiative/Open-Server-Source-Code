@@ -1,0 +1,84 @@
+*** ./tool/lemon.c.00	Sat Apr 23 15:45:24 2005
+--- ./tool/lemon.c	Sun Jul  3 15:46:09 2005
+***************
+*** 110,117 ****
+  ** Principal data structures for the LEMON parser generator.
+  */
+  
+- typedef enum {B_FALSE=0, B_TRUE} Boolean;
+- 
+  /* Symbols (terminals and nonterminals) of the grammar are stored
+  ** in the following: */
+  struct symbol {
+--- 110,115 ----
+***************
+*** 131,137 ****
+      UNK
+    } assoc;                 /* Associativity if predecence is defined */
+    char *firstset;          /* First-set for all rules of this symbol */
+!   Boolean lambda;          /* True if NT and can generate an empty string */
+    char *destructor;        /* Code which executes whenever this symbol is
+                             ** popped from the stack during error processing */
+    int destructorln;        /* Line number of destructor code */
+--- 129,135 ----
+      UNK
+    } assoc;                 /* Associativity if predecence is defined */
+    char *firstset;          /* First-set for all rules of this symbol */
+!   boolean_t lambda;        /* True if NT and can generate an empty string */
+    char *destructor;        /* Code which executes whenever this symbol is
+                             ** popped from the stack during error processing */
+    int destructorln;        /* Line number of destructor code */
+***************
+*** 155,161 ****
+    char *code;              /* The code executed when this rule is reduced */
+    struct symbol *precsym;  /* Precedence symbol for this rule */
+    int index;               /* An index number for this rule */
+!   Boolean canReduce;       /* True if this rule is ever reduced */
+    struct rule *nextlhs;    /* Next rule with the same LHS */
+    struct rule *next;       /* Next rule in the global list */
+  };
+--- 153,159 ----
+    char *code;              /* The code executed when this rule is reduced */
+    struct symbol *precsym;  /* Precedence symbol for this rule */
+    int index;               /* An index number for this rule */
+!   boolean_t canReduce;     /* True if this rule is ever reduced */
+    struct rule *nextlhs;    /* Next rule with the same LHS */
+    struct rule *next;       /* Next rule in the global list */
+  };
+*** ./Configure-OSR6.00	Sun Jul  3 15:48:54 2005
+--- ./Configure-OSR6	Sun Jul  3 15:48:47 2005
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr --with-tcl=/usr/gnu/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.osr6	2005-07-03 16:04:27.270000003 -0700
++++ Install-OSR6	2005-07-03 16:04:44.770000012 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/sqlite
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

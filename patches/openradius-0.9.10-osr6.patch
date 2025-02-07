@@ -1,0 +1,188 @@
+--- ./tools/radclient/radtest.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./tools/radclient/radtest	2005-06-10 21:17:24.438096020 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ if [ -z "$4" ]
+ then
+--- ./tools/radclient/radaccttest.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./tools/radclient/radaccttest	2005-06-10 21:17:24.518096003 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ if [ -z "$3" ]
+ then
+--- ./tools/genmd5hexpasswd.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./tools/genmd5hexpasswd	2005-06-10 21:17:24.578096009 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ # This file is in the public domain
+ 
+--- ./common/test/msgstreamcld.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./common/test/msgstreamcld	2005-06-10 21:17:24.708096005 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ echo Child started. 1>&2
+ 
+--- ./common/test/newproccld_asc.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./common/test/newproccld_asc	2005-06-10 21:17:24.768096009 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ trap "echo Ok, I am out of here. ; exit 123" 15
+ 
+--- ./common/misc.h.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./common/misc.h	2005-06-10 21:17:24.838096010 -0700
+@@ -27,7 +27,7 @@
+ 
+ 
+ #include <sys/types.h>		/* for ssize_t */
+-#include <sys/param.h>		/* for endianness macros */
++#include <sys/byteorder.h>	/* for endianness macros */
+ 
+ #include <metadata.h>		/* for META_ORD */
+ 
+@@ -42,7 +42,7 @@
+ 
+ /* Try to establish endianness - supports BSD, GNU and SysV style */
+ 
+-#ifdef BYTE_ORDER	/* BSD */
++#ifdef BYTE_ORDER	/* BSD and SCO */
+ #ifdef BIG_ENDIAN
+ #if BYTE_ORDER == BIG_ENDIAN
+ #define ISBIGENDIAN	1
+--- ./common/textfile.h.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./common/textfile.h	2005-06-10 21:17:24.898096009 -0700
+@@ -42,6 +42,9 @@
+ 
+ #include <limits.h>	/* For PATH_MAX */
+ #include <sys/param.h>	/* For PATH_MAX */
++#ifndef PATH_MAX
++#define PATH_MAX 1024
++#endif
+ 
+ #include <ringbuf.h>
+ 
+--- ./common/subprocs.c.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./common/subprocs.c	2005-06-10 21:17:24.968096012 -0700
+@@ -30,7 +30,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <string.h>
+ #include <errno.h>
+ 
+--- ./modules/radlogger/radlogger.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./modules/radlogger/radlogger	2005-06-10 21:17:25.038096009 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # This file is in the public domain
+ 
+--- ./modules/delay/delay.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./modules/delay/delay	2005-06-10 21:17:25.108096009 -0700
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # This file is in the public domain
+ 
+--- ./server/main.c.osr6	2005-02-14 07:10:51.000000000 -0800
++++ ./server/main.c	2005-06-10 21:17:25.188096010 -0700
+@@ -26,7 +26,7 @@
+ #include <sys/time.h>		/* For struct tv */
+ #include <sys/wait.h>
+ #include <sys/select.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <string.h>		/* For strerror */
+ #include <unistd.h>		/* For open(), dup2(), perhaps getopt() */
+ #include <stdlib.h>		/* For malloc() and for some SysV's getopt() */
+--- ./Makefile.sco.osr6	2005-06-10 21:19:21.000000000 -0700
++++ ./Makefile.sco	2005-06-10 21:17:25.248096007 -0700
+@@ -0,0 +1,61 @@
++### Installation paths and compiled-in defaults
++#
++DIR_BIN 	= /usr/bin
++DIR_SBIN	= /usr/sbin
++DIR_ETC 	= /etc/openradius
++DIR_LIB 	= /usr/lib/openradius
++FILE_LOG	= /var/log/openradius.log
++
++
++### Modules that will be built and installed
++#
++TGT_LIB		+= modules/ascfile/ascfile
++TGT_LIB		+= modules/unixpasswd/unixpasswd
++TGT_LIB		+= modules/radlogger/radlogger
++TGT_LIB		+= modules/delay/delay
++TGT_LIB		+= modules/radsql/radsql
++#TGT_LIB 	+= modules/radldap/radldap
++
++
++### System compatibility flags, used in some targets' CF_TGT, LF_TGT or LL_TGT
++#
++S_CF_U_INT32_T	= -DU_INT32_T=unsigned
++S_CF_SYSLOG	= -DHAVE_SYSLOG
++S_CF_VSNPRINTF 	= -DHAVE_VSNPRINTF
++S_CF_SIGACTION 	= -DHAVE_SIGACTION
++S_LL_INET	= -lnsl -lsocket
++
++
++### Build flags for all targets
++#
++CF_ALL		= -O2
++LF_ALL		= 
++LL_ALL		=
++
++
++### Module-specific build flags
++#
++CF_RADLDAP	=
++LF_RADLDAP	=
++LL_RADLDAP	= -lldap -llber -lresolv
++
++
++### Build tools
++# 
++# The C compiler named here must output full (header) dependencies in $(@).d.
++# It may be necessary to create a script similar to ccd-gcc for your compiler.
++# 
++CMPLR		= ./build/ccd-gcc
++DEFHDR		= ./build/hdr
++INST		= ./build/install
++ARCH		= ar rc $@ $^
++#
++COMP		= $(CMPLR) $(CF_ALL) $(CF_TGT) -o $@ -c $<
++LINK		= $(CMPLR) $(LF_ALL) $(LF_TGT) -o $@ $^ $(LL_TGT) $(LL_ALL)
++COMPLINK	= $(CMPLR) $(CF_ALL) $(CF_TGT) $(LF_ALL) $(LF_TGT) -o $@ $< $(LL_TGT) $(LL_ALL)
++
++
++### Standard parts
++#
++include	Rules.mk
++
+--- ./Build-OSR6.osr6	2005-06-10 21:17:46.878096011 -0700
++++ ./Build-OSR6	2005-06-10 21:20:07.664816011 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="gcc -D_REENTRANT"
++CXX="g++ -D_REENTRANT"
++PATH=/usr/gnu/bin:$PATH
++export CC CXX CFLAGS PATH
++
++rm -f mout
++make -f Makefile.sco 2>&1 | tee mout

@@ -1,0 +1,1265 @@
+*** ./gcc/cp/lang-specs.h.osr6	Thu Jan 25 06:03:38 2001
+--- ./gcc/cp/lang-specs.h	Sun Jul  3 20:09:25 2005
+***************
+*** 34,40 ****
+  	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\
+  	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+  	%{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1 -D__GNUC_MINOR__=%v2}\
+! 	-D__cplusplus\
+  	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+  	%{!fno-exceptions:-D__EXCEPTIONS}\
+          %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\
+--- 34,40 ----
+  	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\
+  	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+  	%{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1 -D__GNUC_MINOR__=%v2}\
+! 	-D__cplusplus -D_PTHREADS\
+  	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+  	%{!fno-exceptions:-D__EXCEPTIONS}\
+          %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\
+***************
+*** 45,51 ****
+                              -lang-c++ %{nostdinc*} %{C} %{A*} %{I*} %{P} %{$} %I\
+                              %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+                              %{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1\
+!                             -D__GNUC_MINOR__=%v2} -D__cplusplus\
+                              %{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+                              %{!fno-exceptions:-D__EXCEPTIONS}\
+                              %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\
+--- 45,51 ----
+                              -lang-c++ %{nostdinc*} %{C} %{A*} %{I*} %{P} %{$} %I\
+                              %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+                              %{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1\
+!                             -D__GNUC_MINOR__=%v2} -D__cplusplus -D_PTHREADS\
+                              %{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+                              %{!fno-exceptions:-D__EXCEPTIONS}\
+                              %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\
+***************
+*** 66,72 ****
+  	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\
+  	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+  	%{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1 -D__GNUC_MINOR__=%v2}\
+! 	-D__cplusplus\
+  	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+  	%{!fno-exceptions:-D__EXCEPTIONS}\
+          %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\
+--- 66,72 ----
+  	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\
+  	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\
+  	%{!no-gcc:-D__GNUC__=%v1 -D__GNUG__=%v1 -D__GNUC_MINOR__=%v2}\
+! 	-D__cplusplus -D_PTHREADS\
+  	%{ansi:-trigraphs -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\
+  	%{!fno-exceptions:-D__EXCEPTIONS}\
+          %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}} %{trigraphs}\
+*** ./gcc/config/i386/udk.h.osr6	Thu Jun  3 14:28:47 1999
+--- ./gcc/config/i386/udk.h	Sun Jul  3 20:09:25 2005
+***************
+*** 1,5 ****
+  /* Configuration for i386 interfacing with SCO's Universal Development Kit
+!    probably running on OpenServer 5, Unixware 2, or Unixware 5
+   */
+  
+  
+--- 1,5 ----
+  /* Configuration for i386 interfacing with SCO's Universal Development Kit
+!    probably running on OpenServer 5,  or Unixware 2
+   */
+  
+  
+***************
+*** 14,30 ****
+  #undef MD_STARTFILE_PREFIX
+  #define MD_STARTFILE_PREFIX 	"/udk/usr/ccs/lib/" 
+  
+  #define STANDARD_INCLUDE_DIR	"/udk/usr/include"
+  
+  #undef LINK_SPEC
+  #define LINK_SPEC "%{h*} %{v:-V} \
+  	%{b} %{Wl,*:%*} \
+  	%{static:-dn -Bstatic} \
+! 	%{shared:-G -dy -z text} \
+! 	%{symbolic:-Bsymbolic -G -dy -z text} \
+! 	%{G:-G} \
+  	%{YP,*} \
+  	%{!YP,*:%{p:-Y P,/udk/usr/ccs/lib/libp:/udk/usr/lib/libp:/udk/usr/ccs/lib:/udk/usr/lib} \
+  	%{!p:-Y P,/udk/usr/ccs/lib:/udk/usr/lib}} \
+  	%{Qy:} %{!Qn:-Qy}"
+  
+--- 14,81 ----
+  #undef MD_STARTFILE_PREFIX
+  #define MD_STARTFILE_PREFIX 	"/udk/usr/ccs/lib/" 
+  
++ /* Under svr4, the normal location of the various *crt*.o files is the
++    /udk/usr/ccs/lib directory.  However, if we define MD_STARTFILE_PREFIX,
++    gcc also emits it as "-L /usr/ccs/bin/ccs" which gets in the way
++    of finding the UNIX_SVR5 profiled C runtime library.  Not defining
++    this requires CRT files to be completely spelled out. */
++ 
++ #ifndef CROSS_COMPILE
++ #undef MD_STARTFILE_PREFIX
++ #endif
++ 
+  #define STANDARD_INCLUDE_DIR	"/udk/usr/include"
+  
++ /* Add -lcrt for Dwarf2 abbreviation table */
++ #undef  LIB_SPEC
++ #define LIB_SPEC "%{pthread:-lthread \
++ 			%{p:%ecannot use UNIX_SVR5 profiling with threads}} \
++ 		%{pthreadT:-lthreadT \
++ 			%{p:%ecannot use UNIX_SVR5 profiling with threads}} \
++ 		%{p:-lprof} \
++ 		%{!shared:%{!symbolic:-lc -lcrt}}"
++ 
++ /* Do not pass '-z text' to the linker when -shared or -symbolic */
+  #undef LINK_SPEC
+  #define LINK_SPEC "%{h*} %{v:-V} \
+  	%{b} %{Wl,*:%*} \
+  	%{static:-dn -Bstatic} \
+! 	%{shared:-G -dy} \
+! 	%{symbolic:-Bsymbolic -G -dy} \
+! 	%{G:%euse -shared not -G to link dynamic library} \
+  	%{YP,*} \
+  	%{!YP,*:%{p:-Y P,/udk/usr/ccs/lib/libp:/udk/usr/lib/libp:/udk/usr/ccs/lib:/udk/usr/lib} \
+  	%{!p:-Y P,/udk/usr/ccs/lib:/udk/usr/lib}} \
+  	%{Qy:} %{!Qn:-Qy}"
+  
++ 
++ 
++ /* Provide an ENDFILE_SPEC appropriate for sysv5.  Here we tack on our own
++    magical crtend.o file (see crtstuff.c) which provides part of the
++    support for getting C++ file-scope static object constructed before
++    entering `main', followed by the normal svr3/svr4 "finalizer" file,
++    which is either `gcrtn.o' or `crtn.o'.  */
++ 
++ /* Also link in the pthread stub archive prior to the crtend.o
++    Also, provide complete path name for crtn.o */
++ 
++ #undef  ENDFILE_SPEC
++ #define ENDFILE_SPEC " %{!shared:%{!pthread:%{!ptreadT:-lpthrstubs}}} crtend.o%s \
++ 			%{pg:gcrtn.o%s} %{!pg:/udk/usr/ccs/lib/crtn.o} \
++ 			%{p:-I /udk/usr/ccs/lib/libp/libc.so.1}"
++ 
++ /* Redefine the START_FILE for UW 2 or OpenServer 5.0.x to specify complete
++    path of each sytem startup module used. */
++ 
++ #undef	STARTFILE_SPEC
++ #define STARTFILE_SPEC "%{!shared: \
++ 			 %{!symbolic: \
++ 			  %{pg:gcrt1.o%s}%{!pg:%{p:/udk/usr/ccs/lib/mcrt1.o}\
++ 				%{!p:/udk/usr/ccs/lib/crt1.o}}}}\
++ 			%{pg:gcrti.o%s}%{!pg:/udk/usr/ccs/lib/crti.o} \
++ 			%{ansi:/udk/usr/ccs/lib/values-Xc.o} \
++ 			%{!ansi: \
++ 			 %{traditional:/udk/usr/ccs/lib/values-Xt.o} \
++ 			 %{!traditional:/udk/usr/ccs/lib/values-Xa.o}} \
++  			crtbegin.o%s"
++ 
+*** ./gcc/config/i386/sysv5.h.osr6	Thu Apr 29 13:20:15 1999
+--- ./gcc/config/i386/sysv5.h	Sun Jul  3 20:09:25 2005
+***************
+*** 22,35 ****
+  
+  #include "i386/sysv4.h"
+  
+  /* Dwarf2 is supported by native debuggers  */
+  
+  #undef PREFERRED_DEBUGGING_TYPE
+  #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
+  
+! /* Add -lcrt for Dwarf2 abbreviation table */
+  #undef  LIB_SPEC
+! #define LIB_SPEC "%{pthread:-lthread} %{!shared:%{!symbolic:-lc -lcrt}}"
+  
+  #undef CPP_SPEC
+! #define CPP_SPEC "%{pthread:-D_REENTRANT}"
+--- 22,96 ----
+  
+  #include "i386/sysv4.h"
+  
++ /* Under svr4, the normal location of the various *crt*.o files is the
++    /usr/ccs/lib directory.  However, if we define MD_STARTFILE_PREFIX,
++    gcc also emits it as "-L /usr/ccs/bin/ccs" which gets in the way
++    of finding the UNIX_SVR5 profiled C runtime library.  Not defining
++    this requires CRT files to be completely spelled out. */
++ 
++ #ifndef CROSS_COMPILE
++ #undef MD_STARTFILE_PREFIX
++ #endif
++ 
+  /* Dwarf2 is supported by native debuggers  */
+  
+  #undef PREFERRED_DEBUGGING_TYPE
+  #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
+  
+! /* Add -lcrt for Dwarf2 abbreviation table. Look at libgcc.a
+!    after any threads library has been scanned */
+  #undef  LIB_SPEC
+! #define LIB_SPEC "%{pthread:-lthread \
+! 			%{p:%ecannot use UNIX_SVR5 profiling with threads}} \
+! 		%{pthreadT:-lthreadT \
+! 			%{p:%ecannot use UNIX_SVR5 profiling with threads}} \
+! 		%{p:-lprof} \
+! 		%{!shared:%{!symbolic:-lc -lcrt}}"
+  
+  #undef CPP_SPEC
+! #define CPP_SPEC "%{pthread:-D_REENTRANT} %{pthreadT:-D_REENTRANT}"
+! 
+! 
+! /* Do not pass '-z text' to the linker when -shared or -symbolic */
+! #undef	LINK_SPEC
+! #define LINK_SPEC "%{h*} %{v:-V} \
+! 		   %{b} %{Wl,*:%*} \
+! 		   %{static:-dn -Bstatic} \
+! 		   %{shared:-G -dy} \
+! 		   %{symbolic:-Bsymbolic -G -dy} \
+! 		   %{G:%euse -shared not -G to link dynamic library} \
+! 		   %{YP,*} \
+! 		   %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \
+! 		   %{!p:-Y P,/usr/ccs/lib:/usr/lib}} \
+! 		   %{Qy:} %{!Qn:-Qy}"
+! 
+! 
+! /* Provide an ENDFILE_SPEC appropriate for sysv5.  Here we tack on our own
+!    magical crtend.o file (see crtstuff.c) which provides part of the
+!    support for getting C++ file-scope static object constructed before
+!    entering `main', followed by the normal svr3/svr4 "finalizer" file,
+!    which is either `gcrtn.o' or `crtn.o'.  */
+! 
+! /* Also link in the pthread stub archive prior to the crtend.o
+!    Also, provide complete path name for crtn.o */
+! 
+! #undef  ENDFILE_SPEC
+! #define ENDFILE_SPEC " %{!shared:%{!pthread:%{!ptreadT:-lpthrstubs}}} crtend.o%s \
+! 			%{pg:gcrtn.o%s} %{!pg:/usr/ccs/lib/crtn.o} \
+! 			%{p:-I /usr/ccs/lib/libp/libc.so.1}"
+! 
+! /* Redefine the START_FILE for UW 7 or Open Unix 8 to specify complete
+!    path of each sytem startup module used. */
+! 
+! #undef	STARTFILE_SPEC
+! #define STARTFILE_SPEC "%{!shared: \
+! 			 %{!symbolic: \
+! 			  %{pg:gcrt1.o%s}%{!pg:%{p:/usr/ccs/lib/mcrt1.o}\
+! 				%{!p:/usr/ccs/lib/crt1.o}}}}\
+! 			%{pg:gcrti.o%s}%{!pg:/usr/ccs/lib/crti.o} \
+! 			%{ansi:/usr/ccs/lib/values-Xc.o} \
+! 			%{!ansi: \
+! 			 %{traditional:/usr/ccs/lib/values-Xt.o} \
+! 			 %{!traditional:/usr/ccs/lib/values-Xa.o}} \
+!  			crtbegin.o%s"
+! 
+*** ./gcc/config/i386/i386.c.osr6	Tue Sep  7 00:38:56 1999
+--- ./gcc/config/i386/i386.c	Sun Jul  3 20:09:25 2005
+***************
+*** 3884,3889 ****
+--- 3884,3898 ----
+     There is no guarantee that the operands are the same mode, as they
+     might be within FLOAT or FLOAT_EXTEND expressions. */
+  
++ #ifndef SYSV386_COMPAT
++ /* Set to 1 for compatibility with brain-damaged assemblers.  No-one
++    wants to fix the assemblers because that causes incompatibility
++    with gcc.  No-one wants to fix gcc because that causes
++    incompatibility with assemblers...  You can use the option of
++    -DSYSV386_COMPAT=0 if you recompile both gcc and gas this way.  */
++ #define SYSV386_COMPAT 1
++ #endif
++ 
+  char *
+  output_387_binary_op (insn, operands)
+       rtx insn;
+***************
+*** 4152,4158 ****
+--- 4161,4171 ----
+  	{
+  	  if (cc_status.flags & CC_FCOMI)
+  	    {
++ #if SYSV386_COMPAT == 1
++ 	      output_asm_insn (AS1 (fucompi,%y1), operands);
++ #else
+  	      output_asm_insn (AS2 (fucomip,%y1,%0), operands);
++ #endif
+  	      output_asm_insn (AS1 (fstp, %y0), operands);
+  	      if (!TARGET_IEEE_FP)
+  		cc0_set = 0; 
+***************
+*** 4164,4170 ****
+--- 4177,4187 ----
+  	{
+  	  if (cc_status.flags & CC_FCOMI)
+  	    {
++ #if SYSV386_COMPAT == 1
++ 	      output_asm_insn (AS1 (fcompi, %y1), operands);
++ #else
+  	      output_asm_insn (AS2 (fcomip, %y1,%0), operands);
++ #endif
+  	      output_asm_insn (AS1 (fstp, %y0), operands);
+  	      if (!TARGET_IEEE_FP)
+  		cc0_set = 0; 
+***************
+*** 4179,4184 ****
+--- 4196,4216 ----
+  
+        /* Decide if this is a float compare or an unordered float compare. */
+  
++ #if SYSV386_COMPAT == 1
++       if (unordered_compare)
++ 	strcpy (buf, "fucom");
++       else
++ 	strcpy (buf, "fcom");
++ 
++       /* Modify the opcode if the 387 stack is to be popped. */
++ 
++       if (stack_top_dies)
++ 	strcat (buf, "p");
++ 
++       if (cc_status.flags & CC_FCOMI)
++ 	strcat (buf, "i");
++ 
++ #else
+        if (unordered_compare)
+  	strcpy (buf, (cc_status.flags & CC_FCOMI) ? "fucomi" : "fucom");
+        else
+***************
+*** 4188,4197 ****
+--- 4220,4234 ----
+  
+        if (stack_top_dies)
+  	strcat (buf, "p");
++ #endif
+  
+        if (cc_status.flags & CC_FCOMI)
+  	{
++ #if SYSV386_COMPAT == 1
++ 	  output_asm_insn (strcat (buf, AS1 (%z1,%y1)), operands);
++ #else
+  	  output_asm_insn (strcat (buf, AS2 (%z1,%y1,%0)), operands);
++ #endif
+  	  if (!TARGET_IEEE_FP)
+  	    cc0_set = 0; 
+  	}
+***************
+*** 5382,5393 ****
+--- 5419,5458 ----
+      {
+      case 0:
+        /* r <- cond ? arg : r */
++ #if SYSV386_COMPAT == 1
++       switch (GET_MODE (operands[0]))
++ 	{
++ 	case SImode:
++ 	  output_asm_insn (AS2 (cmov%C1%L0,%2,%0), operands);
++ 	  break;
++ 	case HImode:
++ 	  output_asm_insn (AS2 (cmov%C1%W0,%2,%0), operands);
++ 	  break;
++ 	default:
++ 	  abort ();
++       }
++ #else
+        output_asm_insn (AS2 (cmov%C1,%2,%0), operands);
++ #endif
+        break;
+  
+      case 1:
+        /* r <- cond ? r : arg */
++ #if SYSV386_COMPAT == 1
++       switch (GET_MODE (operands[0]))
++ 	{
++ 	case SImode:
++ 	  output_asm_insn (AS2 (cmov%c1%L0,%3,%0), operands);
++ 	  break;
++ 	case HImode:
++ 	  output_asm_insn (AS2 (cmov%c1%W0,%3,%0), operands);
++ 	  break;
++ 	default:
++ 	  abort ();
++       }
++ #else
+        output_asm_insn (AS2 (cmov%c1,%3,%0), operands);
++ #endif
+        break;
+  
+      default:
+*** ./gcc/config/i386/t-sysv5.osr6	Sun Jul  3 20:09:25 2005
+--- ./gcc/config/i386/t-sysv5	Sun Jul  3 20:09:25 2005
+***************
+*** 0 ****
+--- 1,24 ----
++ 
++ # For --enable-shared and -enabled-threads=posix, the C++ runtime will
++ # have calls to pthread_mutex[un]lock(). These must be handled with
++ # stub routines whenever an a.out is not linked with -lthreads (compiled
++ # with -pthread).
++ #
++ # To accomplish this on sysv5 systems, we will build an additional archive,
++ # libpthrstubs.a which be added to the link line prior to crtend.o
++ 
++ sysv5-pthr-stubs.o: $(srcdir)/sysv5-pthr-stubs.c
++ 	$(GCC_FOR_TARGET) $(LIBGCC2_CFLAGS) $(INCLUDES) -c -DL$${name} \
++ 	    $(MAYBE_USE_COLLECT2) $(srcdir)/sysv5-pthr-stubs.c -o $@
++ 
++ libpthrstubs.a: sysv5-pthr-stubs.o
++ 	-rm -rf libpthrstubs.a tmplibpthrstubs.a 
++ 	$(AR_FOR_TARGET) $(AR_FLAGS_FOR_TARGET) tmplibpthrstubs.a \
++ 	      sysv5-pthr-stubs.o
++ 	-if $(RANLIB_TEST_FOR_TARGET) ; then \
++ 	  $(RANLIB_FOR_TARGET) tmplibpthrstubs.a; \
++ 	else true; fi
++ # Like libgcc.a actually build it in tmplibpthrstubs.a, then rename at end,
++ # so that libpthrstubs.a itself remains nonexistent if compilation is aborted.
++ 	mv tmplibpthrstubs.a libpthrstubs.a
++ 
+*** ./gcc/f/Makefile.in.osr6	Wed Dec 16 13:16:32 1998
+--- ./gcc/f/Makefile.in	Sun Jul  3 20:09:25 2005
+***************
+*** 129,135 ****
+  INTERNAL_CFLAGS = $(CROSS) -DIN_GCC @extra_c_flags@
+  
+  # This is the variable actually used when we compile.
+! ALL_CFLAGS = $(INTERNAL_CFLAGS) $(X_CFLAGS) $(T_CFLAGS) $(CFLAGS) $(XCFLAGS) -W -Wall
+  
+  # Likewise.
+  ALL_CPPFLAGS = $(CPPFLAGS) $(X_CPPFLAGS) $(T_CPPFLAGS)
+--- 129,135 ----
+  INTERNAL_CFLAGS = $(CROSS) -DIN_GCC @extra_c_flags@
+  
+  # This is the variable actually used when we compile.
+! ALL_CFLAGS = $(INTERNAL_CFLAGS) $(X_CFLAGS) $(T_CFLAGS) $(CFLAGS) $(XCFLAGS) -Wall
+  
+  # Likewise.
+  ALL_CPPFLAGS = $(CPPFLAGS) $(X_CPPFLAGS) $(T_CPPFLAGS)
+*** ./gcc/fixinc/fixinc.svr4.osr6	Thu Jul  1 17:40:24 1999
+--- ./gcc/fixinc/fixinc.svr4	Sun Jul  3 20:09:25 2005
+***************
+*** 1572,1578 ****
+  
+  # If arpa/inet.h prototypes are incompatible with the ones we just
+  # installed in <sys/byteorder.h>, just remove the protos.
+- set -x
+  file=arpa/inet.h
+  base=`basename $file`
+  if [ -r ${LIB}/$file ]; then
+--- 1572,1577 ----
+***************
+*** 1601,1606 ****
+--- 1600,1900 ----
+    rm -f /tmp/$base
+  fi
+  
++ # The UnixWare UDK Feature Supplement 7.1.1b  and Open UNIX 8.0 DK included
++ # much of the C99 standard and the complete C++ standard library.  With
++ # that, the system header files have been modified.
++ #
++ # The following group of edits are targeted specifically for fixing up those
++ # modified headers to work with GCC.
++ 
++ UW7orOU8=no
++ case ${target_alias} in
++   i?86-*-sysv5*)
++     UW7orOU8=yes
++     ;;
++   *)		# not UW7 or OU8 configure, but may be part of UW7/OU8 package install
++     if [ `uname -s` = UnixWare ] &&  expr `uname -v` : 7\.1\.* > /dev/null
++     then
++       UW7orOU8=yes;
++     elif [ `uname -s` = OpenUNIX ] &&  expr `uname -v` : 8\.*\.* > /dev/null
++     then
++       UW7orOU8=yes;
++     fi
++     ;;
++ esac
++ 
++ if [ ${UW7orOU8} = yes ]
++ then
++ 
++   # Remove the C++ definition of long "int" abs() in UW7 UDK FS 7.1.1b
++   # and Open UNIX 8.0 header file stdlib.h.  The function is declared in the
++   # GNU C++ header cstdlib.
++   #
++   # Also The UDK FS and Open UNIX C++ headers contain C++ version of the
++   # standard functions abort(), exit(), atexit(), bsearch() and qsort().
++   # At least GCC 2.95.3 is expecting to see these declarations in stdlib.h.
++   # Remove the preprocessing conditionals that limit the visibility of these
++   # function declarations to C and cfront.
++   #
++   # Make the static wrapper functions getlogin_r and ttyname_r "static
++   # inline" functions.
++ 
++   file="stdlib.h"
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e 's/^inline[	 ]*long[ 	]*abs/\/\/ &/' \
++         -e '/^#if[ 	]*!defined(__cplusplus)[	 ]*\|\|[ 	]*defined(_CFRONT_3_0)/{
++            h
++            N
++            /extern[ 	]*void[	 ]*abort/{
++              :loop1
++                h
++                N
++                /#endif/!b loop1
++                g
++                D
++                }
++            /extern[ 	]*void[	 ]*\*bsearch/{
++              :loop2
++                h
++                N
++                /#endif/!b loop2
++                g
++                D
++                }
++            h
++            g
++            } ' \
++         -e '/^static int/{
++            N
++            /getlogin_r(/s/static/& inline/
++            /ttyname_r(/s/static/& inline/
++            } ' $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++   # Remove the C++ definition of float/double/long double abs() in UW7
++   # UDK FS 7.1.1b and Open UNIX 8.0 header file math.h.  The functions are
++   # declared in the GNU C++ header cmath.
++   #
++   # Also the definition of HUGE_VAL with the UDK FS and following
++   # Open UNIX 8.x OS releases now uses a compond literal constant to
++   # set the bit patterns.  Modify that to be acceptable to GCC.
++   #
++   # The UDK __builtin_generic() function to determine floating point
++   # type is not available in gcc.  Readapt to use the GCC internal
++   # __builtin_classify_type () and type size to determine FP type
++ 
++   file="math.h"
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e 's/^inline[ 	]*float[ 	]*abs/\/\/ &/' \
++         -e 's/^inline[ 	]*double abs/\/\/ &/' \
++         -e 's/^inline[ 	]*long[	 ]*double[ 	]*abs/\/\/ &/' \
++         -e '/__LDU/s/+(/__extension__((/' \
++         -e '/__LDU/s/\.__c=/__c:/' \
++         -e '/__LDU/s/\.__x)/)&/' \
++ 	-e '/#define[ 	]*__fp_class(a)/i\
++ /* Values returned by __builtin_classify_type.  */\
++ enum __va_type_classes {\
++   __no_type_class = -1,\
++   __void_type_class,\
++   __integer_type_class,\
++   __char_type_class,\
++   __enumeral_type_class,\
++   __boolean_type_class,\
++   __pointer_type_class,\
++   __reference_type_class,\
++   __offset_type_class,\
++   __real_type_class,\
++   __complex_type_class,\
++   __function_type_class,\
++   __method_type_class,\
++   __record_type_class,\
++   __union_type_class,\
++   __array_type_class,\
++   __string_type_class,\
++   __set_type_class,\
++   __file_type_class,\
++   __lang_type_class\
++ };\
++ ' \
++ 	-e '/#define[ 	]*__fp_class(a)/a\
++ 	(__builtin_classify_type (a) == __real_type_class \\\
++ 	     ? (sizeof(a) == sizeof( long double) \\\
++ 		  ? __fpclassifyl(a) \\\
++ 		  : (sizeof (a) == sizeof(float) ? __fpclassifyf(a) : __fpclassify(a))) \\\
++ 	     : __fpclassify(a))
++ ' \
++ 	-e '/__builtin_generic(a,"ld:__fpclassifyl/d' \
++ 	        $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++   # Remove the C++ definition of void exit() in namespace "std" in UW7
++   # UDK FS 7.1.1b and Open UNIX 8.0 header file unistd.h.
++   #
++   # Make the static wrapper functions getlogin_r and ttyname_r "static
++   # inline" functions.
++ 
++   file="unistd.h"
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e 's/^namespace[ 	]*std.*[ 	]*void[	 ]*exit/\/\/ &/' \
++         -e '/^static int/{
++            N
++            /getlogin_r(/s/static/& inline/
++            /ttyname_r(/s/static/& inline/
++            } ' $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++   # Make the 4 static wrapper functions, stat, fstat, mknod, and lstat defined
++   # sys/stat.h "static inline" functions.
++ 
++   file=sys/stat.h
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e '/^static int/{
++            N
++            /mknod(/s/static/& inline/
++            /stat(/s/static/& inline/
++            }'  $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++   # Add the fifteenth zero initializer in the PTHREAD_MUTEX_INITIALIZER
++   # macro of pthread.h, if necessary
++ 
++   file=pthread.h
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e '/PTHREAD_MUTEX_INITIALIZER/s/{0,0,0,0,0,0,0,0,0,0,0,0,0,0}/{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}/' \
++            $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++   # GCC 2.95.3 cannot handle hexadecimal floating point constants.  Replace
++   # those in syslimits.h with something that GCC can use.
++ 
++   file=syslimits.h
++   base=`basename $file`
++   if [ -r ${LIB}/$file ]; then
++     file_to_fix=${LIB}/$file
++   else
++     if [ -r ${INPUT}/$file ]; then
++       file_to_fix=${INPUT}/$file
++     else
++       file_to_fix=""
++     fi
++   fi
++   if [ \! -z "$file_to_fix" ]; then
++     echo Checking $file_to_fix
++     sed -e '/PTHREAD_MUTEX_INITIALIZER/s/{0,0,0,0,0,0,0,0,0,0,0,0,0,0}/{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}/' \
++            $file_to_fix > /tmp/$base
++     if cmp $file_to_fix /tmp/$base >/dev/null 2>&1; then \
++       true
++     else
++       echo Fixed $file_to_fix
++       rm -f ${LIB}/$file
++       cp /tmp/$base ${LIB}/$file
++       chmod a+r ${LIB}/$file
++     fi
++     rm -f /tmp/$base
++   fi
++ 
++ fi        # UnixWare 7.1.x  and Open UNIX 8.x specific/only changes
++   
+  echo 'Removing unneeded directories:'
+  cd $LIB
+  files=`find . -type d \! -name '.' -print | sort -r`
+*** ./gcc/fold-const.c.osr6	Thu Jan 25 06:03:14 2001
+--- ./gcc/fold-const.c	Sun Jul  3 20:09:25 2005
+***************
+*** 530,536 ****
+    encode (den, lden, hden);
+  
+    /* Special code for when the divisor < BASE.  */
+!   if (hden == 0 && lden < (HOST_WIDE_INT) BASE)
+      {
+        /* hnum != 0 already checked.  */
+        for (i = 4 - 1; i >= 0; i--)
+--- 530,536 ----
+    encode (den, lden, hden);
+  
+    /* Special code for when the divisor < BASE.  */
+!   if (hden == 0 && (unsigned HOST_WIDE_INT)lden < (HOST_WIDE_INT) BASE)
+      {
+        /* hnum != 0 already checked.  */
+        for (i = 4 - 1; i >= 0; i--)
+***************
+*** 688,694 ****
+  	     < (unsigned HOST_WIDE_INT) htwice)
+  	    || (((unsigned HOST_WIDE_INT) habs_den
+  		 == (unsigned HOST_WIDE_INT) htwice)
+! 		&& ((HOST_WIDE_INT unsigned) labs_den
+  		    < (unsigned HOST_WIDE_INT) ltwice)))
+  	  {
+  	    if (*hquo < 0)
+--- 688,694 ----
+  	     < (unsigned HOST_WIDE_INT) htwice)
+  	    || (((unsigned HOST_WIDE_INT) habs_den
+  		 == (unsigned HOST_WIDE_INT) htwice)
+! 		&& ((unsigned HOST_WIDE_INT) labs_den
+  		    < (unsigned HOST_WIDE_INT) ltwice)))
+  	  {
+  	    if (*hquo < 0)
+*** ./gcc/version.c.osr6	Fri Mar 16 04:52:12 2001
+--- ./gcc/version.c	Sun Jul  3 20:09:25 2005
+***************
+*** 1 ****
+! char *version_string = "2.95.3 20010315 (release)";
+--- 1 ----
+! char *version_string = "2.95.3pl1 f - 20040710 (build) - UW7.1.4";
+*** ./gcc/frame.c.osr6	Thu Jan 25 06:03:15 2001
+--- ./gcc/frame.c	Sun Jul  3 20:09:25 2005
+***************
+*** 297,305 ****
+  {
+    size_t count = linear->count;
+    size_t linear_max = (size_t) -1;
+!   size_t previous_max[count];
+    size_t i, j;
+  
+    for (i = 0; i < count; i++)
+      {
+        for (j = linear_max;
+--- 297,306 ----
+  {
+    size_t count = linear->count;
+    size_t linear_max = (size_t) -1;
+!   size_t *previous_max;
+    size_t i, j;
+  
++   previous_max = malloc (sizeof (size_t) * count);
+    for (i = 0; i < count; i++)
+      {
+        for (j = linear_max;
+***************
+*** 318,323 ****
+--- 319,325 ----
+      if (linear->array[i] != (fde *) NULL)
+        linear->array[j++] = linear->array[i];
+    linear->count = j;
++   free(previous_max);
+  }
+  
+  /* This is O(n log(n)).  BSD/OS defines heapsort in stdlib.h, so we must
+*** ./gcc/configure.in.osr6	Thu Jan 25 06:03:02 2001
+--- ./gcc/configure.in	Sun Jul  3 20:09:25 2005
+***************
+*** 1436,1445 ****
+                 then
+                         tm_file="${tm_file} dbx.h"
+                 fi
+!                tmake_file=i386/t-crtpic
+                 xmake_file=x-svr4
+!                extra_parts="crtbegin.o crtend.o"
+! 	       if test x$enable_threads = xyes; then
+  		       thread_file='posix'
+  	       fi
+                 ;;
+--- 1436,1445 ----
+                 then
+                         tm_file="${tm_file} dbx.h"
+                 fi
+!                tmake_file="i386/t-crtpic i386/t-sysv5"
+                 xmake_file=x-svr4
+!                extra_parts="crtbegin.o crtend.o libpthrstubs.a"
+! 	       if test x$enable_threads = xyes | test x$enable_threads = xposix; then
+  		       thread_file='posix'
+  	       fi
+                 ;;
+***************
+*** 4424,4429 ****
+--- 4424,4432 ----
+  AC_SUBST_FILE(language_fragments)
+  AC_SUBST_FILE(language_hooks)
+  
++ AC_SUBST(EXTRA_OS_LIBS)
++ 
++ 
+  # Echo that links are built
+  if test x$host = x$target
+  then
+*** ./gcc/configure.osr6	Fri Mar 16 06:13:48 2001
+--- ./gcc/configure	Sun Jul  3 20:09:25 2005
+***************
+*** 3786,3797 ****
+                 then
+                         tm_file="${tm_file} dbx.h"
+                 fi
+!                tmake_file=i386/t-crtpic
+                 xmake_file=x-svr4
+!                extra_parts="crtbegin.o crtend.o"
+! 	       if test x$enable_threads = xyes; then
+  		       thread_file='posix'
+  	       fi
+                 ;;
+  	i[34567]86-*-sysv4*)		# Intel 80386's running system V.4
+  		xm_file="xm-siglist.h xm-alloca.h ${xm_file}"
+--- 3786,3799 ----
+                 then
+                         tm_file="${tm_file} dbx.h"
+                 fi
+!                tmake_file="i386/t-crtpic i386/t-sysv5"
+                 xmake_file=x-svr4
+!                extra_parts="crtbegin.o crtend.o libpthrstubs.a"
+! 	       if test x$enable_threads = xyes | test x$enable_threads = xposix; then
+  		       thread_file='posix'
+  	       fi
++                # Force local_prefix to be whatever prefix was set 
++                local_prefix=${prefix}
+                 ;;
+  	i[34567]86-*-sysv4*)		# Intel 80386's running system V.4
+  		xm_file="xm-siglist.h xm-alloca.h ${xm_file}"
+***************
+*** 8587,8592 ****
+--- 8589,8597 ----
+  
+  
+  
++ 
++ 
++ 
+  # Echo that links are built
+  if test x$host = x$target
+  then
+***************
+*** 8887,8892 ****
+--- 8892,8898 ----
+  s%@language_fragments@%%g
+  /@language_hooks@/r $language_hooks
+  s%@language_hooks@%%g
++ s%@EXTRA_OS_LIBS@%$EXTRA_OS_LIBS%g
+  
+  CEOF
+  EOF
+*** ./gcc/sysv5-pthr-stubs.c.osr6	Sun Jul  3 20:09:25 2005
+--- ./gcc/sysv5-pthr-stubs.c	Sun Jul  3 20:09:25 2005
+***************
+*** 0 ****
+--- 1,96 ----
++ /* Pthread stub routines for GCC on SYSV5 (UnixWare 7.1.1 and Open Unix 8.0)
++    when building C++ STL and --enable-shared.
++ /* Compile this one with gcc.  */
++ /* Copyright (C) 2001 Free Software Foundation, Inc.
++ 
++ This file is part of GNU CC.
++ 
++ GNU CC is free software; you can redistribute it and/or modify
++ it under the terms of the GNU General Public License as published by
++ the Free Software Foundation; either version 2, or (at your option)
++ any later version.
++ 
++ GNU CC is distributed in the hope that it will be useful,
++ but WITHOUT ANY WARRANTY; without even the implied warranty of
++ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ GNU General Public License for more details.
++ 
++ You should have received a copy of the GNU General Public License
++ along with GNU CC; see the file COPYING.  If not, write to
++ the Free Software Foundation, 59 Temple Place - Suite 330,
++ Boston, MA 02111-1307, USA.  */
++ 
++ /* As a special exception, if you link this library with other files,
++    some of which are compiled with GCC, to produce an executable,
++    this library does not by itself cause the resulting executable
++    to be covered by the GNU General Public License.
++    This exception does not however invalidate any other reasons why
++    the executable file might be covered by the GNU General Public License.  */
++ 
++ /* It is incorrect to include config.h here, because this file is being
++    compiled for the target, and hence definitions concerning only the host
++    do not apply.  */
++ 
++ #include "tconfig.h"
++ 
++ /* We disable this when inhibit_libc, so that gcc can still be built without
++    needing header files first.  */
++ /* ??? This is not a good solution, since prototypes may be required in
++    some cases for correct code.  See also frame.c.  */
++ #ifndef inhibit_libc
++ /* fixproto guarantees these system headers exist. */
++ #include <stdlib.h>
++ #include <unistd.h>
++ #endif
++ 
++ #include "machmode.h"
++ #include "defaults.h" 
++ #ifndef L_trampoline
++ #include <stddef.h>
++ #endif
++ 
++ /* Don't use `fancy_abort' here even if config.h says to use it.  */
++ #ifdef abort
++ #undef abort
++ #endif
++ 
++ #if (SUPPORTS_WEAK == 1) && (defined (ASM_OUTPUT_DEF) || defined (ASM_OUTPUT_WEAK_ALIAS))
++ #define WEAK_ALIAS
++ #endif
++ 
++ /* In a cross-compilation situation, default to inhibiting compilation
++    of routines that use libc.  */
++ 
++ #if defined(CROSS_COMPILE) && !defined(inhibit_libc)
++ #define inhibit_libc
++ #endif
++ 
++ /* Permit the tm.h file to select the endianness to use just for this
++    file.  This is used when the endianness is determined when the
++    compiler is run.  */
++ 
++ #ifndef LIBGCC2_WORDS_BIG_ENDIAN
++ #define LIBGCC2_WORDS_BIG_ENDIAN WORDS_BIG_ENDIAN
++ #endif
++ 
++ #ifndef LIBGCC2_LONG_DOUBLE_TYPE_SIZE
++ #define LIBGCC2_LONG_DOUBLE_TYPE_SIZE LONG_DOUBLE_TYPE_SIZE
++ #endif
++ 
++ 
++ 
++ /* Weak definitions of pthread_mutex_lock() and pthread_mutex_unlock()
++    for UnixWare 7.1.x and Open UNIX 8.0.x when threads are enabled */
++ 
++ #include "gthr.h"
++ 
++ 
++ int
++ _pthread_return_zero (__gthread_mutex_t *__dummy)
++ {
++   return 0;
++ }
++ 
++ #pragma weak pthread_mutex_lock = _pthread_return_zero
++ #pragma weak pthread_mutex_trylock = _pthread_return_zero
++ #pragma weak pthread_mutex_unlock = _pthread_return_zero
+*** ./gcc/Makefile.in.osr6	Thu Jan 25 06:02:58 2001
+--- ./gcc/Makefile.in	Sun Jul  3 20:09:25 2005
+***************
+*** 577,583 ****
+  
+  # How to link with both our special library facilities
+  # and the system's installed libraries.
+! LIBS = $(OBSTACK) $(USE_ALLOCA) $(MALLOC) $(INTLLIBS) @LIBS@ $(VFPRINTF) $(DOPRINT) $(CLIB) ../libiberty/libiberty.a
+  
+  # Likewise, for use in the tools that must run on this machine
+  # even if we are cross-building GCC.
+--- 577,583 ----
+  
+  # How to link with both our special library facilities
+  # and the system's installed libraries.
+! LIBS = $(OBSTACK) $(USE_ALLOCA) $(MALLOC) $(INTLLIBS) @LIBS@ $(VFPRINTF) $(DOPRINT) $(CLIB) ../libiberty/libiberty.a @EXTRA_OS_LIBS@
+  
+  # Likewise, for use in the tools that must run on this machine
+  # even if we are cross-building GCC.
+***************
+*** 2166,2172 ****
+  	$(SHELL) ./fixinc.sh `pwd`/include $(SYSTEM_HEADER_DIR) $(OTHER_FIXINCLUDES_DIRS)
+  	rm -f include/syslimits.h
+  	if [ -f include/limits.h ]; then \
+! 	  mv include/limits.h include/syslimits.h; \
+  	else \
+  	  cp $(srcdir)/gsyslimits.h include/syslimits.h; \
+  	fi
+--- 2166,2177 ----
+  	$(SHELL) ./fixinc.sh `pwd`/include $(SYSTEM_HEADER_DIR) $(OTHER_FIXINCLUDES_DIRS)
+  	rm -f include/syslimits.h
+  	if [ -f include/limits.h ]; then \
+! 	  sed \
+! 	    -e 's|^[ 	]*#define[ 	]*DBL_MAX[ 	]*0x1\.f.*|#define	DBL_MAX		1.7976931348623157e+308	/* max value of a "double" */|' \
+! 	    -e 's|^[ 	]*#define[ 	]*FLT_MAX[ 	]*0x1\.f.*|#define	FLT_MAX		3.40282347e+38F /* max value of a "float" */|' \
+! 	    -e 's|^[ 	]*#define[ 	]*DBL_MIN[ 	]*0x1\..*|#define	DBL_MIN		2.2250738585072014e-308	/* min value of a "double" */|' \
+! 	    -e 's|^[ 	]*#define[ 	]*FLT_MIN[ 	]*0x1\..*|#define	FLT_MIN		1.17549435e-38F	/* min value of a "float" */|' \
+! 	    include/limits.h > include/syslimits.h; \
+  	else \
+  	  cp $(srcdir)/gsyslimits.h include/syslimits.h; \
+  	fi
+*** ./libchill/basicio.c.osr6	Mon Jan 11 05:09:11 1999
+--- ./libchill/basicio.c	Sun Jul  3 20:09:25 2005
+***************
+*** 47,52 ****
+--- 47,55 ----
+  #endif
+  #endif
+  #endif
++ #ifndef PATH_MAX
++ #define PATH_MAX 1024
++ #endif
+  
+  static
+  void
+*** ./libiberty/configure.in.osr6	Sun Jun 20 22:00:24 1999
+--- ./libiberty/configure.in	Sun Jul  3 20:09:25 2005
+***************
+*** 300,305 ****
+--- 300,317 ----
+      AC_DEFINE(HAVE_SYS_ERRLIST)
+      ;;
+  
++   *-*-sysv5*)
++     # On UnixWare 7 and Open UNIX 8, the tests for the availability of
++     # sys_nerr and sys_errlist will see these obsolete symbols that
++     # are only available in the static porotion of libc.so.  This is 
++     # fine when building archives, but not shared objects.
++     if test $enable_shared = yes; then
++       vars="`echo $vars | sed -e 's/sys_nerr//' -e 's/sys_errlist//'`"
++       libiberty_cv_var_sys_nerr=no
++       libiberty_cv_var_sys_errlist=no
++     fi
++     ;;
++ 
+    esac
+  
+    # We haven't set the list of objects yet.  Use the standard autoconf
+*** ./libio/configure.in.osr6	Mon Jun 28 19:31:46 1999
+--- ./libio/configure.in	Sun Jul  3 20:09:25 2005
+***************
+*** 141,146 ****
+--- 141,153 ----
+      XCINCLUDES='-I. -I$(srcdir) -I$(srcdir)/../winsup/include'
+      XCXXINCLUDES='-I. -I$(srcdir) -I$(srcdir)/../winsup/include'
+      ;;
++   *-*-sysv5*)
++     # For the UnixWare UDK FS 7.1.1b and OU 8.0.x release, there may
++     # be #include of C++ header files by some C system header files
++     # modified by the fixinc.svr4 if __cplusplus is defined.
++     XCINCLUDES='-I. -I$(srcdir) -I$(srcdir)/../libstdc++'
++     XCXXINCLUDES='-I. -I$(srcdir) -I$(srcdir)/../libstdc++'
++     ;;
+    *)
+      XCINCLUDES='-I. -I$(srcdir)'
+      XCXXINCLUDES='-I. -I$(srcdir)'
+*** ./libstdc++/config/elf.ml.osr6	Sun Aug 30 14:18:42 1998
+--- ./libstdc++/config/elf.ml	Sun Jul  3 20:09:25 2005
+***************
+*** 2,8 ****
+  # for programs that don't use complex.
+  
+  LIBS    = $(ARLIB) $(ARLINK) $(SHLIB) $(SHLINK)
+! SHFLAGS = -h $(SHLIB)
+  DEPLIBS = ../$(SHLIB)
+  LDLIBS  = -L.. -lstdc++ -lm
+  MLDLIBS = -L.. -lstdc++ -lm
+--- 2,8 ----
+  # for programs that don't use complex.
+  
+  LIBS    = $(ARLIB) $(ARLINK) $(SHLIB) $(SHLINK)
+! SHFLAGS = -h $(libdir)/$(SHLIB)
+  DEPLIBS = ../$(SHLIB)
+  LDLIBS  = -L.. -lstdc++ -lm
+  MLDLIBS = -L.. -lstdc++ -lm
+*** ./Build-OSR6.osr6	Sun Jul  3 20:09:25 2005
+--- ./Build-OSR6	Sun Jul  3 20:12:26 2005
+***************
+*** 0 ****
+--- 1,73 ----
++ #! /bin/ksh
++ 
++ rm -rf osr6
++ mkdir osr6
++ cd osr6
++ 
++ #
++ #  configure
++ #
++ 
++ [ -f ../mout-configure ] && mv ../mout-configure ../mout-configure-prev
++ 
++ CC="/usr/ccs/bin/cc -Xb" ../configure \
++ 	--prefix=/usr/gnu --host=i586-sco-sysv5 \
++ 	--enable-threads=posix --enable-shared \
++ 	--without-gnu-as --with-as=/usr/ccs/bin/as \
++         --with-ld=/usr/ccs/bin/ld \
++ 	2>&1 | tee ../mout-configure
++ 
++ #
++ #   make clean
++ #
++ gmake clean 2>&1 | tee log.gmk.clean
++ 
++ 
++ #
++ #   make bootstrap
++ #
++ 
++ #gmake bootstrap > log.gmk.bootstrap 2>&1
++ [ -f ../mout ] && mv ../mout ../mout-prev
++ touch  ../gcc/c-gperf.h
++ gmake MAKEINFO="makeinfo --no-split"  bootstrap-lean 2>&1 | tee ../mout
++ gmake MAKEINFO="makeinfo --no-split"  info 2>&1 | tee ../mout-info
++ 
++ #
++ #   make tests
++ #
++ 
++ gmake -k check RUNTESTFLAGS="--target_board 'unix{-march=i386,-march=i486,-march=i586,-march=i686,-fpic,-fPIC,-pthread,}'" 2>&1 | tee log.gmk.tests.LARGE
++ 
++ ../contrib/test_summary > test_summary 
++ mv test_summary test_summary.LARGE
++ 
++ 
++ gmake -k check 2>&1 | tee log.gmk.tests.SIMPLE
++ 
++ ../contrib/test_summary > test_summary 
++ mv test_summary test_summary.SIMPLE
++ 
++ 
++ #
++ #  Install in packaging directory
++ #
++ 
++ [ -f ../mout-install ] && mv ../mout-install ../mout-install-prev
++ 
++ gmake install \
++         prefix=`pwd`/dist/usr/gnu \
++         mandir=`pwd`/dist/usr/gnu/man \
++         infodir=`pwd`/dist/usr/gnu/info \
++         MAKEINFO="makeinfo --no-split" 2>&1 | tee ../mout-install
++ 
++ # fix some things
++ cp gcc/fixinc.sh `pwd`/dist
++ rm -f `pwd`/dist/usr/gnu/info/dir
++ gzip -9 `pwd`/dist/usr/gnu/info/*.info*
++ 
++ ln -sf g77.1 `pwd`/dist/usr/gnu/man/man1/f77.1
++ ln -sf g77 `pwd`/dist/usr/gnu/bin/f77
++ 
++ ln -sf cccp.1 `pwd`/dist/usr/gnu/man/man1/cpp.1
++ 
+*** ./config.guess.osr6	Tue Mar  7 20:52:57 2000
+--- ./config.guess	Sun Jul  3 20:09:25 2005
+***************
+*** 740,756 ****
+  		echo ${UNAME_MACHINE}-pc-sysv${UNAME_RELEASE}
+  	fi
+  	exit 0 ;;
+!     i?86:*:5:7*)
+         UNAME_REL=`(/bin/uname -X|egrep Release|sed -e 's/.*= //')`
+         (/bin/uname -X|egrep i80486 >/dev/null) && UNAME_MACHINE=i486
+         (/bin/uname -X|egrep '^Machine.*Pentium' >/dev/null) \
+                 && UNAME_MACHINE=i586
+- # 5.0.4c returns "Pent II".  5.0.5 returns PentII
+         (/bin/uname -X|egrep '^Machine.*Pent.*II' >/dev/null) \
+                 && UNAME_MACHINE=i686
+         (/bin/uname -X|egrep '^Machine.*Pentium Pro' >/dev/null) \
+                 && UNAME_MACHINE=i686
+!        echo ${UNAME_MACHINE}-${UNAME_SYSTEM}${UNAME_VERSION}-sysv${UNAME_RELEASE}
+         exit 0 ;;
+      i?86:*:3.2:*)
+  	if test -f /usr/options/cb.name; then
+--- 740,759 ----
+  		echo ${UNAME_MACHINE}-pc-sysv${UNAME_RELEASE}
+  	fi
+  	exit 0 ;;
+!     i?86:*:5:[78]*)
+         UNAME_REL=`(/bin/uname -X|egrep Release|sed -e 's/.*= //')`
+         (/bin/uname -X|egrep i80486 >/dev/null) && UNAME_MACHINE=i486
+         (/bin/uname -X|egrep '^Machine.*Pentium' >/dev/null) \
+                 && UNAME_MACHINE=i586
+         (/bin/uname -X|egrep '^Machine.*Pent.*II' >/dev/null) \
+                 && UNAME_MACHINE=i686
++        (/bin/uname -X|egrep '^Machine.*Celeron' >/dev/null) \
++                && UNAME_MACHINE=i686
+         (/bin/uname -X|egrep '^Machine.*Pentium Pro' >/dev/null) \
+                 && UNAME_MACHINE=i686
+!        (/bin/uname -X|egrep '^Machine.*Pentium 4' >/dev/null) \
+!                && UNAME_MACHINE=i686
+!        echo ${UNAME_MACHINE}-unknown-sysv${UNAME_RELEASE}${UNAME_SYSTEM}${UNAME_VERSION}
+         exit 0 ;;
+      i?86:*:3.2:*)
+  	if test -f /usr/options/cb.name; then
+--- Install-OSR6.osr6	2005-07-03 21:23:04.930000025 -0700
++++ Install-OSR6	2005-07-03 21:24:38.670000011 -0700
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gcc
++prefix=$D/usr/gnu
++export prefix
++
++cd osr6
++[ -f ../$MOUT ] && mv ../$MOUT ../$MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install prefix=$D/usr/gnu 2>&1 | tee ../$MOUT

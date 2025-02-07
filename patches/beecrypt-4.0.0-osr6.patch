@@ -1,0 +1,256 @@
+*** ./configure.osr6 Wed Jul 28 00:16:11 2004
+--- ./configure Wed May 25 17:55:26 2005
+***************
+*** 1038,1044 ****
+    --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+    --enable-debug          creates debugging code default=no
+    --enable-threads        enables multithread support default=yes
+!   --enable-aio            enables asynchronous i/o for entropy gathering default=yes
+    --disable-dependency-tracking  speeds up one-time build
+    --enable-dependency-tracking   do not reject slow dependency extractors
+    --enable-shared[=PKGS]
+--- 1038,1044 ----
+    --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+    --enable-debug          creates debugging code default=no
+    --enable-threads        enables multithread support default=yes
+!   --enable-aio            enables asynchronous i/o for entropy gathering default=no
+    --disable-dependency-tracking  speeds up one-time build
+    --enable-dependency-tracking   do not reject slow dependency extractors
+    --enable-shared[=PKGS]
+***************
+*** 2235,2241 ****
+    fi
+  
+  else
+!   ac_enable_aio=yes
+  fi;
+  
+  
+--- 2235,2241 ----
+    fi
+  
+  else
+!   ac_enable_aio=no
+  fi;
+  
+  
+***************
+*** 6780,6791 ****
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; } then
+        bc_cv_as_noexecstack=yes
+-       if test "$ac_cv_c_compiler_gnu" = yes; then
+-          CFLAGS="$CFLAGS -Wa,--noexecstack"
+-       fi
+-       if test "$ac_cv_cxx_compiler_gnu" = yes; then
+-          CXXFLAGS="$CXXFLAGS -Wa,--noexecstack"
+-       fi
+      else
+        bc_cv_as_noexecstack=no
+      fi
+--- 6780,6785 ----
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; } then
+        bc_cv_as_noexecstack=yes
+      else
+        bc_cv_as_noexecstack=no
+      fi
+***************
+*** 7268,7274 ****
+    esac
+    ;;
+  
+! sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+--- 7262,7268 ----
+    esac
+    ;;
+  
+! sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+***************
+*** 9719,9725 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 9713,9719 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 10410,10418 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 10404,10411 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 13594,13600 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+--- 13587,13593 ----
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+***************
+*** 16628,16634 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 16621,16627 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 17299,17307 ****
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+--- 17292,17299 ----
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 18976,18982 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+--- 18968,18974 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+***************
+*** 19667,19675 ****
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+--- 19659,19666 ----
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+*** ./Build-OSR6.osr6 Wed May 25 16:35:26 2005
+--- ./Build-OSR6 Wed May 25 17:50:08 2005
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="gcc -D_REENTRANT"
++ CXX="g++ -D_REENTRANT"
++ CFLAGS="-O2"
++ export CC CXX CFLAGS
++ rm -f mout-configure
++ 
++ ./configure --prefix=/usr --sysconfdir=/etc --program-prefix="" --enable-shared \
++       --localstatedir=/var --infodir='/usr/gnu/info' --mandir='/usr/man' \
++       --without-cplusplus --without-java --without-python --without-gnu-ld \
++       --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ gmake 2>&1 | tee mout
++ 
+*** ./Makefile.in.osr6 Wed Jul 28 00:16:06 2004
+--- ./Makefile.in Wed May 25 18:04:04 2005
+***************
+*** 302,308 ****
+  libbeecrypt_la_SOURCES = aes.c base64.c beecrypt.c blockmode.c blockpad.c blowfish.c dhaes.c dldp.c dlkp.c dlpk.c dlsvdp-dh.c dsa.c elgamal.c endianness.c entropy.c fips186.c hmac.c hmacmd5.c hmacsha1.c hmacsha256.c md5.c memchunk.c mp.c mpbarrett.c mpnumber.c mpprime.c mtprng.c pkcs1.c pkcs12.c rsa.c rsakp.c rsapk.c sha1.c sha256.c timestamp.c cppglue.cxx
+  libbeecrypt_la_DEPENDENCIES = $(BEECRYPT_OBJECTS)
+  libbeecrypt_la_LIBADD = aesopt.lo blowfishopt.lo mpopt.lo sha1opt.lo
+! libbeecrypt_la_LDFLAGS = -no-undefined -version-info $(LIBBEECRYPT_LT_CURRENT):$(LIBBEECRYPT_LT_REVISION):$(LIBBEECRYPT_LT_AGE)
+  pkginclude_HEADERS = aes.h aesopt.h api.h base64.h beecrypt.h blockmode.h blockpad.h blowfish.h blowfishopt.h dhaes.h dldp.h dlkp.h dlpk.h dlsvdp-dh.h dsa.h elgamal.h endianness.h entropy.h fips186.h gnu.h hmac.h hmacmd5.h hmacsha1.h hmacsha256.h md5.h memchunk.h mp.h mpbarrett.h mpnumber.h mpopt.h mpprime.h mtprng.h pkcs1.h pkcs12.h rsa.h rsakp.h rsapk.h sha1.h sha1opt.h sha256.h timestamp.h win.h
+  noinst_HEADERS = aes_be.h aes_le.h
+  EXTRA_DIST = BENCHMARKS BUGS CONTRIBUTORS README.DLL README.WIN32 Doxyheader beecrypt.rc autogen.sh Makefile.mak
+--- 302,308 ----
+  libbeecrypt_la_SOURCES = aes.c base64.c beecrypt.c blockmode.c blockpad.c blowfish.c dhaes.c dldp.c dlkp.c dlpk.c dlsvdp-dh.c dsa.c elgamal.c endianness.c entropy.c fips186.c hmac.c hmacmd5.c hmacsha1.c hmacsha256.c md5.c memchunk.c mp.c mpbarrett.c mpnumber.c mpprime.c mtprng.c pkcs1.c pkcs12.c rsa.c rsakp.c rsapk.c sha1.c sha256.c timestamp.c cppglue.cxx
+  libbeecrypt_la_DEPENDENCIES = $(BEECRYPT_OBJECTS)
+  libbeecrypt_la_LIBADD = aesopt.lo blowfishopt.lo mpopt.lo sha1opt.lo
+! libbeecrypt_la_LDFLAGS = -version-info $(LIBBEECRYPT_LT_CURRENT):$(LIBBEECRYPT_LT_REVISION):$(LIBBEECRYPT_LT_AGE)
+  pkginclude_HEADERS = aes.h aesopt.h api.h base64.h beecrypt.h blockmode.h blockpad.h blowfish.h blowfishopt.h dhaes.h dldp.h dlkp.h dlpk.h dlsvdp-dh.h dsa.h elgamal.h endianness.h entropy.h fips186.h gnu.h hmac.h hmacmd5.h hmacsha1.h hmacsha256.h md5.h memchunk.h mp.h mpbarrett.h mpnumber.h mpopt.h mpprime.h mtprng.h pkcs1.h pkcs12.h rsa.h rsakp.h rsapk.h sha1.h sha1opt.h sha256.h timestamp.h win.h
+  noinst_HEADERS = aes_be.h aes_le.h
+  EXTRA_DIST = BENCHMARKS BUGS CONTRIBUTORS README.DLL README.WIN32 Doxyheader beecrypt.rc autogen.sh Makefile.mak
+*** ./Install-OSR6.osr6 Wed May 25 17:48:37 2005
+--- ./Install-OSR6 Wed May 25 17:48:20 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ RPM_BUILD_ROOT=/var/tmp/beecrypt-4.0.0-root
++ export RPM_BUILD_ROOT
++ 
++ [ -f mout-install ] && mv mout-install mout-install-prev
++ [ "$RPM_BUILD_ROOT" != "/" ] && [ -d $RPM_BUILD_ROOT ] && rm -rf $RPM_BUILD_ROOT
++ make DESTDIR="$RPM_BUILD_ROOT" install 2>&1 | tee mout-install
++ 

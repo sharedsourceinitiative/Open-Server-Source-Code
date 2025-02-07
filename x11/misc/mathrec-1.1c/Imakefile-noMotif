@@ -1,0 +1,8 @@
+
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+SUBDIRS = libXrr endo lyap coral hop julia lds splines spore xtopo
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))

@@ -1,0 +1,105 @@
+--- ./splash/SplashFTFont.h.uw	2004-01-22 01:26:44.000000000 +0000
++++ ./splash/SplashFTFont.h	2004-12-02 22:08:50.520000015 +0000
+@@ -15,7 +15,8 @@
+ #pragma interface
+ #endif
+ 
+-#include <freetype/freetype.h>
++#include <ft2build.h>
++#include FT_FREETYPE_H
+ #include "SplashFont.h"
+ 
+ class SplashFTFontFile;
+--- ./splash/SplashFTFontEngine.h.uw	2004-01-22 01:26:44.000000000 +0000
++++ ./splash/SplashFTFontEngine.h	2004-12-02 22:08:50.520000027 +0000
+@@ -15,7 +15,8 @@
+ #pragma interface
+ #endif
+ 
+-#include <freetype/freetype.h>
++#include <ft2build.h>
++#include FT_FREETYPE_H
+ #include "gtypes.h"
+ 
+ class SplashFontFile;
+--- ./splash/SplashFTFontFile.h.uw	2004-01-22 01:26:44.000000000 +0000
++++ ./splash/SplashFTFontFile.h	2004-12-02 22:08:50.520000039 +0000
+@@ -15,7 +15,8 @@
+ #pragma interface
+ #endif
+ 
+-#include <freetype/freetype.h>
++#include <ft2build.h>
++#include FT_FREETYPE_H
+ #include "SplashFontFile.h"
+ 
+ class SplashFontFileID;
+--- ./xpdf/XPDFViewer.cc.uw	2004-01-22 01:26:45.000000000 +0000
++++ ./xpdf/XPDFViewer.cc	2004-12-02 22:09:53.820000023 +0000
+@@ -1741,8 +1741,10 @@
+   //----- fonts
+   aboutBigFont =
+     createFontList("-*-times-bold-i-normal--20-*-*-*-*-*-iso8859-1");
++  // aboutVersionFont =
++    // createFontList("-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1");
+   aboutVersionFont =
+-    createFontList("-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1");
++    createFontList("-*-times-bold-r-normal--12-*-*-*-*-*-iso8859-1");
+   aboutFixedFont =
+     createFontList("-*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1");
+ 
+--- ./configure.uw	2004-01-22 01:26:44.000000000 +0000
++++ ./configure	2004-12-02 22:08:50.530000052 +0000
+@@ -3794,13 +3794,13 @@
+ echo "${ECHO_T}$ac_cv_func_gethostbyname" >&6
+ 
+     if test $ac_cv_func_gethostbyname = no; then
+-      echo "$as_me:$LINENO: checking for gethostbyname in -lnsl" >&5
+-echo $ECHO_N "checking for gethostbyname in -lnsl... $ECHO_C" >&6
++      echo "$as_me:$LINENO: checking for gethostbyname in -lsocket -lnsl" >&5
++echo $ECHO_N "checking for gethostbyname in -lsocket -lnsl... $ECHO_C" >&6
+ if test "${ac_cv_lib_nsl_gethostbyname+set}" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lnsl  $LIBS"
++LIBS="-lsocket -lnsl  $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -3849,7 +3849,7 @@
+ echo "$as_me:$LINENO: result: $ac_cv_lib_nsl_gethostbyname" >&5
+ echo "${ECHO_T}$ac_cv_lib_nsl_gethostbyname" >&6
+ if test $ac_cv_lib_nsl_gethostbyname = yes; then
+-  X_EXTRA_LIBS="$X_EXTRA_LIBS -lnsl"
++  X_EXTRA_LIBS="$X_EXTRA_LIBS -lsocket -lnsl"
+ fi
+ 
+       if test $ac_cv_lib_nsl_gethostbyname = no; then
+@@ -4001,7 +4001,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lsocket $X_EXTRA_LIBS $LIBS"
++LIBS="-lsocket -lnsl $X_EXTRA_LIBS $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -4050,7 +4050,7 @@
+ echo "$as_me:$LINENO: result: $ac_cv_lib_socket_connect" >&5
+ echo "${ECHO_T}$ac_cv_lib_socket_connect" >&6
+ if test $ac_cv_lib_socket_connect = yes; then
+-  X_EXTRA_LIBS="-lsocket $X_EXTRA_LIBS"
++  X_EXTRA_LIBS="-lsocket -lnsl $X_EXTRA_LIBS"
+ fi
+ 
+     fi
+@@ -8115,7 +8115,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lXm $Xm_CFLAGS $X_CFLAGS $Xm_LIBS $Xt_LIBS $X_LIBS $X_PRE_LIBS $Xp_LIBS $Xext_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
++LIBS="$Xm_CFLAGS $X_CFLAGS $Xm_LIBS $Xt_LIBS $X_LIBS $X_PRE_LIBS $Xp_LIBS $Xext_LIBS $X_EXTRA_LIBS -lX11 $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */

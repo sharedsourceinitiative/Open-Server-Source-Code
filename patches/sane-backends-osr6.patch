@@ -1,0 +1,70 @@
+*** ./sanei/sanei_scsi.c.osr6	Thu Nov 24 14:08:49 2005
+--- ./sanei/sanei_scsi.c	Fri Mar 16 13:08:43 2007
+***************
+*** 127,132 ****
+--- 127,133 ----
+  # ifdef HAVE_SYS_SDI_COMM_H
+  #  ifdef HAVE_SYS_PASSTHRUDEF_H
+  #   define USE SCO_UW71_INTERFACE
++ #   include <libsdi.h>
+  #   include <sys/scsi.h>
+  #   include <sys/sdi_edt.h>
+  #   include <sys/sdi.h>
+*** ./backend/dell1600n_net.c.osr6	Mon Jun 19 14:07:52 2006
+--- ./backend/dell1600n_net.c	Fri Mar 16 13:18:29 2007
+***************
+*** 70,75 ****
+--- 70,76 ----
+  /* :NOTE: these are likely to be platform-specific! */
+  #include <sys/types.h>
+  #include <sys/socket.h>
++ #include <sys/time.h>
+  #include <netinet/in.h>
+  #include <netdb.h>
+  
+*** ./Configure-OSR6.osr6	Fri Mar 16 13:08:43 2007
+--- ./Configure-OSR6	Fri Mar 16 13:12:30 2007
+***************
+*** 0 ****
+--- 1,24 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ ac_cv_type_u_int8_t=yes
++ ac_cv_type_u_int16_t=yes
++ ac_cv_type_u_int32_t=yes
++ export ac_cv_type_u_int8_t ac_cv_type_u_int16_t ac_cv_type_u_int32_t
++ rm -f mout-configure
++ LIBS="-lsdi" ./configure --prefix=/usr --sysconfdir=/etc --disable-ipv6 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Fri Mar 16 13:22:15 2007
+--- ./Install-OSR6	Fri Mar 16 13:22:37 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/sane
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

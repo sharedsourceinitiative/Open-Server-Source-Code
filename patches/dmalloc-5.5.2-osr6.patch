@@ -1,0 +1,82 @@
+*** ./configure.osr6	Mon May 14 10:26:14 2007
+--- ./configure	Wed Jul 18 17:46:48 2007
+***************
+*** 4443,4450 ****
+              ac_cv_shared_link_args='# Could not configure shlib linking'
+              enable_shlib=no
+            fi
+!        elif (ld -shared --whole-archive -soname conftest.so -o conftest.so.t conftest.a) 2>&5; then
+! 		ac_cv_shared_link_args='ld -shared --whole-archive -soname $@ -o $@.t'
+  	elif (ld -shared -o conftest.so.t -all -soname conftest.so.t -none -lc -all conftest.a) 2>&5; then
+  		ac_cv_shared_link_args='ld -shared -o $@.t -all -soname $@ -none -lc -all'
+  	elif (ld -G -o conftest.so.t conftest.a) 2>&5; then
+--- 4443,4450 ----
+              ac_cv_shared_link_args='# Could not configure shlib linking'
+              enable_shlib=no
+            fi
+!        elif (cc -G -Wl,-h,conftest.so -o conftest.so.t conftest.a) 2>&5; then
+! 		ac_cv_shared_link_args='cc -G -Wl,-h,$@ -o $@.t'
+  	elif (ld -shared -o conftest.so.t -all -soname conftest.so.t -none -lc -all conftest.a) 2>&5; then
+  		ac_cv_shared_link_args='ld -shared -o $@.t -all -soname $@ -none -lc -all'
+  	elif (ld -G -o conftest.so.t conftest.a) 2>&5; then
+*** ./Build-OSR6.osr6	Wed Jul 18 17:46:48 2007
+--- ./Build-OSR6	Wed Jul 18 17:46:48 2007
+***************
+*** 0 ****
+--- 1,38 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --enable-threads --enable-shlib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT
++ 
++ MOUT=mout-threads
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make threads 2>&1 | tee $MOUT
++ 
++ MOUT=mout-threadscxx
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make threadscxx 2>&1 | tee $MOUT
++ 
++ MOUT=mout-threadscxxsl
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make threadscxxsl 2>&1 | tee $MOUT
++ 
+*** ./Install-OSR6.osr6	Wed Jul 18 17:46:48 2007
+--- ./Install-OSR6	Wed Jul 18 17:55:36 2007
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/dmalloc
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install prefix=$D/usr 2>&1 | tee $MOUT
++ make installthcxx prefix=$D/usr 2>&1 | tee $MOUT-cxx
++ make installthcxxsl prefix=$D/usr 2>&1 | tee $MOUT-cxxsl
++ make installdocs prefix=$D/usr 2>&1 | tee $MOUT-docs
++ 

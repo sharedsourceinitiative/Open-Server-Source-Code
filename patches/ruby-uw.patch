@@ -1,0 +1,33 @@
+--- ./missing/flock.c.uw	2002-12-15 13:52:48.000000000 +0000
++++ ./missing/flock.c	2003-12-11 18:35:35.570000034 +0000
+@@ -1,6 +1,6 @@
+ #include "config.h"
+ 
+-#if defined HAVE_FCNTL && defined HAVE_FCNTL_H
++#if defined HAVE_FCNTL && defined HAVE_FCNTL_H && !defined(__USLC__)
+ 
+ /* These are the flock() constants.  Since this sytems doesn't have
+    flock(), the values of the constants are probably not available.
+--- ./configure.in.uw	2003-12-11 18:35:35.000000000 +0000
++++ ./configure.in	2003-12-11 18:37:08.000000017 +0000
+@@ -753,6 +753,7 @@
+ 	hpux*)		CCDLFLAGS='+Z';;
+ 	solaris*|irix*)	CCDLFLAGS='-KPIC' ;;
+ 	sunos*)		CCDLFLAGS='-PIC' ;;
++	sysv5*)		CCDLFLAGS='-KPIC' ;;
+ 	esix*|uxpds*)   CCDLFLAGS='-KPIC' ;;
+ 	*)		CCDLFLAGS='' ;;
+     esac
+@@ -775,6 +776,12 @@
+ 			rb_cv_dlopen=yes;;
+ 	sunos*) 	LDSHARED='ld -assert nodefinitions'
+ 			rb_cv_dlopen=yes;;
++	sysv5*) 	if test "$GCC" = yes; then
++			   LDSHARED='$(CC) -shared'
++			else
++			   LDSHARED='ld -G'
++			fi
++			rb_cv_dlopen=yes;;
+ 	irix*)		LDSHARED='ld -shared'
+ 			rb_cv_dlopen=yes;;
+ 	sysv4*) 	LDSHARED='ld -G'

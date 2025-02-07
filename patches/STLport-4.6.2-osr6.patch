@@ -1,0 +1,701 @@
+*** ./src/gcc.mak.osr6	Sun Jan 25 07:14:21 2004
+--- ./src/gcc.mak	Mon Sep  4 12:29:27 2006
+***************
+*** 36,42 ****
+  
+  WARNING_FLAGS= -Wall -W -Wno-sign-compare -Wno-unused -Wno-uninitialized -ftemplate-depth-32 -frtti
+  
+! CXXFLAGS_COMMON = -I${STLPORT_DIR} ${WARNING_FLAGS}
+  
+  CXXFLAGS_RELEASE_static = $(CXXFLAGS_COMMON) -O2
+  CXXFLAGS_RELEASE_dynamic = $(CXXFLAGS_COMMON) -O2 -fPIC
+--- 36,42 ----
+  
+  WARNING_FLAGS= -Wall -W -Wno-sign-compare -Wno-unused -Wno-uninitialized -ftemplate-depth-32 -frtti
+  
+! CXXFLAGS_COMMON = -DSCO -I${STLPORT_DIR} ${WARNING_FLAGS}
+  
+  CXXFLAGS_RELEASE_static = $(CXXFLAGS_COMMON) -O2
+  CXXFLAGS_RELEASE_dynamic = $(CXXFLAGS_COMMON) -O2 -fPIC
+*** ./src/num_put_float.cpp.osr6	Sun Nov  2 00:58:51 2003
+--- ./src/num_put_float.cpp	Mon Sep  4 12:29:27 2006
+***************
+*** 51,58 ****
+--- 51,60 ----
+  # if defined (__sun) || defined (__digital__) || defined (__sgi) || defined (_STLP_SCO_OPENSERVER) || defined (__NCR_SVR)
+  // DEC, SGI & Solaris need this
+  #  include <values.h>
++ #if !defined(SCO)
+  #  include <nan.h>
+  # endif
++ # endif
+  
+  # if defined (__QNXNTO__) || ( defined(__GNUC__) && defined(__APPLE__) )
+  #  define USE_SPRINTF_INSTEAD
+*** ./src/sysv5.mak.osr6	Mon Sep  4 12:29:27 2006
+--- ./src/sysv5.mak	Mon Sep  4 12:29:27 2006
+***************
+*** 0 ****
+--- 1,73 ----
++ CC=cc
++ CXX=CC
++ LIB_BASENAME=libstlport_sysv5
++ 
++ CUR_DIR= ${TOP}/
++ 
++ STL_INCL= -I. -I$(TOP)/stlport
++ OUTDIR=$(TOP)/lib
++ 
++ #
++ # guts for common stuff
++ #
++ #
++ LINK=ar cr
++ DYN_LINK=$(CXX) -G -o
++ 
++ OBJEXT=o
++ DYNEXT=so
++ STEXT=a
++ RM=rm -rf
++ PATH_SEP=/
++ MKDIR=mkdir -p
++ INSTALL_STEP = install_unix
++ PREPARE_STEP =
++ 
++ all: all_dynamic symbolic_links  all_static
++ 
++ include common_macros.mak
++ 
++ CXXFLAGS_COMMON = ${STL_INCL} $(EXTRA_COMMON_FLAGS)
++ 
++ SHCXXFLAGS = -KPIC
++ 
++ DEBUG_FLAGS = -g +w2 -D_STLP_DEBUG
++ 
++ #
++ # Try those flags to see if they help to get maximum efficiency :
++ # -Qoption iropt -R,-Ml30,-Ms30,-Mi1000000,-Mm1000000,-Mr1000000,-Ma1000000,-Mc1000000,-Mt1000000
++ RELEASE_FLAGS =
++ 
++ 
++ # install: $(TARGETS)
++ #	cp -p $(TARGETS) ${INSTALLDIR}
++ 
++ RELEASE_static_rep = 
++ RELEASE_dynamic_rep = 
++ DEBUG_static_rep = 
++ DEBUG_dynamic_rep = 
++ STLDEBUG_static_rep = 
++ STLDEBUG_dynamic_rep = 
++ 
++ CXXFLAGS_RELEASE_static = $(CXXFLAGS_COMMON) ${RELEASE_FLAGS} ${RELEASE_static_rep}
++ CXXFLAGS_RELEASE_dynamic = $(CXXFLAGS_COMMON) ${RELEASE_FLAGS} $(SHCXXFLAGS) ${RELEASE_dynamic_rep}
++ 
++ CXXFLAGS_DEBUG_static = $(CXXFLAGS_COMMON) -g ${DEBUG_static_rep}
++ CXXFLAGS_DEBUG_dynamic = $(CXXFLAGS_COMMON) -g $(SHCXXFLAGS) ${DEBUG_dynamic_rep}
++ 
++ CXXFLAGS_STLDEBUG_static = $(CXXFLAGS_COMMON) -g ${STLDEBUG_static_rep} -D_STLP_DEBUG
++ CXXFLAGS_STLDEBUG_dynamic = $(CXXFLAGS_COMMON) -g $(SHCXXFLAGS) ${STLDEBUG_dynamic_rep} -D_STLP_DEBUG
++ 
++ 
++ LDFLAGS_RELEASE_static = ${ATOMIC_ASM}
++ LDFLAGS_RELEASE_dynamic = ${CXXFLAGS_RELEASE_dynamic} -h${RELEASE_DYNLIB_SONAME} ${ATOMIC_ASM}
++ 
++ LDFLAGS_DEBUG_static = ${ATOMIC_ASM}
++ LDFLAGS_DEBUG_dynamic = ${CXXFLAGS_DEBUG_dynamic} -h${DEBUG_DYNLIB_SONAME} ${ATOMIC_ASM}
++ 
++ LDFLAGS_STLDEBUG_static = ${ATOMIC_ASM}
++ LDFLAGS_STLDEBUG_dynamic = ${CXXFLAGS_STLDEBUG_dynamic} -h${STLDEBUG_DYNLIB_SONAME} ${ATOMIC_ASM}
++ 
++ include common_percent_rules.mak
++ 
++ include common_rules.mak
+*** ./stlport/stl/_threads.c.osr6	Sun Nov  2 00:59:05 2003
+--- ./stlport/stl/_threads.c	Mon Sep  4 12:29:27 2006
+***************
+*** 83,88 ****
+--- 83,89 ----
+  extern "C" int __nanosleep(const struct timespec*, struct timespec*);
+  # define _STLP_NANOSLEEP __nanosleep
+  #else
++ extern "C" int nanosleep(const struct timespec*, struct timespec*);
+  # define _STLP_NANOSLEEP nanosleep
+  #endif
+  
+*** ./stlport/stl/c_locale.h.osr6	Sun Nov  2 00:59:03 2003
+--- ./stlport/stl/c_locale.h	Mon Sep  4 12:29:27 2006
+***************
+*** 153,159 ****
+  
+  #endif /* IRIX */
+  
+- 
+  #if defined( __Lynx__ )
+   /* azov: On Lynx isalpha defined as (_U | _L), which gives us a mask 
+    * unusable in ctype_table. So we have to redefine it and use hard-coded 
+--- 153,158 ----
+***************
+*** 401,406 ****
+--- 400,415 ----
+  #  define _Locale_SPACE  __dj_ISSPACE
+  #  define _Locale_PRINT  __dj_ISPRINT
+  #  define _Locale_ALPHA  __dj_ISALPHA
++ #elif defined (SCO)
++ # define _Locale_CNTRL _C
++ # define _Locale_UPPER _U
++ # define _Locale_LOWER _L
++ # define _Locale_DIGIT _N
++ # define _Locale_XDIGIT (_N|_X)
++ # define _Locale_PUNCT _P
++ # define _Locale_SPACE _S
++ # define _Locale_PRINT (_P|_U|_L|_N|_B)
++ # define _Locale_ALPHA (_U|_L)
+  #elif defined (_STLP_SCO_OPENSERVER)
+  #  define _Locale_CNTRL _C
+  #  define _Locale_UPPER _U
+*** ./stlport/config/stl_gcc.h.osr6	Sun Nov  2 00:59:11 2003
+--- ./stlport/config/stl_gcc.h	Mon Sep  4 22:31:03 2006
+***************
+*** 7,19 ****
+  # define _STLP_USE_GLIBC
+  #endif
+  
+! #   define _STLP_NO_MEMBER_TEMPLATE_KEYWORD
+  
+  # if defined(__FreeBSD__) || defined (__hpux) || defined(__amigaos__) || ( defined(__OS2__) && defined(__EMX__) )
+  #  define _STLP_NO_WCHAR_T
+  # endif
+  
+! #ifdef __USLC__
+  # include <config/stl_sco.h>
+  #endif
+  
+--- 7,19 ----
+  # define _STLP_USE_GLIBC
+  #endif
+  
+! // #   define _STLP_NO_MEMBER_TEMPLATE_KEYWORD
+  
+  # if defined(__FreeBSD__) || defined (__hpux) || defined(__amigaos__) || ( defined(__OS2__) && defined(__EMX__) )
+  #  define _STLP_NO_WCHAR_T
+  # endif
+  
+! #if defined(__USLC__) || defined(SCO) || defined(_SCO_DS)
+  # include <config/stl_sco.h>
+  #endif
+  
+*** ./stlport/config/stl_sco.h.osr6	Sun Nov  2 00:59:11 2003
+--- ./stlport/config/stl_sco.h	Mon Sep  4 22:31:22 2006
+***************
+*** 1,29 ****
+  // SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x)
+  
+  
+! #  define _STLP_NO_BAD_ALLOC 1
+  
+  // allocator::rebind used not to work properly
+  // #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1
+  // #  define _STLP_NO_MEMBER_TEMPLATE_KEYWORD 1
+  
+! #  define _STLP_NO_FRIEND_TEMPLATES 1
+! #  define _STLP_NO_QUALIFIED_FRIENDS 1
+  
+  
+  // #  define _STLP_NO_DEFAULT_NON_TYPE_PARAM 1
+  
+  //#  define _STLP_HAS_NO_NEW_IOSTREAMS 1
+  //#  define _STLP_HAS_NO_NEW_C_HEADERS 1
+  
+- // ???
+  //#  define _STLP_STATIC_CONST_INIT_BUG 1
+- 
+- // ???
+  //#  define _STLP_LINK_TIME_INSTANTIATION 1
+! 
+! // ???
+! #  define _STLP_NO_TEMPLATE_CONVERSIONS 1
+  
+  #     define _STLP_LONG_LONG long long
+  
+--- 1,25 ----
+  // SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x)
+  
+  
+! // #  define _STLP_NO_BAD_ALLOC 1
+  
+  // allocator::rebind used not to work properly
+  // #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1
+  // #  define _STLP_NO_MEMBER_TEMPLATE_KEYWORD 1
+  
+! // #  define _STLP_NO_FRIEND_TEMPLATES 1
+! // #  define _STLP_NO_QUALIFIED_FRIENDS 1
+  
++ #  define _STLP_UNIX 1
+  
+  // #  define _STLP_NO_DEFAULT_NON_TYPE_PARAM 1
+  
+  //#  define _STLP_HAS_NO_NEW_IOSTREAMS 1
+  //#  define _STLP_HAS_NO_NEW_C_HEADERS 1
+  
+  //#  define _STLP_STATIC_CONST_INIT_BUG 1
+  //#  define _STLP_LINK_TIME_INSTANTIATION 1
+! // #  define _STLP_NO_TEMPLATE_CONVERSIONS 1
+  
+  #     define _STLP_LONG_LONG long long
+  
+*** ./test/eh/sysv5.mak.osr6	Mon Sep  4 12:29:27 2006
+--- ./test/eh/sysv5.mak	Mon Sep  4 12:29:27 2006
+***************
+*** 0 ****
+--- 1,118 ----
++ # ;;; -*- Mode:makefile;-*- 
++ # Generated automatically from Makefile.in by configure.
++ # This requires GNU make.
++ 
++ srcdir = .
++ VPATH = .
++ SHELL=/bin/sh
++ 
++ # point this to proper location
++ STL_INCL=-I../../stlport
++ 
++ AUX_LIST=TestClass.cpp main.cpp nc_alloc.cpp random_number.cpp
++ 
++ TEST_LIST=test_algo.cpp  \
++ test_algobase.cpp     test_list.cpp test_slist.cpp \
++ test_bit_vector.cpp   test_vector.cpp \
++ test_deque.cpp test_set.cpp test_map.cpp \
++ test_hash_map.cpp  test_hash_set.cpp test_rope.cpp \
++ test_string.cpp test_bitset.cpp test_valarray.cpp
++ 
++ LIST=${AUX_LIST} ${TEST_LIST}
++ 
++ OBJECTS = $(LIST:%.cpp=obj/%.o) $(STAT_MODULE)
++ D_OBJECTS = $(LIST:%.cpp=d_obj/%.o) $(STAT_MODULE)
++ NOSGI_OBJECTS = $(LIST:%.cpp=nosgi_obj/%.o) $(STAT_MODULE)
++ 
++ EXECS = $(LIST:%.cpp=%)
++ TESTS = $(LIST:%.cpp=%.out)
++ TEST_EXE  = ./eh_test
++ D_TEST_EXE = ./eh_test_d
++ NOSGI_TEST_EXE = ./eh_test_nosgi
++ 
++ TEST  = ./eh_test.out
++ D_TEST = ./eh_test_d.out
++ NOSGI_TEST = ./eh_test_nosgi.out
++ 
++ CC = cc -Kpthread
++ CXX = CC -Kpthread
++ 
++ CXXFLAGS = ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DEH_VECTOR_OPERATOR_NEW -DEH_DELETE_HAS_THROW_SPEC
++ D_CXXFLAGS = -g ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DEH_VECTOR_OPERATOR_NEW -D_STLP_DEBUG -D_STLP_USE_STATIC_LIB
++ NOSGI_CXXFLAGS = -g ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -D_STLP_NO_OWN_IOSTREAMS -D_STLP_DEBUG_UNINITIALIZED -DEH_VECTOR_OPERATOR_NEW
++ 
++ check: $(TEST)
++ 
++ LIBS = -lm 
++ D_LIBSTLPORT = -L../../lib -lstlport_sysv5_stldebug
++ LIBSTLPORT = -L../../lib -lstlport_sysv5
++ 
++ all: $(TEST_EXE) $(D_TEST_EXE) $(NOSGI_TEST_EXE)
++ 
++ check_nosgi: $(NOSGI_TEST)
++ check_d: $(D_TEST)
++ 
++ 
++ OBJDIR=obj
++ D_OBJDIR=d_obj
++ NOSGI_OBJDIR=nosgi_obj
++ 
++ $(OBJDIR):
++ 	mkdir obj
++ $(D_OBJDIR):
++ 	mkdir d_obj
++ $(NOSGI_OBJDIR):
++ 	mkdir nosgi_obj
++ 
++ $(TEST_EXE) : $(OBJDIR) $(OBJECTS)
++ 	$(CXX) $(CXXFLAGS) $(OBJECTS) $(LIBSTLPORT) $(LIBS) -o $(TEST_EXE)
++ 
++ $(D_TEST_EXE) : $(D_OBJDIR) $(D_OBJECTS)
++ 	$(CXX) $(D_CXXFLAGS) $(D_OBJECTS) $(D_LIBSTLPORT) $(LIBS) -o $(D_TEST_EXE)
++ 
++ $(NOSGI_TEST_EXE) : $(NOSGI_OBJDIR) $(NOSGI_OBJECTS)
++ 	$(CXX) $(NOSGI_CXXFLAGS) $(NOSGI_OBJECTS) $(LIBS) -o $(NOSGI_TEST_EXE)
++ 
++ $(TEST) : $(TEST_EXE)
++ 	LD_LIBRARY_PATH="../../lib" time ./$(TEST_EXE) -s 100
++ 
++ $(D_TEST) : $(D_TEST_EXE)
++ 	LD_LIBRARY_PATH="../../lib" ./$(D_TEST_EXE) -s 100
++ 
++ 
++ $(NOSGI_TEST) : $(NOSGI_TEST_EXE)
++ 	$(NOSGI_TEST_EXE)
++ 
++ SUFFIXES: .cpp.o.exe.out.res
++ 
++ nosgi_obj/%.o : %.cpp
++ 	$(CXX) $(NOSGI_CXXFLAGS) $< -c -o $@
++ 
++ d_obj/%.o : %.cpp
++ 	$(CXX) $(D_CXXFLAGS) $< -c -o $@
++ 
++ obj/%.o : %.cpp
++ 	$(CXX) $(CXXFLAGS) $< -c -o $@
++ 
++ nosgi_obj/%.i : %.cpp
++ 	$(CXX) $(NOSGI_CXXFLAGS) $< -E -H > $@
++ 
++ d_obj/%.i : %.cpp
++ 	$(CXX) $(D_CXXFLAGS) $< -E -H > $@
++ 
++ obj/%.i : %.cpp
++ 	$(CXX) $(CXXFLAGS) $< -E -H > $@
++ 
++ %.out: %.cpp
++ 	$(CXX) $(CXXFLAGS) $< -c -USINGLE -DMAIN -o $*.o
++ 	$(CXX) $(CXXFLAGS) $*.o $(LIBSTLPORT) $(LIBS) -o $*
++ 	./$* > $@
++ 
++ %.s: %.cpp
++ 	$(CXX) $(CXXFLAGS) -S -pto $<  -o $@
++ 
++ %.E: %.cpp
++ 	$(CXX) $(CXXFLAGS) -E $<  -o $@
++ 
++ clean:
++ 	-rm -fr ${TEST_EXE} *.o */*.o *.rpo *.obj *.out core *~ Templates.DB
+*** ./test/eh/gcc.mak.osr6	Sun Nov  2 00:58:53 2003
+--- ./test/eh/gcc.mak	Mon Sep  4 13:19:38 2006
+***************
+*** 40,48 ****
+  # dwa 12/22/99 -- had to turn off -ansi flag so we could use SGI IOSTREAMS
+  # also, test_slist won't compile with -O3/-O2 when targeting PPC. It fails 
+  # in the assembler with 'invalid relocation type'
+! CXXFLAGS = -Wall -O ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DEH_VECTOR_OPERATOR_NEW
+! D_CXXFLAGS = -Wall -g -O ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DEH_VECTOR_OPERATOR_NEW -D_STLP_DEBUG -D_STLP_USE_STATIC_LIB
+! NOSGI_CXXFLAGS = -Wall -g -O2 ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -D_STLP_NO_OWN_IOSTREAMS -D_STLP_DEBUG_UNINITIALIZED -DEH_VECTOR_OPERATOR_NEW
+  
+  check: $(TEST)
+  
+--- 40,48 ----
+  # dwa 12/22/99 -- had to turn off -ansi flag so we could use SGI IOSTREAMS
+  # also, test_slist won't compile with -O3/-O2 when targeting PPC. It fails 
+  # in the assembler with 'invalid relocation type'
+! CXXFLAGS = -Wall -O ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DSCO -DEH_VECTOR_OPERATOR_NEW
+! D_CXXFLAGS = -Wall -g -O ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DSCO -DEH_VECTOR_OPERATOR_NEW -D_STLP_DEBUG -D_STLP_USE_STATIC_LIB
+! NOSGI_CXXFLAGS = -Wall -g -O2 ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} -DSCO -D_STLP_NO_OWN_IOSTREAMS -D_STLP_DEBUG_UNINITIALIZED -DEH_VECTOR_OPERATOR_NEW
+  
+  check: $(TEST)
+  
+*** ./test/regression/sysv5.mak.osr6	Mon Sep  4 12:29:27 2006
+--- ./test/regression/sysv5.mak	Mon Sep  4 12:29:27 2006
+***************
+*** 0 ****
+--- 1,167 ----
++ # ;;; -*- Mode:makefile;-*- 
++ # Generated automatically from Makefile.in by configure.
++ # This requires GNU make.
++ .SUFFIXES:	.cc .cpp .o .exe .out
++ 
++ srcdir = .
++ VPATH = .
++ 
++ STL_INCL=-I../../stlport
++ 
++ LIST  = stl_test.cpp accum1.cpp accum2.cpp \
++ 	adjdiff0.cpp adjdiff1.cpp adjdiff2.cpp \
++ 	adjfind0.cpp adjfind1.cpp adjfind2.cpp \
++ 	advance.cpp \
++ 	alg1.cpp alg2.cpp alg3.cpp alg4.cpp alg5.cpp \
++ 	bcompos1.cpp bcompos2.cpp \
++ 	bind1st1.cpp bind1st2.cpp \
++ 	bind2nd1.cpp bind2nd2.cpp \
++ 	binsert1.cpp binsert2.cpp \
++ 	binsrch1.cpp binsrch2.cpp \
++ 	bnegate1.cpp bnegate2.cpp bvec1.cpp \
++ 	copy1.cpp copy2.cpp copy3.cpp copy4.cpp \
++ 	copyb.cpp copyb0.cpp \
++ 	count0.cpp count1.cpp \
++ 	countif1.cpp \
++ 	deque1.cpp \
++ 	divides.cpp \
++ 	eqlrnge0.cpp eqlrnge1.cpp eqlrnge2.cpp \
++ 	equal0.cpp equal1.cpp equal2.cpp \
++ 	equalto.cpp \
++ 	fill1.cpp filln1.cpp \
++ 	find0.cpp find1.cpp \
++ 	findif0.cpp findif1.cpp \
++ 	finsert1.cpp finsert2.cpp \
++ 	foreach0.cpp foreach1.cpp \
++ 	func1.cpp func2.cpp func3.cpp \
++ 	gener1.cpp gener2.cpp \
++ 	genern1.cpp genern2.cpp \
++ 	greateq.cpp greater.cpp \
++ 	incl0.cpp incl1.cpp incl2.cpp \
++ 	inplmrg1.cpp inplmrg2.cpp \
++ 	inrprod0.cpp inrprod1.cpp inrprod2.cpp \
++ 	insert1.cpp insert2.cpp \
++ 	iota1.cpp \
++ 	istmit1.cpp \
++ 	iter1.cpp iter2.cpp iter3.cpp iter4.cpp \
++ 	iterswp0.cpp iterswp1.cpp \
++ 	less.cpp \
++ 	lesseq.cpp \
++ 	lexcmp1.cpp lexcmp2.cpp \
++ 	list1.cpp list2.cpp list3.cpp list4.cpp \
++ 	logicand.cpp logicnot.cpp \
++ 	logicor.cpp \
++ 	lwrbnd1.cpp lwrbnd2.cpp \
++ 	map1.cpp \
++ 	max1.cpp max2.cpp \
++ 	maxelem1.cpp maxelem2.cpp \
++ 	memfunptr.cpp \
++ 	merge0.cpp merge1.cpp merge2.cpp \
++ 	min1.cpp min2.cpp \
++ 	minelem1.cpp minelem2.cpp \
++ 	minus.cpp \
++ 	mismtch0.cpp mismtch1.cpp mismtch2.cpp \
++ 	mkheap0.cpp mkheap1.cpp \
++ 	mmap1.cpp mmap2.cpp \
++ 	modulus.cpp \
++ 	mset1.cpp mset3.cpp mset4.cpp mset5.cpp \
++ 	negate.cpp nequal.cpp \
++ 	nextprm0.cpp nextprm1.cpp nextprm2.cpp \
++ 	nthelem0.cpp nthelem1.cpp nthelem2.cpp \
++ 	ostmit.cpp \
++ 	pair0.cpp pair1.cpp pair2.cpp \
++ 	parsrt0.cpp parsrt1.cpp parsrt2.cpp \
++ 	parsrtc0.cpp parsrtc1.cpp parsrtc2.cpp \
++ 	partsrt0.cpp \
++ 	partsum0.cpp partsum1.cpp partsum2.cpp \
++ 	pheap1.cpp pheap2.cpp \
++ 	plus.cpp \
++ 	pqueue1.cpp \
++ 	prevprm0.cpp prevprm1.cpp prevprm2.cpp \
++ 	ptition0.cpp ptition1.cpp \
++ 	ptrbinf1.cpp ptrbinf2.cpp \
++ 	ptrunf1.cpp ptrunf2.cpp \
++ 	queue1.cpp \
++ 	rawiter.cpp \
++ 	remcopy1.cpp \
++ 	remcpif1.cpp \
++ 	remif1.cpp \
++ 	remove1.cpp \
++ 	repcpif1.cpp \
++ 	replace0.cpp replace1.cpp replcpy1.cpp replif1.cpp \
++ 	revbit1.cpp revbit2.cpp \
++ 	revcopy1.cpp reverse1.cpp reviter1.cpp reviter2.cpp \
++ 	rndshuf0.cpp rndshuf1.cpp rndshuf2.cpp \
++ 	rotate0.cpp rotate1.cpp rotcopy0.cpp rotcopy1.cpp \
++ 	search0.cpp search1.cpp search2.cpp \
++ 	set1.cpp set2.cpp \
++ 	setdiff0.cpp setdiff1.cpp setdiff2.cpp \
++ 	setintr0.cpp setintr1.cpp setintr2.cpp \
++ 	setsymd0.cpp setsymd1.cpp setsymd2.cpp \
++ 	setunon0.cpp setunon1.cpp setunon2.cpp \
++ 	sort1.cpp sort2.cpp \
++ 	stack1.cpp stack2.cpp \
++ 	stblptn0.cpp stblptn1.cpp \
++ 	stblsrt1.cpp stblsrt2.cpp \
++ 	swap1.cpp \
++ 	swprnge1.cpp \
++ 	times.cpp \
++ 	trnsfrm1.cpp trnsfrm2.cpp \
++ 	ucompos1.cpp ucompos2.cpp \
++ 	unegate1.cpp unegate2.cpp \
++ 	uniqcpy1.cpp uniqcpy2.cpp \
++ 	unique1.cpp unique2.cpp \
++ 	uprbnd1.cpp uprbnd2.cpp \
++ 	vec1.cpp vec2.cpp vec3.cpp vec4.cpp vec5.cpp vec6.cpp vec7.cpp vec8.cpp \
++   hmmap1.cpp hset2.cpp hmset1.cpp slist1.cpp hmap1.cpp string_mt.cpp string1.cpp bitset1.cpp
++ 
++ 
++ # STAT_MODULE=stat.o
++ OBJECTS = $(LIST:%.cpp=%.o) $(STAT_MODULE)
++ EXECS = $(LIST:%.cpp=%.exe)
++ TESTS = $(LIST:%.cpp=%.out)
++ TEST_EXE  = stl_test.exe
++ TEST  = stl_test.out
++ 
++ CC = cc -Kpthread
++ CXX = CC -Kpthread
++ 
++ DEBUG_FLAGS= -D_STLP_DEBUG
++ 
++ CXXFLAGS = -O2 ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} ${STL_VERSION_FLAGS}
++ 
++ LIBS = -L../../lib -lstlport_sysv5_stldebug -lm 
++ LIBSTDCXX = 
++ 
++ check: $(TEST)
++ 
++ $(TEST) : $(OBJECTS)
++ 	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} ${REPO_FLAGS} -Wt,-r $(OBJECTS) $(LIBS) -o $(TEST_EXE)
++ 	echo 'a string' | LD_LIBRARY_PATH="../../lib" ./$(TEST_EXE) > $(TEST)
++ 
++ .cc.o .cxx.o .C.o .cpp.o:
++ 	${CXX} ${CXXFLAGS} ${DEBUG_FLAGS} ${REPO_FLAGS} -c -o $*.o $<
++ 
++ %.out: %.cpp
++ 	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} -USINGLE -DMAIN=1 $< -c -o $*.o
++ 	$(CXX) $(CXXFLAGS) $*.o $(STAT_MODULE) $(LIBS) -o $*.exe
++ 	./$*.exe > $@
++ 	-rm -f $*.exe
++ 
++ istmit1.out: istmit1.cpp
++ 	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} ${REPO_FLAGS} $< $(STAT_MODULE) $(LIBSTDCXX) -lstdc++ $(LIBS) -o istmit1
++ 	echo 'a string' | ./istmit1 > istmit1.out
++ 	-rm -f ./istmit1
++ 
++ $(STAT_MODULE): stat.cpp
++ 	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} ${REPO_FLAGS} -c $< -o $@
++ 
++ %.s: %.cpp
++ 	$(CXX) $(CXXFLAGS) -D_STLP_NO_EXCEPTIONS -S $<  -o $*.s
++ 
++ %.i: %.cpp
++ 	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} -E $<  > $@
++ 
++ clean:
++ 	-rm -rf *.exe *.out *.o *.rpo core *.out Templates.DB
++ 
+*** ./test/regression/gcc.mak.osr6	Thu Jan 15 16:27:18 2004
+--- ./test/regression/gcc.mak	Mon Sep  4 13:37:00 2006
+***************
+*** 112,119 ****
+  	uniqcpy1.cpp uniqcpy2.cpp \
+  	unique1.cpp unique2.cpp \
+  	uprbnd1.cpp uprbnd2.cpp \
+! 	vec1.cpp vec2.cpp vec3.cpp vec4.cpp vec5.cpp vec6.cpp vec7.cpp vec8.cpp \
+!   hmmap1.cpp hset2.cpp hmset1.cpp slist1.cpp hmap1.cpp string1.cpp bitset1.cpp
+  
+  
+  # STAT_MODULE=stat.o
+--- 112,121 ----
+  	uniqcpy1.cpp uniqcpy2.cpp \
+  	unique1.cpp unique2.cpp \
+  	uprbnd1.cpp uprbnd2.cpp \
+! 	vec1.cpp vec2.cpp vec3.cpp \
+! 	vec4.cpp vec5.cpp vec6.cpp vec7.cpp vec8.cpp \
+! 	hmmap1.cpp hset2.cpp hmset1.cpp slist1.cpp \
+! 	hmap1.cpp string1.cpp string_mt.cpp bitset1.cpp
+  
+  
+  # STAT_MODULE=stat.o
+***************
+*** 128,144 ****
+  
+  DEBUG_FLAGS= -g -D_STLP_DEBUG
+  
+! CXXFLAGS = -pthread -Wall ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} ${STL_VERSION_FLAGS}
+  # CXXFLAGS = -Wall ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} ${STL_VERSION_FLAGS} 
+  
+! LIBS = -L../../lib -Wl,--rpath=../../lib -lstlport_gcc_stldebug -lm 
+  LIBSTDCXX = 
+  
+  check: $(TEST)
+  
+  $(TEST) : $(OBJECTS)
+  	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} ${REPO_FLAGS} $(OBJECTS) $(LIBS) -o $(TEST_EXE)
+! 	echo 'a string' | ./$(TEST_EXE) > $(TEST)
+  
+  
+  .cc.o .cxx.o .C.o .cpp.o:
+--- 130,146 ----
+  
+  DEBUG_FLAGS= -g -D_STLP_DEBUG
+  
+! CXXFLAGS = -pthread -Wall ${STL_INCL} -DSCO -I. ${CXX_EXTRA_FLAGS} ${STL_VERSION_FLAGS}
+  # CXXFLAGS = -Wall ${STL_INCL} -I. ${CXX_EXTRA_FLAGS} ${STL_VERSION_FLAGS} 
+  
+! LIBS = -L../../lib -lstlport_gcc_stldebug -lm 
+  LIBSTDCXX = 
+  
+  check: $(TEST)
+  
+  $(TEST) : $(OBJECTS)
+  	$(CXX) $(CXXFLAGS) ${DEBUG_FLAGS} ${REPO_FLAGS} $(OBJECTS) $(LIBS) -o $(TEST_EXE)
+! 	echo 'a string' | LD_LIBRARY_PATH="../../lib" ./$(TEST_EXE) > $(TEST)
+  
+  
+  .cc.o .cxx.o .C.o .cpp.o:
+*** ./test/regression/stl_test.h.osr6	Mon Jan 19 10:22:43 2004
+--- ./test/regression/stl_test.h	Mon Sep  4 13:37:08 2006
+***************
+*** 238,243 ****
+--- 238,244 ----
+  extern int hmset1_test  ( int, char**);
+  extern int slist1_test (int, char**);
+  extern int string1_test (int, char**);
++ extern int string_mt_test (int, char**);
+  extern int bitset1_test (int, char**);
+  extern int string_mt_test(int, char **);
+  #endif
+*** ./test/regression/stl_test.cpp.osr6	Mon Jan 19 10:22:43 2004
+--- ./test/regression/stl_test.cpp	Mon Sep  4 13:37:04 2006
+***************
+*** 488,493 ****
+--- 488,495 ----
+          cout.flush();
+          string1_test (argc, argv);
+          cout.flush();
++         string_mt_test (argc, argv);
++         cout.flush();
+  	bitset1_test (argc, argv); 
+          cout.flush();
+          string_mt_test(argc, argv);
+*** ./Build-OSR6.osr6	Mon Sep  4 12:29:27 2006
+--- ./Build-OSR6	Mon Sep  4 22:08:21 2006
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ TOP=`pwd`
++ OUTDIR=$TOP/lib
++ export TOP OUTDIR
++ make -C src -f gcc.mak clean all TOP=$TOP OUTDIR=$OUTDIR 2>&1 | tee mout
+*** ./Install-OSR6.osr6	Mon Sep  4 12:29:27 2006
+--- ./Install-OSR6	Mon Sep  4 12:29:27 2006
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/stlport
++ TOP=`pwd`
++ OUTDIR=$TOP/lib
++ export TOP OUTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make -C src -f gcc.mak install INSTALLDIR=$D/usr \
++         TOP=$TOP OUTDIR=$OUTDIR 2>&1 | tee $MOUT
+*** ./Test-OSR6.osr6	Mon Sep  4 12:29:27 2006
+--- ./Test-OSR6	Mon Sep  4 12:29:27 2006
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ TOP=`pwd`
++ OUTDIR=$TOP/lib
++ export TOP OUTDIR
++ make -C test/eh -f gcc.mak clean check TOP=$TOP OUTDIR=$OUTDIR 2>&1 | tee mout-test-eh
++ make -C test/regression -f gcc.mak clean check TOP=$TOP OUTDIR=$OUTDIR 2>&1 \
++       | tee mout-test-regression
+*** ./Clean.osr6	Mon Sep  4 18:35:23 2006
+--- ./Clean	Mon Sep  4 18:36:49 2006
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ make -C src -f gcc.mak clean
++ make -C test/eh -f gcc.mak clean
++ make -C test/regression -f gcc.mak clean
++ rm -f mout* lib/*.a lib/*.so*

@@ -1,0 +1,509 @@
+*** ./config/config.guess.00 Thu Oct 23 07:28:51 2003
+--- ./config/config.guess Tue May 10 17:00:03 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Attempt to guess a canonical system name.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # Attempt to guess a canonical system name.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+*** ./config/config.sub.00 Thu Oct 23 07:28:51 2003
+--- ./config/config.sub Tue May 10 17:00:03 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Configuration validation subroutine script.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  # Configuration validation subroutine script.
+  #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+  #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+*** ./config/elisp-comp.00 Thu Nov  6 00:50:45 2003
+--- ./config/elisp-comp Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # Copyright (C) 1995, 2000, 2003  Free Software Foundation, Inc.
+  # Franc,ois Pinard <pinard@iro.umontreal.ca>, 1995.
+  #
+--- 1,4 ----
+! #!/bin/bash
+  # Copyright (C) 1995, 2000, 2003  Free Software Foundation, Inc.
+  # Franc,ois Pinard <pinard@iro.umontreal.ca>, 1995.
+  #
+*** ./config/install-sh.00 Thu Nov  6 00:50:43 2003
+--- ./config/install-sh Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # install - install a program, script, or datafile
+  
+  scriptversion=2003-09-24.23
+--- 1,4 ----
+! #!/bin/bash
+  # install - install a program, script, or datafile
+  
+  scriptversion=2003-09-24.23
+*** ./config/mdate-sh.00 Thu Nov  6 00:50:44 2003
+--- ./config/mdate-sh Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # Get modification time of a file or directory and pretty-print it.
+  # Copyright (C) 1995, 1996, 1997, 2003  Free Software Foundation, Inc.
+  # written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
+--- 1,4 ----
+! #!/bin/bash
+  # Get modification time of a file or directory and pretty-print it.
+  # Copyright (C) 1995, 1996, 1997, 2003  Free Software Foundation, Inc.
+  # written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
+*** ./config/missing.00 Thu Nov  6 00:50:43 2003
+--- ./config/missing Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Common stub for a few missing GNU programs while installing.
+  
+  scriptversion=2003-09-02.23
+--- 1,4 ----
+! #! /bin/bash
+  # Common stub for a few missing GNU programs while installing.
+  
+  scriptversion=2003-09-02.23
+***************
+*** 191,197 ****
+  	touch $file
+      else
+  	test -z "$file" || exec >$file
+! 	echo "#! /bin/sh"
+  	echo "# Created by GNU Automake missing as a replacement of"
+  	echo "#  $ $@"
+  	echo "exit 0"
+--- 191,197 ----
+  	touch $file
+      else
+  	test -z "$file" || exec >$file
+! 	echo "#! /bin/bash"
+  	echo "# Created by GNU Automake missing as a replacement of"
+  	echo "#  $ $@"
+  	echo "exit 0"
+*** ./config/mkinstalldirs.00 Thu Nov  6 00:50:43 2003
+--- ./config/mkinstalldirs Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # mkinstalldirs --- make directory hierarchy
+  # Original author: Noah Friedman <friedman@prep.ai.mit.edu>
+  # Created: 1993-05-16
+--- 1,4 ----
+! #! /bin/bash
+  # mkinstalldirs --- make directory hierarchy
+  # Original author: Noah Friedman <friedman@prep.ai.mit.edu>
+  # Created: 1993-05-16
+*** ./config/move-if-change.00 Fri Nov 15 01:10:48 2002
+--- ./config/move-if-change Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # Like mv $1 $2, but if the files are the same, just delete $1.
+  # Status is 0 if $2 is changed, 1 otherwise.
+  if test -r $2; then
+--- 1,4 ----
+! #!/bin/bash
+  # Like mv $1 $2, but if the files are the same, just delete $1.
+  # Status is 0 if $2 is changed, 1 otherwise.
+  if test -r $2; then
+*** ./tests/wrapper.in.00 Thu Sep 25 02:25:02 2003
+--- ./tests/wrapper.in Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  ## --------------------- ##
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+--- 1,4 ----
+! #! /bin/bash
+  ## --------------------- ##
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+*** ./tests/c.at.00 Thu May 22 04:53:44 2003
+--- ./tests/c.at Tue May 10 17:00:04 2005
+***************
+*** 112,118 ****
+  AT_SETUP([AC_PROG_CPP with warnings])
+  
+  AT_DATA([mycpp],
+! [[#! /bin/sh
+  echo noise >&2
+  exec "$@"
+  ]])
+--- 112,118 ----
+  AT_SETUP([AC_PROG_CPP with warnings])
+  
+  AT_DATA([mycpp],
+! [[#! /bin/bash
+  echo noise >&2
+  exec "$@"
+  ]])
+***************
+*** 146,152 ****
+  
+  # A cpp which exit status is meaningless.
+  AT_DATA([mycpp],
+! [[#! /bin/sh
+  /lib/cpp "$@"
+  exit 0
+  ]])
+--- 146,152 ----
+  
+  # A cpp which exit status is meaningless.
+  AT_DATA([mycpp],
+! [[#! /bin/bash
+  /lib/cpp "$@"
+  exit 0
+  ]])
+***************
+*** 182,188 ****
+  AT_CHECK([/lib/cpp </dev/null || exit 77], [], [ignore], [ignore])
+  
+  AT_DATA([mycc],
+! [[#! /bin/sh
+  echo "Annoying copyright message" >&2
+  exec "$@"
+  ]])
+--- 182,188 ----
+  AT_CHECK([/lib/cpp </dev/null || exit 77], [], [ignore], [ignore])
+  
+  AT_DATA([mycc],
+! [[#! /bin/bash
+  echo "Annoying copyright message" >&2
+  exec "$@"
+  ]])
+*** ./tests/semantics.at.00 Thu May 22 05:05:13 2003
+--- ./tests/semantics.at Tue May 10 17:00:04 2005
+***************
+*** 356,362 ****
+  [mkdir path
+  
+  cat >path/tool <<\EOF
+! #! /bin/sh
+  exit 0
+  EOF
+  chmod +x path/tool
+--- 356,362 ----
+  [mkdir path
+  
+  cat >path/tool <<\EOF
+! #! /bin/bash
+  exit 0
+  EOF
+  chmod +x path/tool
+*** ./tests/mktests.sh.00 Tue Nov  4 04:11:18 2003
+--- ./tests/mktests.sh Tue May 10 17:00:04 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  
+  # Build some of the Autoconf test files.
+  # Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+--- 1,4 ----
+! #! /bin/bash
+  
+  # Build some of the Autoconf test files.
+  # Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+*** ./bin/autoconf.in.00 Thu May 22 05:05:46 2003
+--- ./bin/autoconf.in Tue May 10 17:00:07 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  ## --------------------- ##
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+--- 1,4 ----
+! #! /bin/bash
+  ## --------------------- ##
+  ## M4sh Initialization.  ##
+  ## --------------------- ##
+*** ./lib/m4sugar/m4sh.m4.00 Thu Nov  6 00:46:24 2003
+--- ./lib/m4sugar/m4sh.m4 Tue May 10 17:00:07 2005
+***************
+*** 57,63 ****
+  # KILL is only used to suppress output.
+  #
+  # - BINSH
+! #   AC_REQUIRE'd #! /bin/sh line
+  # - HEADER-REVISION
+  #   RCS keywords etc.
+  # - HEADER-COMMENT
+--- 57,63 ----
+  # KILL is only used to suppress output.
+  #
+  # - BINSH
+! #   AC_REQUIRE'd #! /bin/bash line
+  # - HEADER-REVISION
+  #   RCS keywords etc.
+  # - HEADER-COMMENT
+***************
+*** 120,126 ****
+  #
+  # gives
+  #
+! #      #! /bin/sh
+  #      bar=bar
+  #
+  #      foo1=`foo=foo
+--- 120,126 ----
+  #
+  # gives
+  #
+! #      #! /bin/bash
+  #      bar=bar
+  #
+  #      foo1=`foo=foo
+***************
+*** 637,643 ****
+  m4_defun([_AS_PATH_SEPARATOR_PREPARE],
+  [# The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/sh" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+--- 637,643 ----
+  m4_defun([_AS_PATH_SEPARATOR_PREPARE],
+  [# The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/bash" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+*** ./lib/autoconf/general.m4.00 Mon Oct 27 03:10:56 2003
+--- ./lib/autoconf/general.m4 Tue May 10 17:00:07 2005
+***************
+*** 65,71 ****
+  # it reaches the end of `configure.ac'.
+  #
+  # - BINSH
+! #   #! /bin/sh
+  # - HEADER-REVISION
+  #   Sent by AC_REVISION
+  # - HEADER-COMMENT
+--- 65,71 ----
+  # it reaches the end of `configure.ac'.
+  #
+  # - BINSH
+! #   #! /bin/bash
+  # - HEADER-REVISION
+  #   Sent by AC_REVISION
+  # - HEADER-COMMENT
+*** ./lib/autotest/general.m4.00 Fri Sep 26 01:14:18 2003
+--- ./lib/autotest/general.m4 Tue May 10 17:00:07 2005
+***************
+*** 703,709 ****
+  	  # Upon failure, keep the group directory for autopsy, and
+  	  # create the debugging script.
+  	  {
+! 	    echo "#! /bin/sh"
+  	    echo 'test "${ZSH_VERSION+set}" = set && alias -g '\''${1+"$[@]"}'\''='\''"$[@]"'\'''
+  	    echo "cd $at_dir"
+  	    echo 'exec ${CONFIG_SHELL-'"$SHELL"'}' "$[0]" \
+--- 703,709 ----
+  	  # Upon failure, keep the group directory for autopsy, and
+  	  # create the debugging script.
+  	  {
+! 	    echo "#! /bin/bash"
+  	    echo 'test "${ZSH_VERSION+set}" = set && alias -g '\''${1+"$[@]"}'\''='\''"$[@]"'\'''
+  	    echo "cd $at_dir"
+  	    echo 'exec ${CONFIG_SHELL-'"$SHELL"'}' "$[0]" \
+*** ./doc/autoconf.texi.00 Wed Nov  5 02:38:29 2003
+--- ./doc/autoconf.texi Tue May 10 17:00:08 2005
+***************
+*** 1693,1699 ****
+  produces this in @command{configure}:
+  
+  @example
+! #! /bin/sh
+  # From configure.ac Revision: 1.30
+  @end example
+  @end defmac
+--- 1693,1699 ----
+  produces this in @command{configure}:
+  
+  @example
+! #! /bin/bash
+  # From configure.ac Revision: 1.30
+  @end example
+  @end defmac
+***************
+*** 2091,2097 ****
+  example, an input shell script should begin like this:
+  
+  @example
+! #! /bin/sh
+  # @@configure_input@@
+  @end example
+  
+--- 2091,2097 ----
+  example, an input shell script should begin like this:
+  
+  @example
+! #! /bin/bash
+  # @@configure_input@@
+  @end example
+  
+***************
+*** 10302,10308 ****
+  variable.  The following code demonstrates this failure:
+  
+  @example
+! #! /bin/sh
+  echo $FOO
+  FOO=bar
+  echo $FOO
+--- 10302,10308 ----
+  variable.  The following code demonstrates this failure:
+  
+  @example
+! #! /bin/bash
+  echo $FOO
+  FOO=bar
+  echo $FOO
+*** ./doc/autoconf.info.00 Thu Nov  6 01:36:30 2003
+--- ./doc/autoconf.info Tue May 10 17:00:09 2005
+***************
+*** 1416,1422 ****
+  
+       produces this in `configure':
+  
+!           #! /bin/sh
+            # From configure.ac Revision: 1.30
+  
+  
+--- 1416,1422 ----
+  
+       produces this in `configure':
+  
+!           #! /bin/bash
+            # From configure.ac Revision: 1.30
+  
+  
+***************
+*** 1733,1739 ****
+       variable in a comment at the top of each input file.  For example,
+       an input shell script should begin like this:
+  
+!           #! /bin/sh
+            # @configure_input@
+  
+       The presence of that line also reminds people editing the file
+--- 1733,1739 ----
+       variable in a comment at the top of each input file.  For example,
+       an input shell script should begin like this:
+  
+!           #! /bin/bash
+            # @configure_input@
+  
+       The presence of that line also reminds people editing the file
+***************
+*** 8558,8564 ****
+       environment variable and the shell variable.  The following code
+       demonstrates this failure:
+  
+!           #! /bin/sh
+            echo $FOO
+            FOO=bar
+            echo $FOO
+--- 8558,8564 ----
+       environment variable and the shell variable.  The following code
+       demonstrates this failure:
+  
+!           #! /bin/bash
+            echo $FOO
+            FOO=bar
+            echo $FOO
+*** ./configure.00 Thu Nov  6 01:33:28 2003
+--- ./configure Tue May 10 17:00:05 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.58a for GNU Autoconf 2.59.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.58a for GNU Autoconf 2.59.
+  #
+***************
+*** 87,93 ****
+  
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/sh" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+--- 87,93 ----
+  
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/bash" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+***************
+*** 2277,2283 ****
+  
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/sh" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+--- 2277,2283 ----
+  
+  # The user is always right.
+  if test "${PATH_SEPARATOR+set}" != set; then
+!   echo "#! /bin/bash" >conf$$.sh
+    echo  "exit 0"   >>conf$$.sh
+    chmod +x conf$$.sh
+    if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+*** ./ChangeLog.00 Thu Nov  6 01:30:29 2003
+--- ./ChangeLog Tue May 10 17:00:06 2005
+***************
+*** 4082,4088 ****
+  
+  	* lib/autoconf/general.m4 (_m4_divert(BODY)): Move to...
+  	* lib/m4sugar/m4sh.m4: here.
+! 	(AS_INIT): Push the BODY diversion, set the #! /bin/sh line.
+  	* lib/autoconf/general.m4 (AC_PLAIN_SCRIPT) : Remove.
+  	(AT_INIT): Replace AC_PLAIN_SCRIPT with AS_INIT invocation,
+  	include handle the m4_pattern_*, no longer push the
+--- 4082,4088 ----
+  
+  	* lib/autoconf/general.m4 (_m4_divert(BODY)): Move to...
+  	* lib/m4sugar/m4sh.m4: here.
+! 	(AS_INIT): Push the BODY diversion, set the #! /bin/bash line.
+  	* lib/autoconf/general.m4 (AC_PLAIN_SCRIPT) : Remove.
+  	(AT_INIT): Replace AC_PLAIN_SCRIPT with AS_INIT invocation,
+  	include handle the m4_pattern_*, no longer push the
+--- Install-OSR6.osr6	2005-07-03 16:30:56.040000003 -0700
++++ Install-OSR6	2005-07-03 16:31:07.990000016 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/autoconf
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

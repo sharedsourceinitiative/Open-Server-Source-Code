@@ -1,0 +1,155 @@
+*** ./src/common/datetime.cpp.osr6	Thu Jun  2 09:03:18 2005
+--- ./src/common/datetime.cpp	Mon May 15 13:55:14 2006
+***************
+*** 2222,2231 ****
+          }
+  #ifndef __WXWINCE__
+      //Windows CE doesn't support strftime or wcsftime, so we use the generic implementation
+!         if ( tm )
+!         {
+!             return CallStrftime(format, tm);
+!         }
+  #endif
+          //else: use generic code below
+      }
+--- 2222,2231 ----
+          }
+  #ifndef __WXWINCE__
+      //Windows CE doesn't support strftime or wcsftime, so we use the generic implementation
+! //        if ( tm )
+! //        {
+! //            return CallStrftime(format, tm);
+! //        }
+  #endif
+          //else: use generic code below
+      }
+*** ./include/wx/wxchar.h.osr6	Thu Jun  2 09:03:13 2005
+--- ./include/wx/wxchar.h	Mon May 15 12:26:39 2006
+***************
+*** 446,455 ****
+          #define wxNEED_WX_TIME_H
+  
+      #elif wxUSE_UNICODE
+!         #include <wctype.h>
+  
+!         /* this is probably glibc-specific */
+!         #if defined(__WCHAR_TYPE__) && !defined(__MWERKS__)
+              /* ctype.h functions (wctype.h) */
+              #define  wxIsalnum   iswalnum
+              #define  wxIsalpha   iswalpha
+--- 446,455 ----
+          #define wxNEED_WX_TIME_H
+  
+      #elif wxUSE_UNICODE
+!        #include <wctype.h>
+  
+!        /* this is probably glibc-specific */
+!        #if defined(__WCHAR_TYPE__) || defined(_WCTYPE_T) && !defined(__MWERKS__)
+              /* ctype.h functions (wctype.h) */
+              #define  wxIsalnum   iswalnum
+              #define  wxIsalpha   iswalpha
+*** ./configure.osr6	Thu Jun  2 09:03:05 2005
+--- ./configure	Mon May 15 12:26:39 2006
+***************
+*** 34416,34421 ****
+--- 34416,34424 ----
+                  fi
+                  ;;
+  
++           *-*-sysv5* )
++                     THREAD_OPTS=""
++                 ;;
+            *-*-*UnixWare*)
+                                  if test "x$GCC" != "xyes"; then
+                      THREAD_OPTS="-Ethread"
+***************
+*** 37929,37935 ****
+  /* end confdefs.h.  */
+  
+                      #include <sys/time.h>
+-                     #include <unistd.h>
+  
+  int
+  main ()
+--- 37932,37937 ----
+***************
+*** 37977,37983 ****
+  /* end confdefs.h.  */
+  
+                          #include <sys/time.h>
+-                         #include <unistd.h>
+  
+  int
+  main ()
+--- 37979,37984 ----
+***************
+*** 41950,41955 ****
+--- 41951,41964 ----
+          fi
+        ;;
+  
++       *-*-sysv5* )
++         if test "x$GCC" != xyes ; then
++             SHARED_LD_CC="${CC} -G -o"
++             SHARED_LD_CXX="${CXX} -G -o"
++             PIC_FLAG="-KPIC"
++         fi
++       ;;
++ 
+        *-*-darwin* )
+  
+                                  echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
+*** ./Install-OSR6.osr6	Mon May 15 12:26:39 2006
+--- ./Install-OSR6	Mon May 15 12:26:39 2006
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/wxGTK
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
++ cd contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make install DESTDIR=$D 2>&1 | tee $MOUT
+*** ./Build-OSR6.osr6	Mon May 15 12:26:39 2006
+--- ./Build-OSR6	Mon May 15 12:26:39 2006
+***************
+*** 0 ****
+--- 1,29 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --enable-unicode --enable-shared --with-gtk \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
++ cd contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT

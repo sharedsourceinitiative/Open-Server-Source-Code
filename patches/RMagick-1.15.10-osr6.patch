@@ -1,0 +1,29 @@
+*** ./Configure-OSR6.osr6	Fri Nov  9 14:24:11 2007
+--- ./Configure-OSR6	Fri Nov  9 14:44:32 2007
+***************
+*** 0 ****
+--- 1,24 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ ac_cv_member_ExceptionInfo_module=false
++ export CC CXX CFLAGS NM M4 INSTALL ac_cv_member_ExceptionInfo_module
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ sed -e "s/-lpthread//g" ext/RMagick/extconf.rb > /tmp/foo$$
++ cp /tmp/foo$$ ext/RMagick/extconf.rb

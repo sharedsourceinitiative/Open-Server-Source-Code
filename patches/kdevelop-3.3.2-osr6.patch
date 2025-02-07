@@ -1,0 +1,293 @@
+--- configure.00	2006-03-18 06:03:40.000000000 -0800
++++ configure	2006-08-03 14:48:55.647388004 -0700
+@@ -9,6 +9,14 @@
+ ## M4sh Initialization.  ##
+ ## --------------------- ##
+ 
++# more CFLAGS and CXXFLAGS.  Should be in some global place.
++CFLAGS="${CFLAGS} -Kpthread -D_EFTSAFE -DSVR4 -DNARROWPROTO -D__i386__ -DUSL -DHAVE_LONG_LONG -D__svr4__"
++CXXFLAGS="${CXXFLAGS} -Kpthread -D_EFTSAFE -DSVR4 -DNARROWPROTO -D__i386__ -DUSL -DHAVE_LONG_LONG -D__svr4__"
++CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,177"
++CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,816"
++CXXFLAGS="${CXXFLAGS} -Wf,--diag_suppress -Wf,838"
++CXXFLAGS="${CXXFLAGS} -Tno_implicit"
++
+ # Be Bourne compatible
+ if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+   emulate sh
+@@ -3301,6 +3309,7 @@
+   (exit $ac_status); }; }; then
+   for ac_declaration in \
+    '' \
++   '#include <stdlib.h>' \
+    'extern "C" void std::exit (int) throw (); using std::exit;' \
+    'extern "C" void std::exit (int); using std::exit;' \
+    'extern "C" void exit (int) throw ();' \
+@@ -3781,7 +3790,7 @@
+ 
+   case "$host" in
+   *-*-sysv4.2uw*) CFLAGS="-D_UNIXWARE $CFLAGS";;
+-  *-*-sysv5uw7*) CFLAGS="-D_UNIXWARE7 $CFLAGS";;
++  *-*-sysv5*) CFLAGS="-D_UNIXWARE7 $CFLAGS";;
+   esac
+ 
+   if test -z "$LDFLAGS" && test "$kde_use_debug_code" = "no" && test "$GCC" = "yes"; then
+@@ -4035,6 +4044,7 @@
+ fi
+ for ac_declaration in \
+    '' \
++   '#include <stdlib.h>' \
+    'extern "C" void std::exit (int) throw (); using std::exit;' \
+    'extern "C" void std::exit (int); using std::exit;' \
+    'extern "C" void exit (int) throw ();' \
+@@ -6212,7 +6222,7 @@
+   case "$host" in
+       *-*-irix*)  test "$GXX" = yes && CXXFLAGS="-D_LANGUAGE_C_PLUS_PLUS -D__LANGUAGE_C_PLUS_PLUS $CXXFLAGS" ;;
+       *-*-sysv4.2uw*) CXXFLAGS="-D_UNIXWARE $CXXFLAGS";;
+-      *-*-sysv5uw7*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
++      *-*-sysv5*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
+       *-*-solaris*)
+         if test "$GXX" = yes; then
+           libstdcpp=`$CXX -print-file-name=libstdc++.so`
+@@ -7633,7 +7643,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sco3.2v5*)
++sco3.2v5* | sysv5*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+@@ -7642,7 +7652,7 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -9877,7 +9887,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -10517,24 +10527,12 @@
+       runpath_var=LD_RUN_PATH
+       ;;
+ 
+-   sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+-      no_undefined_flag='${wl}-z ${wl}text'
+-      if test "$GCC" = yes; then
+-	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+-      else
+-	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $compiler_flags $libobjs $deplibs'
+-      fi
+-      runpath_var='LD_RUN_PATH'
+-      hardcode_shlibpath_var=no
+-      ;;
+-
+-    sysv5*)
++    sysv5* | unixware7*)
+       no_undefined_flag=' -z text'
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds='$CC -G${allow_undefined_flag} ${wl}-h$soname -o $lib $libobjs $deplibs $compiler_flags'
++      archive_expsym_cmds='$CC -G${allow_undefined_flag} ${wl}-Bexport:$export_symbols ${wl}-h$soname -o $lib $libobjs $deplibs $compiler_flags'
+       hardcode_libdir_flag_spec=
+       hardcode_shlibpath_var=no
+       runpath_var='LD_RUN_PATH'
+@@ -13655,8 +13653,10 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+-    archive_cmds_need_lc_CXX=no
++  sysv5* | unixware7*)
++      archive_cmds_CXX='$CC -G${allow_undefined_flag} ${wl}-h$soname -o $lib $libobjs $deplibs $compiler_flags'
++      archive_expsym_cmds_CXX='$CC -G${allow_undefined_flag} ${wl}-Bexport:$export_symbols ${wl}-h$soname -o $lib $libobjs $deplibs $compiler_flags'
++      archive_cmds_need_lc_CXX=no
+     ;;
+   tandem*)
+     case $cc_basename in
+@@ -16654,7 +16654,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_F77=no
+ 	cat <<EOF 1>&2
+@@ -18927,7 +18927,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_GCJ=no
+ 	cat <<EOF 1>&2
+--- parts/classview/digraphview.cpp.00	2005-09-10 01:21:53.000000000 -0700
++++ parts/classview/digraphview.cpp	2006-08-03 15:01:19.640748024 -0700
+@@ -289,7 +289,7 @@
+         QPoint p1 = (*it2)->points[n-2];
+         QPoint p2 = (*it2)->points[n-1];
+         QPoint d = p1-p2;
+-        double l = sqrt(d.x()*d.x()+d.y()*d.y());
++        double l = sqrt((double)(d.x()*d.x()+d.y()*d.y()));
+         double d11 = (10.0)/l*d.x();
+         double d12 = (10.0)/l*d.y();
+         double d21 = -(3.0/l)*d.y();
+--- parts/tools/tools_part.cpp.00	2005-09-10 01:21:53.000000000 -0700
++++ parts/tools/tools_part.cpp	2006-08-03 15:18:05.390348005 -0700
+@@ -180,7 +180,7 @@
+     if (captured)
+     {
+        if (KDevAppFrontend *appFrontend = extension<KDevAppFrontend>("KDevelop/AppFrontend"))
+-            appFrontend->startAppCommand(QString::QString(), cmdline, false);
++            appFrontend->startAppCommand(QString(), cmdline, false);
+     }
+     else 
+     {
+--- buildtools/qmake/trollprojectwidget.cpp.00	2005-09-10 01:21:47.000000000 -0700
++++ buildtools/qmake/trollprojectwidget.cpp	2006-08-03 16:20:19.091548020 -0700
+@@ -1759,12 +1759,12 @@
+         noPathFileName = info.fileName();
+ 
+     GroupItem *gitem = 0;
+-    QPtrListIterator<GroupItem> it(m_shownSubproject->groups);
+-    for (; it.current(); ++it)
++    QPtrListIterator<GroupItem> it2(m_shownSubproject->groups);
++    for (; it2.current(); ++it2)
+     {
+-        if ((*it)->groupType == GroupItem::groupTypeForExtension(ext))
++        if ((*it2)->groupType == GroupItem::groupTypeForExtension(ext))
+         {
+-            gitem = *it;
++            gitem = *it2;
+             break;
+         }
+     }
+--- languages/bash/bashsupport_part.cpp.00	2005-09-10 01:22:41.000000000 -0700
++++ languages/bash/bashsupport_part.cpp	2006-08-03 16:36:36.327148021 -0700
+@@ -183,7 +183,7 @@
+ {
+ 	kdDebug() << "starting application" << program << endl;
+ 	if (KDevAppFrontend *appFrontend = extension<KDevAppFrontend>("KDevelop/AppFrontend"))
+-		appFrontend->startAppCommand(QString::QString(), program, TRUE);
++		appFrontend->startAppCommand(QString(), program, TRUE);
+ }
+ 
+ 
+--- languages/cpp/debugger/variablewidget.cpp.00	2005-09-10 01:22:30.000000000 -0700
++++ languages/cpp/debugger/variablewidget.cpp	2006-08-03 16:40:00.700828035 -0700
+@@ -949,7 +949,7 @@
+     }
+ 
+     if (*buf == '$') {
+-        if (char *end = strchr(buf, '='))
++        if (char *end = (char *)strchr(buf, '='))
+             buf = end+2;
+     }
+ 
+@@ -1189,7 +1189,7 @@
+     if (noLocals) {
+         locals_ = "";
+         if (locals)
+-            if (char *end = strchr(locals, '\n'))
++            if (char *end = (char *)strchr(locals, '\n'))
+                 *end = 0;      // clobber the new line
+     } else
+         locals_ = locals;
+--- languages/cpp/debugger/framestackwidget.cpp.00	2005-09-10 01:22:30.000000000 -0700
++++ languages/cpp/debugger/framestackwidget.cpp	2006-08-03 16:41:20.904428005 -0700
+@@ -136,7 +136,7 @@
+ {
+     // on receipt of a thread list we must always clear the list.
+     clear();
+-    while (char *end = strchr(str, '\n'))
++    while (char *end = (char *)strchr(str, '\n'))
+     {
+         // make it a string and skip non-thread list strings
+         *end = 0;
+@@ -171,7 +171,7 @@
+     if (strncmp(str, "No stack.", 9) == 0)
+         return;
+ 
+-    while (char* end = strchr(str, '\n'))
++    while (char* end = (char *)strchr(str, '\n'))
+     {
+         // Don't bother with extra data
+         if (*str == '#')
+@@ -207,7 +207,7 @@
+     {
+         QString frameStr = frame->text(0);
+         const char *frameData = frameStr.latin1();
+-        if (char *paramStart = strchr(frameData, '('))
++        if (char *paramStart = (char *)strchr(frameData, '('))
+         {
+             char *fnstart = paramStart-2;
+             while (fnstart > frameData)
+--- languages/perl/perlparser.cpp.00	2005-09-10 01:22:39.000000000 -0700
++++ languages/perl/perlparser.cpp	2006-08-03 17:43:22.733788005 -0700
+@@ -464,7 +464,7 @@
+             return;
+         }
+         array.setRawData(buffer, n);
+-        result=QString::QString(array);
++        result=QString(array);
+         array.resetRawData(buffer, n);
+  }
+  pclose(fd);
+--- languages/perl/perlsupportpart.cpp.00	2005-09-10 01:22:39.000000000 -0700
++++ languages/perl/perlsupportpart.cpp	2006-08-03 17:44:47.993788021 -0700
+@@ -194,7 +194,7 @@
+ {
+     bool inTerminal = DomUtil::readBoolEntry(*projectDom(), "/kdevperlsupport/run/terminal");
+     if (KDevAppFrontend *appFrontend = extension<KDevAppFrontend>("KDevelop/AppFrontend"))
+-        appFrontend->startAppCommand(QString::QString(), program, inTerminal);
++        appFrontend->startAppCommand(QString(), program, inTerminal);
+ }
+ 
+ 
+--- languages/python/pythonsupportpart.cpp.00	2005-09-10 01:22:25.000000000 -0700
++++ languages/python/pythonsupportpart.cpp	2006-08-03 17:48:08.873788005 -0700
+@@ -324,7 +324,7 @@
+ {
+     bool inTerminal = DomUtil::readBoolEntry(*projectDom(), "/kdevpythonsupport/run/terminal");
+     if (KDevAppFrontend *appFrontend = extension<KDevAppFrontend>("KDevelop/AppFrontend"))
+-        appFrontend->startAppCommand(QString::QString(), program, inTerminal);
++        appFrontend->startAppCommand(QString(), program, inTerminal);
+ }
+ 
+ 
+--- languages/ruby/rubysupport_part.cpp.00	2006-03-17 02:14:19.000000000 -0800
++++ languages/ruby/rubysupport_part.cpp	2006-08-03 17:50:22.493788006 -0700
+@@ -552,7 +552,7 @@
+ void RubySupportPart::startApplication(const QString &program) {
+ 	bool inTerminal = DomUtil::readBoolEntry(*projectDom(), "/kdevrubysupport/run/terminal");
+     if (KDevAppFrontend *appFrontend = extension<KDevAppFrontend>("KDevelop/AppFrontend"))
+-        appFrontend->startAppCommand(QString::QString(), program, inTerminal);
++        appFrontend->startAppCommand(QString(), program, inTerminal);
+ }
+ 
+ 
+--- src/partcontroller.cpp.00	2005-09-10 01:21:49.000000000 -0700
++++ src/partcontroller.cpp	2006-08-03 17:53:24.210428035 -0700
+@@ -1211,7 +1211,7 @@
+     editbox->completionObject()->setItems( part_list );
+     editbox->setFocus();
+     int result = dialog.exec();
+-    if (result==KDialogBase::KDialogBase::Accepted) {
++    if (result==KDialogBase::Accepted) {
+         if (parts_map.contains(editbox->text())) {
+             activatePart(parts_map[editbox->text()]);
+         }

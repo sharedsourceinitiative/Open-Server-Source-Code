@@ -1,0 +1,256 @@
+*** ./src/common/stopwatch.cpp.00	Wed Jul  4 12:25:04 2007
+--- ./src/common/stopwatch.cpp	Mon Nov 10 18:11:52 2008
+***************
+*** 99,106 ****
+--- 99,110 ----
+  // define wxGetTimeOfDay() to hide this difference
+  #ifdef HAVE_GETTIMEOFDAY
+      #ifdef WX_GETTIMEOFDAY_NO_TZ
++       #if defined(__USLC__)
++         #define wxGetTimeOfDay(tv, tz)      gettimeofday((tv), (tz))
++       #else
+          struct timezone;
+          #define wxGetTimeOfDay(tv, tz)      gettimeofday(tv)
++       #endif
+      #else
+          #define wxGetTimeOfDay(tv, tz)      gettimeofday((tv), (tz))
+      #endif
+*** ./src/common/wxchar.cpp.00	Fri Jun 13 21:18:21 2008
+--- ./src/common/wxchar.cpp	Mon Nov 10 18:11:52 2008
+***************
+*** 28,33 ****
+--- 28,36 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
++ #ifdef __USLC__
++ #include <strings.h>
++ #endif
+  
+  #ifndef __WXWINCE__
+      #include <time.h>
+*** ./wxPython/src/gtk/aui_wrap.cpp.00	Sun Sep 28 15:10:58 2008
+--- ./wxPython/src/gtk/aui_wrap.cpp	Mon Nov 10 18:11:52 2008
+***************
+*** 2954,2960 ****
+  
+      DEC_PYCALLBACK_INT_INT(GetMetric);
+      DEC_PYCALLBACK_VOID_INTINT(SetMetric);
+!     DEC_PYCALLBACK__INTFONT(SetFont);
+      DEC_PYCALLBACK_FONT_INT(GetFont);
+      DEC_PYCALLBACK_COLOUR_INT(GetColour);
+      DEC_PYCALLBACK__INTCOLOUR(SetColour);
+--- 2954,2960 ----
+  
+      DEC_PYCALLBACK_INT_INT(GetMetric);
+      DEC_PYCALLBACK_VOID_INTINT(SetMetric);
+!     DEC_PYCALLBACK__INTFONT(SetFont)
+      DEC_PYCALLBACK_FONT_INT(GetFont);
+      DEC_PYCALLBACK_COLOUR_INT(GetColour);
+      DEC_PYCALLBACK__INTCOLOUR(SetColour);
+*** ./include/wx/clntdata.h.00	Wed Jul  4 12:24:57 2007
+--- ./include/wx/clntdata.h	Mon Nov 10 18:11:52 2008
+***************
+*** 161,166 ****
+--- 161,170 ----
+  
+  #include "wx/vector.h"
+  
++ #ifdef index
++ #undef index
++ #endif
++ 
+  struct WXDLLIMPEXP_BASE wxClientDataDictionaryPair
+  {
+      wxClientDataDictionaryPair( size_t idx ) : index( idx ), data( 0 ) { }
+*** ./configure.00	Sun Sep 28 14:48:55 2008
+--- ./configure	Mon Nov 10 18:11:52 2008
+***************
+*** 2042,2048 ****
+  #define __SVR4__ 1
+  _ACEOF
+  
+!     DEFAULT_DEFAULT_wxUSE_MOTIF=1
+    ;;
+    *-*-aix* )
+      USE_AIX=1
+--- 2042,2048 ----
+  #define __SVR4__ 1
+  _ACEOF
+  
+!     DEFAULT_DEFAULT_wxUSE_GTK=1
+    ;;
+    *-*-aix* )
+      USE_AIX=1
+***************
+*** 37265,37271 ****
+  
+  
+  
+! for ac_func in setenv putenv
+  do
+  as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
+  echo "$as_me:$LINENO: checking for $ac_func" >&5
+--- 37265,37271 ----
+  
+  
+  
+! for ac_func in putenv
+  do
+  as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
+  echo "$as_me:$LINENO: checking for $ac_func" >&5
+***************
+*** 39144,39149 ****
+--- 39144,39156 ----
+                      THREAD_OPTS="-mt $THREAD_OPTS"
+                  fi
+                  ;;
++           *-*-sysv5* )
++                 if test "x$GCC" = "xyes"; then
++                                         THREAD_OPTS="-pthreads $THREAD_OPTS"
++                 else
++                     THREAD_OPTS=""
++                 fi
++                 ;;
+            *-*-freebsd*)
+                                                  THREAD_OPTS="-kthread lthread $THREAD_OPTS c_r"
+                  ;;
+***************
+*** 48012,48017 ****
+--- 48019,48032 ----
+          fi
+        ;;
+  
++       *-*-sysv5* )
++         if test "x$GCC" != xyes ; then
++             SHARED_LD_CC="${CC} -G -o"
++             SHARED_LD_CXX="${CXX} -G -o"
++             PIC_FLAG="-KPIC"
++         fi
++       ;;
++ 
+        *-*-darwin* )
+  
+  D='$'
+***************
+*** 48817,48822 ****
+--- 48832,48844 ----
+          USE_SOSYMLINKS=1
+        ;;
+  
++       *-*-sysv5* )
++         SONAME_FLAG="-Wl,-h,"
++         USE_SOVERSION=1
++         USE_SOVERLINUX=1
++         USE_SOSYMLINKS=1
++       ;;
++ 
+        *-*-solaris2* )
+          SONAME_FLAG="-h "
+          USE_SOVERSION=1
+*** ./wx-config.in.00	Fri Feb 29 12:32:17 2008
+--- ./wx-config.in	Mon Nov 10 18:11:52 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  #
+  # Name:        wx-config{.in,}
+  # Purpose:     wx configuration search and query tool {template,}
+--- 1,4 ----
+! #!/bin/bash
+  #
+  # Name:        wx-config{.in,}
+  # Purpose:     wx configuration search and query tool {template,}
+*** ./wx-config-inplace.in.00	Wed Jul  4 12:25:12 2007
+--- ./wx-config-inplace.in	Mon Nov 10 18:11:52 2008
+***************
+*** 1,4 ****
+! #!/bin/sh
+  #
+  # Name:        wx-config-inplace
+  # Purpose:     wx configuration in tree search and query tool
+--- 1,4 ----
+! #!/bin/bash
+  #
+  # Name:        wx-config-inplace
+  # Purpose:     wx configuration in tree search and query tool
+*** ./Build-OSR6.00	Mon Nov 10 18:11:52 2008
+--- ./Build-OSR6	Mon Nov 10 18:11:52 2008
+***************
+*** 0 ****
+--- 1,50 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ MAKE=/usr/gnu/bin/make
++ export CC CXX CFLAGS NM MAKE
++ 
++ ac_cv_strings_strcasecmp=yes
++ ac_cv_string_strcasecmp=no
++ ac_cv_func_setenv=no
++ ac_cv_func_unsetenv=no
++ export ac_cv_strings_strcasecmp ac_cv_string_strcasecmp
++ export ac_cv_func_setenv ac_cv_func_unsetenv
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr --disable-gtktest --enable-gtk2 \
++             --enable-monolithic --disable-unicode \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make 2>&1 | tee $MOUT
++ MOUT=mout-contrib
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make -C contrib 2>&1 | tee $MOUT
++ 
++ WXDIR=`pwd`
++ cd $WXDIR/wxPython
++ CXX="CC -Kpthread -Kalloca" \
++ CC="CC -Kpthread -Kalloca" \
++ python setup.py \
++         WXPORT=gtk2 \
++         UNICODE=0 \
++         BUILD_GLCANVAS=0 \
++         EP_ADD_OPTS=1 \
++         NO_SCRIPTS=1 \
++         WX_CONFIG="/usr/bin/wx-config" \
++         build_ext --rpath=/usr/lib/wxPython-2.8.6.1-gtk2-ansi/lib \
++         build 2>&1 | tee ../mout-setup
++ 
+*** ./Install-OSR6.00	Mon Nov 10 18:11:52 2008
+--- ./Install-OSR6	Mon Nov 10 18:11:52 2008
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/wxPython
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install
++ make -C contrib install DESTDIR=$D 2>&1 | tee mout-contrib-install
++ 
++ WXDIR=`pwd`
++ cd $WXDIR/wxPython
++ python setup.py \
++         WXPORT=gtk2 \
++         UNICODE=0 \
++         BUILD_GLCANVAS=0 \
++         EP_ADD_OPTS=1 \
++         NO_SCRIPTS=1 \
++         WX_CONFIG="/usr/bin/wx-config --prefix=$D/usr/lib/wxPython-2.8.6.1-gtk2-ansi" \
++         build_ext --rpath=/usr/lib/wxPython-2.8.6.1-gtk2-ansi/lib \
++         install --root=$D

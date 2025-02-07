@@ -1,0 +1,15 @@
+*** ./Configure-OSR6.osr6 Fri May 27 19:04:02 2005
+--- ./Configure-OSR6 Fri May 27 19:04:02 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CC="gcc -D_REENTRANT"
++ CXX="g++ -D_REENTRANT"
++ export CC CXX CFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr/gnu \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

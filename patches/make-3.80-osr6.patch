@@ -1,0 +1,35 @@
+*** ./Configure-OSR6.osr6 Sun May 29 17:51:45 2005
+--- ./Configure-OSR6 Sun May 29 17:55:28 2005
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr/gnu --with-libintl-prefix=/usr/gnu/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.osr6	2005-07-03 19:19:34.530000003 -0700
++++ Install-OSR6	2005-07-03 19:19:46.860000016 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/make
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

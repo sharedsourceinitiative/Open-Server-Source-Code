@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<TITLE>madness</TITLE>
+</HEAD>
+<BODY>
+<H1>madness</H1>
+<P>
+Calculate and display an aggregating particle
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record
+<DT><B>Restrictions</B>
+<DD>Copyright 1993, 1994 Ronald Joe Record
+<DT><B>Availability</B>
+<DD>
+The mathrec source code is freely redistributable. The author maintains
+binary distributions for SCO OpenServer and UnixWare 7. These distributions
+and the source code are available via:
+<BR>
+<A HREF="http://www.sco.com/skunkware/x11/apps/index.html#mathrec">
+http://www.sco.com/skunkware/x11/apps/index.html#mathrec</A>.
+<DT><B>History</B>
+<DD>
+Written 4/22 1988 by Ron Record (rr@sco.com).
+Based in part on the Computer Recreations article in the 5/88
+Scientific American.
+<DT><B>Description</B>
+<DD>
+The heart drawing mode was added right after the Loma Prieta
+earthquake. The idea was to convey the sense of a seismograph
+gone berserk but forming the shape of a heart.
+<P>
+Some sample shell scripts are provided in /usr/local/mathrec/madness.
+<P>
+It's amazing what you can do with sines and cosines.
+<DT><B>Build</B>
+<DD>
+To build the madness binary, use the Imakefile.
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile madness.
+<P>
+The manual page can be formatted by typing 
+"nroff -man madness.man > madness.1".
+
+<DT><B>Install</B>
+<DD>
+To install madness, copy the madness binary to the desired location (the sample
+makefile puts it in /usr/local/bin). Also copy the resource file Madness.ad
+to /usr/lib/X11/app-defaults/Madness or append it to you local $HOME/.Xdefaults.
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/man/cat.LOCAL for imaging software), then add that location
+to your MANPATH.
+
+<DT><B>Productivity</B>
+<DD>None
+
+<DT><B>Safety</B>
+<DD>I have used this for years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual page.
+
+<DT><B>Verification</B>
+<DD>
+You can test madness by just invoking it with no arguments.
+
+Some "interesting" ways to run madness are provided as shell scripts
+in the params subdirectory of the source and in /usr/skunk/lib/madness.
+
+<DT><B>Feedback</B>
+<DD>
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

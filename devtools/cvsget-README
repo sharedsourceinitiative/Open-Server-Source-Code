@@ -1,0 +1,35 @@
+June 3, 2008
+
+Cvsget - convenience script to remotely update a read-only CVS source tree
+==========================================================================
+
+SUMMARY: The cvsget shell script semi-automates the retrieval of the latest
+         source from CVS repositories for many open source development
+         projects. Projects currently supported include the following:
+           amavis Amaya Ayttm aolserver autoconf ccvs dejagnu enhydra
+           enlightenment everybuddy expect faqomatic firebird fltk freetype
+           freetype2 ftpascal ft2demos gdb gtk-gnutella hylafax hypermail
+           incrtcl interbase interchange interchangedocs jboss jday jetspeed
+           KBackup libtiff libtool libwww lxr mozilla mutt opennms openoffice
+           openssh php pymilter python quadra roxen rsync rxvt sabtol samba
+           tcl tk tclx tmda trn udi vim wine wxPython
+
+REQUIREMENTS: CVS and a Bourne Shell
+
+DOWNLOAD: ftp://ftp2.sco.com/pub/skunkware/src/devtools/cvsget.gz
+
+INSTALLATION: Download and uncompress the cvsget shell script
+              For example:
+                # wget ftp://ftp2.sco.com/pub/skunkware/src/devtools/cvsget.gz
+                # gunzip cvsget.gz
+
+              Edit the cvsget shell script, setting the SRCDIR variable.
+              The default setting is /u/src. Change this to the root of 
+              your development source tree.
+                 # vi cvsget
+
+              Copy the cvsget shell script to a PATH component and make it
+              executable. For example:
+                # cp cvsget /usr/local/bin/cvsget
+                # chmod 755 /usr/local/bin/cvsget
+

@@ -1,0 +1,547 @@
+*** ./src/network_backends.h.osr6	Thu Dec 28 21:32:44 2006
+--- ./src/network_backends.h	Thu Nov 29 12:56:50 2007
+***************
+*** 33,38 ****
+--- 33,41 ----
+  #if defined HAVE_SYS_MMAN_H && defined HAVE_MMAP
+  # define USE_MMAP
+  # include <sys/mman.h>
++ # ifdef mmap
++ # undef mmap
++ # endif
+  /* NetBSD 1.3.x needs it */
+  # ifndef MAP_FAILED
+  #  define MAP_FAILED -1
+*** ./src/sys-mmap.h.osr6	Wed Oct  4 06:26:23 2006
+--- ./src/sys-mmap.h	Thu Nov 29 12:56:50 2007
+***************
+*** 15,20 ****
+--- 15,23 ----
+  
+  #else
+  #include <sys/mman.h>
++ #ifdef mmap
++ #undef mmap
++ #endif
+  
+  #ifndef MAP_FAILED
+  #define MAP_FAILED -1
+*** ./src/chunk.c.osr6	Wed Oct  4 06:26:23 2006
+--- ./src/chunk.c	Thu Nov 29 12:56:50 2007
+***************
+*** 7,12 ****
+--- 7,15 ----
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/mman.h>
++ #ifdef mmap
++ #undef mmap
++ #endif
+  
+  #include <stdlib.h>
+  #include <fcntl.h>
+*** ./src/mod_cgi.c.osr6	Sat Aug 18 05:25:52 2007
+--- ./src/mod_cgi.c	Thu Nov 29 12:56:50 2007
+***************
+*** 5,10 ****
+--- 5,13 ----
+  #include <sys/socket.h>
+  #include <sys/wait.h>
+  #include <sys/mman.h>
++ #ifdef mmap
++ #undef mmap
++ #endif
+  
+  #include <netinet/in.h>
+  
+*** ./src/mod_extforward.c.osr6	Sat Aug 18 02:43:35 2007
+--- ./src/mod_extforward.c	Thu Nov 29 12:56:50 2007
+***************
+*** 285,290 ****
+--- 285,293 ----
+   */
+  #define AI_NUMERICSERV 0
+  #endif
++ #ifndef AI_NUMERICHOST
++ #define AI_NUMERICHOST 0x00000004
++ #endif
+     hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV;
+  
+     result = getaddrinfo(host, NULL, &hints, &res0);
+*** ./doc/lighttpd.conf.osr6	Tue Aug 14 12:05:57 2007
+--- ./doc/lighttpd.conf	Thu Nov 29 12:57:45 2007
+***************
+*** 37,46 ****
+  
+  ## a static document-root, for virtual-hosting take look at the
+  ## server.virtual-* options
+! server.document-root        = "/srv/www/htdocs/"
+  
+  ## where to send error-messages to
+! server.errorlog             = "/var/log/lighttpd/error.log"
+  
+  # files to check for if .../ is requested
+  index-file.names            = ( "index.php", "index.html",
+--- 37,46 ----
+  
+  ## a static document-root, for virtual-hosting take look at the
+  ## server.virtual-* options
+! server.document-root        = "/usr/lib/lighttpd/htdocs/"
+  
+  ## where to send error-messages to
+! server.errorlog             = "/usr/lib/lighttpd/logs/error.log"
+  
+  # files to check for if .../ is requested
+  index-file.names            = ( "index.php", "index.html",
+***************
+*** 115,121 ****
+  # server.tag                 = "lighttpd"
+  
+  #### accesslog module
+! accesslog.filename          = "/var/log/lighttpd/access.log"
+  
+  ## deny access the file-extensions
+  #
+--- 115,121 ----
+  # server.tag                 = "lighttpd"
+  
+  #### accesslog module
+! accesslog.filename          = "/usr/lib/lighttpd/logs/access.log"
+  
+  ## deny access the file-extensions
+  #
+***************
+*** 147,153 ****
+  #server.error-handler-404   = "/error-handler.php"
+  
+  ## to help the rc.scripts
+! #server.pid-file            = "/var/run/lighttpd.pid"
+  
+  
+  ###### virtual hosts
+--- 147,153 ----
+  #server.error-handler-404   = "/error-handler.php"
+  
+  ## to help the rc.scripts
+! server.pid-file            = "/usr/lib/lighttpd/logs/lighttpd.pid"
+  
+  
+  ###### virtual hosts
+***************
+*** 186,195 ****
+  #server.chroot              = "/"
+  
+  ## change uid to <uid> (default: don't care)
+! #server.username            = "wwwrun"
+  
+  ## change uid to <uid> (default: don't care)
+! #server.groupname           = "wwwrun"
+  
+  #### compress module
+  #compress.cache-dir         = "/var/cache/lighttpd/compress/"
+--- 186,195 ----
+  #server.chroot              = "/"
+  
+  ## change uid to <uid> (default: don't care)
+! server.username            = "nouser"
+  
+  ## change uid to <uid> (default: don't care)
+! server.groupname           = "nogroup"
+  
+  #### compress module
+  #compress.cache-dir         = "/var/cache/lighttpd/compress/"
+*** ./doc/rc.lighttpd.sco.osr6	Thu Nov 29 12:56:50 2007
+--- ./doc/rc.lighttpd.sco	Thu Nov 29 12:58:14 2007
+***************
+*** 0 ****
+--- 1,340 ----
++ #!/bin/sh
++ #
++ # Copyright (c) 1999 The Santa Cruz Operation, Inc.. All Rights Reserved.
++ # THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF THE SANTA CRUZ OPERATION INC.
++ # The copyright notice above does not evidence any actual or intended
++ # publication of such source code.
++ # 
++ #
++ # lighttpd start/stop script
++ # Usage: lighttpd [ start | stop | enable | disable | query | status | restart ]
++ #
++ LIGHTTPD_HOME="/usr/lib/lighttpd"
++ SSL=yes
++ [ -f /etc/default/lighttpd ] && {
++ 	. /etc/default/lighttpd
++ }
++ 
++ # definitions
++ USAGE="Usage: %s [ start  | startssl | stop | enable | disable | query | status | restart ]"
++ LABEL="UX:`basename $0`"
++ CAT="lighttpd.cat"
++ 
++ # paths to lighttpd files, and a label
++ LIGHTTPD_LABEL="lighttpd"
++ LIGHTTPD_BIN="/usr/sbin/lighttpd"
++ LIGHTTPD_CONF="$LIGHTTPD_HOME/conf/lighttpd.conf"
++ LIGHTTPD_PIDFILE="$LIGHTTPD_HOME/logs/lighttpd.pid"
++ 
++ # more paths, and some wait timeouts
++ PATH="/bin:/usr/bin:/etc:/usr/gnu/bin"; export PATH
++ [ -f /etc/OSRELEASE ] && {
++   SHELL=/u95/bin/sh; export SHELL
++ }
++ SCRIPTDIR="/etc/init.d"
++ SCRIPT="lighttpd"
++ SCRIPTNUM="90"
++ STOP_TIMEOUT=30
++ START_TIMEOUT=30
++ 
++ # shell values of TRUE and FALSE
++ TRUE=0
++ FALSE=1
++ 
++ 
++ #############################################################################
++ #
++ # get_server_pid
++ #
++ # returns the server PID, from the PID file, or 0 if no PID file found
++ #
++ #############################################################################
++ get_server_pid() {
++ 	# look for the expected PID file
++ 	if [ -r $LIGHTTPD_PIDFILE ]; then
++ 		# file exists, so extract the PID from it
++ 		read line < $LIGHTTPD_PIDFILE
++ 		set -- junk $line		# protects against empty line
++ 		shift				# get rid of junk
++ 
++ 		# return this PID
++ 		case "$1" in
++ 			[1-9][0-9]*) return $1 ;;
++ 			*) return 0		# Protect against corrupt file
++ 			   ;;
++ 		esac
++ 	fi
++ 
++ 	# PID file does not exist.
++ 	return 0
++ }
++ 
++ 
++ 
++ #############################################################################
++ #
++ # server_running
++ #
++ # check to see if the server is running - returns
++ #		$TRUE if the daemon is running
++ #		$FALSE otherwise
++ #
++ #############################################################################
++ server_running() {
++ 	# get the server process PID, or zero if no PID file
++ 	get_server_pid; kill_pid=$?
++ 	if [ $kill_pid -ne 0 ]; then
++ 		# try killing this process with signal zero
++ 		if kill -0 $kill_pid >/dev/null 2>&1; then
++ 			# the process is running
++ 			return $TRUE
++ 		fi
++ 	fi
++ 
++ 	# either the PID file does not exist, or the kill failed; in both
++ 	# cases this means that the server isn't running
++ 	return $FALSE
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_start
++ #
++ # start the server daemon running
++ #
++ #############################################################################
++ lighttpd_start() {
++ 	[ -z "$1" -o "x$1" = "xno" -o "x$1" = "xoff" ] && STARTSSL=
++ 	[ -n "$1" -a "x$1" = "xyes" -o "x$1" = "xon" ] && STARTSSL=ssl
++ 
++ 	# see if the server is already running, and if it is then
++ 	# just return without further action
++ 	if server_running; then
++ 		dspmsg $CAT 2 \
++ 			"%s is already running.\n" $LIGHTTPD_LABEL
++ 		return
++ 	fi
++ 
++ 	# start the server
++ 	dspmsg $CAT 3 \
++ 		"Starting %s ... " $LIGHTTPD_LABEL
++ 	if su root -c "$LIGHTTPD_BIN -f $LIGHTTPD_CONF > /dev/null 2>&1 &"; then
++ 		# wait to see if the server gets started
++ 		count=0; while [ $count -lt $START_TIMEOUT ]; do
++ 			if server_running; then
++ 				dspmsg $CAT 4 "done.\n"
++ 				return
++ 			fi
++ 			sleep 1			# let server start
++ 			count=`expr $count + 1`
++ 		done
++ 
++ 		# server did not start correctly
++ 		echo ""
++ 		dspmsg $CAT 5 \
++ 			"start wait timed out.\n"
++ 		return
++ 	else
++ 		# execution of the server binary failed in some way
++ 		echo ""
++ 		dspmsg $CAT 6 \
++ 			"%s could not be started\n" $LIGHTTPD_LABEL
++ 		return
++ 	fi
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_stop
++ #
++ # stop the server daemon if it is running
++ #
++ #############################################################################
++ lighttpd_stop() {
++ 	# see if the server is already running, and if it is not then
++ 	# return without further action
++ 	if server_running; then
++ 		:
++ 	else
++ 		# the server isn't running
++ 		dspmsg $CAT 7 \
++ 			"%s does not appear to be running.\n" $LIGHTTPD_LABEL
++ 		return
++ 	fi
++ 
++ 	# get the server's PID
++ 	get_server_pid; kill_pid=$?
++ 
++ 	# signal the server to stop
++ 	dspmsg $CAT 8 \
++ 		"Stopping %s ... " $LIGHTTPD_LABEL
++ 	if [ $kill_pid -ne 0 ]; then
++ 		kill $kill_pid >/dev/null 2>&1
++ 	fi
++ 
++ 	# wait for it to halt
++ 	count=0; while [ $count -lt $STOP_TIMEOUT ]; do
++ 		sleep 1			# let server stop
++ 		if server_running; then
++ 			count=`expr $count + 1`
++ 			continue
++ 		fi
++ 
++ 		# server is no longer running
++ 		dspmsg $CAT 9 "done.\n"
++ 		return
++ 	done
++ 
++ 	# the server appears to be unwilling to stop
++ 	echo ""
++ 	dspmsg $CAT 10 \
++ 		"stop wait timed out.\n"
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_restart
++ #
++ # restart the server daemon by sending it a SIGHUP
++ #
++ #############################################################################
++ lighttpd_restart() {
++ 	# see if the server is running, and if not then return
++ 	# without further action
++ 	if server_running; then
++ 		:
++ 	else
++ 		# the server isn't running
++ 		dspmsg $CAT 11 \
++ 			"%s does not appear to be running.\n" $LIGHTTPD_LABEL
++ 		return
++ 	fi
++ 	lighttpd_stop
++ 	lighttpd_start
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_enable
++ #
++ # add a link to this script into the /etc/rc2.d directory, then start
++ # the server
++ #
++ #############################################################################
++ lighttpd_enable() {
++ 	# create the /etc/rc2.d startup file
++ 	if [ -f /etc/rc2.d/P$SCRIPTNUM$SCRIPT ]; then
++ 		# file already exists
++ 		test -z "$ISL" && dspmsg $CAT 15 \
++ 			"%s is already enabled.\n" $LIGHTTPD_LABEL
++ 	else
++ 		# link in the file
++ 		test -z "$ISL" && dspmsg $CAT 16 \
++ 			"Enabling %s ... " $LIGHTTPD_LABEL
++ 		ln $SCRIPTDIR/$SCRIPT /etc/rc2.d/P$SCRIPTNUM$SCRIPT
++ 		ln $SCRIPTDIR/$SCRIPT /etc/rc0.d/P$SCRIPTNUM$SCRIPT
++ 		test -z "$ISL" && dspmsg $CAT 17 "done.\n"
++ 	fi
++ 
++ 	# start the server
++ 	test -z "$ISL" && lighttpd_start
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_disable
++ #
++ # stop the server, then remove any links to this script in /etc/rc2.d
++ #
++ #############################################################################
++ lighttpd_disable() {
++ 	# stop the server
++ 	lighttpd_stop
++ 
++ 	# remove the /etc/rc2.d startup file
++ 	if [ -f /etc/rc2.d/P$SCRIPTNUM$SCRIPT ]; then
++ 		# unlink the file
++ 		test -z "$ISL" && dspmsg $CAT 18 \
++ 			"Disabling %s ... " $LIGHTTPD_LABEL
++ 		rm -f /etc/rc2.d/P$SCRIPTNUM$SCRIPT
++ 		rm -f /etc/rc0.d/P$SCRIPTNUM$SCRIPT
++ 		test -z "$ISL" && dspmsg $CAT 19 "done.\n"
++ 	else
++ 		# file does not exist
++ 		test -z "$ISL" && dspmsg $CAT 20 \
++ 			"%s is already disabled.\n" $LIGHTTPD_LABEL
++ 	fi
++ }
++ 
++ 
++ #############################################################################
++ #
++ # lighttpd_query
++ #
++ # query the server to see if it is running
++ #
++ #############################################################################
++ lighttpd_query() {
++ 	# test for the server process
++ 	if server_running; then
++ 		dspmsg $CAT 21 \
++ 			"%s is currently running.\n" $LIGHTTPD_LABEL
++ 	else
++ 		dspmsg $CAT 22 \
++ 			"%s is not running.\n" $LIGHTTPD_LABEL
++ 	fi
++ 
++ 	# test for the /etc/rc2.d startup on boot file
++ 	if [ -f /etc/rc2.d/P$SCRIPTNUM$SCRIPT ]; then
++ 		dspmsg $CAT 23 \
++ 			"%s is enabled.\n" $LIGHTTPD_LABEL
++ 	else
++ 		dspmsg $CAT 24 \
++ 			"%s is disabled.\n" $LIGHTTPD_LABEL
++ 	fi
++ }
++ 
++ 
++ #############################################################################
++ # main()
++ #############################################################################
++ 
++ # check the usage of the script
++ if [ $# -gt 1 ]; then
++ 	dspmsg $CAT 1 "$USAGE\n" `basename $0`
++ 	exit 1
++ fi
++ 
++ # function to perform is in $1
++ function="$1"
++ 
++ # execute the routine for the requested function
++ case $function in
++ start)
++ 	lighttpd_start $SSL ;;
++ startssl)
++ 	lighttpd_start yes ;;
++ stop)
++ 	lighttpd_stop	;;
++ enable)
++ 	lighttpd_enable	;;
++ disable)
++ 	lighttpd_disable	;;
++ query)
++ 	lighttpd_query	;;
++ status)
++ 	lighttpd_query	;;
++ restart)
++ 	lighttpd_restart	;;
++ *)
++ 	dspmsg $CAT 1 "$USAGE\n" `basename $0`
++ 	exit 1		;;
++ esac
++ 
++ # done
++ exit 0
+*** ./Install-OSR6.osr6	Thu Nov 29 12:56:50 2007
+--- ./Install-OSR6	Thu Nov 29 12:56:50 2007
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/lighttpd
++ DESTDIR=$D
++ export DESTDIR
++ CDIR=$DESTDIR/usr/lib/lighttpd/conf
++ IDIR=$DESTDIR/etc/init.d
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
++ [ -d $CDIR ] || mkdir -p $CDIR
++ cp doc/lighttpd.conf $CDIR/lighttpd.conf
++ [ -d $IDIR ] || mkdir -p $IDIR
++ cp doc/rc.lighttpd.sco $IDIR/lighttpd
+*** ./Configure-OSR6.osr6	Thu Nov 29 12:56:50 2007
+--- ./Configure-OSR6	Thu Nov 29 12:56:50 2007
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --program-prefix="" \
++             --libdir=/usr/lib/lighttpd/lib --with-ldap \
++             --disable-ipv6 --with-openssl --with-bzip2 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

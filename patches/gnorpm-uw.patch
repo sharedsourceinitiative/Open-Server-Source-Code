@@ -1,0 +1,275 @@
+--- ./macros/Makefile.in.uw	2001-02-14 12:58:41.000000000 +0000
++++ ./macros/Makefile.in	2003-12-13 21:05:14.730000058 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = ..
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+--- ./po/Makefile.in.in.uw	2001-02-14 12:49:43.000000000 +0000
++++ ./po/Makefile.in.in	2003-12-13 21:09:29.500000010 +0000
+@@ -19,7 +19,7 @@
+ prefix = @prefix@
+ exec_prefix = @exec_prefix@
+ datadir = $(prefix)/@DATADIRNAME@
+-localedir = $(datadir)/locale
++localedir = $(prefix)/share/locale
+ gnulocaledir = $(prefix)/share/locale
+ gettextsrcdir = $(prefix)/share/gettext/po
+ subdir = po
+--- ./find/Makefile.in.uw	2001-02-14 12:58:46.000000000 +0000
++++ ./find/Makefile.in	2003-12-13 21:05:14.740000052 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = ..
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+@@ -121,7 +121,7 @@
+ noinst_PROGRAMS = tester
+ 
+ tester_SOURCES = tester.c
+-tester_LDADD = $(GNOME_LIBDIR) $(GNOMEUI_LIBS) $(GNOME_LIBS) $(RPMFIND_LIBS) $(GHTTP_LIB) -L$(RPM_PREFIX)/lib -lrpm -lz -ldb
++tester_LDADD = $(GNOME_LIBDIR) $(GNOMEUI_LIBS) $(GNOME_LIBS) $(RPMFIND_LIBS) $(GHTTP_LIB) -L$(RPM_PREFIX)/lib -lrpm -lrpmdb -lz -ldb
+ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+ CONFIG_HEADER = ../config.h
+ CONFIG_CLEAN_FILES = 
+--- ./find/tester.c.uw	1999-03-13 02:26:43.000000000 +0000
++++ ./find/tester.c	2003-12-13 21:05:14.740000072 +0000
+@@ -30,7 +30,7 @@
+   rpmdb db;
+ 
+   gnomelib_init("tester", "0.0");
+-  rpmReadRC(NULL);
++/*  rpmReadRC(NULL); */
+   rpmdbOpen(NULL, &db, O_RDONLY, 0644);
+   guessInit(db);
+   cache_create_dirs();
+--- ./help/C/Makefile.in.uw	2001-02-14 12:59:06.000000000 +0000
++++ ./help/C/Makefile.in	2003-12-13 21:05:14.740000091 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = ../..
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+--- ./help/es/Makefile.in.uw	2001-02-14 12:59:10.000000000 +0000
++++ ./help/es/Makefile.in	2003-12-13 21:05:14.750000006 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = ../..
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+--- ./help/Makefile.in.uw	2001-02-14 12:58:50.000000000 +0000
++++ ./help/Makefile.in	2003-12-13 21:05:14.750000033 +0000
+@@ -43,10 +43,10 @@
+ 
+ top_builddir = ..
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+--- ./Makefile.in.uw	2001-02-14 12:57:52.000000000 +0000
++++ ./Makefile.in	2003-12-13 21:05:14.760000008 +0000
+@@ -40,10 +40,10 @@
+ 
+ top_builddir = .
+ 
+-ACLOCAL = @ACLOCAL@
+-AUTOCONF = @AUTOCONF@
+-AUTOMAKE = @AUTOMAKE@
+-AUTOHEADER = @AUTOHEADER@
++ACLOCAL = true
++AUTOCONF = true
++AUTOMAKE = true
++AUTOHEADER = true
+ 
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+@@ -116,7 +116,7 @@
+ INCLUDES = $(GNOME_INCLUDEDIR) -I$(RPM_PREFIX)/include/rpm            -DGNOMELOCALEDIR=\""$(datadir)/locale"\" 	   -DG_LOG_DOMAIN=\"GnoRPM\"
+ 
+ 
+-LDADD = $(GNOME_LIBDIR) $(GNOMEUI_LIBS) $(RPMFIND_LIBS) 	 -L$(RPM_PREFIX)/lib -lrpm -lz $(INTLLIBS) 	$(GHTTP_LIB)
++LDADD = $(GNOME_LIBDIR) $(GNOMEUI_LIBS) $(RPMFIND_LIBS) 	 -L$(RPM_PREFIX)/lib -lrpm -lrpmdb -lz $(INTLLIBS) 	$(GHTTP_LIB)
+ 
+ 
+ bin_PROGRAMS = gnorpm
+@@ -525,9 +525,11 @@
+ rpmpackagelist.o: rpmpackagelist.c config.h rpmpackagelist.h \
+ 	gtkpathtree.h dbhandle.h gnome-package.xpm
+ rpmprogress.o: rpmprogress.c config.h rpmprogress.h dbhandle.h
++	gcc -DHAVE_CONFIG_H -I. -I. -I. -I/opt/gnome/include/gnome-1.0 -DNEED_GNOMESUPPORT_H -I/opt/gnome/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/orbit-1.0 -I/usr/include/gtk-1.2 -I/usr/X11R6.1/include -I/usr/include/rpm            -DGNOMELOCALEDIR=\""/opt/gnome/share/locale"\"       -DG_LOG_DOMAIN=\"GnoRPM\"   -march=i386 -mcpu=i686 -DHAVE_NETINET_IN_SYSTM_H -D_LARGEFILE64_SOURCE -I/opt/gnome/include -Wall -Wunused  -c rpmprogress.c
+ rpmprops.o: rpmprops.c config.h rpmprops.h misc.h install.h \
+ 	find/libfind.h find/trans.h find/guess.h find/distrib.h \
+ 	find/rpmdata.h find/rdf.h find/search.h find/deps.h
++	gcc -DHAVE_CONFIG_H -I. -I. -I. -I/opt/gnome/include/gnome-1.0 -DNEED_GNOMESUPPORT_H -I/opt/gnome/lib/gnome-libs/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/orbit-1.0 -I/usr/include/gtk-1.2 -I/usr/X11R6.1/include -I/usr/include/rpm            -DGNOMELOCALEDIR=\""/opt/gnome/share/locale"\" 	   -DG_LOG_DOMAIN=\"GnoRPM\"  -march=i386 -mcpu=i686 -DHAVE_NETINET_IN_SYSTM_H -D_LARGEFILE64_SOURCE -I/opt/gnome/include -Wall -Wunused  -c rpmprops.c
+ rpmquery.o: rpmquery.c config.h rpmquery.h dbhandle.h find/rdf.h \
+ 	find/rpmdata.h pixmaps.h rpmcompat.h
+ rpmquerydlg.o: rpmquerydlg.c config.h rpmquerydlg.h rpmquery.h \
+--- ./configure.uw	2001-02-14 12:57:16.000000000 +0000
++++ ./configure	2003-12-13 21:05:14.770000041 +0000
+@@ -4405,7 +4405,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lrpmio -lz -ldb $LIBS"
++LIBS="-lrpmio -lintl -lz -ldb $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 4411 "configure"
+ #include "confdefs.h"
+@@ -4433,7 +4433,7 @@
+ fi
+ if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
+   echo "$ac_t""yes" 1>&6
+-  LIBS="-lrpmio $LIBS";
++  LIBS="-lrpmio -lintl $LIBS";
+ 	cat >> confdefs.h <<EOF
+ #define HAVE_RPM_4_0 1
+ EOF
+--- ./install.c.uw	2000-12-11 15:02:10.000000000 +0000
++++ ./install.c	2003-12-13 21:05:14.790000015 +0000
+@@ -177,13 +177,13 @@
+ 
+ static void addDepNodes(rpmdb db, gchar *rootdir,
+ 			GtkCTree *ctree, GtkCTreeNode *parent,
+-			struct rpmDependencyConflict *conflicts,
++			rpmDependencyConflict conflicts,
+ 			int numConflicts, GList **processed) {
+   GtkCTreeNode *node;
+   gint i, flags;
+   guint32 offs;
+   gchar buf[1024], *row[1];
+-  struct rpmDependencyConflict *conf2;
++  rpmDependencyConflict conf2;
+   gint numConf2;
+ 
+   row[0] = buf;
+@@ -274,7 +274,7 @@
+ }
+ 
+ /* returns TRUE if yes was pressed */
+-static gboolean displayDepProblems(struct rpmDependencyConflict *conflicts,
++static gboolean displayDepProblems(rpmDependencyConflict conflicts,
+ 				   int numConflicts,
+ 				   rpmdb db, gchar *rootdir,
+ 				   GList **dependentPkgs) {
+@@ -340,7 +340,7 @@
+   Header *binaryHeaders;
+   rpmdb db;
+   rpmDependencies rpmdep;
+-  struct rpmDependencyConflict *conflicts;
++  rpmDependencyConflict conflicts;
+   gulong *sizep;
+ 
+   if (installFlags & RPMINSTALL_TEST)
+@@ -454,11 +454,11 @@
+ 
+   for (i = 0; i < probs->numProblems; i++) {
+       if (!probs->probs[i].ignoreProblem) {
+-	  const char *msg = rpmProblemString(probs->probs[i]);
+-	  w = gtk_list_item_new_with_label(msg);
+-	  gtk_widget_show(w);
+-	  items = g_list_append(items, w);
+-	  free((void *)msg);
++	const char *msg = rpmProblemString(&(probs->probs[i]));
++	w = gtk_list_item_new_with_label(msg);
++	gtk_widget_show(w);
++	items = g_list_append(items, w);
++	free((void *)msg);
+       }
+   }
+ 
+@@ -500,7 +500,7 @@
+   GtkWidget *win, *wid;
+ 
+   FD_t fd;
+-  struct rpmDependencyConflict *conflicts;
++  rpmDependencyConflict conflicts;
+   gulong *sizep;
+ 
+   if (transFlags & RPMTRANS_FLAG_TEST)
+@@ -693,7 +693,7 @@
+   rpmdb db;
+   gint mode, numFailed = 0, numConflicts, stopUninstall = 0;
+   rpmDependencies rpmdep;
+-  struct rpmDependencyConflict *conflicts;
++  rpmDependencyConflict conflicts;
+   GList *tmp;
+ 
+   if (uninstallFlags &RPMUNINSTALL_TEST)
+@@ -738,7 +738,7 @@
+   rpmdb db;
+   gint mode, numFailed = 0, numConflicts, stopUninstall = 0;
+   rpmTransactionSet rpmdep = NULL;
+-  struct rpmDependencyConflict *conflicts;
++  rpmDependencyConflict conflicts;
+   GList *tmp;
+   rpmProblemSet probs;
+ 
+--- ./rpmfinddlg.c.uw	2000-09-18 15:31:32.000000000 +0000
++++ ./rpmfinddlg.c	2003-12-13 21:05:14.790000046 +0000
+@@ -24,6 +24,10 @@
+ #include "misc.h"
+ #include "pixmaps.h"
+ 
++#ifdef index
++#undef index
++#endif
++
+ enum {
+   QUERY_RECORDS,
+   UNINSTALL_RECORDS,
+@@ -233,6 +237,7 @@
+ #ifdef HAVE_RPM_4_0
+   rpmdbMatchIterator mi;
+   gint rpmtag = -1;
++  gint index = 0;
+ #else
+   dbiIndexSet matches;
+   gchar buf[512], *s1, *s2, *s3;

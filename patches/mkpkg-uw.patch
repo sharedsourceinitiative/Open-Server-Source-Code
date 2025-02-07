@@ -1,0 +1,158 @@
+--- ./usr/bin/srpm2pkg.uw	2003-11-03 17:28:01.000000000 +0000
++++ ./usr/bin/srpm2pkg	2004-09-01 20:48:38.750000021 +0000
+@@ -74,6 +74,11 @@
+ #    cp -pR doc/src $DESDOC/src
+ 
+ # Finally, copy in the pkgadd install scripts and set permissions/ownership
++    [ -f ${SOURCE0} ] && {
++        [ -d $RPM_BUILD_ROOT ] || mkdir -p $RPM_BUILD_ROOT
++        cp -p ${SOURCE0} $RPM_BUILD_ROOT/preremove
++        chmod 700 $RPM_BUILD_ROOT/preremove
++    }
+     [ -f ${SOURCE1} ] && {
+         [ -d $RPM_BUILD_ROOT ] || mkdir -p $RPM_BUILD_ROOT
+         cp -p ${SOURCE1} $RPM_BUILD_ROOT/postinstall
+@@ -102,7 +107,7 @@
+     [ -d $RPM_BUILD_ROOT ] || {
+         echo "$RPM_BUILD_ROOT does not exist!"
+         echo "Check the spec file for $NAME and make sure that BuildRoot"
+-        echo "is set to /var/tmp/$NAME-$VERSION-root"
++        echo "is set to /u/tmp/$NAME-$VERSION-root"
+         exit 1
+     }
+     cd $RPM_BUILD_ROOT
+@@ -115,6 +120,8 @@
+     cd $PKGDIR
+     gzcat $DISDIR/$NAME-$VERS-$REL-dist.tar.gz | tar xf -
+     [ -f ${SOURCE3} ] && gzcat ${SOURCE3} | tar xf -
++    find . -nouser | xargs chown root
++    find . -nogroup | xargs chgrp sys
+     for M in usr/man usr/share/man
+     do
+       [-d $M ] && {
+@@ -136,15 +143,7 @@
+ }
+ 
+ Mkpkg() {
+-    if [ -d $PKGDIR ] 
+-    then
+-        [ "$PKGDIR" != "/" ] && rm -rf $PKGDIR
+-        mkdir -p $PKGDIR
+-    else
+-        mkdir -p $PKGDIR
+-    fi
+     cd $PKGDIR
+-    gzcat $DISDIR/$NAME-$VERS-$REL-dist.tar.gz | tar xf -
+ #   [ "$COMP" ] || COMP=`echo $NAME | sed -e "s/-//g"`
+     [ "$COMP" ] || COMP=$NAME
+ #   mkpkg -p SCO -c $COMP -r $VERS
+@@ -153,6 +152,8 @@
+ 
+ Clean() {
+ [ "$RPM_BUILD_ROOT" != "/" ] && [ -d $RPM_BUILD_ROOT ] && rm -rf $RPM_BUILD_ROOT
++    cd $PKGDIR
++    [ -x Clean ] && ./Clean
+ }
+ 
+ umask 022
+@@ -276,8 +277,9 @@
+ SFILE=$NAME.spec
+ SRPM=$TOPDIR/SRPMS/$NAME-$VERS-$REL.src.rpm
+ LOGDIR=$TOPDIR/logs/Vols
+-RPM_BUILD_ROOT=/var/tmp/$NAME-$VERS-root
++RPM_BUILD_ROOT=/u/tmp/$NAME-$VERS-root
+ BUILD_DIR=$TOPDIR/BUILD/$NAME-$VERS
++SOURCE0=$TOPDIR/SOURCES/$NAME-preremove
+ SOURCE1=$TOPDIR/SOURCES/$NAME-postinstall
+ SOURCE2=$TOPDIR/SOURCES/$NAME-preinstall
+ SOURCE3=$TOPDIR/SOURCES/$NAME-$VERS-pkg.tar.gz
+@@ -306,6 +308,9 @@
+ [ "$Do_Install" ] && $ECHO Install
+ [ "$Do_Archive" ] && $ECHO Archive
+ [ "$Do_Extract" ] && $ECHO Extract
+-[ "$Do_Mkpkg" ] && $ECHO Mkpkg
++[ "$Do_Mkpkg" ] && {
++    [ "$Do_Extract" ] || $ECHO Extract
++    $ECHO Mkpkg
++}
+ [ "$Do_Clean" ] && $ECHO Clean
+ 
+--- ./usr/bin/mkpkg.uw	2003-11-03 17:06:51.000000000 +0000
++++ ./usr/bin/mkpkg	2004-09-01 20:46:47.330000046 +0000
+@@ -16,7 +16,11 @@
+ mv prototype prototype_tmp
+ sed -e "s/none/$1/" -e "s/rr other/root sys/" prototype_tmp > prototype
+ rm -f prototype_tmp
+-mv pkginfo pkginfo_tmp
+-sed -e "s/XXXXX/$1/" -e "s/YYYYY/$2/" pkginfo_tmp > pkginfo
+-rm -f pkginfo_tmp
++for i in Clean Handoff Install MakePKG Remove pkginfo
++do
++    mv $i ${i}_tmp
++    sed -e "s/XXXXX/$1/g" -e "s/YYYYY/$2/g" ${i}_tmp > $i
++    rm -f ${i}_tmp
++done
++chmod 755 Clean Handoff Install MakePKG Remove
+ $MPKDIR/MakePkg $1
+--- ./usr/lib/mkpkg/templates/Clean.uw	2004-09-01 20:46:47.330000054 +0000
++++ ./usr/lib/mkpkg/templates/Clean	2004-09-01 20:46:47.330000059 +0000
+@@ -0,0 +1,3 @@
++#!/bin/sh
++
++rm -rf XXXXX XXXXX.pkg MakePKG.log
+--- ./usr/lib/mkpkg/templates/Handoff.uw	2004-09-01 20:46:47.330000065 +0000
++++ ./usr/lib/mkpkg/templates/Handoff	2004-09-01 20:46:47.330000071 +0000
+@@ -0,0 +1,21 @@
++#!/bin/sh
++
++H=`pwd`
++N=`basename $H`
++D=`dirname $H`
++OUT=$D/../Handoffs/$N.cpio.Z
++
++rm -rf XXXXX XXXXX.pkg MakePKG.log
++
++cd $D
++[ -d ../Handoffs/pkg ] || mkdir -p ../Handoffs/pkg
++
++rm -f $OUT
++find $N -print -depth | cpio -oc | compress > $OUT
++
++cd $H
++./MakePKG
++
++cp XXXXX.pkg $D/../Handoffs/pkg/$N.pkg
++
++./Clean
+--- ./usr/lib/mkpkg/templates/Install.uw	2004-09-01 20:46:47.340000001 +0000
++++ ./usr/lib/mkpkg/templates/Install	2004-09-01 20:46:47.340000009 +0000
+@@ -0,0 +1,3 @@
++#!/bin/sh
++
++pkgadd -d `pwd`/XXXXX.pkg all
+--- ./usr/lib/mkpkg/templates/MakePKG.uw	2004-09-01 20:46:47.340000022 +0000
++++ ./usr/lib/mkpkg/templates/MakePKG	2004-09-01 20:46:47.340000028 +0000
+@@ -0,0 +1,8 @@
++#!/bin/sh
++
++NAME=XXXXX
++
++[ -d $NAME ] && rm -rf $NAME
++[ -f $NAME.pkg ] && rm -f $NAME.pkg
++
++/usr/lib/mkpkg/MakePkg $NAME > MakePKG.log 2>&1
+--- ./usr/lib/mkpkg/templates/Remove.uw	2004-09-01 20:46:47.340000034 +0000
++++ ./usr/lib/mkpkg/templates/Remove	2004-09-01 20:46:47.370000042 +0000
+@@ -0,0 +1,3 @@
++#!/bin/sh
++
++pkgrm XXXXX
+--- ./usr/lib/mkpkg/templates/pkginfo.uw	2001-01-03 01:47:52.000000000 +0000
++++ ./usr/lib/mkpkg/templates/pkginfo	2004-09-01 20:46:47.380000002 +0000
+@@ -1,6 +1,5 @@
+ PKG="XXXXX"
+ NAME="XXXXX"
+-DESC="XXXXX Package"
+ VERSION="YYYYY"
+ CATEGORY="application"
+ CLASSES="XXXXX"

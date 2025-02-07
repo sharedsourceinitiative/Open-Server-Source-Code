@@ -1,0 +1,57 @@
+*** ./Makefile.osr6	Tue Oct 20 17:06:11 1998
+--- ./Makefile	Sat Jul  2 13:53:29 2005
+***************
+*** 1,7 ****
+! CC = gcc
+! CFLAGS = -Wall -I.
+  LDFLAGS =
+! PREFIX = /usr/local
+  
+  SRCS = getopt.c getopt1.c
+  OBJS = getopt.o getopt1.o
+--- 1,9 ----
+! CC = cc
+! CFLAGS = -O2 -I.
+  LDFLAGS =
+! DESTDIR=
+! PREFIX = $(DESTDIR)/usr
+! INSTALL = /usr/gnu/bin/install
+  
+  SRCS = getopt.c getopt1.c
+  OBJS = getopt.o getopt1.o
+***************
+*** 12,17 ****
+--- 14,21 ----
+  	$(AR) cq $@ $(OBJS)
+  
+  install: $(OBJS) libgetopt.a
++ 	-mkdir -p $(PREFIX)/include
++ 	-mkdir -p $(PREFIX)/lib
+  	$(INSTALL) getopt.h $(PREFIX)/include
+  	$(INSTALL) libgetopt.a $(PREFIX)/lib
+  
+*** ./Build-OSR6.osr6	Sat Jul  2 13:51:49 2005
+--- ./Build-OSR6	Sat Jul  2 13:51:49 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Sat Jul  2 13:53:40 2005
+--- ./Install-OSR6	Sat Jul  2 13:53:55 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/getopt
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

@@ -1,0 +1,45 @@
+--- ./configure.00	2002-02-11 11:14:06.000000000 -0800
++++ ./configure	2005-06-08 21:41:09.996606011 -0700
+@@ -27,8 +27,8 @@
+ else
+     CC="gcc";
+ fi;
+-CFLAGS="$CFLAGS -g -Wall -I. -I.."
+-MCFLAGS="$MCFLAGS -shared"
++CFLAGS="$CFLAGS -O2 -I. -I.."
++MCFLAGS="$MCFLAGS -G"
+ LDFLAGS="$LDFLAGS"
+ LIBS="$LIBS"
+ XLDFLAGS="$XLDFLAGS "
+@@ -77,10 +77,14 @@
+ # Pth check
+ ##
+ printf "Getting pth settings..."
+-PTH_CFLAGS=`pth-config --cflags`
+-PTH_LDFLAGS=`pth-config --ldflags`
+-PTH_LIBS=`pth-config --libs`
+-PTH_LIBDIR=`pth-config --libdir`
++#PTH_CFLAGS=`pth-config --cflags`
++#PTH_LDFLAGS=`pth-config --ldflags`
++#PTH_LIBS=`pth-config --libs`
++#PTH_LIBDIR=`pth-config --libdir`
++PTH_CFLAGS=-Kpthread
++PTH_LDFLAGS=
++PTH_LIBS=
++PTH_LIBDIR=
+ if [ -n "$PTH_CFLAGS" ]; then
+     CFLAGS="$CFLAGS $PTH_CFLAGS";
+     LDFLAGS="$LDFLAGS $PTH_LDFLAGS";
+@@ -110,6 +114,12 @@
+ printf "Setting Build Parameters..."
+ hosttype=`uname -s`
+ case $hosttype in
++    SCO_SV)
++        CC="cc"
++        CFLAGS="$CFLAGS -KPIC"
++        LIBS="$LIBS -ldl -lsocket -lnsl -lresolv"
++        SLIBS="$SLIBS -lresolv";
++        XLDFLAGS="$XLDFLAGS -Wl,-Bexport";;
+     Linux)
+         CFLAGS="$CFLAGS -fPIC"
+         LIBS="$LIBS -ldl -lresolv"

@@ -1,0 +1,96 @@
+#!/usr/local/bin/yabasic
+rem Released under GPL License distribute and modify freely
+rem version 0.1b1 (needs lots of modifications but works :-)
+header$="Yamandel, Copyright (c) Hermang H. Mansilla Mattos, Nov 1998"
+goto Main
+label Initialize
+Ro=-1.60:Io=-1.0
+Rn=0.60:In=1.0
+rem Ro=-1.0:Io=-0.7
+rem Rn=-0.5:In=0
+delta=0.01
+VentXmax=300
+VentYmax=260
+IterMax=350
+dim buffer(VentXmax/8,VentYmax)
+return :rem Initialize
+
+label showcord
+print @(8,14) "From:";
+print @(8,15) "Real=",str$(Ro);
+print @(8,16) "Imag=",str$(Io);
+print @(8,17) "To:";
+print @(8,18) "Real=",str$(Rn);
+print @(8,19) "Imag=",str$(In);
+return:rem showcord
+
+label Mandelbrot
+ZR=0
+ZI=0
+n=0
+label Lazo
+TR=R+ZR*ZR-ZI*ZI
+TI=I+2*ZI*ZR
+ZR=TR
+ZI=TI
+n=n+1
+MAG2=ZR*ZR+ZI*ZI
+if MAG2>4 then 
+    answer$="N"
+    goto Salir
+fi
+if n<IterMax then goto Lazo
+else answer$="Y"
+fi
+label Salir
+return :rem Mandelbrot
+
+label UpdateScreen
+rem dot xi+(R-Ro)/delta ,yi+(I-Io)/delta
+dot Xcor,VentYmax-Ycor
+rem buffer(
+return
+
+label DibujaFractal
+dr=(Rn-Ro)/VentXmax
+di=(In-Io)/VentYmax
+for Ycor=yinit to VentYmax step 2
+for Xcor=xinit to VentXmax step 2
+R=dr*Xcor+Ro
+I=di*Ycor+Io
+gosub Mandelbrot
+print @(2,5) R,"+i",I,answer$
+if answer$="Y" then gosub UpdateScreen 
+fi
+next Xcor
+next Ycor
+return :rem DibujaFractal
+
+label Main
+gosub Initialize
+clear screen
+print "Press F10 to quit, R to redraw"
+open window VentXmax,VentYmax
+gosub showcord
+xinit=1:yinit=1
+print @(3,6) "Loop 1 of 4";
+gosub DibujaFractal
+beep
+xinit=2:yinit=2
+print @(3,6) "Loop 2 of 4";
+gosub DibujaFractal
+beep
+xinit=1:yinit=2
+print @(3,6) "Loop 3 of 4";
+gosub DibujaFractal
+beep
+xinit=2:yinit=1
+print @(3,6) "Loop 4 of 4";
+gosub DibujaFractal
+beep
+
+label handlekey
+k$=inkey$
+if k$<>"f10" then goto handlekey fi
+close window
+end

@@ -1,0 +1,101 @@
+--- ./test/Makefile.in.00	2005-10-03 17:48:31.000000000 -0700
++++ ./test/Makefile.in	2008-12-31 17:30:58.260000040 -0800
+@@ -43,7 +43,7 @@
+ @CAIRO_HAS_PS_SURFACE_TRUE@am__append_4 = ps-surface
+ @CAIRO_HAS_XLIB_SURFACE_TRUE@am__append_5 = xlib-surface
+ check_PROGRAMS = $(am__EXEEXT_6)
+-@HAVE_PTHREAD_TRUE@am__append_6 = -lpthread
++@HAVE_PTHREAD_TRUE@am__append_6 = -lthread
+ noinst_PROGRAMS = imagediff$(EXEEXT)
+ subdir = test
+ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+--- ./configure.00	2005-10-03 17:48:32.000000000 -0700
++++ ./configure	2008-12-31 17:26:14.520000093 -0800
+@@ -3949,7 +3949,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sco3.2v5*)
++sysv5* | sco3.2v5*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+@@ -3957,7 +3957,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -7043,7 +7043,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7715,12 +7715,11 @@
+       ;;
+ 
+     sysv5*)
+-      no_undefined_flag=' -z text'
++      no_undefined_flag=''
+       # $CC -shared without GNU ld will not create a library from C++
+       # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++      archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++      archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec=
+       hardcode_shlibpath_var=no
+       runpath_var='LD_RUN_PATH'
+--- ./Install-OSR6.00	2008-12-31 17:26:25.790000034 -0800
++++ ./Install-OSR6	2008-12-31 17:28:19.570000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/cairogcc
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./Configure-OSR6.00	2008-12-31 17:26:25.790000027 -0800
++++ ./Configure-OSR6	2008-12-31 17:26:25.790000024 -0800
+@@ -0,0 +1,27 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -O2 -Wall"
++  LIBS=""
++fi
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PKG_CONFIG_PATH LIBS
++rm -f mout-configure
++./configure --prefix=/usr/local --sysconfdir=/etc \
++            --disable-shared --enable-static \
++            --mandir=/usr/local/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

@@ -1,0 +1,110 @@
+*** ./rake/rakesysv5.rb.osr6	Fri Nov 16 19:13:14 2007
+--- ./rake/rakesysv5.rb	Fri Nov 16 19:13:14 2007
+***************
+*** 0 ****
+--- 1,19 ----
++ # rakesysv5.rb
++ #   Copyright 2007 by Ronald Joe Record
++ #   released under the MIT-style wxruby2 license
++ 
++ 
++ #############################
++ # platform-dependent settings
++ 
++ use_wx_config
++ 
++ $extra_cppflags = ''
++ 
++ # create a .so binary
++ $extra_ldflags = '-G'
++ 
++ # This class is not available on WXGTK
++ $excluded_classes << 'PrinterDC'
++ 
++ $link_wx_statically = false
+*** ./rake/rakewx.rb.osr6	Mon Oct 22 13:08:19 2007
+--- ./rake/rakewx.rb	Fri Nov 16 19:15:12 2007
+***************
+*** 97,107 ****
+    
+    # Check whether there is a lib file for StyledTextCtrl (Scintilla). If
+    # not, don't try and compile this file.
+!   stc_lib = $wx_libs[/\S+libwx\S+_stc\S+/]
+!   if not File.exists?(stc_lib)
+!     $wx_libs = wx_config("--libs")
+!     $excluded_classes << 'StyledTextCtrl'
+!   end
+  end
+  
+  def get_classes
+--- 97,107 ----
+    
+    # Check whether there is a lib file for StyledTextCtrl (Scintilla). If
+    # not, don't try and compile this file.
+!   #stc_lib = $wx_libs[/\S+libwx\S+_stc\S+/]
+!   #if not File.exists?(stc_lib)
+!   #  $wx_libs = wx_config("--libs")
+!   #  $excluded_classes << 'StyledTextCtrl'
+!   #end
+  end
+  
+  def get_classes
+*** ./Build-OSR6.osr6	Fri Nov 16 19:13:14 2007
+--- ./Build-OSR6	Fri Nov 16 19:13:14 2007
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout
++ rake 2>&1 | tee mout
+*** ./rakefile.osr6	Mon Oct 22 13:08:46 2007
+--- ./rakefile	Fri Nov 16 19:13:14 2007
+***************
+*** 45,51 ****
+  elsif($cygwin) then require "rake/rakecygwin"
+  elsif($bccwin) then require "rake/rakebccwin"
+  elsif($netbsd) then require "rake/rakenetbsd"
+! else                require "rake/rakelinux"
+  end
+  
+  
+--- 45,52 ----
+  elsif($cygwin) then require "rake/rakecygwin"
+  elsif($bccwin) then require "rake/rakebccwin"
+  elsif($netbsd) then require "rake/rakenetbsd"
+! elsif($linux) then  require "rake/rakelinux"
+! else                require "rake/rakesysv5"
+  end
+  
+  
+*** ./Install-OSR6.osr6	Fri Nov 16 19:33:56 2007
+--- ./Install-OSR6	Fri Nov 16 19:34:46 2007
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/wxruby
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ rake install prefix=$D 2>&1 | tee $MOUT
++ 

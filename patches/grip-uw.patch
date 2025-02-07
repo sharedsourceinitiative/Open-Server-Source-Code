@@ -1,0 +1,11 @@
+--- ./src/grip.h.00	2003-01-04 19:04:08.000000000 +0000
++++ ./src/grip.h	2003-12-12 16:37:13.360000010 +0000
+@@ -46,7 +46,7 @@
+ 
+ #define MAILER "/usr/sbin/sendmail -i -t"
+ 
+-#elif defined(__sparc__)
++#elif defined(__sparc__) || defined(__USLC__)
+ 
+ #define MAILER "/usr/lib/sendmail -i -t"
+ 

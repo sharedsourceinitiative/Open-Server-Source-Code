@@ -1,0 +1,57 @@
+--- ./appl/telnet/telnetd/Makefile.in.uw	2004-05-06 01:51:59.000000000 +0000
++++ ./appl/telnet/telnetd/Makefile.in	2005-03-17 18:41:59.510000039 +0000
+@@ -62,7 +62,7 @@
+ CATMAN_FALSE = @CATMAN_FALSE@
+ CATMAN_TRUE = @CATMAN_TRUE@
+ CC = @CC@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS@ -D_KMEMUSER
+ COMPILE_ET = @COMPILE_ET@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+--- ./appl/telnet/telnetd/Makefile.am.uw	2005-03-17 18:41:58.800000035 +0000
++++ ./appl/telnet/telnetd/Makefile.am	2005-03-17 18:41:59.520000002 +0000
+@@ -2,6 +2,7 @@
+ 
+ include $(top_srcdir)/Makefile.am.common
+ 
++CFLAGS   += -D_KMEMUSER
+ INCLUDES += -I$(srcdir)/.. $(INCLUDE_krb4) $(INCLUDE_des)
+ 
+ libexec_PROGRAMS = telnetd
+--- ./appl/telnet/telnetd/telnetd.c.uw	2004-03-22 18:17:25.000000000 +0000
++++ ./appl/telnet/telnetd/telnetd.c	2005-03-17 18:41:59.520000021 +0000
+@@ -78,7 +78,7 @@
+ /* make sure we don't get the bsd version */
+ /* what is this here for? solaris? /joda */
+ # ifdef HAVE_SYS_TTY_H
+-# include "/usr/include/sys/tty.h"
++# include <sys/tty.h>
+ # endif
+ # ifdef HAVE_SYS_PTYVAR_H
+ # include <sys/ptyvar.h>
+--- ./lib/roken/ndbm_wrap.c.uw	2003-08-29 17:00:34.000000000 +0000
++++ ./lib/roken/ndbm_wrap.c	2005-03-17 18:41:59.520000036 +0000
+@@ -166,6 +166,11 @@
+ 	return NULL;
+     }
+ 
++/* fcntl.h defines open as open64 which confuses SVR5 cc */
++#if defined(open)
++#undef open
++#endif
++
+ #if (DB_VERSION_MAJOR > 3) && (DB_VERSION_MINOR > 0)
+     if(db->open(db, NULL, fn, NULL, DB_BTREE, myflags, mode) != 0) {
+ #else
+--- ./lib/otp/Makefile.am.uw	2005-03-17 18:41:58.000000000 +0000
++++ ./lib/otp/Makefile.am	2005-03-17 18:42:46.320000015 +0000
+@@ -14,7 +14,7 @@
+ 
+ lib_LTLIBRARIES = libotp.la
+ libotp_la_LDFLAGS = -version-info 1:4:1
+-libotp_la_LIBADD  = $(LIB_des) $(LIB_roken) $(LIB_NDBM) -lndbm
++libotp_la_LIBADD  = $(LIB_des) $(LIB_roken) $(LIB_NDBM)
+ 
+ if HAVE_DB3
+ ndbm_wrap = ndbm_wrap.c ndbm_wrap.h

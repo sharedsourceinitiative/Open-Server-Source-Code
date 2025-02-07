@@ -1,0 +1,1697 @@
+*** ./backend/ipp.c.osr6	Fri Sep 26 14:59:39 2008
+--- ./backend/ipp.c	Wed Oct 29 08:48:32 2008
+***************
+*** 595,601 ****
+    fputs("STATE: -connecting-to-device\n", stderr);
+    _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #ifdef AF_INET6
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6)...\n",
+  	    httpAddrString(http->hostaddr, addrname, sizeof(addrname)),
+--- 595,601 ----
+    fputs("STATE: -connecting-to-device\n", stderr);
+    _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6)...\n",
+  	    httpAddrString(http->hostaddr, addrname, sizeof(addrname)),
+*** ./backend/lpd.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./backend/lpd.c	Wed Oct 29 08:48:32 2008
+***************
+*** 869,875 ****
+      fputs("STATE: -connecting-to-device\n", stderr);
+      _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #ifdef AF_INET6
+      if (addr->addr.addr.sa_family == AF_INET6)
+        fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6) (local port %d)...\n", 
+  	      httpAddrString(&addr->addr, addrname, sizeof(addrname)),
+--- 869,875 ----
+      fputs("STATE: -connecting-to-device\n", stderr);
+      _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (addr->addr.addr.sa_family == AF_INET6)
+        fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6) (local port %d)...\n", 
+  	      httpAddrString(&addr->addr, addrname, sizeof(addrname)),
+***************
+*** 1250,1256 ****
+      * Set the port number...
+      */
+  
+! #  ifdef AF_INET6
+      if (family == AF_INET6)
+        addr.ipv6.sin6_port = htons(*port);
+      else
+--- 1250,1256 ----
+      * Set the port number...
+      */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (family == AF_INET6)
+        addr.ipv6.sin6_port = htons(*port);
+      else
+*** ./backend/parallel.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./backend/parallel.c	Wed Oct 29 08:48:32 2008
+***************
+*** 598,603 ****
+--- 598,645 ----
+        printf("direct parallel:%s \"Unknown\" \"Parallel Port #%d\"\n", device, i + 1);
+      }
+    }
++ #elif defined(_unixware)
++   int	i;			/* Looping var */
++   int	fd;			/* File descriptor */
++   char	device[255];		/* Device filename */
++ 
++ 
++   for (i = 0; i < 3; i ++)
++   {
++     sprintf(device, "/dev/lp%d", i);
++ 
++    /*
++     * Since the backend is asked for the list of supported devices only
++     * at startup, it should list all ports that are present even if there
++     * is no attached printer.   Otherwise, after attaching a printer,
++     * the scheduler will have to be restarted for it to see the port.
++     */
++ 
++     if ((fd = open(device, O_WRONLY)) >= 0 || errno == EIO)
++     {
++       if (fd >= 0)
++         close(fd);
++       printf("direct parallel:%s \"Unknown\" \"Parallel Port #%d\"\n", device, i + 1);
++     }
++   }
++ #elif defined(_SCO_DS) || defined(__USLC__)	/* SCO OpenServer */
++   int	portnum;
++   int	fd;			/* File descriptor */
++   char	device[255];		/* Device filename */
++ 
++   for (portnum = 0; portnum <= 9; portnum++)
++   {
++     sprintf(device, "/dev/lp%d", portnum);
++     if ((fd = open(device, O_WRONLY)) >= 0)
++     {
++       close(fd);
++       printf("direct parallel:%s \"Unknown\" \"Parallel Port %s (", device, device+5);
++       if (portnum < 3)
++ 	  printf("LPT%d)\"\n", portnum+1);
++       else
++ 	  printf("PCI)\"\n");
++     }
++   }
+  #endif
+  }
+  
+*** ./backend/serial.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./backend/serial.c	Wed Oct 29 08:48:32 2008
+***************
+*** 31,36 ****
+--- 31,44 ----
+  #  include <sys/modem.h>
+  #endif /* __hpux */
+  
++ #if defined(_SCO_DS) || defined(__USLC__)
++ #define _SVID3	/* To get TIOCMGET etc. from termios.h */
++ #include <glob.h>
++ #include <fnmatch.h>
++ #include <sys/types.h>
++ #include <sys/stat.h>
++ #endif
++ 
+  #ifdef WIN32
+  #  include <io.h>
+  #else
+***************
+*** 78,84 ****
+  #  include <linux/ioctl.h>
+  #endif /* __linux && TIOCGSERIAL */
+  
+- 
+  /*
+   * Local functions...
+   */
+--- 86,91 ----
+***************
+*** 1238,1243 ****
+--- 1245,1295 ----
+        IOObjectRelease(serialPortIterator);
+      }
+    }
++ #elif defined(_unixware)
++   int	i, j;		/* Looping vars */
++   int	fd;		/* File descriptor */
++   char	device[255];	/* Device filename */
++ 
++ 
++   for (i = 0; i < 2; i ++)
++   {
++     sprintf(device, "/dev/tty%02d", i);
++     if ((fd = open(device, O_WRONLY | O_NOCTTY | O_NDELAY)) >= 0)
++     {
++       close(fd);
++       printf("serial serial:%s?baud=115200 \"Unknown\" \"Serial Port #%d\"\n",
++              device, i + 1);
++     }
++   }
++ #elif defined(_SCO_DS) || defined(__USLC__)	/* SCO OpenServer */
++   glob_t globbuf;
++   char *name;
++   int i;
++   struct stat statbuf;
++ 
++   /* Under OpenServer, serial devices always have two names,
++    * tty*[a-z]* and a matching name with an upper case character.
++    * Hardware flow control is only enabled for the upper case version.
++    * ttys that are not serial ports will not have an upper case name.
++    * Serial devices are intentionally not opened here.
++    */
++   if (glob("/dev/tty*[A-Z]*", 0, NULL, &globbuf) == 0)
++   {
++     for (i = 0; i < globbuf.gl_pathc; i++) {
++       name = globbuf.gl_pathv[i];
++       if (stat(name, &statbuf) != -1 && S_ISCHR(statbuf.st_mode))
++       {
++         printf("serial serial:%s?baud=115200 \"Unknown\" \"Serial Port %s",
++ 		name, name+5);
++ 	if (!fnmatch("/dev/tty[12]A", name, 0))
++ 	  printf(" (COM%c)", name[8]);
++         puts("\"");
++       }
++     }
++     globfree(&globbuf);
++   }
++   printf("serial serial: \"Unknown\" \"Serial Port (other)\"\n");
++ 
+  #endif
+  }
+  
+*** ./backend/socket.c.osr6	Thu Aug 28 13:22:20 2008
+--- ./backend/socket.c	Wed Oct 29 08:48:32 2008
+***************
+*** 346,352 ****
+    fputs("STATE: -connecting-to-device\n", stderr);
+    _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #ifdef AF_INET6
+    if (addr->addr.addr.sa_family == AF_INET6)
+      fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6)...\n", 
+  	    httpAddrString(&addr->addr, addrname, sizeof(addrname)),
+--- 346,352 ----
+    fputs("STATE: -connecting-to-device\n", stderr);
+    _cupsLangPrintf(stderr, _("INFO: Connected to %s...\n"), hostname);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (addr->addr.addr.sa_family == AF_INET6)
+      fprintf(stderr, "DEBUG: Connected to [%s]:%d (IPv6)...\n", 
+  	    httpAddrString(&addr->addr, addrname, sizeof(addrname)),
+*** ./backend/usb-unix.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./backend/usb-unix.c	Wed Oct 29 08:48:32 2008
+***************
+*** 31,36 ****
+--- 31,80 ----
+  #include "ieee1284.c"
+  #include <sys/select.h>
+  
++ #if defined(__USLC__) && !defined (_SCO_DS)		/* SCO OpenServer 6 */
++ #define _unixware
++ #endif
++ 
++ #if defined(_SCO_DS)	/* SCO OpenServer 5 */
++ #define _SVID3
++ #include <glob.h>
++ #include <fnmatch.h>
++ #include <sys/types.h>
++ #include <sys/stat.h>
++ #define SCO_UDI
++ #endif
++ 
++ #ifdef _unixware
++ #  include <dirent.h>
++ #  include <sys/lp.h>
++ #define SCO_UDI
++ #endif
++ 
++ #ifdef SCO_UDI
++ #  define UDI_VERSION	0x0101
++ #  include <udi/udi.h>
++ 
++ /*
++  * Get device_id string
++  */
++ 
++ #  define GIOMAP_IOCTL(x)         (int)(((int)'G'<<24) | (x))
++ #  define UDI_GIO_DATA_XFER       GIOMAP_IOCTL(1)
++ 
++ typedef struct giomap_uio {
++         void *u_addr;                   /* User buffer address */
++         udi_ubit32_t u_count;           /* Transfer length (bytes) */
++         udi_status_t u_error;           /* Error code (status) */
++         udi_ubit32_t u_resid;           /* Amount outstanding */
++         udi_gio_op_t u_op;              /* GIO operation */
++         udi_ubit32_t tr_param_len;      /* Length of tr_params */
++         void *tr_params;                /* User supplied tr_params */
++         udi_boolean_t u_async;          /* Asynchronous ioctl() */
++         void *u_handle;                 /* For asynchronous requests */
++ } giomap_uio_t;
++ 
++ int	udi_gio_data_xfer(int fd, int udi_gio_data_xfer_op, void *arg, int len);
++ #endif /* _unixware */
+  
+  /*
+   * Local functions...
+***************
+*** 58,63 ****
+--- 102,110 ----
+    int		device_fd;		/* USB device */
+    size_t	tbytes;			/* Total number of bytes written */
+    struct termios opts;			/* Parallel port options */
++ #if defined(SCO_UDI) && defined (LP_IS_NOPAPER)
++       unsigned char       status;         /* Port status (off-line, out-of-paper, etc.) */
++ #endif /* SCO_UDI */
+  
+  
+    (void)argc;
+***************
+*** 157,162 ****
+--- 204,223 ----
+  
+    tcsetattr(device_fd, TCSANOW, &opts);
+  
++ #if defined(SCO_UDI) && defined(LP_IS_NOPAPER)
++   if (udi_gio_data_xfer(device_fd, UDI_GIO_OP_READ | 0x01, (void *)&status, 1) == 0)
++   {
++     fprintf(stderr, "DEBUG: LPGETSTATUS returned a port status of %02X...\n", status);
++ 
++     if (LP_IS_NOPAPER(status))
++       fputs("WARNING: Media tray empty!\n", stderr);
++     else if (LP_IS_DEVERROR(status))
++       fputs("WARNING: Printer fault!\n", stderr);
++     else if (LP_IS_OFFLINE(status))
++       fputs("WARNING: Printer off-line.\n", stderr);
++   }
++ #endif /* SCO_UDI */
++ 
+   /*
+    * Finally, send the print file...
+    */
+***************
+*** 194,199 ****
+--- 255,280 ----
+    return (tbytes < 0 ? CUPS_BACKEND_FAILED : CUPS_BACKEND_OK);
+  }
+  
++ #ifdef SCO_UDI
++ /*
++  * 'udi_gio_data_xfer()' - UDI_GIO_DATA_XFER ioctl wrapper
++  */
++ 
++ int
++ udi_gio_data_xfer(int fd, int udi_gio_data_xfer_op, void *arg, int len)
++ {
++   giomap_uio_t	uio;
++ 
++   uio.u_addr = arg;
++   uio.u_count = len;
++   uio.u_error = 0x12345;
++   uio.u_op = udi_gio_data_xfer_op;
++   uio.tr_param_len = 0;
++   uio.u_async = FALSE;
++ 
++   return (ioctl(fd, UDI_GIO_DATA_XFER, &uio));
++ }
++ #endif /* SCO_UDI */
+  
+  /*
+   * 'list_devices()' - List all USB devices.
+***************
+*** 296,301 ****
+--- 377,461 ----
+      if (!access(device, 0))
+        printf("direct usb:%s \"Unknown\" \"USB Printer #%d (no reset)\"\n", device, i + 1);
+    }
++ #elif defined(_unixware)
++   DIR	*dirp;			/* Directory */
++   struct dirent *direntp;	/* Directory entry */
++   int   i;                      /* Looping var */
++   int	fd;			/* File descriptor */
++   char  device[255],		/* Device filename */
++   	device_id[64 * 3];	/* Device ID string from USB header */
++ 
++ 
++   /*
++    * Look for device nodes that begin with /dev/usblp.
++    */
++ 
++   i = 1;
++   if ((dirp = opendir("/dev")) != NULL)
++   {
++     while (direntp = readdir(dirp))
++     {
++       if (!strncmp(direntp->d_name, "usblp", strlen("usblp")))
++       {
++         sprintf(device, "/dev/%s", direntp->d_name);
++ 
++         if ((fd = open(device, O_RDWR)) >= 0) 
++ 	{
++ 	  if (udi_gio_data_xfer(fd, UDI_GIO_OP_READ | 0x04,
++ 	                        device_id, sizeof(device_id)) != 0)
++ 	    device_id[0] = '\0';
++ 
++ 	  close(fd);
++ 	}
++ 	else
++ 	  device_id[0] = '\0';
++ 
++ 	if (device_id[0]) {
++           if (strncasecmp(device_id + 128, "Hewlett-Packard ", 16) == 0)
++ 	    strcpy(device_id + 128, "HP");
++           printf("direct usb:%s \"%s %s\" \"USB Printer #%d\"\n",
++ 	         device, device_id + 128, device_id + 64, i++);
++         }
++ 	else
++           printf("direct usb:%s \"Unknown\" \"USB Printer #%d\"\n",
++ 	         device, i++);
++       }
++     }
++     closedir(dirp);
++   }
++ #elif (_SCO_DS - 0 == 1)        /* SCO OpenServer 5 */
++   glob_t globbuf;
++   char **name;
++   struct stat statbuf;
++   int fd;
++   char device_id[64 * 3];	/* Device ID string from USB header */
++ 
++   /*
++    * Under OpenServer, usb devices may have two names,
++    * /dev/usb/lp<n> where n = 0 for the first printer discovered, etc.,
++    * and /dev/usb/lp.<tree-position>, where <tree-position> will always
++    * be the same for a given root/hub/device cabling configuration.
++    */
++   if (!glob("/dev/usb/lp*", 0, NULL, &globbuf))
++   {
++     for (name = globbuf.gl_pathv; *name != NULL; name++)
++       if (stat(*name, &statbuf) != -1 && S_ISCHR(statbuf.st_mode) &&
++ 	  (fd = open(*name, O_WRONLY)) >= 0)
++ 	{
++ 	  printf("usb usb:%s", *name);
++ 	  if (udi_gio_data_xfer(fd, UDI_GIO_OP_READ | 0x04,
++ 		    device_id, sizeof(device_id)) == 0)
++ 	    printf(" \"%s %s\"", device_id + 128, device_id + 64);
++ 	  else
++ 	    printf(" \"Unknown\"");
++ 	  if ((*name)[11] == '.')
++ 	    printf(" \"USB printer %s\"\n", (*name)+13);
++ 	  else
++ 	    printf(" \"USB printer %s (by order of discovery)\"\n", (*name)+5);
++ 	  close(fd);
++ 	}
++     globfree(&globbuf);
++   }
+  #endif
+  }
+  
+*** ./backend/usb.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./backend/usb.c	Wed Oct 29 08:48:32 2008
+***************
+*** 64,70 ****
+  
+  #ifdef __APPLE__
+  #  include "usb-darwin.c"
+! #elif defined(__linux) || defined(__sun) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+  #  include "usb-unix.c"
+  #else
+  /*
+--- 64,71 ----
+  
+  #ifdef __APPLE__
+  #  include "usb-darwin.c"
+! #elif defined(__linux) || defined(__sun) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(_SCO_DS) || defined(__USLC__) || defined(_unixware)
+! 
+  #  include "usb-unix.c"
+  #else
+  /*
+*** ./backend/glob.c.osr6	Wed Oct 29 08:48:32 2008
+--- ./backend/glob.c	Wed Oct 29 08:48:32 2008
+***************
+*** 0 ****
+--- 1,34 ----
++ #include <sys/types.h>
++ #include <sys/stat.h>
++ #include <glob.h>
++ #include <stdio.h>
++ main() {
++   glob_t globbuf;
++   char *name;
++   int i;
++   struct stat statbuf;
++ 
++   /* Under OpenServer, serial devices always have two names,
++    * tty*[a-z]* and a matching name with an upper case character.
++    * Hardware flow control is only enabled for the upper case version.
++    * ttys that are not serial ports will not have an upper case name.
++    * Serial devices are intentionally not opened here.
++    */
++   if (glob("/dev/tty*[A-Z]*", 0, NULL, &globbuf) == 0)
++   {
++ 	printf("%d\n", globbuf.gl_pathc);
++     for (i = 0; i < globbuf.gl_pathc; i++) {
++       name = globbuf.gl_pathv[i];
++       if (stat(name, &statbuf) != -1 && S_ISCHR(statbuf.st_mode))
++       {
++         printf("serial serial:%s?baud=115200 \"Unknown\" \"Serial Port %s",
++ 		name, name+5);
++ 	if (!fnmatch("/dev/tty[12]A", name, 0))
++ 	  printf(" (COM%c)", name[8]);
++         puts("\"");
++       }
++     }
++     globfree(&globbuf);
++   }
++   printf("serial serial: \"Unknown\" \"Serial Port (other)\"\n");
++ }
+*** ./cups/adminutil.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./cups/adminutil.c	Wed Oct 29 08:48:32 2008
+***************
+*** 982,988 ****
+  #ifdef AF_LOCAL
+              && *value != '/'
+  #endif /* AF_LOCAL */
+! #ifdef AF_INET6
+              && strcmp(value, "::1")
+  #endif /* AF_INET6 */
+  	    )
+--- 982,988 ----
+  #ifdef AF_LOCAL
+              && *value != '/'
+  #endif /* AF_LOCAL */
+! #if defined(AF_INET6) && !defined(__USLC__)
+              && strcmp(value, "::1")
+  #endif /* AF_INET6 */
+  	    )
+***************
+*** 1065,1071 ****
+  #ifdef AF_LOCAL
+  	       && *value != '/'
+  #endif /* AF_LOCAL */
+! #ifdef AF_INET6
+  	       && strcmp(value, "::1")
+  #endif /* AF_INET6 */
+  	       )
+--- 1065,1071 ----
+  #ifdef AF_LOCAL
+  	       && *value != '/'
+  #endif /* AF_LOCAL */
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	       && strcmp(value, "::1")
+  #endif /* AF_INET6 */
+  	       )
+*** ./cups/http-addr.c.osr6	Fri Sep  5 17:30:39 2008
+--- ./cups/http-addr.c	Wed Oct 29 08:48:32 2008
+***************
+*** 34,39 ****
+--- 34,40 ----
+  #include <stdlib.h>
+  #include <stddef.h>
+  #ifdef HAVE_RESOLV_H
++ #  include <arpa/nameser.h>
+  #  include <resolv.h>
+  #endif /* HAVE_RESOLV_H */
+  
+***************
+*** 50,56 ****
+    if (!addr)
+      return (0);
+  
+! #ifdef AF_INET6
+    if (addr->addr.sa_family == AF_INET6 &&
+        IN6_IS_ADDR_UNSPECIFIED(&(addr->ipv6.sin6_addr)))
+      return (1);
+--- 51,57 ----
+    if (!addr)
+      return (0);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (addr->addr.sa_family == AF_INET6 &&
+        IN6_IS_ADDR_UNSPECIFIED(&(addr->ipv6.sin6_addr)))
+      return (1);
+***************
+*** 88,94 ****
+      return (!strcmp(addr1->un.sun_path, addr2->un.sun_path));
+  #endif /* AF_LOCAL */
+  
+! #ifdef AF_INET6
+    if (addr1->addr.sa_family == AF_INET6)
+      return (!memcmp(&(addr1->ipv6.sin6_addr), &(addr2->ipv6.sin6_addr), 16));
+  #endif /* AF_INET6 */
+--- 89,95 ----
+      return (!strcmp(addr1->un.sun_path, addr2->un.sun_path));
+  #endif /* AF_LOCAL */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (addr1->addr.sa_family == AF_INET6)
+      return (!memcmp(&(addr1->ipv6.sin6_addr), &(addr2->ipv6.sin6_addr), 16));
+  #endif /* AF_INET6 */
+***************
+*** 109,115 ****
+    if (!addr)
+      return (0);
+  
+! #ifdef AF_INET6
+    if (addr->addr.sa_family == AF_INET6)
+      return (sizeof(addr->ipv6));
+    else
+--- 110,116 ----
+    if (!addr)
+      return (0);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (addr->addr.sa_family == AF_INET6)
+      return (sizeof(addr->ipv6));
+    else
+***************
+*** 141,147 ****
+    if (!addr)
+      return (1);
+  
+! #ifdef AF_INET6
+    if (addr->addr.sa_family == AF_INET6 &&
+        IN6_IS_ADDR_LOOPBACK(&(addr->ipv6.sin6_addr)))
+      return (1);
+--- 142,148 ----
+    if (!addr)
+      return (1);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (addr->addr.sa_family == AF_INET6 &&
+        IN6_IS_ADDR_LOOPBACK(&(addr->ipv6.sin6_addr)))
+      return (1);
+***************
+*** 253,259 ****
+      struct hostent	*host;			/* Host from name service */
+  
+  
+! #  ifdef AF_INET6
+      if (addr->addr.sa_family == AF_INET6)
+        host = gethostbyaddr(ADDR_CAST &(addr->ipv6.sin6_addr),
+                  	   sizeof(struct in_addr), AF_INET6);
+--- 254,260 ----
+      struct hostent	*host;			/* Host from name service */
+  
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (addr->addr.sa_family == AF_INET6)
+        host = gethostbyaddr(ADDR_CAST &(addr->ipv6.sin6_addr),
+                  	   sizeof(struct in_addr), AF_INET6);
+***************
+*** 323,329 ****
+      snprintf(s, slen, "%d.%d.%d.%d", (temp >> 24) & 255,
+               (temp >> 16) & 255, (temp >> 8) & 255, temp & 255);
+    }
+! #ifdef AF_INET6
+    else if (addr->addr.sa_family == AF_INET6)
+    {
+  #  ifdef HAVE_GETNAMEINFO
+--- 324,330 ----
+      snprintf(s, slen, "%d.%d.%d.%d", (temp >> 24) & 255,
+               (temp >> 16) & 255, (temp >> 8) & 255, temp & 255);
+    }
+! #if defined(AF_INET6) && !defined(__USLC__)
+    else if (addr->addr.sa_family == AF_INET6)
+    {
+  #  ifdef HAVE_GETNAMEINFO
+*** ./cups/http-addrlist.c.osr6	Fri Sep  5 17:30:39 2008
+--- ./cups/http-addrlist.c	Wed Oct 29 08:48:32 2008
+***************
+*** 29,34 ****
+--- 29,35 ----
+  #include <stdlib.h>
+  #include <errno.h>
+  #ifdef HAVE_RESOLV_H
++ #  include <arpa/nameser.h>
+  #  include <resolv.h>
+  #endif /* HAVE_RESOLV_H */
+  
+***************
+*** 189,195 ****
+  #  ifdef AF_LOCAL
+  	     family == AF_LOCAL ? "LOCAL" :
+  #  endif /* AF_LOCAL */
+! #  ifdef AF_INET6
+  	     family == AF_INET6 ? "INET6" :
+  #  endif /* AF_INET6 */
+  	     family == AF_INET ? "INET" : "???", service);
+--- 190,196 ----
+  #  ifdef AF_LOCAL
+  	     family == AF_LOCAL ? "LOCAL" :
+  #  endif /* AF_LOCAL */
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	     family == AF_INET6 ? "INET6" :
+  #  endif /* AF_INET6 */
+  	     family == AF_INET ? "INET" : "???", service);
+***************
+*** 306,312 ****
+        */
+  
+        for (current = results; current; current = current->ai_next)
+!         if (current->ai_family == AF_INET || current->ai_family == AF_INET6)
+  	{
+  	 /*
+            * Copy the address over...
+--- 307,317 ----
+        */
+  
+        for (current = results; current; current = current->ai_next)
+!         if (current->ai_family == AF_INET
+! #ifdef AF_INET6
+! 		|| current->ai_family == AF_INET6
+! #endif
+! 		)
+  	{
+  	 /*
+            * Copy the address over...
+***************
+*** 319,328 ****
+  	    return (NULL);
+  	  }
+  
+!           if (current->ai_family == AF_INET6)
+  	    memcpy(&(temp->addr.ipv6), current->ai_addr,
+  	           sizeof(temp->addr.ipv6));
+  	  else
+  	    memcpy(&(temp->addr.ipv4), current->ai_addr,
+  	           sizeof(temp->addr.ipv4));
+  
+--- 324,335 ----
+  	    return (NULL);
+  	  }
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+!       if (current->ai_family == AF_INET6)
+  	    memcpy(&(temp->addr.ipv6), current->ai_addr,
+  	           sizeof(temp->addr.ipv6));
+  	  else
++ #endif
+  	    memcpy(&(temp->addr.ipv4), current->ai_addr,
+  	           sizeof(temp->addr.ipv4));
+  
+***************
+*** 415,421 ****
+  	}
+        }
+        else if ((host = gethostbyname(hostname)) != NULL &&
+! #  ifdef AF_INET6
+                 (host->h_addrtype == AF_INET || host->h_addrtype == AF_INET6))
+  #  else
+                 host->h_addrtype == AF_INET)
+--- 422,428 ----
+  	}
+        }
+        else if ((host = gethostbyname(hostname)) != NULL &&
+! #if defined(AF_INET6) && !defined(__USLC__)
+                 (host->h_addrtype == AF_INET || host->h_addrtype == AF_INET6))
+  #  else
+                 host->h_addrtype == AF_INET)
+***************
+*** 434,440 ****
+  	    return (NULL);
+  	  }
+  
+! #  ifdef AF_INET6
+            if (host->h_addrtype == AF_INET6)
+  	  {
+              temp->addr.ipv6.sin6_family = AF_INET6;
+--- 441,447 ----
+  	    return (NULL);
+  	  }
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+            if (host->h_addrtype == AF_INET6)
+  	  {
+              temp->addr.ipv6.sin6_family = AF_INET6;
+***************
+*** 512,518 ****
+        * IPv4 loopback interface addresses...
+        */
+  
+! #ifdef AF_INET6
+        if (family != AF_INET)
+        {
+         /*
+--- 519,525 ----
+        * IPv4 loopback interface addresses...
+        */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (family != AF_INET)
+        {
+         /*
+***************
+*** 571,577 ****
+        * Provide one or more passive listening addresses...
+        */
+  
+! #ifdef AF_INET6
+        if (family != AF_INET)
+        {
+         /*
+--- 578,584 ----
+        * Provide one or more passive listening addresses...
+        */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (family != AF_INET)
+        {
+         /*
+*** ./cups/http-private.h.osr6	Fri Jul 11 15:48:49 2008
+--- ./cups/http-private.h	Wed Oct 29 08:48:32 2008
+***************
+*** 65,71 ****
+  #    include <Security/Authorization.h>
+  #  endif /* HAVE_AUTHORIZATION_H */
+  
+! #  if defined(__sgi) || (defined(__APPLE__) && !defined(_SOCKLEN_T))
+  /*
+   * IRIX and MacOS X 10.2.x do not define socklen_t, and in fact use an int instead of
+   * unsigned type for length values...
+--- 65,71 ----
+  #    include <Security/Authorization.h>
+  #  endif /* HAVE_AUTHORIZATION_H */
+  
+! #  if defined(__sgi) || (defined(__APPLE__) || defined(_SCO_DS) && !defined(_SOCKLEN_T))
+  /*
+   * IRIX and MacOS X 10.2.x do not define socklen_t, and in fact use an int instead of
+   * unsigned type for length values...
+*** ./cups/http.h.osr6	Fri Jul 11 15:48:49 2008
+--- ./cups/http.h	Wed Oct 29 08:48:32 2008
+***************
+*** 95,101 ****
+   * platforms.
+   */
+  
+! #if defined(AF_INET6) && !defined(s6_addr32)
+  #  if defined(__sun)
+  #    define s6_addr32	_S6_un._S6_u32
+  #  elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+--- 95,101 ----
+   * platforms.
+   */
+  
+! #if defined(AF_INET6) && !defined(s6_addr32) && !defined(__USLC__)
+  #  if defined(__sun)
+  #    define s6_addr32	_S6_un._S6_u32
+  #  elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+***************
+*** 303,309 ****
+  {
+    struct sockaddr	addr;		/* Base structure for family value */
+    struct sockaddr_in	ipv4;		/* IPv4 address */
+! #ifdef AF_INET6
+    struct sockaddr_in6	ipv6;		/* IPv6 address */
+  #endif /* AF_INET6 */
+  #ifdef AF_LOCAL
+--- 303,309 ----
+  {
+    struct sockaddr	addr;		/* Base structure for family value */
+    struct sockaddr_in	ipv4;		/* IPv4 address */
+! #if defined(AF_INET6) && !defined(__USLC__)
+    struct sockaddr_in6	ipv6;		/* IPv6 address */
+  #endif /* AF_INET6 */
+  #ifdef AF_LOCAL
+*** ./cups/ipp.h.osr6	Fri Jul 11 15:48:49 2008
+--- ./cups/ipp.h	Wed Oct 29 08:48:32 2008
+***************
+*** 102,109 ****
+--- 102,114 ----
+    IPP_TAG_MIMETYPE,			/* MIME media type value */
+    IPP_TAG_MEMBERNAME,			/* Collection member name value */
+    IPP_TAG_MASK = 0x7fffffff,		/* Mask for copied attribute values */
++ #ifndef _SCO_DS
+    IPP_TAG_COPY = -0x7fffffff-1		/* Bitflag for copied attribute values */
++ #endif
+  } ipp_tag_t;
++ #ifdef _SCO_DS
++ #    define  IPP_TAG_COPY -0x7fffffff-1		/* Bitflag for copied attribute values */
++ #endif
+  
+  typedef enum ipp_res_e			/**** Resolution units... ****/
+  {
+*** ./cups/Makefile.osr6	Fri Sep  5 17:30:39 2008
+--- ./cups/Makefile	Wed Oct 29 08:48:32 2008
+***************
+*** 22,27 ****
+--- 22,28 ----
+  #
+  
+  LIBOBJS	=	\
++ 		isCupsActive.o \
+  		adminutil.o \
+  		array.o \
+  		attr.o \
+***************
+*** 230,236 ****
+  
+  libcups.so.2 libcups.sl.2:	$(LIBOBJS)
+  	echo Linking $@...
+! 	$(DSO) $(ARCHFLAGS) $(DSOFLAGS) -o $@ $(LIBOBJS) $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ)
+  	$(RM) `basename $@ .2`
+  	$(LN) $@ `basename $@ .2`
+  
+--- 231,237 ----
+  
+  libcups.so.2 libcups.sl.2:	$(LIBOBJS)
+  	echo Linking $@...
+! 	$(DSO) $(ARCHFLAGS) $(DSOFLAGS) -o $@ $(LIBOBJS) $(LIBGSSAPI) $(SSLLIBS) $(COMMONLIBS) $(LIBZ) /usr/lib/libxattr.so
+  	$(RM) `basename $@ .2`
+  	$(LN) $@ `basename $@ .2`
+  
+*** ./cups/util.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./cups/util.c	Wed Oct 29 08:48:32 2008
+***************
+*** 791,797 ****
+  
+    httpGetHostname(http, http_hostname, sizeof(http_hostname));
+  
+! #ifdef AF_INET6
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      http_port = ntohs(http->hostaddr->ipv6.sin6_port);
+    else
+--- 791,797 ----
+  
+    httpGetHostname(http, http_hostname, sizeof(http_hostname));
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      http_port = ntohs(http->hostaddr->ipv6.sin6_port);
+    else
+***************
+*** 1494,1500 ****
+  
+    httpGetHostname(http, http_hostname, sizeof(http_hostname));
+  
+! #ifdef AF_INET6
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      http_port = ntohs(http->hostaddr->ipv6.sin6_port);
+    else
+--- 1494,1500 ----
+  
+    httpGetHostname(http, http_hostname, sizeof(http_hostname));
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (http->hostaddr->addr.sa_family == AF_INET6)
+      http_port = ntohs(http->hostaddr->ipv6.sin6_port);
+    else
+*** ./cups/isCupsActive.c.osr6	Wed Oct 29 08:48:32 2008
+--- ./cups/isCupsActive.c	Wed Oct 29 08:48:32 2008
+***************
+*** 0 ****
+--- 1,65 ----
++ #if defined(_SCO_DS)
++ #include <sys/types.h>
++ #include <prototypes.h>
++ #elif defined(__USLC__)
++ /* link with -lxattr to get the def*() routines */
++ #include <deflt.h>
++ #endif
++ #include <stdio.h>
++ #include <strings.h>
++ #include <stdlib.h>
++ 
++ #if defined(_SCO_DS)
++ char *
++ defval(char *filename, char *prefix)
++ {
++     char *buf;
++     char *ret;
++ 
++     if (defopen(filename) != 0 || (buf = malloc(strlen(prefix)+2)) == NULL)
++ 	return NULL;
++     strcpy(buf, prefix);
++     strcat(buf, "=");
++     ret = defread(buf);
++     free(buf);
++     return ret;
++ }
++ #elif defined(__USLC__)
++ char *
++ defval(char *filename, char *prefix)
++ {
++     char *ret;
++     FILE *fp;
++     
++     if ((fp = defopen(filename)) == NULL)
++ 	return NULL;
++     ret = defread(fp, prefix);
++     defclose(fp);
++     return ret;
++ }
++ #endif
++ 
++ int
++ isCupsActiveForUser(void)
++ {
++ #ifdef _unixware
++     /* for UW, should check whether cupsd is running */
++ #elif defined(_SCO_DS) || defined(__USLC__)		/* OSR5/6 */
++     char *printsys;
++ 
++     /* Under OpenServer, if the PRINT_SYSTEM environment variable is set, it
++      * determines the default print system for the user.  Otherwise, if
++      * PRINT_SYSTEM is set in /etc/default/lpd, its value is used; it
++      * determines the default print system systemwide.  If PRINT_SYSTEM is not
++      * set in /etc/default/lpd, the default print system is not CUPS.
++      */
++     return ((printsys = getenv("PRINT_SYSTEM")) == NULL &&
++ 	    (printsys = defval("/etc/default/lpd", "PRINT_SYSTEM")) == NULL) ?
++ 	    0 : strcasecmp(printsys, "cups") == 0;
++ #else
++    /* Assume that under most OSes, if CUPS (and thus this library) is
++     * installed, it is the active print system.
++     */
++    return 1;	
++ #endif
++ }
+*** ./init/cups.sh.in.osr6	Wed Jul 11 14:46:42 2007
+--- ./init/cups.sh.in	Wed Oct 29 08:48:32 2008
+***************
+*** 155,160 ****
+--- 155,164 ----
+  		pid=`ps -e | awk '{if (match($6, ".*/cupsd$") || $6 == "cupsd") print $1}'`
+  		. /etc/TIMEZONE
+  		;;
++ 	SCO_SV)
++ 		pid=`/bin/su root -c 'ps -uroot -ocomm -opid' | awk '$1 == "cupsd" {print $2}'`
++ 		. /etc/TIMEZONE
++ 		;;
+  	OSF1*)
+  		pid=`ps -e | awk '{if (match($5, ".*/cupsd$") || $5 == "cupsd") print $1}'`
+  		;;
+***************
+*** 178,184 ****
+  			else
+  				prefix=@prefix@
+  				exec_prefix=@exec_prefix@
+! 				@sbindir@/cupsd
+  				if test $? != 0; then
+  					$ECHO_FAIL
+  					$ECHO "cups: unable to $1 scheduler."
+--- 182,194 ----
+  			else
+  				prefix=@prefix@
+  				exec_prefix=@exec_prefix@
+! 				if test "`uname`" = SCO_SV; then
+! 					# Must set login uid else daemon will
+! 					# not be able to setgid
+! 					/bin/su root -c ${exec_prefix}/sbin/cupsd
+! 				else
+! 					${exec_prefix}/sbin/cupsd
+! 				fi
+  				if test $? != 0; then
+  					$ECHO_FAIL
+  					$ECHO "cups: unable to $1 scheduler."
+***************
+*** 213,219 ****
+  
+  	stop_msg)
+  		# HP-UX non-standard...
+! 		echo "Starting CUPS Server"
+  		;;
+  
+  	*)
+--- 223,229 ----
+  
+  	stop_msg)
+  		# HP-UX non-standard...
+! 		echo "Stopping CUPS Server"
+  		;;
+  
+  	*)
+*** ./pdftops/JArithmeticDecoder.cxx.osr6	Fri Jul 11 15:48:49 2008
+--- ./pdftops/JArithmeticDecoder.cxx	Wed Oct 29 08:48:32 2008
+***************
+*** 93,99 ****
+    limitStream = gFalse;
+  }
+  
+! inline Guint JArithmeticDecoder::readByte() {
+    if (limitStream) {
+      --dataLen;
+      if (dataLen < 0) {
+--- 93,102 ----
+    limitStream = gFalse;
+  }
+  
+! #ifndef _SCO_DS
+! inline
+! #endif
+! Guint JArithmeticDecoder::readByte() {
+    if (limitStream) {
+      --dataLen;
+      if (dataLen < 0) {
+*** ./scheduler/auth.c.osr6	Mon Apr 21 16:13:22 2008
+--- ./scheduler/auth.c	Wed Oct 29 08:48:32 2008
+***************
+*** 95,100 ****
+--- 95,103 ----
+  #  define CUPSD_UCRED_UID(c) (c).uid
+  #endif /* HAVE_SYS_UCRED_H */
+  
++ #if defined(_SCO_DS)	/* OSR5 */
++ #include <prot.h>
++ #endif
+  
+  /*
+   * Local functions...
+***************
+*** 1112,1118 ****
+    int		i;			/* Looping var */
+    cupsd_netif_t	*iface;			/* Network interface */
+    unsigned	netip4;			/* IPv4 network address */
+! #ifdef AF_INET6
+    unsigned	netip6[4];		/* IPv6 network address */
+  #endif /* AF_INET6 */
+  
+--- 1115,1121 ----
+    int		i;			/* Looping var */
+    cupsd_netif_t	*iface;			/* Network interface */
+    unsigned	netip4;			/* IPv4 network address */
+! #if defined(AF_INET6) && !defined(__USLC__)
+    unsigned	netip6[4];		/* IPv6 network address */
+  #endif /* AF_INET6 */
+  
+***************
+*** 1127,1133 ****
+  
+            netip4 = htonl(ip[3]);
+  
+! #ifdef AF_INET6
+            netip6[0] = htonl(ip[0]);
+            netip6[1] = htonl(ip[1]);
+            netip6[2] = htonl(ip[2]);
+--- 1130,1136 ----
+  
+            netip4 = htonl(ip[3]);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+            netip6[0] = htonl(ip[0]);
+            netip6[1] = htonl(ip[1]);
+            netip6[2] = htonl(ip[2]);
+***************
+*** 1164,1170 ****
+  		     iface->mask.ipv4.sin_addr.s_addr))
+  		  return (1);
+                }
+! #ifdef AF_INET6
+  	      else
+  	      {
+  	       /*
+--- 1167,1173 ----
+  		     iface->mask.ipv4.sin_addr.s_addr))
+  		  return (1);
+                }
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	      else
+  	      {
+  	       /*
+***************
+*** 1207,1213 ****
+  		     iface->mask.ipv4.sin_addr.s_addr))
+  		  return (1);
+                }
+! #ifdef AF_INET6
+  	      else
+  	      {
+  	       /*
+--- 1210,1216 ----
+  		     iface->mask.ipv4.sin_addr.s_addr))
+  		  return (1);
+                }
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	      else
+  	      {
+  	       /*
+***************
+*** 1865,1871 ****
+    * Check host/ip-based accesses...
+    */
+  
+! #ifdef AF_INET6
+    if (con->http.hostaddr->addr.sa_family == AF_INET6)
+    {
+     /*
+--- 1868,1874 ----
+    * Check host/ip-based accesses...
+    */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (con->http.hostaddr->addr.sa_family == AF_INET6)
+    {
+     /*
+***************
+*** 2428,2434 ****
+--- 2431,2442 ----
+      * Use the standard crypt() function...
+      */
+  
++ #if defined(_SCO_DS) || defined(__USLC__)
++     /* This is required for passwords > 8 chars to work under OpenServer */
++     return (bigcrypt((char *)pw, (char *)salt));
++ #else
+      return (crypt(pw, salt));
++ #endif
+    }
+  }
+  #endif /* !HAVE_LIBPAM && !HAVE_USERSEC_H */
+*** ./scheduler/client.c.osr6	Tue Sep 16 17:42:56 2008
+--- ./scheduler/client.c	Wed Oct 29 08:48:32 2008
+***************
+*** 183,189 ****
+      return;
+    }
+  
+! #ifdef AF_INET6
+    if (lis->address.addr.sa_family == AF_INET6)
+    {
+     /*
+--- 183,189 ----
+      return;
+    }
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (lis->address.addr.sa_family == AF_INET6)
+    {
+     /*
+***************
+*** 351,357 ****
+      }
+    }
+  
+! #ifdef AF_INET6
+    if (con->http.hostaddr->addr.sa_family == AF_INET6)
+      cupsdLogMessage(CUPSD_LOG_DEBUG, "cupsdAcceptClient: %d from %s:%d (IPv6)",
+                      con->http.fd, con->http.hostname,
+--- 351,357 ----
+      }
+    }
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (con->http.hostaddr->addr.sa_family == AF_INET6)
+      cupsdLogMessage(CUPSD_LOG_DEBUG, "cupsdAcceptClient: %d from %s:%d (IPv6)",
+                      con->http.fd, con->http.hostname,
+***************
+*** 383,389 ****
+    }
+    else
+    {
+! #ifdef AF_INET6
+      if (temp.addr.sa_family == AF_INET6)
+      {
+        if (HostNameLookups)
+--- 383,389 ----
+    }
+    else
+    {
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (temp.addr.sa_family == AF_INET6)
+      {
+        if (HostNameLookups)
+*** ./scheduler/conf.c.osr6	Sun Sep  7 14:58:01 2008
+--- ./scheduler/conf.c	Wed Oct 29 08:48:32 2008
+***************
+*** 1352,1358 ****
+    else
+      maskval = value + strlen(value);
+  
+! #ifdef AF_INET6
+   /*
+    * Check for an IPv6 address...
+    */
+--- 1352,1358 ----
+    else
+      maskval = value + strlen(value);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+   /*
+    * Check for an IPv6 address...
+    */
+***************
+*** 1475,1481 ****
+  
+        i = atoi(maskval);
+  
+! #ifdef AF_INET6
+        if (family == AF_INET6)
+        {
+          if (i > 128)
+--- 1475,1481 ----
+  
+        i = atoi(maskval);
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (family == AF_INET6)
+        {
+          if (i > 128)
+***************
+*** 1663,1669 ****
+        else
+  	cupsdDenyIP(loc, ones, zeros);
+      }
+! #ifdef AF_INET6
+      else if (value[0] == '*' || value[0] == '.' || 
+               (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+--- 1663,1669 ----
+        else
+  	cupsdDenyIP(loc, ones, zeros);
+      }
+! #if defined(AF_INET6) && !defined(__USLC__)
+      else if (value[0] == '*' || value[0] == '.' || 
+               (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+***************
+*** 2233,2239 ****
+  
+  	httpAddrString(&lis->address, temp, sizeof(temp));
+  
+! #ifdef AF_INET6
+          if (lis->address.addr.sa_family == AF_INET6)
+            cupsdLogMessage(CUPSD_LOG_INFO, "Listening to %s:%d (IPv6)", temp,
+                            ntohs(lis->address.ipv6.sin6_port));
+--- 2233,2239 ----
+  
+  	httpAddrString(&lis->address, temp, sizeof(temp));
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+          if (lis->address.addr.sa_family == AF_INET6)
+            cupsdLogMessage(CUPSD_LOG_INFO, "Listening to %s:%d (IPv6)", temp,
+                            ntohs(lis->address.ipv6.sin6_port));
+***************
+*** 2447,2453 ****
+  	  else
+  	    cupsdDenyIP(location, ones, zeros);
+  	}
+! #ifdef AF_INET6
+  	else if (value[0] == '*' || value[0] == '.' || 
+          	 (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+--- 2447,2453 ----
+  	  else
+  	    cupsdDenyIP(location, ones, zeros);
+  	}
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	else if (value[0] == '*' || value[0] == '.' || 
+          	 (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+***************
+*** 2536,2542 ****
+        *    nnn.nnn.nnn.nnn/mmm.mmm.mmm.mmm
+        */
+  
+! #ifdef AF_INET6
+        if (value[0] == '*' || value[0] == '.' || 
+            (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+--- 2536,2542 ----
+        *    nnn.nnn.nnn.nnn/mmm.mmm.mmm.mmm
+        */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (value[0] == '*' || value[0] == '.' || 
+            (!isdigit(value[0] & 255) && value[0] != '['))
+  #else
+*** ./scheduler/cups-lpd.c.osr6	Fri Jul 11 15:48:49 2008
+--- ./scheduler/cups-lpd.c	Wed Oct 29 08:48:32 2008
+***************
+*** 196,202 ****
+      else
+        strlcpy(hostname, hostip, sizeof(hostname));
+  
+! #ifdef AF_INET6
+      if (hostaddr.addr.sa_family == AF_INET6)
+        hostfamily = "IPv6";
+      else
+--- 196,202 ----
+      else
+        strlcpy(hostname, hostip, sizeof(hostname));
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (hostaddr.addr.sa_family == AF_INET6)
+        hostfamily = "IPv6";
+      else
+*** ./scheduler/dirsvc.c.osr6	Fri Jul 18 13:30:23 2008
+--- ./scheduler/dirsvc.c	Wed Oct 29 08:48:32 2008
+***************
+*** 3528,3534 ****
+    * Figure out where it came from...
+    */
+  
+! #ifdef AF_INET6
+    if (srcaddr.addr.sa_family == AF_INET6)
+    {
+      address[0] = ntohl(srcaddr.ipv6.sin6_addr.s6_addr32[0]);
+--- 3528,3534 ----
+    * Figure out where it came from...
+    */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+    if (srcaddr.addr.sa_family == AF_INET6)
+    {
+      address[0] = ntohl(srcaddr.ipv6.sin6_addr.s6_addr32[0]);
+*** ./scheduler/listen.c.osr6	Mon Aug 13 10:20:14 2007
+--- ./scheduler/listen.c	Wed Oct 29 08:48:32 2008
+***************
+*** 165,171 ****
+    {
+      httpAddrString(&(lis->address), s, sizeof(s));
+  
+! #ifdef AF_INET6
+      if (lis->address.addr.sa_family == AF_INET6)
+        p = ntohs(lis->address.ipv6.sin6_port);
+      else
+--- 165,171 ----
+    {
+      httpAddrString(&(lis->address), s, sizeof(s));
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+      if (lis->address.addr.sa_family == AF_INET6)
+        p = ntohs(lis->address.ipv6.sin6_port);
+      else
+***************
+*** 212,218 ****
+        * Bind to the port we found...
+        */
+  
+! #ifdef AF_INET6
+        if (lis->address.addr.sa_family == AF_INET6)
+        {
+  #  ifdef IPV6_V6ONLY
+--- 212,218 ----
+        * Bind to the port we found...
+        */
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (lis->address.addr.sa_family == AF_INET6)
+        {
+  #  ifdef IPV6_V6ONLY
+*** ./scheduler/main.c.osr6	Sun Sep  7 14:58:01 2008
+--- ./scheduler/main.c	Wed Oct 29 08:48:32 2008
+***************
+*** 46,51 ****
+--- 46,55 ----
+  #include <grp.h>
+  #include <cups/dir.h>
+  
++ #if defined(_SCO_DS) || defined(__USLC__)
++ #include <prot.h>
++ #endif
++ 
+  #ifdef HAVE_LAUNCH_H
+  #  include <launch.h>
+  #  include <libgen.h>
+***************
+*** 168,173 ****
+--- 172,182 ----
+    }
+  #endif /* HAVE_GETEUID */
+  
++ #if defined(_SCO_DS) || defined(__USLC__)
++   /* This is required for bigcrypt() to work under OpenServer */
++   set_auth_parameters(argc, argv);
++ #endif
++ 
+   /*
+    * Check for command-line arguments...
+    */
+***************
+*** 1521,1527 ****
+  #  ifdef HAVE_SSL
+        portnum = 0;
+  
+! #    ifdef AF_INET6
+        if (lis->address.addr.sa_family == AF_INET6)
+  	portnum = ntohs(lis->address.ipv6.sin6_port);
+        else
+--- 1530,1536 ----
+  #  ifdef HAVE_SSL
+        portnum = 0;
+  
+! #if defined(AF_INET6) && !defined(__USLC__)
+        if (lis->address.addr.sa_family == AF_INET6)
+  	portnum = ntohs(lis->address.ipv6.sin6_port);
+        else
+*** ./scheduler/network.c.osr6	Mon Aug 25 20:43:28 2008
+--- ./scheduler/network.c	Wed Oct 29 08:48:32 2008
+***************
+*** 144,150 ****
+  
+      if (addr->ifa_addr == NULL ||
+          (addr->ifa_addr->sa_family != AF_INET
+! #ifdef AF_INET6
+  	 && addr->ifa_addr->sa_family != AF_INET6
+  #endif
+  	) ||
+--- 144,150 ----
+  
+      if (addr->ifa_addr == NULL ||
+          (addr->ifa_addr->sa_family != AF_INET
+! #if defined(AF_INET6) && !defined(__USLC__)
+  	 && addr->ifa_addr->sa_family != AF_INET6
+  #endif
+  	) ||
+***************
+*** 210,216 ****
+  	memcpy(&(temp->broadcast), addr->ifa_dstaddr,
+  	       sizeof(struct sockaddr_in));
+      }
+! #ifdef AF_INET6
+      else
+      {
+       /*
+--- 210,216 ----
+  	memcpy(&(temp->broadcast), addr->ifa_dstaddr,
+  	       sizeof(struct sockaddr_in));
+      }
+! #if defined(AF_INET6) && !defined(__USLC__)
+      else
+      {
+       /*
+***************
+*** 249,255 ****
+  	           (temp->address.ipv4.sin_addr.s_addr &
+  		    temp->mask.ipv4.sin_addr.s_addr))
+          match = 1;
+! #ifdef AF_INET6
+        else if (addr->ifa_addr->sa_family == AF_INET6 &&
+                 lis->address.addr.sa_family == AF_INET6 &&
+                 (lis->address.ipv6.sin6_addr.s6_addr[0] &
+--- 249,255 ----
+  	           (temp->address.ipv4.sin_addr.s_addr &
+  		    temp->mask.ipv4.sin_addr.s_addr))
+          match = 1;
+! #if defined(AF_INET6) && !defined(__USLC__)
+        else if (addr->ifa_addr->sa_family == AF_INET6 &&
+                 lis->address.addr.sa_family == AF_INET6 &&
+                 (lis->address.ipv6.sin6_addr.s6_addr[0] &
+***************
+*** 275,281 ****
+        {
+          if (lis->address.addr.sa_family == AF_INET)
+            temp->port = ntohs(lis->address.ipv4.sin_port);
+! #ifdef AF_INET6
+          else if (lis->address.addr.sa_family == AF_INET6)
+            temp->port = ntohs(lis->address.ipv6.sin6_port);
+  #endif /* AF_INET6 */
+--- 275,281 ----
+        {
+          if (lis->address.addr.sa_family == AF_INET)
+            temp->port = ntohs(lis->address.ipv4.sin_port);
+! #if defined(AF_INET6) && !defined(__USLC__)
+          else if (lis->address.addr.sa_family == AF_INET6)
+            temp->port = ntohs(lis->address.ipv6.sin6_port);
+  #endif /* AF_INET6 */
+*** ./Configure-OSR6.osr6	Wed Oct 29 08:48:32 2008
+--- ./Configure-OSR6	Wed Oct 29 08:48:32 2008
+***************
+*** 0 ****
+--- 1,30 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -I/usr/include/udi -D_FILE_OFFSET_BITS=64"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ 
++ # -I/usr/include is added to CC to force it ahead of the -I/usr/include/heimdal
++ # that the configure process adds, because heimdal/glob.h is NOT the one we
++ # want!
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ LDFLAGS="-lprot"
++ export CC CXX CFLAGS NM M4 INSTALL LDFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
++             --with-domainsocket=/var/run/cups/cups.sock \
++             --enable-shared --enable-openssl --disable-pam \
++             --enable-threads --enable-largefile --with-cups-user=lp \
++             --with-cups-group=lp --with-printcap=/etc/printcap.cups \
++             --with-java --with-perl --with-php --without-python \
++             --host=$HOST --target=$HOST --build=$HOST --mandir=/usr/man 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Wed Oct 29 08:48:32 2008
+--- ./Install-OSR6	Wed Oct 29 13:50:40 2008
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/cups
++ DOC=/usr/share/doc/cups
++ DSTROOT=$D
++ export DSTROOT
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DSTROOT=$D 2>&1 | tee $MOUT
++ 
++ [ -d $D/$DOC ] || mkdir -p $D/$DOC
++ cp CREDITS.txt CHANGES.txt LICENSE.txt README.txt $D/$DOC
++ H=`pwd`
++ cd $D
++ bzcat $H/../cups-add.tar.bz2 | tar xf -
+*** ./configure.osr6	Thu Oct  9 13:24:17 2008
+--- ./configure	Wed Oct 29 08:48:32 2008
+***************
+*** 9360,9366 ****
+  			INITDIR="/sbin"
+  			;;
+  
+! 		SunOS*)
+  			# Solaris
+  			INITDIR="/etc"
+  			RCSTART="81"
+--- 9360,9366 ----
+  			INITDIR="/sbin"
+  			;;
+  
+! 		SunOS* | SCO_SV*)
+  			# Solaris
+  			INITDIR="/etc"
+  			RCSTART="81"
+***************
+*** 9813,9819 ****
+  		fi
+  		;;
+  
+! 	SunOS*)
+  		if test "x$enable_32bit" = xyes; then
+  			# Build 32-bit libraries, 64-bit base...
+  			INSTALL32="install32bit"
+--- 9813,9819 ----
+  		fi
+  		;;
+  
+! 	SunOS* | SCO_SV*)
+  		if test "x$enable_32bit" = xyes; then
+  			# Build 32-bit libraries, 64-bit base...
+  			INSTALL32="install32bit"
+***************
+*** 9847,9857 ****
+  
+  if test x$enable_shared != xno; then
+  	case "$uname" in
+! 		SunOS* | UNIX_S*)
+  			LIBCUPS="libcups.so.2"
+  			LIBCUPSIMAGE="libcupsimage.so.2"
+  			DSO="\$(CC)"
+! 			DSOFLAGS="$DSOFLAGS -Wl,-h,\`basename \$@\` -G \$(OPTIM)"
+  			;;
+  		HP-UX*)
+  			case "$uarch" in
+--- 9847,9857 ----
+  
+  if test x$enable_shared != xno; then
+  	case "$uname" in
+! 		SunOS* | UNIX_S* | SCO_SV*)
+  			LIBCUPS="libcups.so.2"
+  			LIBCUPSIMAGE="libcupsimage.so.2"
+  			DSO="\$(CC)"
+! 			DSOFLAGS="$DSOFLAGS -Wl,-h,/usr/lib/\`basename \$@\` -G \$(OPTIM)"
+  			;;
+  		HP-UX*)
+  			case "$uarch" in
+***************
+*** 9968,9974 ****
+                  	LDFLAGS="$LDFLAGS -Wl,+s,+b,$libdir"
+                  	EXPORT_LDFLAGS="-Wl,+s,+b,$libdir"
+  			;;
+!                 SunOS*)
+                  	# Solaris...
+  			if test $exec_prefix != /usr; then
+  				DSOFLAGS="-R$libdir $DSOFLAGS"
+--- 9968,9974 ----
+                  	LDFLAGS="$LDFLAGS -Wl,+s,+b,$libdir"
+                  	EXPORT_LDFLAGS="-Wl,+s,+b,$libdir"
+  			;;
+!                 SunOS* | SCO_SV*)
+                  	# Solaris...
+  			if test $exec_prefix != /usr; then
+  				DSOFLAGS="-R$libdir $DSOFLAGS"
+***************
+*** 10400,10406 ****
+  			fi
+  			;;
+  
+! 		SunOS*)
+  			if test "x$enable_32bit" = xyes; then
+  				# Build 32-bit libraries, 64-bit base...
+  				if test -z "$with_arch32flags"; then
+--- 10400,10406 ----
+  			fi
+  			;;
+  
+! 		SunOS* | SCO_SV*)
+  			if test "x$enable_32bit" = xyes; then
+  				# Build 32-bit libraries, 64-bit base...
+  				if test -z "$with_arch32flags"; then
+***************
+*** 16793,16799 ****
+  
+  
+  	if test x$ac_cv_header_pthread_h = xyes; then
+! 				for flag in -lpthreads -lpthread -pthread; do
+          		{ echo "$as_me:$LINENO: checking for pthread_create using $flag" >&5
+  echo $ECHO_N "checking for pthread_create using $flag... $ECHO_C" >&6; }
+  			SAVELIBS="$LIBS"
+--- 16793,16799 ----
+  
+  
+  	if test x$ac_cv_header_pthread_h = xyes; then
+! 				for flag in -Kpthread; do
+          		{ echo "$as_me:$LINENO: checking for pthread_create using $flag" >&5
+  echo $ECHO_N "checking for pthread_create using $flag... $ECHO_C" >&6; }
+  			SAVELIBS="$LIBS"
+***************
+*** 16852,16857 ****
+--- 16852,16860 ----
+  				if test $uname = SunOS; then
+  					PTHREAD_FLAGS="$PTHREAD_FLAGS -D_POSIX_PTHREAD_SEMANTICS"
+  				fi
++ 				if test $uname = SCO_SV; then
++ 					PTHREAD_FLAGS="$PTHREAD_FLAGS -D_POSIX_PTHREAD_SEMANTICS"
++ 				fi
+  				break
+  			fi
+  		done

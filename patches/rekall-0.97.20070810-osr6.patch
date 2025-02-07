@@ -1,0 +1,66 @@
+*** ./scons/build/settings.kde.00	Thu Jan 19 07:42:03 2006
+--- ./scons/build/settings.kde	Fri Aug 10 13:21:06 2007
+***************
+*** 9,15 ****
+  libprefix=rekall
+  appname=rekall
+  mode=kde
+- with-ora10i-includes=/opt/Oracle/10.2.0/client/rdbms/public
+- with-ora10i-libraries=/opt/Oracle/10.2.0/client/lib
+- with-db2cli-includes=/opt/IBM/db2/V8.1/include
+- with-db2cli-libraries=/opt/IBM/db2/V8.1/lib
+--- 9,11 ----
+*** ./scons/Makefile.00	Thu Jan 19 04:31:07 2006
+--- ./scons/Makefile	Fri Aug 10 13:21:48 2007
+***************
+*** 11,21 ****
+  
+  install.kde:
+  		REKALL_MODE=kde PYTHONPATH=scons/ scons -Q install
+- 		[ `id -u` = 0 ] && ldconfig
+  
+  install.qt3:
+  		REKALL_MODE=qt3 PYTHONPATH=scons/ scons -Q install
+- 		[ `id -u` = 0 ] && ldconfig
+  
+  install.mac:
+  		REKALL_MODE=mac PYTHONPATH=scons/ scons -Q install
+--- 11,19 ----
+*** ./Build-OSR6.00	Fri Aug 10 13:19:26 2007
+--- ./Build-OSR6	Fri Aug 10 13:37:33 2007
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ 
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ rm -f mout-config mout
++ cp scons/build/settings.kde .
++ cp scons/Makefile .
++ make config.kde 2>&1 | tee mout-config
++ make kde 2>&1 | tee mout
++ 
+*** ./Install-OSR6.00	Fri Aug 10 13:22:02 2007
+--- ./Install-OSR6	Fri Aug 10 13:23:18 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rekall
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install.kde DESTDIR=$D 2>&1 | tee $MOUT
++ 

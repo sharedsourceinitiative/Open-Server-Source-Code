@@ -1,0 +1,88 @@
+*** ./src/adpcm.c.osr6	Mon Nov 22 15:07:37 2004
+--- ./src/adpcm.c	Sat Sep 10 17:51:11 2005
+***************
+*** 52,58 ****
+  /* these are step-size adjust factors, where
+   * 1.0 is scaled to 0x100
+   */
+! static const
+  st_sample_t stepAdjustTable[] = {
+          230, 230, 230, 230, 307, 409, 512, 614,
+          768, 614, 512, 409, 307, 230, 230, 230
+--- 52,58 ----
+  /* these are step-size adjust factors, where
+   * 1.0 is scaled to 0x100
+   */
+! const
+  st_sample_t stepAdjustTable[] = {
+          230, 230, 230, 230, 307, 409, 512, 614,
+          768, 614, 512, 409, 307, 230, 230, 230
+***************
+*** 165,171 ****
+          return errmsg;
+  }
+  
+! static int AdpcmMashS(
+          int ch,              /* channel number to encode, REQUIRE 0 <= ch < chans  */
+          int chans,           /* total channels */
+          SAMPL v[2],          /* values to use as starting 2 */
+--- 165,171 ----
+          return errmsg;
+  }
+  
+! int AdpcmMashS(
+          int ch,              /* channel number to encode, REQUIRE 0 <= ch < chans  */
+          int chans,           /* total channels */
+          SAMPL v[2],          /* values to use as starting 2 */
+*** ./src/FFT.c.osr6	Mon Dec 20 13:13:02 2004
+--- ./src/FFT.c	Sat Sep 10 17:52:21 2005
+***************
+*** 50,56 ****
+  /* Declare Static functions */
+  static int IsPowerOfTwo(int x);
+  static int NumberOfBitsNeeded(int PowerOfTwo);
+- static int ReverseBits(int index, int NumBits);
+  static void InitFFT();
+  
+  int IsPowerOfTwo(int x)
+--- 50,55 ----
+*** ./Configure-OSR6.osr6	Sat Sep 10 17:51:11 2005
+--- ./Configure-OSR6	Sat Sep 10 17:51:11 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kinline -Kpthread -Kalloca"
++   CXX="CC -Kinline -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sat Sep 10 17:51:11 2005
+--- ./Install-OSR6	Sat Sep 10 17:51:11 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/sox
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install prefix=$D/usr 2>&1 | tee $MOUT
++ 

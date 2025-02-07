@@ -1,0 +1,69 @@
+*** ./osdef.h.in.osr6	Sat Apr 28 06:26:43 2001
+--- ./osdef.h.in	Tue Sep 20 10:36:40 2005
+***************
+*** 148,154 ****
+--- 148,156 ----
+  extern void  free __P((char *));
+  
+  #ifdef NAMEDPIPE
++ #ifndef __USLC__
+  extern int   mknod __P((char *, int, int));
++ #endif
+  #else
+  struct sockaddr;	/* for connect __P */
+  extern int   socket __P((int, int, int));
+***************
+*** 189,196 ****
+--- 191,200 ----
+  #endif
+  
+  struct stat;
++ #ifndef __USLC__
+  extern int stat __P((char *, struct stat *));
+  extern int lstat __P((char *, struct stat *));
++ #endif
+  extern int fstat __P((int, struct stat *));
+  extern int fchmod __P((int, int));
+  extern int fchown __P((int, int, int));
+*** ./Install-OSR6.osr6	Tue Sep 20 10:36:40 2005
+--- ./Install-OSR6	Tue Sep 20 10:36:40 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/screen
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Tue Sep 20 10:38:36 2005
+--- ./Configure-OSR6	Tue Sep 20 10:38:31 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --with-sys-screenrc=/etc/screenrc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

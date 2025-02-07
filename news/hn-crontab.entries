@@ -1,0 +1,9 @@
+#
+# Add these entries to root's crontab if you want to WAIS index your HyperNews
+# forums and update your HyperNews root index.html nightly.
+# Adjust the times to your preference.
+#
+# rr@sco.com
+#
+0 1 * * * /usr/local/bin/hnindex
+0 2 * * * /usr/local/bin/hnlist

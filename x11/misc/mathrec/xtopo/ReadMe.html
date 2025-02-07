@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<TITLE>xtopo</TITLE>
+</HEAD>
+<BODY>
+<H1>xtopo</H1>
+<P>
+Calculate and graphically display a topographic map of an artificial landscape
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record
+<DT><B>Restrictions</B>
+<DD>Copyright 1993, 1994 Ronald Joe Record
+
+<DT><B>Availability</B>
+<DD>
+The mathrec source code is freely redistributable. The author maintains
+binary distributions for SCO OpenServer and UnixWare 7. These distributions
+and the source code are available via:
+<BR>
+<A HREF="http://www.sco.com/skunkware/x11/apps/index.html#mathrec">
+http://www.sco.com/skunkware/x11/apps/index.html#mathrec</A>.
+<DT><B>Description</B>
+<DD>
+The idea here is to calculate and display a fractal landscape topographically.
+In order to accomplish this, a midpoint displacement algorithm is used.
+The colors in the image represent heights in the landscape. Landscapes of
+varying "roughness" or "smoothness" can be calculated by varying the 
+parameter "beta" which controls the fractal dimension.
+
+<DT><B>Acknowledgements</B>
+<DD>
+The algorithm was derived from lectures given by Dietmar Saupe at the 
+University of California at Santa Cruz. Assistance with colormaps and 
+spinning color wheels and X was gleaned from Hiram Clawson and Stacey Campbell.
+<DT><B>Build</B>
+<DD>
+To build the xtopo binary, either use the Imakefile or the sample makefile,
+Makefile.std.  If your system doesn't support prototypes, uncomment the 
+PROTODEFINE line of the Imakefile.
+<P>
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile xtopo.
+<P>
+The manual page can be formatted by typing "nroff -man xtopo.man > xtopo.1".
+<DT><B>Install</B>
+<DD>
+To install xtopo, copy the xtopo binary to the desired location (the sample
+makefile puts it in /usr/local/bin)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/local/man/cat1 for imaging software), then add that location
+to your MANPATH.
+
+<DT><B>Safety</B>
+<DD>I have used it for several years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual page.
+
+<DT><B>Verification</B>
+<DD>
+You can test xtopo by just invoking it with no arguments. It should display
+a 512x512 image. Some workstations may be slow to calculate and display a
+map as there are lots of calculations involved. On a DECstation 5000/200
+with 32 Mb memory, "time ./xtopo -V -d" gave a test timing of :
+<PRE>
+real    0m17.46s
+user    0m5.30s
+sys     0m1.10s
+</PRE>
+
+On a Compaq 33 MHz 386 with no co-processor and 10 Mb memory, the same 
+command gave results of :
+<PRE>
+real    4m18.09s
+user    4m7.32s
+sys     0m2.20s
+</PRE>
+
+Some "interesting" ways to run xtopo are as follows :
+<BR>
+% xtopo -F -S 0 -m 0 -r -n 10 -d
+<BR>
+(use the full screen, set sea level to 0, minimum upper color index to 0,
+ randomly select beta for each map, calculate 10 maps in demo mode)
+ <BR>
+% xtopo -R -H 0.9
+<BR>
+(display on the root window a landscape with paramter beta equal to 0.9)
+<BR>
+% xtopo -o topomap.ppm
+<BR>
+(calculate and display with default parameters and save the resulting image
+ as a PPM file called topomap.ppm. this can be viewed later using xv or any
+ PPM viewing utility)
+
+<DT><B>Ideas, comments, additions, deletions, suggestions, bug reports, code review</B>
+<DD>e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

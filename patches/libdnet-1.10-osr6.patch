@@ -1,0 +1,36 @@
+*** ./src/arp-ioctl.c.orig Wed Feb  9 14:31:00 2005
+--- ./src/arp-ioctl.c Fri May  6 23:40:15 2005
+***************
+*** 12,17 ****
+  #include <sys/types.h>
+  #include <sys/ioctl.h>
+  #include <sys/socket.h>
+  #ifdef HAVE_STREAMS_MIB2
+  # include <sys/sockio.h>
+  # include <sys/stream.h>
+--- 12,20 ----
+  #include <sys/types.h>
+  #include <sys/ioctl.h>
+  #include <sys/socket.h>
++ #include <sys/sockio.h>
++ #include <net/radix.h>
++ #include <net/route.h>
+  #ifdef HAVE_STREAMS_MIB2
+  # include <sys/stream.h>
+  # include <sys/tihdr.h>
+***************
+*** 13,19 ****
+  #include <sys/ioctl.h>
+  #include <sys/socket.h>
+  #ifdef HAVE_STREAMS_MIB2
+- # include <sys/sockio.h>
+  # include <sys/stream.h>
+  # include <sys/tihdr.h>
+  # include <sys/tiuser.h>
+--- 16,21 ----
+  #include <net/radix.h>
+  #include <net/route.h>
+  #ifdef HAVE_STREAMS_MIB2
+  # include <sys/stream.h>
+  # include <sys/tihdr.h>
+  # include <sys/tiuser.h>

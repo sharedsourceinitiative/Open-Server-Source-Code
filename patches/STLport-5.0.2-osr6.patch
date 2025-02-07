@@ -1,0 +1,1111 @@
+*** ./src/num_put_float.cpp.osr6	Thu Feb  9 21:54:30 2006
+--- ./src/num_put_float.cpp	Wed Jun 14 15:19:42 2006
+***************
+*** 50,57 ****
+--- 50,64 ----
+  # if defined (__sun) || defined (__digital__) || defined (__sgi) || defined (_STLP_SCO_OPENSERVER) || defined (__NCR_SVR)
+  // DEC, SGI & Solaris need this
+  #  include <values.h>
++ #if !defined(__USLC__)
+  #  include <nan.h>
+  # endif
++ # endif
++ #  if defined(__USLC__)
++ #    undef _POSIX_SOURCE
++ #    include <math.h>
++ #    define _POSIX_SOURCE
++ #  endif
+  
+  # if defined (__QNXNTO__) || ( defined(__GNUC__) && defined(__APPLE__) ) || defined(_STLP_USE_UCLIBC) /* 0.9.26 */ \
+    || defined(__FreeBSD__)
+***************
+*** 217,223 ****
+  // these differences here.
+  
+  #ifndef USE_SPRINTF_INSTEAD
+! # if defined (__hpux) || defined (__DJGPP) || (defined(_STLP_USE_GLIBC) && ! defined (__MSL__) ) \
+    || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+  #  if defined (isfinite) 
+  inline bool _Stl_is_nan_or_inf(double x) { return !isfinite(x); }
+--- 224,231 ----
+  // these differences here.
+  
+  #ifndef USE_SPRINTF_INSTEAD
+! # if defined (__hpux) || defined (__DJGPP) || \
+!     (defined(_STLP_USE_GLIBC) && ! defined (__MSL__) ) \
+    || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+  #  if defined (isfinite) 
+  inline bool _Stl_is_nan_or_inf(double x) { return !isfinite(x); }
+***************
+*** 230,236 ****
+  inline bool _Stl_is_neg_inf(double x)    { return isinf(x) && x < 0; }
+  # elif (defined(__unix) || defined(__unix__)) \
+        && !defined(__APPLE__) && !defined(__DJGPP) && !defined(__osf__) \
+!       && !defined(_CRAY)
+  inline bool _Stl_is_nan_or_inf(double x) { return IsNANorINF(x); }
+  inline bool _Stl_is_inf(double x)        { return IsNANorINF(x) && IsINF(x); }
+  inline bool _Stl_is_neg_inf(double x)    { return (IsINF(x)) && (x < 0.0); }
+--- 238,244 ----
+  inline bool _Stl_is_neg_inf(double x)    { return isinf(x) && x < 0; }
+  # elif (defined(__unix) || defined(__unix__)) \
+        && !defined(__APPLE__) && !defined(__DJGPP) && !defined(__osf__) \
+!       && !defined(_CRAY) && !defined(__USLC__)
+  inline bool _Stl_is_nan_or_inf(double x) { return IsNANorINF(x); }
+  inline bool _Stl_is_inf(double x)        { return IsNANorINF(x) && IsINF(x); }
+  inline bool _Stl_is_neg_inf(double x)    { return (IsINF(x)) && (x < 0.0); }
+***************
+*** 269,274 ****
+--- 277,287 ----
+  inline bool _Stl_is_inf         (double x) { return _fp_isINF(x); }
+  inline bool _Stl_is_neg_inf     (double x) { return _fp_isINF(x) && x < 0; }
+  inline bool _Stl_is_neg_nan     (double x) { return _fp_isNAN(x) && x < 0; }
++ # elif defined(__USLC__)
++ inline bool _Stl_is_nan_or_inf(double x) { return isnan(x) || isinf(x); }
++ inline bool _Stl_is_inf(double x)        { return isinf(x); }
++ inline bool _Stl_is_neg_inf(double x)    { return isinf(x) && signbit(x); }
++ inline bool _Stl_is_neg_nan(double x)    { return isnan(x) && signbit(x); }
+  # elif defined(_CRAY)
+  #  if defined(_CRAYIEEE)
+  inline bool _Stl_is_nan_or_inf(double x) { return isnan(x) || isinf(x); }
+*** ./src/ctype.cpp.osr6	Thu Jun 30 23:46:27 2005
+--- ./src/ctype.cpp	Wed Jun 14 15:19:42 2006
+***************
+*** 51,57 ****
+     * STLport flag character like 'a' with alpha | lower, if alpha is badly configure
+     * then 'a' will also be seen as upper which is wrong.
+     */
+! #ifndef __MWERKS__
+    /* CodeWarrior 8 don't understabd this */
+    typedef char __static_assert[(alpha & (lower | upper)) == 0];
+  #endif
+--- 51,57 ----
+     * STLport flag character like 'a' with alpha | lower, if alpha is badly configure
+     * then 'a' will also be seen as upper which is wrong.
+     */
+! #if !defined(__MWERKS__) && !defined(__USLC__)
+    /* CodeWarrior 8 don't understabd this */
+    typedef char __static_assert[(alpha & (lower | upper)) == 0];
+  #endif
+*** ./src/complex.cpp.osr6	Fri Jun 24 12:20:37 2005
+--- ./src/complex.cpp	Wed Jun 14 15:19:42 2006
+***************
+*** 30,36 ****
+  }
+  _STLP_TEMPLATE_NULL
+  _STLP_DECLSPEC double _STLP_CALL abs(const complex<double>& __z) {
+!   return ::hypot(__z._M_re, __z._M_im);
+  }
+  
+  #ifndef _STLP_NO_LONG_DOUBLE
+--- 30,36 ----
+  }
+  _STLP_TEMPLATE_NULL
+  _STLP_DECLSPEC double _STLP_CALL abs(const complex<double>& __z) {
+!   return ::hypot((long double)__z._M_re, (long double)__z._M_im);
+  }
+  
+  #ifndef _STLP_NO_LONG_DOUBLE
+***************
+*** 171,177 ****
+  complex<_Tp> sqrtT(const complex<_Tp>& z) {
+    _Tp re = z._M_re;
+    _Tp im = z._M_im;
+!   _Tp mag = ::hypot(re, im);
+    complex<_Tp> result;
+  
+    if (mag == 0.f) {
+--- 171,177 ----
+  complex<_Tp> sqrtT(const complex<_Tp>& z) {
+    _Tp re = z._M_re;
+    _Tp im = z._M_im;
+!   _Tp mag = ::hypot((long double)re, (long double)im);
+    complex<_Tp> result;
+  
+    if (mag == 0.f) {
+*** ./src/_stdio_file.h.osr6	Fri May  6 22:56:03 2005
+--- ./src/_stdio_file.h	Wed Jun 14 15:19:42 2006
+***************
+*** 129,134 ****
+--- 129,165 ----
+  
+  # define _STLP_FILE_I_O_IDENTICAL 1
+  
++ #elif defined(SCO) || defined(__USLC__)
++ 
++ typedef  unsigned char* _File_ptr_type;
++ inline int   _FILE_fd(const FILE *__f) { return __f->__file; }
++ inline char* _FILE_I_begin(const FILE *__f) { return (char*) __f->__base; }
++ inline char* _FILE_I_next(const FILE *__f) { return (char*) __f->__ptr; }  
++ 
++ inline char* _FILE_I_end(const FILE *__f)
++   { return (char*) __f->__ptr + __f->__cnt; }
++ 
++ inline ptrdiff_t _FILE_I_avail(const FILE *__f) { return __f->__cnt; }
++ 
++ inline char& _FILE_I_preincr(FILE *__f)
++   { --__f->__cnt; return *(char*) (++__f->__ptr); }
++ inline char& _FILE_I_postincr(FILE *__f)
++   { --__f->__cnt; return *(char*) (__f->__ptr++); }
++ inline char& _FILE_I_predecr(FILE *__f)
++   { ++__f->__cnt; return *(char*) (--__f->__ptr); }
++ inline char& _FILE_I_postdecr(FILE *__f)
++   { ++__f->__cnt; return *(char*) (__f->__ptr--); }
++ inline void  _FILE_I_bump(FILE *__f, int __n)
++   { __f->__ptr += __n; __f->__cnt -= __n; }
++ 
++ inline void _FILE_I_set(FILE *__f, char* __begin, char* __next, char* __end) {
++   __f->__base = (_File_ptr_type) __begin;
++   __f->__ptr  = (_File_ptr_type) __next;
++   __f->__cnt  = __end - __next;
++ }
++ 
++ # define _STLP_FILE_I_O_IDENTICAL 1
++ 
+  #elif defined(__EMX__)
+  
+  inline int   _FILE_fd(const FILE* __f) { return __f->_handle; }
+*** ./src/complex_exp.cpp.osr6	Fri Jun 24 12:20:37 2005
+--- ./src/complex_exp.cpp	Wed Jun 14 15:19:42 2006
+***************
+*** 51,57 ****
+    complex<_Tp> r;
+  
+    r._M_im = ::atan2(z._M_im, z._M_re) * ln10_inv;
+!   r._M_re = ::log10(::hypot(z._M_re, z._M_im));
+    return r;
+  }
+  
+--- 51,57 ----
+    complex<_Tp> r;
+  
+    r._M_im = ::atan2(z._M_im, z._M_re) * ln10_inv;
+!   r._M_re = ::log10(::hypot((long double)z._M_re, (long double)z._M_im));
+    return r;
+  }
+  
+***************
+*** 76,82 ****
+    complex<_Tp> r;
+  
+    r._M_im = ::atan2(z._M_im, z._M_re);
+!   r._M_re = ::log(::hypot(z._M_re, z._M_im));
+    return r;
+  }
+  _STLP_DECLSPEC complex<float> _STLP_CALL log(const complex<float>& z)
+--- 76,82 ----
+    complex<_Tp> r;
+  
+    r._M_im = ::atan2(z._M_im, z._M_re);
+!   r._M_re = ::log(::hypot((long double)z._M_re, (long double)z._M_im));
+    return r;
+  }
+  _STLP_DECLSPEC complex<float> _STLP_CALL log(const complex<float>& z)
+***************
+*** 113,119 ****
+  
+  template <class _Tp>
+  complex<_Tp> powT(const complex<_Tp>& a, const _Tp& b) {
+!   _Tp logr = ::log(::hypot(a._M_re,a._M_im));
+    _Tp logi = ::atan2(a._M_im, a._M_re);
+    _Tp x = ::exp(logr * b);
+    _Tp y = logi * b;
+--- 113,119 ----
+  
+  template <class _Tp>
+  complex<_Tp> powT(const complex<_Tp>& a, const _Tp& b) {
+!   _Tp logr = ::log(::hypot((long double)a._M_re,(long double)a._M_im));
+    _Tp logi = ::atan2(a._M_im, a._M_re);
+    _Tp x = ::exp(logr * b);
+    _Tp y = logi * b;
+***************
+*** 123,129 ****
+  
+  template <class _Tp>
+  complex<_Tp> powT(const complex<_Tp>& a, const complex<_Tp>& b) {
+!   _Tp logr = ::log(::hypot(a._M_re,a._M_im));
+    _Tp logi = ::atan2(a._M_im, a._M_re);
+    _Tp x = ::exp(logr * b._M_re - logi * b._M_im);
+    _Tp y = logr * b._M_im + logi * b._M_re;
+--- 123,129 ----
+  
+  template <class _Tp>
+  complex<_Tp> powT(const complex<_Tp>& a, const complex<_Tp>& b) {
+!   _Tp logr = ::log(::hypot((long double)a._M_re,(long double)a._M_im));
+    _Tp logi = ::atan2(a._M_im, a._M_re);
+    _Tp x = ::exp(logr * b._M_re - logi * b._M_im);
+    _Tp y = logr * b._M_im + logi * b._M_re;
+*** ./build/lib/sysv5.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/lib/sysv5.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,19 ----
++ # -*- Makefile -*- Time-stamp: <03/10/12 20:35:49 ptr>
++ # $Id: CC.mak,v 1.1.2.2 2005/11/17 21:16:07 complement Exp $
++ 
++ 
++ SRCROOT := ..
++ COMPILER_NAME := cc
++ 
++ STLPORT_ETC_DIR = ../../etc
++ STLPORT_INCLUDE_DIR = ../../stlport
++ include Makefile.inc
++ include ${SRCROOT}/Makefiles/top.mak
++ 
++ INCLUDES += -I. -I$(STLPORT_INCLUDE_DIR)
++ 
++ # options for build with boost support
++ ifdef STLP_BUILD_BOOST_PATH
++ INCLUDES += -I$(STLP_BUILD_BOOST_PATH)
++ endif
++ 
+*** ./build/Makefiles/gmake/lib/cc.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/lib/cc.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,28 ----
++ # -*- makefile -*- Time-stamp: <04/08/23 23:07:35 ptr>
++ # $Id: CC.mak,v 1.1.2.3 2005/11/20 08:42:08 complement Exp $
++ 
++ dbg-shared:	LDFLAGS += -G -h$(SO_NAME_DBGxx) ${LDSEARCH} ${NOSTDLIB}
++ stldbg-shared:	LDFLAGS += -G -h$(SO_NAME_STLDBGxx) ${LDSEARCH} ${NOSTDLIB}
++ release-shared:	LDFLAGS += -G -h$(SO_NAMExx) ${LDSEARCH} ${NOSTDLIB}
++ dbg-static:	LDFLAGS += ${LDSEARCH}
++ stldbg-static:	LDFLAGS += ${LDSEARCH}
++ release-static:	LDFLAGS += ${LDSEARCH}
++ 
++ DEPENDS_COLLECTION_SUNPRO := $(DEPENDS_COLLECTION).sunpro
++ 
++ compiler-dep :: $(DEPENDS_COLLECTION_SUNPRO)
++ 
++ STD_HEADER_LISTS = $(STLPORT_ETC_DIR)/std_headers.txt \
++                    $(STLPORT_ETC_DIR)/std_headers_cpp_runtime_h.txt \
++                    $(STLPORT_ETC_DIR)/std_headers_c.txt \
++                    $(STLPORT_ETC_DIR)/std_headers_c_h.txt \
++                    $(STLPORT_ETC_DIR)/std_headers_classic_iostreams.txt \
++                    $(STLPORT_ETC_DIR)/std_headers_cpp_runtime.txt
++ 
++ $(DEPENDS_COLLECTION_SUNPRO) : $(STD_HEADER_LISTS)
++ 	@echo "Linking header files required for USL compiler"
++ 	@for file in `cat $(STD_HEADER_LISTS)`; do \
++ 	  echo "." | awk '{printf("%s", $$0)}' ; \
++ 	  (cd $(STLPORT_INCLUDE_DIR) ; rm -f $$file.USLCCh; ln -s ./$$file $$file.USLCCh) ; \
++         done; echo ""
++ 	@cat $(STD_HEADER_LISTS) | awk '{print "$(STLPORT_INCLUDE_DIR)/" $$0 ".USLCCh : $(STLPORT_INCLUDE_DIR)/" $$0 }'  > $@
+*** ./build/Makefiles/gmake/sco_sv/extern.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/extern.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,63 ----
++ # Time-stamp: <03/07/15 17:46:28 ptr>
++ # $Id: extern.mak,v 1.1.2.1 2004/12/24 11:31:15 ptr Exp $
++ 
++ 
++ # This is Complement project (really not extern):
++ 
++ CoMT_LIB_DIR        ?= ${INSTALL_LIB_DIR}
++ CoMT_LIB_DIR_DBG    ?= ${INSTALL_LIB_DIR_DBG}
++ CoMT_LIB_DIR_STLDBG ?= ${INSTALL_LIB_DIR_STLDBG}
++ CoMT_BIN_DIR        ?= ${INSTALL_BIN_DIR}
++ CoMT_BIN_DIR_DBG    ?= ${INSTALL_BIN_DIR_DBG}
++ CoMT_BIN_DIR_STLDBG ?= ${INSTALL_BIN_DIR_STLDBG}
++ 
++ CoMT_INCLUDE_DIR ?= ${CoMT_DIR}/include
++ 
++ # This file reflect versions of third-party libraries that
++ # used in projects
++ 
++ # STLport library
++ #STLPORT_LIB_DIR ?= /usr/local/lib
++ #STLPORT_INCLUDE_DIR ?= /usr/local/include/stlport
++ #STLPORT_VER ?= 4.5
++ STLPORT_LIB_DIR ?= $(STLPORT_DIR)/${TARGET_NAME}lib
++ STLPORT_INCLUDE_DIR ?= $(STLPORT_DIR)/stlport
++ STLPORT_VER ?= 4.5.5
++ 
++ # PostgreSQL library version:
++ 
++ PG_INCLUDE ?= $(PG_DIR)/include
++ PG_LIB ?= $(PG_DIR)/lib
++ PG_LIB_VER_MAJOR = 2
++ PG_LIB_VER_MINOR = 1
++ 
++ # Readline libraries version:
++ 
++ RL_INCLUDE ?= /usr/include/readline
++ RL_LIB ?= /usr/lib
++ RL_LIB_VER_MAJOR = 4
++ RL_LIB_VER_MINOR = 2
++ 
++ # gSOAP (http://gsoap2.sourceforge.net)
++ 
++ gSOAP_INCLUDE_DIR ?= ${gSOAP_DIR}/include
++ gSOAP_LIB_DIR ?= ${gSOAP_DIR}/lib
++ gSOAP_BIN_DIR ?= ${gSOAP_DIR}/bin
++ 
++ # boost (http://www.boost.org, http://boost.sourceforge.net)
++ BOOST_INCLUDE_DIR ?= ${BOOST_DIR}
++ 
++ # This file reflect versions of third-party libraries that
++ # used in projects, with make-depend style
++ 
++ ifeq ($(OSNAME),sunos)
++ PG_DIR ?= /opt/PGpgsql
++ endif
++ ifeq ($(OSNAME),linux)
++ PG_DIR ?= /usr/local/pgsql
++ endif
++ 
++ gSOAP_DIR ?= /usr/lib/gsoap
++ BOOST_DIR ?= ${SRCROOT}/../extern/boost
++ STLPORT_DIR ?= /usr/stlport
++ CoMT_DIR ?= ${SRCROOT}
+*** ./build/Makefiles/gmake/sco_sv/lib.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/lib.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,5 ----
++ # -*- makefile -*- Time-stamp: <03/10/19 12:26:05 ptr>
++ # $Id: lib.mak,v 1.1.2.1 2004/12/24 11:31:16 ptr Exp $
++ 
++ include ${RULESBASE}/${USE_MAKE}/unix/lib.mak
++ 
+*** ./build/Makefiles/gmake/sco_sv/rules-install-so.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/rules-install-so.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,64 ----
++ # -*- makefile -*- Time-stamp: <03/07/10 13:22:04 ptr>
++ 
++ INSTALL_TAGS ?= install-release-shared install-dbg-shared install-stldbg-shared
++ 
++ PHONY += install $(INSTALL_TAGS)
++ 
++ install:	$(INSTALL_TAGS)
++ 
++ install-release-shared:	release-shared $(INSTALL_LIB_DIR)
++ 	@if [ -h $(INSTALL_LIB_DIR)/${SO_NAME} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR)/${SO_NAME}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR)/${SO_NAMEx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR)/${SO_NAMEx}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR)/${SO_NAMExx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR)/${SO_NAMExx}; \
++ 	fi
++ 	@if [ -f $(INSTALL_LIB_DIR)/${SO_NAMExxx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR)/${SO_NAMExxx}; \
++ 	fi
++ 	$(INSTALL_SO) ${SO_NAME_OUTxxx} $(INSTALL_LIB_DIR)
++ 	(cd $(INSTALL_LIB_DIR) && \
++ 	 { ln -s ${SO_NAMExxx} ${SO_NAMExx}; \
++ 	   ln -s ${SO_NAMExx} ${SO_NAMEx}; \
++ 	   ln -s ${SO_NAMEx} ${SO_NAME}; } )
++ 
++ install-dbg-shared:	dbg-shared $(INSTALL_LIB_DIR_DBG)
++ 	@if [ -h $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBG} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBG}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGx}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGxx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGxx}; \
++ 	fi
++ 	@if [ -f $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGxxx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_DBG)/${SO_NAME_DBGxxx}; \
++ 	fi
++ 	$(INSTALL_SO) ${SO_NAME_OUT_DBGxxx} $(INSTALL_LIB_DIR_DBG)
++ 	(cd $(INSTALL_LIB_DIR_DBG) && \
++ 	 { ln -s ${SO_NAME_DBGxxx} ${SO_NAME_DBGxx}; \
++ 	   ln -s ${SO_NAME_DBGxx} ${SO_NAME_DBGx}; \
++ 	   ln -s ${SO_NAME_DBGx} ${SO_NAME_DBG}; } )
++ 
++ install-stldbg-shared:	stldbg-shared $(INSTALL_LIB_DIR_STLDBG)
++ 	@if [ -h $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBG} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBG}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGx}; \
++ 	fi
++ 	@if [ -h $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGxx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGxx}; \
++ 	fi
++ 	@if [ -f $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGxxx} ] ; then \
++ 	  rm $(INSTALL_LIB_DIR_STLDBG)/${SO_NAME_STLDBGxxx}; \
++ 	fi
++ 	$(INSTALL_SO) ${SO_NAME_OUT_STLDBGxxx} $(INSTALL_LIB_DIR_STLDBG)
++ 	(cd $(INSTALL_LIB_DIR_STLDBG) && \
++ 	 { ln -s ${SO_NAME_STLDBGxxx} ${SO_NAME_STLDBGxx}; \
++ 	   ln -s ${SO_NAME_STLDBGxx} ${SO_NAME_STLDBGx}; \
++ 	   ln -s ${SO_NAME_STLDBGx} ${SO_NAME_STLDBG}; } )
+*** ./build/Makefiles/gmake/sco_sv/rules-so.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/rules-so.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,33 ----
++ # -*- makefile -*- Time-stamp: <05/03/28 23:42:45 ptr>
++ # $Id: rules-so.mak,v 1.1.2.2 2005/03/28 20:43:54 ptr Exp $
++ 
++ # Shared libraries tags
++ 
++ PHONY += release-shared dbg-shared stldbg-shared
++ 
++ release-shared:	$(OUTPUT_DIR) ${SO_NAME_OUTxxx}
++ 
++ dbg-shared:	$(OUTPUT_DIR_DBG) ${SO_NAME_OUT_DBGxxx}
++ 
++ stldbg-shared:	$(OUTPUT_DIR_STLDBG) ${SO_NAME_OUT_STLDBGxxx}
++ 
++ ${SO_NAME_OUTxxx}:	$(OBJ) $(LIBSDEP)
++ 	$(LINK.cc) $(LINK_OUTPUT_OPTION) ${START_OBJ} $(OBJ) $(LDLIBS) ${STDLIBS} ${END_OBJ}
++ 	(cd $(OUTPUT_DIR); \
++ 	 rm -f ${SO_NAMExx}; ln -s $(SO_NAMExxx) ${SO_NAMExx}; \
++ 	 rm -f ${SO_NAMEx}; ln -s ${SO_NAMExx} ${SO_NAMEx}; \
++ 	 rm -f ${SO_NAME}; ln -s ${SO_NAMEx} ${SO_NAME})
++ 
++ ${SO_NAME_OUT_DBGxxx}:	$(OBJ_DBG) $(LIBSDEP)
++ 	$(LINK.cc) $(LINK_OUTPUT_OPTION) ${START_OBJ} $(OBJ_DBG) $(LDLIBS) ${STDLIBS} ${END_OBJ}
++ 	(cd $(OUTPUT_DIR_DBG); \
++ 	 rm -f ${SO_NAME_DBGxx}; ln -s $(SO_NAME_DBGxxx) ${SO_NAME_DBGxx}; \
++ 	 rm -f ${SO_NAME_DBGx}; ln -s ${SO_NAME_DBGxx} ${SO_NAME_DBGx}; \
++ 	 rm -f ${SO_NAME_DBG}; ln -s ${SO_NAME_DBGx} ${SO_NAME_DBG})
++ 
++ ${SO_NAME_OUT_STLDBGxxx}:	$(OBJ_STLDBG) $(LIBSDEP)
++ 	$(LINK.cc) $(LINK_OUTPUT_OPTION) ${START_OBJ} $(OBJ_STLDBG) $(LDLIBS) ${STDLIBS} ${END_OBJ}
++ 	(cd $(OUTPUT_DIR_STLDBG); \
++ 	 rm -f ${SO_NAME_STLDBGxx}; ln -s $(SO_NAME_STLDBGxxx) ${SO_NAME_STLDBGxx}; \
++ 	 rm -f ${SO_NAME_STLDBGx}; ln -s ${SO_NAME_STLDBGxx} ${SO_NAME_STLDBGx}; \
++ 	 rm -f ${SO_NAME_STLDBG}; ln -s ${SO_NAME_STLDBGx} ${SO_NAME_STLDBG})
+*** ./build/Makefiles/gmake/sco_sv/sys.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/sys.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,10 ----
++ # Time-stamp: <05/09/09 21:10:32 ptr>
++ # $Id: sys.mak,v 1.1.2.2 2005/09/11 06:27:35 complement Exp $
++ 
++ INSTALL := /usr/gnu/bin/install
++ 
++ INSTALL_SO := ${INSTALL} -c -m 0755
++ INSTALL_A := ${INSTALL} -c -m 0644
++ INSTALL_EXE := ${INSTALL} -c -m 0755
++ 
++ EXT_TEST := /usr/bin/test
+*** ./build/Makefiles/gmake/sco_sv/targetsys.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sco_sv/targetsys.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,10 ----
++ # Time-stamp: <05/09/09 21:08:34 ptr>
++ # $Id: targetsys.mak,v 1.1.2.1 2005/09/11 06:27:35 complement Exp $
++ 
++ SO := so
++ 
++ ARCH := a
++ AR := ar
++ AR_INS_R := -rs
++ AR_EXTR := -x
++ AR_OUT = $@
+*** ./build/Makefiles/gmake/sysv5.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/sysv5.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,59 ----
++ # Time-stamp: <04/08/23 22:49:14 ptr>
++ # $Id: CC.mak,v 1.1.2.3 2005/11/20 08:41:11 complement Exp $
++ 
++ 
++ #INCLUDES = -I$(SRCROOT)/include
++ INCLUDES :=
++ 
++ CXX := CC
++ CC := cc
++ 
++ ifdef TARGET_OS
++ CXX := ${TARGET_OS}-${CXX}
++ CC := ${TARGET_OS}-${CC}
++ endif
++ 
++ CXX_VERSION := $(shell ${CXX} -V 2>&1 | grep ${CXX} | awk '{ print $$4; }')
++ 
++ CXX_VERSION_MAJOR := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { print $$1; }')
++ CXX_VERSION_MINOR := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { print $$2; }')
++ CXX_VERSION_PATCH := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { if (NF > 2) {print $$3;}else{print "0"} }')
++ 
++ DEFS ?=
++ OPT ?=
++ 
++ OUTPUT_OPTION = -o $@
++ LINK_OUTPUT_OPTION = ${OUTPUT_OPTION}
++ CPPFLAGS = $(DEFS) $(INCLUDES)
++ 
++ OPT = -O2
++ CCFLAGS = $(OPT) 
++ CFLAGS = $(OPT)
++ CXXFLAGS = $(OPT)
++ CDEPFLAGS = 
++ CCDEPFLAGS = 
++ 
++ # STLport DEBUG mode specific defines
++ stldbg-static :	    DEFS += -D_STLP_DEBUG
++ stldbg-shared :     DEFS += -D_STLP_DEBUG
++ stldbg-static-dep : DEFS += -D_STLP_DEBUG
++ stldbg-shared-dep : DEFS += -D_STLP_DEBUG
++ 
++ dbg-static : OPT += -g
++ dbg-shared : OPT += -g
++ 
++ stldbg-static : OPT += -g
++ stldbg-shared : OPT += -g
++ 
++ # dependency output parser (dependencies collector)
++ 
++ DP_OUTPUT_DIR = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ DP_OUTPUT_DIR_DBG = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR_DBG)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ DP_OUTPUT_DIR_STLDBG = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR_STLDBG)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ 
+*** ./build/Makefiles/gmake/cc.mak.osr6	Wed Jun 14 15:19:42 2006
+--- ./build/Makefiles/gmake/cc.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 0 ****
+--- 1,59 ----
++ # Time-stamp: <04/08/23 22:49:14 ptr>
++ # $Id: CC.mak,v 1.1.2.3 2005/11/20 08:41:11 complement Exp $
++ 
++ 
++ #INCLUDES = -I$(SRCROOT)/include
++ INCLUDES :=
++ 
++ CXX := CC
++ CC := cc
++ 
++ ifdef TARGET_OS
++ CXX := ${TARGET_OS}-${CXX}
++ CC := ${TARGET_OS}-${CC}
++ endif
++ 
++ CXX_VERSION := $(shell ${CXX} -V 2>&1 | grep ${CXX} | awk '{ print $$4; }')
++ 
++ CXX_VERSION_MAJOR := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { print $$1; }')
++ CXX_VERSION_MINOR := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { print $$2; }')
++ CXX_VERSION_PATCH := $(shell echo ${CXX_VERSION} | awk 'BEGIN { FS = "."; } { if (NF > 2) {print $$3;}else{print "0"} }')
++ 
++ DEFS ?= -D__i386 -D_POSIX_SOURCE
++ OPT ?=
++ 
++ OUTPUT_OPTION = -o $@
++ LINK_OUTPUT_OPTION = ${OUTPUT_OPTION}
++ CPPFLAGS = $(DEFS) $(INCLUDES)
++ 
++ OPT = -O2
++ CCFLAGS = $(OPT) 
++ CFLAGS = $(OPT)
++ CXXFLAGS = $(OPT)
++ CDEPFLAGS = 
++ CCDEPFLAGS = 
++ 
++ # STLport DEBUG mode specific defines
++ stldbg-static :	    DEFS += -D_STLP_DEBUG
++ stldbg-shared :     DEFS += -D_STLP_DEBUG
++ stldbg-static-dep : DEFS += -D_STLP_DEBUG
++ stldbg-shared-dep : DEFS += -D_STLP_DEBUG
++ 
++ dbg-static : OPT += -g
++ dbg-shared : OPT += -g
++ 
++ stldbg-static : OPT += -g
++ stldbg-shared : OPT += -g
++ 
++ # dependency output parser (dependencies collector)
++ 
++ DP_OUTPUT_DIR = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ DP_OUTPUT_DIR_DBG = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR_DBG)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ DP_OUTPUT_DIR_STLDBG = | sed 's|\($*\)\.o[ :]*|$(OUTPUT_DIR_STLDBG)/\1.o $@ : |g' > $@; \
++                            [ -s $@ ] || rm -f $@
++ 
++ 
+*** ./build/Makefiles/config.mak.osr6	Sun Jan 22 11:01:05 2006
+--- ./build/Makefiles/config.mak	Wed Jun 14 15:19:42 2006
+***************
+*** 1 ****
+- STLP_BUILD_BOOST_PATH := /export/home/ptr/workshop/extern/boost
+--- 0 ----
+*** ./stlport/stl/_string.c.osr6	Sun Jul 24 01:38:13 2005
+--- ./stlport/stl/_string.c	Wed Jun 14 15:19:42 2006
+***************
+*** 650,656 ****
+    _M_range_initialize(__s._M_Start(), __s._M_Finish());
+  }
+    
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) && \
+     (!defined (__GNUC__) || (__GNUC__ != 2) || (__GNUC_MINOR__ != 96))
+  template <class _CharT, class _Traits, class _Alloc>
+  const size_t basic_string<_CharT, _Traits, _Alloc>::npos;
+--- 650,656 ----
+    _M_range_initialize(__s._M_Start(), __s._M_Finish());
+  }
+    
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) && !defined(__USLC__) && \
+     (!defined (__GNUC__) || (__GNUC__ != 2) || (__GNUC_MINOR__ != 96))
+  template <class _CharT, class _Traits, class _Alloc>
+  const size_t basic_string<_CharT, _Traits, _Alloc>::npos;
+*** ./stlport/stl/c_locale.h.osr6	Wed Jun 15 12:11:08 2005
+--- ./stlport/stl/c_locale.h	Wed Jun 14 15:19:42 2006
+***************
+*** 242,248 ****
+  
+  #if ( defined(__sun) && defined (__SVR4) ) \
+      || (defined (__digital__) && defined (__unix__)) \
+!     || defined(_AIX)
+  /* fbp : condition from AT&T code*/
+  #  if !(defined(__XPG4_CHAR_CLASS__) || defined(_XPG4_2) || \
+         (defined(_XOPEN_SOURCE) && (_XOPEN_VERSION - 0 == 4))) && ! defined (_ISCNTRL)
+--- 242,248 ----
+  
+  #if ( defined(__sun) && defined (__SVR4) ) \
+      || (defined (__digital__) && defined (__unix__)) \
+!     || defined(_AIX) || defined(__USLC__)
+  /* fbp : condition from AT&T code*/
+  #  if !(defined(__XPG4_CHAR_CLASS__) || defined(_XPG4_2) || \
+         (defined(_XOPEN_SOURCE) && (_XOPEN_VERSION - 0 == 4))) && ! defined (_ISCNTRL)
+*** ./stlport/stl/_config.h.osr6	Tue Feb  7 03:31:47 2006
+--- ./stlport/stl/_config.h	Wed Jun 14 15:19:42 2006
+***************
+*** 166,172 ****
+  #    define _STLP_BIG_ENDIAN 1
+  #  elif defined (__i386) || defined (_M_IX86) || defined (_M_ARM) || \
+          defined (__amd64__) || defined (_M_AMD64) || defined (__x86_64__) || \
+!         defined (__alpha__)
+  #    define _STLP_LITTLE_ENDIAN 1
+  #  elif defined (__ia64__)
+      /* itanium allows both settings (for instance via gcc -mbig-endian) - hence a seperate check is required */
+--- 166,172 ----
+  #    define _STLP_BIG_ENDIAN 1
+  #  elif defined (__i386) || defined (_M_IX86) || defined (_M_ARM) || \
+          defined (__amd64__) || defined (_M_AMD64) || defined (__x86_64__) || \
+!         defined (__alpha__) || defined (__USLC__)
+  #    define _STLP_LITTLE_ENDIAN 1
+  #  elif defined (__ia64__)
+      /* itanium allows both settings (for instance via gcc -mbig-endian) - hence a seperate check is required */
+***************
+*** 206,212 ****
+  #endif
+  
+  /* Operating system recognition (basic) */
+! #if defined (__unix) || defined (__linux__) || defined (__QNX__) || defined (_AIX)  || defined (__NetBSD__) || defined(__OpenBSD__) || defined (__Lynx__)
+  #  define _STLP_UNIX 1
+  #  if defined (__linux__)
+  /* This is defined wether library in use is glibc or not.
+--- 206,212 ----
+  #endif
+  
+  /* Operating system recognition (basic) */
+! #if defined (__unix) || defined (__linux__) || defined (__QNX__) || defined (_AIX)  || defined (__NetBSD__) || defined(__OpenBSD__) || defined (__Lynx__) || defined (SCO) || defined (__USLC__)
+  #  define _STLP_UNIX 1
+  #  if defined (__linux__)
+  /* This is defined wether library in use is glibc or not.
+*** ./stlport/stl/_threads.c.osr6	Sun Oct 16 00:50:04 2005
+--- ./stlport/stl/_threads.c	Wed Jun 14 15:19:42 2006
+***************
+*** 83,88 ****
+--- 83,89 ----
+  extern "C" int __nanosleep(const struct timespec*, struct timespec*);
+  # define _STLP_NANOSLEEP __nanosleep
+  #else
++ extern "C" int nanosleep(const struct timespec*, struct timespec*);
+  # define _STLP_NANOSLEEP nanosleep
+  #endif
+  
+*** ./stlport/stl/_string.h.osr6	Tue Feb 28 05:54:46 2006
+--- ./stlport/stl/_string.h	Wed Jun 14 15:19:42 2006
+***************
+*** 1304,1310 ****
+  #endif /* _STLP_USE_TEMPLATE_EXPRESSION */
+  };
+  
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) &&  \
+     (!defined (__GNUC__) || ((__GNUC__ == 2) && (__GNUC_MINOR__ == 96)))
+  template <class _CharT, class _Traits, class _Alloc>
+  const size_t basic_string<_CharT, _Traits, _Alloc>::npos = ~(size_t) 0;
+--- 1304,1310 ----
+  #endif /* _STLP_USE_TEMPLATE_EXPRESSION */
+  };
+  
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) && !defined(__USLC__) && \
+     (!defined (__GNUC__) || ((__GNUC__ == 2) && (__GNUC_MINOR__ == 96)))
+  template <class _CharT, class _Traits, class _Alloc>
+  const size_t basic_string<_CharT, _Traits, _Alloc>::npos = ~(size_t) 0;
+--- stlport/stl/_site_config.h.osr6	2005-09-12 22:04:37.000000000 -0700
++++ stlport/stl/_site_config.h	2006-06-16 14:32:12.399280005 -0700
+@@ -12,9 +12,7 @@
+ */
+ 
+ /* _PTHREADS: if defined, use POSIX threads for multithreading support. */
+-/*
+ #define _PTHREADS
+-*/
+ 
+ /* compatibility section
+  */
+@@ -72,28 +70,16 @@
+  * _STLP_NATIVE_INCLUDE_PATH.
+  * Hint: never install STLport in the directory that ends with "include"
+  */
+-/*
+-#undef _STLP_NATIVE_INCLUDE_PATH
+-#define _STLP_NATIVE_INCLUDE_PATH ../include
+-*/
++#define _STLP_NATIVE_INCLUDE_PATH /usr/include
+ /* same for C library headers like <cstring> */
+-/*
+-#undef _STLP_NATIVE_CPP_C_INCLUDE_PATH
+-#define _STLP_NATIVE_CPP_C_INCLUDE_PATH _STLP_NATIVE_INCLUDE_PATH
+-*/
++#define _STLP_NATIVE_CPP_C_INCLUDE_PATH /usr/include/CC
+ /* same for C headers like <string.h> */
+-/*
+-#undef _STLP_NATIVE_C_INCLUDE_PATH
+ #define _STLP_NATIVE_C_INCLUDE_PATH _STLP_NATIVE_INCLUDE_PATH
+-*/
+ /* Some compilers locate basic C++ runtime support headers (<new>, <typeinfo>, <exception>) in separate directory */
+-/*
+-#undef _STLP_NATIVE_CPP_RUNTIME_INCLUDE_PATH
+-#define _STLP_NATIVE_CPP_RUNTIME_INCLUDE_PATH _STLP_NATIVE_INCLUDE_PATH
+-*/
++#define _STLP_NATIVE_CPP_RUNTIME_INCLUDE_PATH _STLP_NATIVE_CPP_C_INCLUDE_PATH
+ 
+ /* 
+- * If namespases available, STLport use own namespace (and masquerade
++ * If namespaces available, STLport use own namespace (and masquerade
+  * it as std). Disable own namespace may cause undefined behaviour.
+  */
+ /*
+*** ./stlport/stl/_cmath.h.osr6	Wed Dec 14 13:26:26 2005
+--- ./stlport/stl/_cmath.h	Wed Jun 14 15:19:42 2006
+***************
+*** 221,226 ****
+--- 221,227 ----
+  //MSVC starting with .Net 2003 has already all math functions in global namespace.
+  //As Intel C++ compiler icl include MSVC headers it also have all math functions in ::
+  // so we use _MSC_VER rather than _STLP_MSVC
++ #  if !defined(__USLC__)
+  #if !defined (_MSC_VER) || (_MSC_VER < 1310)
+  #  if !(defined(__sun) && defined(__SUNPRO_CC))
+  inline double abs(double __x) { return ::fabs(__x); }
+***************
+*** 230,235 ****
+--- 231,237 ----
+  #  else // __MVS__ has native long double abs?
+  inline float abs(float __x) { return ::fabsf(__x); }
+  #  endif
++ #  endif
+  
+  _STLP_DEF_MATH_INLINE(acos,acos)
+  _STLP_DEF_MATH_INLINE(asin,asin)
+***************
+*** 339,346 ****
+--- 341,350 ----
+  #  if defined (_STLP_USE_UCLIBC) || defined (_STLP_WCE)
+  inline double hypot(double x, double y) { return sqrt(x*x + y*y); }
+  #  endif
++ #ifndef __USLC__
+  _STLP_DEF_MATH_INLINE2(hypot,hypot)
+  #endif
++ #endif
+  
+  #if defined (_STLP_RESTORE_FUNCTION_INTRINSIC)
+  //restoration of the default intrinsic status of those functions:
+*** ./stlport/stl/_rope.c.osr6	Thu Jan 12 12:15:55 2006
+--- ./stlport/stl/_rope.c	Wed Jun 14 19:54:49 2006
+***************
+*** 1326,1332 ****
+  # endif /* _STLP_STATIC_TEMPLATE_DATA */
+  // # endif
+  
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) && \
+     (!defined (__GNUC__) || (__GNUC__ != 2) || (__GNUC_MINOR__ != 96))
+  template <class _CharT, class _Alloc>
+  const size_t rope<_CharT, _Alloc>::npos;
+--- 1326,1332 ----
+  # endif /* _STLP_STATIC_TEMPLATE_DATA */
+  // # endif
+  
+! #if !defined (_STLP_STATIC_CONST_INIT_BUG) && !defined (__USLC__) && \
+     (!defined (__GNUC__) || (__GNUC__ != 2) || (__GNUC_MINOR__ != 96))
+  template <class _CharT, class _Alloc>
+  const size_t rope<_CharT, _Alloc>::npos;
+*** ./stlport/config/stlcomp.h.osr6	Tue Sep 27 22:29:25 2005
+--- ./stlport/config/stlcomp.h	Wed Jun 14 15:19:42 2006
+***************
+*** 44,50 ****
+  #  define _STLP_MSVC _MSC_VER
+  # endif
+  
+! # if defined (__xlC__)  || defined (__IBMC__) || defined ( __IBMCPP__ ) 
+  /* AIX xlC, Visual Age C++ , OS-390 C++ */
+  #  include <config/stl_ibm.h>
+  # elif defined (__INTEL_COMPILER) && defined(__unix__)
+--- 44,53 ----
+  #  define _STLP_MSVC _MSC_VER
+  # endif
+  
+! /* SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x) */
+! # if defined(__USLC__)
+! #  include <config/stl_sco.h>
+! # elif defined (__xlC__)  || defined (__IBMC__) || defined ( __IBMCPP__ ) 
+  /* AIX xlC, Visual Age C++ , OS-390 C++ */
+  #  include <config/stl_ibm.h>
+  # elif defined (__INTEL_COMPILER) && defined(__unix__)
+***************
+*** 95,103 ****
+  # elif defined(__ICL)
+  /* Intel reference compiler for Win */
+  #  include <config/stl_intel.h>
+- /* SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x) */
+- # elif defined(__USLC__)
+- #  include <config/stl_sco.h>
+  /* Apogee 4.x */
+  # elif defined (__APOGEE__)
+  #  include <config/stl_apcc.h>
+--- 98,103 ----
+*** ./stlport/config/stl_sco.h.osr6	Tue Sep 11 11:08:28 2001
+--- ./stlport/config/stl_sco.h	Wed Jun 14 15:19:42 2006
+***************
+*** 1,15 ****
+  // SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x)
+  
+  
+! #  define _STLP_NO_BAD_ALLOC 1
+  
+  // allocator::rebind used not to work properly
+  // #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1
+  // #  define _STLP_NO_MEMBER_TEMPLATE_KEYWORD 1
+  
+! #  define _STLP_NO_FRIEND_TEMPLATES 1
+! #  define _STLP_NO_QUALIFIED_FRIENDS 1
+  
+  
+  // #  define _STLP_NO_DEFAULT_NON_TYPE_PARAM 1
+  
+--- 1,31 ----
+  // SCO UDK 7 compiler (UnixWare 7x, OSR 5, UnixWare 2x)
+  
++ // define native include path before trying to include anything
+  
+! # define _STLP_NATIVE_HEADER(__x) </usr/include/CC/##__x>
+! # define _STLP_NATIVE_C_HEADER(__x) </usr/include/##__x>
+! # define _STLP_NATIVE_OLD_STREAMS_HEADER(__x) </usr/include/CC/##__x>
+! # define _STLP_NATIVE_CPP_C_HEADER(__x) </usr/include/CC/##__x>
+! # define _STLP_NATIVE_CPP_RUNTIME_HEADER(__x) </usr/include/CC/##__x>
+! 
+! // # define _STLP_NO_BAD_ALLOC 1
+! // # define _STLP_NO_VENDOR_MATH_F
+! // # define _STLP_NO_VENDOR_MATH_L
+! # define _STLP_NO_VENDOR_STDLIB_L
+! # define _STLP_UINT32_T unsigned int
+! # define _STLP_RAND48 1
+! # define _STLP_BASE_MATCH_BUG 1
+! // # define _STLP_LONG_LONG 1
+! # define _STLP_NO_METHOD_SPECIALIZATION 1
+  
+  // allocator::rebind used not to work properly
+  // #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1
+  // #  define _STLP_NO_MEMBER_TEMPLATE_KEYWORD 1
+  
+! # define _STLP_NO_FRIEND_TEMPLATES 1
+! # define _STLP_NO_QUALIFIED_FRIENDS 1
+  
++ # define _STLP_USE_EXCEPTIONS 1
+  
+  // #  define _STLP_NO_DEFAULT_NON_TYPE_PARAM 1
+  
+***************
+*** 23,35 ****
+  //#  define _STLP_LINK_TIME_INSTANTIATION 1
+  
+  // ???
+! #  define _STLP_NO_TEMPLATE_CONVERSIONS 1
+  
+! #     define _STLP_LONG_LONG long long
+  
+  #     if defined(_REENTRANT)
+  #           define _UITHREADS     /* if      UnixWare < 7.0.1 */
+  #           define _STLP_UITHREADS
+  #     endif /* _REENTRANT */
+  
+! # define _STLP_SCO_OPENSERVER
+--- 39,55 ----
+  //#  define _STLP_LINK_TIME_INSTANTIATION 1
+  
+  // ???
+! # define _STLP_NO_TEMPLATE_CONVERSIONS 1
+  
+! # define _STLP_LONG_LONG long long
+  
+  #     if defined(_REENTRANT)
+  #           define _UITHREADS     /* if      UnixWare < 7.0.1 */
+  #           define _STLP_UITHREADS
+  #     endif /* _REENTRANT */
+  
+! # define _STLP_SCO_OPENSERVER 1
+! # define _STLP_UNIX 1
+! # define __unix
+! # undef _STLP_DEBUG
+! /* # define _STLP_NO_CSTD_FUNCTION_IMPORTS 1 */
+*** ./stlport/cstdlib.osr6	Thu Nov 17 12:57:22 2005
+--- ./stlport/cstdlib	Wed Jun 14 15:19:42 2006
+***************
+*** 22,28 ****
+  #endif
+  
+  // GAB: 11/16/05
+! // On the SunPro compiler we use the stdlib.h instead of cstdlib
+  // to get the long long versions of lldiv() and llabs()
+  #if defined (_STLP_USE_NEW_C_HEADERS) && !defined(__SUNPRO_CC)
+  #  include _STLP_NATIVE_CPP_C_HEADER(cstdlib)
+--- 22,28 ----
+  #endif
+  
+  // GAB: 11/16/05
+! // On the SunPro/USL compiler we use the stdlib.h instead of cstdlib
+  // to get the long long versions of lldiv() and llabs()
+  #if defined (_STLP_USE_NEW_C_HEADERS) && !defined(__SUNPRO_CC)
+  #  include _STLP_NATIVE_CPP_C_HEADER(cstdlib)
+***************
+*** 109,116 ****
+  #  pragma function (abs)
+  #endif
+  
+! // The SunPro Compiler already has abs and div defined for the long case..
+! #ifndef __SUNPRO_CC
+  //MSVC starting with .Net 2003 already define all math functions in global namespace:
+  #  if !defined (_MSC_VER) || (_MSC_VER < 1310)
+  inline long abs(long __x) { return ::labs(__x); }
+--- 109,117 ----
+  #  pragma function (abs)
+  #endif
+  
+! // The SunPro and USL Compilers already have abs and div 
+! // defined for the long case..
+! #if !defined(__SUNPRO_CC) && !defined(__USLC__)
+  //MSVC starting with .Net 2003 already define all math functions in global namespace:
+  #  if !defined (_MSC_VER) || (_MSC_VER < 1310)
+  inline long abs(long __x) { return ::labs(__x); }
+***************
+*** 127,133 ****
+  #  undef _STLP_RESTORE_FUNCTION_INTRINSIC
+  #endif
+  
+! #if defined (_STLP_LONG_LONG)
+  #  if !defined (_STLP_NO_VENDOR_STDLIB_L)
+  #    if !defined(__sun)
+  inline _STLP_LONG_LONG  abs(_STLP_LONG_LONG __x) { return _STLP_VENDOR_CSTD::llabs(__x); }
+--- 128,134 ----
+  #  undef _STLP_RESTORE_FUNCTION_INTRINSIC
+  #endif
+  
+! #if defined (_STLP_LONG_LONG) && !defined(__USLC__)
+  #  if !defined (_STLP_NO_VENDOR_STDLIB_L)
+  #    if !defined(__sun)
+  inline _STLP_LONG_LONG  abs(_STLP_LONG_LONG __x) { return _STLP_VENDOR_CSTD::llabs(__x); }
+*** ./stlport/stl_user_config.h.osr6	Tue Jan 24 05:22:54 2006
+--- ./stlport/stl_user_config.h	Wed Jun 14 15:19:42 2006
+***************
+*** 276,284 ****
+   *         const_cast to assign the null terminated char in the c_str const method.
+   * STLport rebuild: Yes
+   */
+- /*
+  #define _STLP_FORCE_STRING_TERMINATION 1
+- */
+  
+  /*
+   * To reduce the famous code bloat trouble due to the use of templates STLport grant
+--- 276,282 ----
+*** ./Build-OSR6.osr6	Wed Jun 14 15:19:42 2006
+--- ./Build-OSR6	Wed Jun 14 15:19:43 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ TOP=`pwd`
++ OUTDIR=$TOP/lib
++ export TOP OUTDIR
++ cd build/lib
++ make -f sysv5.mak clean all TOP=$TOP OUTDIR=$OUTDIR 2>&1 | tee $TOP/mout
+*** ./Install-OSR6.osr6	Wed Jun 14 15:19:43 2006
+--- ./Install-OSR6	Wed Jun 14 15:19:43 2006
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/stlport
++ TOP=`pwd`
++ OUTDIR=$TOP/lib
++ export TOP OUTDIR D
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/usr/include
++ cd build/lib
++ make -f sysv5.mak install INSTALLDIR=$D/usr \
++         TOP=$TOP OUTDIR=$OUTDIR 2>&1 | tee $MOUT
++ cd ../..
++ tar cf - stlport | (cd $D/usr/include; tar xf -)
++ chmod -R a+r $D/usr/include/stlport
++ chown -R root:root $D/usr/include/stlport
++ tar cf - lib | (cd $D/usr; tar xf -)
++ chown -R root:root $D/usr/lib/libstlport*
++ 
++ find $D -name \*\.osr6 | xargs rm -f
+--- ./stlport/unistd.h.osr6	2006-06-18 19:36:04.000000000 -0700
++++ ./stlport/unistd.h	2006-06-18 19:35:57.093985002 -0700
+@@ -0,0 +1,35 @@
++/*
++ * Copyright (c) 2006 The SCO Group, Inc.
++ *
++ * This material is provided "as is", with absolutely no warranty expressed
++ * or implied. Any use is at your own risk.
++ *
++ * Permission to use or copy this software for any purpose is hereby granted 
++ * without fee, provided the above notices are retained on all copies.
++ * Permission to modify the code and to distribute modified code is granted,
++ * provided the above notices are retained, and a notice that the code was
++ * modified is included with the above copyright notice.
++ *
++ */
++
++#if !defined (_STLP_OUTERMOST_HEADER_ID)
++#  define _STLP_OUTERMOST_HEADER_ID 0x202
++#  include <stl/_prolog.h>
++#elif (_STLP_OUTERMOST_HEADER_ID == 0x202) && ! defined (_STLP_DONT_POP_HEADER_ID)
++#  define _STLP_DONT_POP_HEADER_ID
++#endif
++
++#  include _STLP_NATIVE_C_HEADER(unistd.h)
++
++#if (_STLP_OUTERMOST_HEADER_ID == 0x202)
++#  if ! defined (_STLP_DONT_POP_HEADER_ID)
++#    include <stl/_epilog.h>
++#    undef  _STLP_OUTERMOST_HEADER_ID
++#  endif
++#  undef  _STLP_DONT_POP_HEADER_ID
++#endif
++
++/* Local Variables:
++ * mode:C++
++ * End:
++ */

@@ -1,0 +1,42 @@
+--- ./Makefile.in.uw	2004-12-01 03:05:17.880000049 +0000
++++ ./Makefile.in	2004-12-01 03:06:33.160000010 +0000
+@@ -30,7 +30,7 @@
+ CC=@CC@
+ LD=@LD@
+ BINFORMAT=bin
+-OPT_FLAGS=-O2
++OPT_FLAGS=-O2 -I/usr/ucbinclude
+ 
+ @SET_MAKE@
+ 
+@@ -101,6 +101,12 @@
+ osr5-gcc:
+ 	./configure && make
+ 
++unixware-gcc:
++	./configure && make
++
++unixware-cc:
++	./configure && make
++
+ solaris-gcc:
+ 	./configure && make
+ 
+--- ./configure.in.uw	2004-12-01 03:05:17.880000063 +0000
++++ ./configure.in	2004-12-01 03:06:50.790000010 +0000
+@@ -48,6 +48,15 @@
+     XLDFLAGS=-shared
+   ;;
+ 
++  UnixWare*)
++    XLIBS='-L/usr/X11R6/lib -lX11 -lsocket -lnsl'
++    X11=/usr/X11R6
++    CC=cc
++    LD=cc
++    XCFLAGS=-Kpic
++    XLDFLAGS=-G
++  ;;
++
+   SunOS*)
+     XLIBS='-lX11 -lsocket -lnsl'
+     LD=ld

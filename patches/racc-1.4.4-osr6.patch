@@ -1,0 +1,39 @@
+*** ./Configure-OSR6.osr6	Sun Sep  4 14:33:56 2005
+--- ./Configure-OSR6	Sun Sep  4 14:33:56 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-config mout-setup
++ ruby setup.rb config 2>&1 | tee mout-config
++ ruby setup.rb setup 2>&1 | tee mout-setup
+*** ./Install-OSR6.osr6	Sun Sep  4 14:33:56 2005
+--- ./Install-OSR6	Sun Sep  4 14:36:06 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/racc
++ MOUT=mout-install
++ 
++ rm -rf $D
++ mkdir -p $D
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ ruby setup.rb install --prefix=$D 2>&1 | tee $MOUT

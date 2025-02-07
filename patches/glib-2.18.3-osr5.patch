@@ -1,0 +1,631 @@
+--- ./gthread/gthread-posix.c.00	2008-11-23 21:45:19.000000000 -0800
++++ ./gthread/gthread-posix.c	2009-04-26 12:34:55.000000000 -0700
+@@ -98,7 +98,9 @@
+ #endif
+ 
+ #if defined (POSIX_MIN_PRIORITY) && defined (POSIX_MAX_PRIORITY)
++#if !(_SCO_DS == 1)
+ # define HAVE_PRIORITIES 1
++#endif
+ static gint priority_normal_value;
+ # ifdef __FreeBSD__
+    /* FreeBSD threads use different priority values from the POSIX_
+--- ./gio/Makefile.in.00	2008-11-23 21:49:56.000000000 -0800
++++ ./gio/Makefile.in	2009-04-26 12:34:55.000000000 -0700
+@@ -398,7 +398,7 @@
+ TEST_PROGS = 
+ NULL = 
+ SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
+-	$(am__append_9) . $(am__append_12) tests
++	$(am__append_9) . $(am__append_12)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gio-2.0.lib
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib
+--- ./gio/glocalfileinfo.c.00	2008-11-23 21:45:19.000000000 -0800
++++ ./gio/glocalfileinfo.c	2009-04-26 12:34:55.000000000 -0700
+@@ -23,6 +23,9 @@
+  */
+ 
+ #include "config.h"
++#ifndef _XOPEN_SOURCE
++#define _XOPEN_SOURCE 500
++#endif
+ 
+ #ifdef HAVE_SYS_TIME_H
+ #include <sys/time.h>
+--- ./gio/gunixmounts.c.00	2008-11-23 21:45:19.000000000 -0800
++++ ./gio/gunixmounts.c	2009-04-26 12:34:55.000000000 -0700
+@@ -152,6 +152,12 @@
+ #include <mntent.h>
+ #elif defined (HAVE_SYS_MNTTAB_H)
+ #include <sys/mnttab.h>
++#elif (_SCO_DS == 1)
++# include <mountops.h>
++# include <sys/mount.h>
++# include <sys/fstyp.h>
++# include <sys/statfs.h>
++int sysfs(int, int, char *);
+ #endif
+ 
+ #ifdef HAVE_SYS_VFSTAB_H
+@@ -411,6 +417,68 @@
+   return g_list_reverse (return_list);
+ }
+ 
++#elif (_SCO_DS == 1)
++
++static char *
++get_mtab_read_file (void)
++{
++  return "/etc/mnttab";
++}
++
++static char *
++get_mtab_monitor_file (void)
++{
++  return get_mtab_read_file ();
++}
++
++static GList *
++_g_get_unix_mounts (void)
++{
++/*  struct mnttab mntent;
++ *  FILE *file;
++ *  char *read_file;
++ *  GUnixMountEntry *mount_entry;
++ *  GList *return_list;
++ *  
++ *  read_file = get_mtab_read_file ();
++ *  
++ *  file = setmntent (read_file, "r");
++ *  if (file == NULL)
++ *    return NULL;
++ *  
++ *  return_list = NULL;
++ *  
++ *  G_LOCK (getmntent);
++ *  while (! getmntent (file, &mntent))
++ *    {
++ *      mount_entry = g_new0 (GUnixMountEntry, 1);
++ *      
++ *      mount_entry->mount_path = g_strdup (mntent.mnt_mountp);
++ *      mount_entry->device_path = g_strdup (mntent.mnt_special);
++ *      mount_entry->filesystem_type = g_strdup (mntent.mnt_fstype);
++ *      
++ * #if defined (HAVE_HASMNTOPT)
++ *      if (hasmntopt (&mntent, MNTOPT_RO) != NULL)
++ *	mount_entry->is_read_only = TRUE;
++ * #endif
++ *
++ *     mount_entry->is_system_internal =
++ *	guess_system_internal (mount_entry->mount_path,
++ *			       mount_entry->filesystem_type,
++ *			       mount_entry->device_path);
++ *     
++ *    return_list = g_list_prepend (return_list, mount_entry);
++ * }
++ * 
++ *  endmntent (file);
++ *  
++ *  G_UNLOCK (getmntent);
++ *  
++ *  return g_list_reverse (return_list);
++ */
++ return (GList *) NULL;
++}
++
+ #elif defined (HAVE_SYS_MNTTAB_H)
+ 
+ G_LOCK_DEFINE_STATIC(getmntent);
+@@ -974,8 +1042,12 @@
+   
+   return g_list_reverse (return_list);
+ }
+-#else
+-#error No g_get_mount_table() implementation for system
++#elif (_SCO_DS == 1)
++static GList *
++_g_get_unix_mount_points (void)
++{
++ return (GList *) NULL;
++}
+ #endif
+ 
+ static guint64
+--- ./glib/gstrfuncs.c.00	2008-11-23 21:45:23.000000000 -0800
++++ ./glib/gstrfuncs.c	2009-04-26 12:34:55.000000000 -0700
+@@ -36,6 +36,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ #include <locale.h>
+ #include <errno.h>
+ #include <ctype.h>		/* For tolower() */
+--- ./Configure-OSR5.00	2009-04-26 12:34:55.000000000 -0700
++++ ./Configure-OSR5	2009-04-26 12:49:21.000000000 -0700
+@@ -0,0 +1,33 @@
++#!/bin/sh
++#
++HOST=i386-pc-sco3.2v5.0.7
++INSTALL=/usr/gnu/bin/install
++LD=/usr/gnu/bin/ld
++NM=/usr/gnu/bin/nm
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-c" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  LIBS=""
++fi
++LDFLAGS="-L/usr/local/lib"
++PATH=/usr/local/bin:/usr/bin:/usr/gnu/bin:$PATH
++export CC CXX CFLAGS CXXFLAGS LD NM M4 INSTALL LIBS LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --enable-shared --enable-static \
++            --with-threads=posix --with-libiconv=no \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++
++# Lost in libtool land.
++# I don't have time to figure this out. Just patch for now
++/usr/gnu/bin/patch -b -z .bak -p0 -i libtool.patch
+--- ./Install-OSR5.00	2009-04-26 12:34:56.000000000 -0700
++++ ./Install-OSR5	2009-04-26 12:34:56.000000000 -0700
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/glib
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./configure.00	2008-11-23 21:50:01.000000000 -0800
++++ ./configure	2009-04-26 12:34:57.000000000 -0700
+@@ -3660,7 +3660,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3739,7 +3739,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -3796,9 +3796,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -5205,7 +5205,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5284,7 +5284,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5341,9 +5341,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -5852,7 +5852,7 @@
+   ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+    ac_cxx_werror_flag=yes
+    ac_cv_prog_cxx_g=no
+-   CXXFLAGS="-g"
++   CXXFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5931,7 +5931,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+-	 CXXFLAGS="-g"
++	 CXXFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -5988,9 +5988,9 @@
+   CXXFLAGS=$ac_save_CXXFLAGS
+ elif test $ac_cv_prog_cxx_g = yes; then
+   if test "$GXX" = yes; then
+-    CXXFLAGS="-g -O2"
++    CXXFLAGS="-O2"
+   else
+-    CXXFLAGS="-g"
++    CXXFLAGS=""
+   fi
+ else
+   if test "$GXX" = yes; then
+@@ -6585,7 +6585,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS=""
+    cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6664,7 +6664,7 @@
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ 	ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS=""
+ 	 cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -6721,9 +6721,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -9592,13 +9592,13 @@
+ 	 || test "$gt_cv_func_ngettext_libc" != "yes" \
+          || test "$ac_cv_func_bind_textdomain_codeset" != "yes" ; then
+ 
+-        { $as_echo "$as_me:$LINENO: checking for bindtextdomain in -lintl" >&5
+-$as_echo_n "checking for bindtextdomain in -lintl... " >&6; }
++        { $as_echo "$as_me:$LINENO: checking for bindtextdomain in -lgnuintl" >&5
++$as_echo_n "checking for bindtextdomain in -lgnuintl... " >&6; }
+ if test "${ac_cv_lib_intl_bindtextdomain+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl  $LIBS"
++LIBS="-lgnuintl -lsocket $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -9658,13 +9658,13 @@
+ { $as_echo "$as_me:$LINENO: result: $ac_cv_lib_intl_bindtextdomain" >&5
+ $as_echo "$ac_cv_lib_intl_bindtextdomain" >&6; }
+ if test "x$ac_cv_lib_intl_bindtextdomain" = x""yes; then
+-  { $as_echo "$as_me:$LINENO: checking for ngettext in -lintl" >&5
+-$as_echo_n "checking for ngettext in -lintl... " >&6; }
++  { $as_echo "$as_me:$LINENO: checking for ngettext in -lgnuintl" >&5
++$as_echo_n "checking for ngettext in -lgnuintl... " >&6; }
+ if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl  $LIBS"
++LIBS="-lgnuintl -lsocket $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -9724,13 +9724,13 @@
+ { $as_echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+ $as_echo "$ac_cv_lib_intl_ngettext" >&6; }
+ if test "x$ac_cv_lib_intl_ngettext" = x""yes; then
+-  { $as_echo "$as_me:$LINENO: checking for dgettext in -lintl" >&5
+-$as_echo_n "checking for dgettext in -lintl... " >&6; }
++  { $as_echo "$as_me:$LINENO: checking for dgettext in -lgnuintl" >&5
++$as_echo_n "checking for dgettext in -lgnuintl... " >&6; }
+ if test "${ac_cv_lib_intl_dgettext+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl  $LIBS"
++LIBS="-lgnuintl -lsocket $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -9803,13 +9803,13 @@
+ $as_echo_n "checking if -liconv is needed to use gettext... " >&6; }
+ 	  { $as_echo "$as_me:$LINENO: result: " >&5
+ $as_echo "" >&6; }
+-  	  { $as_echo "$as_me:$LINENO: checking for ngettext in -lintl" >&5
+-$as_echo_n "checking for ngettext in -lintl... " >&6; }
++  	  { $as_echo "$as_me:$LINENO: checking for ngettext in -lgnuintl" >&5
++$as_echo_n "checking for ngettext in -lgnuintl... " >&6; }
+ if test "${ac_cv_lib_intl_ngettext+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl -liconv $LIBS"
++LIBS="-lgnuintl -liconv $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -9869,13 +9869,13 @@
+ { $as_echo "$as_me:$LINENO: result: $ac_cv_lib_intl_ngettext" >&5
+ $as_echo "$ac_cv_lib_intl_ngettext" >&6; }
+ if test "x$ac_cv_lib_intl_ngettext" = x""yes; then
+-  { $as_echo "$as_me:$LINENO: checking for dcgettext in -lintl" >&5
+-$as_echo_n "checking for dcgettext in -lintl... " >&6; }
++  { $as_echo "$as_me:$LINENO: checking for dcgettext in -lgnuintl" >&5
++$as_echo_n "checking for dcgettext in -lgnuintl... " >&6; }
+ if test "${ac_cv_lib_intl_dcgettext+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lintl -liconv $LIBS"
++LIBS="-lgnuintl -liconv $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -9954,7 +9954,7 @@
+         #
+         if test "$gt_cv_func_dgettext_libintl" = "yes" ; then
+           glib_save_LIBS="$LIBS"
+-          LIBS="$LIBS -lintl $libintl_extra_libs"
++          LIBS="$LIBS -lgnuintl -lsocket $libintl_extra_libs"
+           unset ac_cv_func_bind_textdomain_codeset
+ 
+ for ac_func in bind_textdomain_codeset
+@@ -10076,7 +10076,7 @@
+       fi
+ 
+       if test "$gt_cv_func_dgettext_libintl" = "yes"; then
+-        INTLLIBS="-lintl $libintl_extra_libs"
++        INTLLIBS="-lgnuintl -lsocket $libintl_extra_libs"
+       fi
+ 
+       if test "$gt_cv_have_gettext" = "yes"; then
+@@ -12780,11 +12780,11 @@
+   ;;
+ 
+ *-*-sco3.2v5*)
+-  # On SCO OpenServer 5, we need -belf to get full-featured binaries.
++  # On SCO OpenServer 5, we need -melf to get full-featured binaries.
+   SAVE_CFLAGS="$CFLAGS"
+-  CFLAGS="$CFLAGS -belf"
+-  { $as_echo "$as_me:$LINENO: checking whether the C compiler needs -belf" >&5
+-$as_echo_n "checking whether the C compiler needs -belf... " >&6; }
++  CFLAGS="$CFLAGS -melf"
++  { $as_echo "$as_me:$LINENO: checking whether the C compiler needs -melf" >&5
++$as_echo_n "checking whether the C compiler needs -melf... " >&6; }
+ if test "${lt_cv_cc_needs_belf+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+@@ -12851,7 +12851,7 @@
+ { $as_echo "$as_me:$LINENO: result: $lt_cv_cc_needs_belf" >&5
+ $as_echo "$lt_cv_cc_needs_belf" >&6; }
+   if test x"$lt_cv_cc_needs_belf" != x"yes"; then
+-    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
++    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -melf
+     CFLAGS="$SAVE_CFLAGS"
+   fi
+   ;;
+@@ -15573,37 +15573,6 @@
+       fi
+       ;;
+ 
+-    sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX*)
+-      case `$LD -v 2>&1` in
+-        *\ [01].* | *\ 2.[0-9].* | *\ 2.1[0-5].*)
+-	ld_shlibs=no
+-	cat <<_LT_EOF 1>&2
+-
+-*** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
+-*** reliably create shared libraries on SCO systems.  Therefore, libtool
+-*** is disabling shared libraries support.  We urge you to upgrade GNU
+-*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+-*** your PATH or compiler configuration so that the native linker is
+-*** used, and then restart.
+-
+-_LT_EOF
+-	;;
+-	*)
+-	  # For security reasons, it is highly recommended that you always
+-	  # use absolute paths for naming shared libraries, and exclude the
+-	  # DT_RUNPATH tag from executables and libraries.  But doing so
+-	  # requires that you compile everything twice, which is a pain.
+-	  if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+-	    hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
+-	    archive_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+-	    archive_expsym_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+-	  else
+-	    ld_shlibs=no
+-	  fi
+-	;;
+-      esac
+-      ;;
+-
+     sunos4*)
+       archive_cmds='$LD -assert pure-text -Bshareable -o $lib $libobjs $deplibs $linker_flags'
+       wlarc=
+@@ -16313,7 +16282,7 @@
+       fi
+       ;;
+ 
+-    sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7* | sco3.2v5.0.[024]*)
++    sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7*)
+       no_undefined_flag='${wl}-z,text'
+       archive_cmds_need_lc=no
+       hardcode_shlibpath_var=no
+@@ -16346,11 +16315,14 @@
+       runpath_var='LD_RUN_PATH'
+ 
+       if test "$GCC" = yes; then
+-	archive_cmds='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++        hardcode_libdir_flag_spec='--rpath $libdir'
++        export_dynamic_flag_spec='--export-dynamic'
++	archive_cmds='$LD -shared -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags'
++	archive_expsym_cmds='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
++	$LD -shared -M $lib.exp -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags~$RM $lib.exp'
+       else
+-	archive_cmds='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_cmds='$CC -G ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+       fi
+       ;;
+ 
+@@ -19528,7 +19500,7 @@
+         esac
+         ;;
+ 
+-    sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7* | sco3.2v5.0.[024]*)
++    sysv4*uw2* | sysv5OpenUNIX* | sysv5UnixWare7.[01].[10]* | unixware7*)
+       no_undefined_flag_CXX='${wl}-z,text'
+       archive_cmds_need_lc_CXX=no
+       hardcode_shlibpath_var_CXX=no
+@@ -19540,8 +19512,9 @@
+ 	  archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	  ;;
+ 	*)
+-	  archive_cmds_CXX='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	  archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	  archive_cmds_CXX='$LD -shared -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags'
++	  archive_expsym_cmds_CXX='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
++	  $LD -shared -M $lib.exp -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags~$RM $lib.exp'
+ 	  ;;
+       esac
+       ;;
+@@ -19565,12 +19538,15 @@
+ 
+ 	case $cc_basename in
+           CC*)
+-	    archive_cmds_CXX='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	    archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_cmds_CXX='$CC -G ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/local/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	    ;;
+ 	  *)
+-	    archive_cmds_CXX='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	    archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++            hardcode_libdir_flag_spec_CXX='--rpath $libdir'
++            export_dynamic_flag_spec_CXX='--export-dynamic'
++	    archive_cmds_CXX='$LD -shared -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags'
++	    archive_expsym_cmds_CXX='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
++	    $LD -shared -M $lib.exp -soname /usr/local/lib/$soname -o $lib $libobjs $deplibs $linker_flags~$RM $lib.exp'
+ 	    ;;
+ 	esac
+       ;;
+@@ -29063,7 +29039,7 @@
+ 
+ 
+ 
+-for ac_header in mntent.h sys/mnttab.h sys/vfstab.h sys/mntctl.h sys/sysctl.h fstab.h
++for ac_header in mntent.h mnttab.h sys/vfstab.h sys/mntctl.h sys/sysctl.h fstab.h
+ do
+ as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+@@ -36695,6 +36671,14 @@
+         G_THREAD_CFLAGS="-D_REENTRANT -D_PTHREADS"
+         G_THREAD_LIBS="-lpthread -lthread"
+         ;;
++      *-sco3.2v5*)
++        G_THREAD_CFLAGS="-D_REENTRANT -D_PTHREADS"
++        G_THREAD_LIBS="-lpthread -lsocket"
++        ;;
++      *-sysv5*)
++        G_THREAD_CFLAGS="-D_PTHREADS"
++        G_THREAD_LIBS=""
++        ;;
+       *)
+         for flag in pthread pthreads mt; do
+           glib_save_CFLAGS="$CFLAGS"
+@@ -36843,7 +36827,7 @@
+ 		G_THREAD_CFLAGS="-threads"
+ 		G_THREAD_LIBS=$G_THREAD_CFLAGS
+ 		;;
+-	*-sysv5uw7*) # UnixWare 7
++	*-sysv5*) # UnixWare 7
+ 		# We are not using gcc with -pthread. Catched above.
+ 		G_THREAD_CFLAGS="-Kthread"
+ 		G_THREAD_LIBS=$G_THREAD_CFLAGS
+--- ./libtool.patch.00	2009-04-26 12:47:16.000000000 -0700
++++ ./libtool.patch	2009-04-26 12:47:10.000000000 -0700
+@@ -0,0 +1,43 @@
++--- libtool.00	2009-04-26 12:44:23.000000000 -0700
+++++ libtool	2009-04-26 12:44:28.000000000 -0700
++@@ -296,7 +296,7 @@
++ export_dynamic_flag_spec="\${wl}--export-dynamic"
++ 
++ # Compiler flag to generate shared objects directly from archives.
++-whole_archive_flag_spec="\${wl}--whole-archive\$convenience \${wl}--no-whole-archive"
+++whole_archive_flag_spec="--whole-archive\$convenience --no-whole-archive"
++ 
++ # Whether the compiler copes with passing no objects directly.
++ compiler_needs_object="no"
++@@ -308,8 +308,11 @@
++ old_archive_from_expsyms_cmds=""
++ 
++ # Commands used to build a shared archive.
++-archive_cmds="\$CC -shared \$libobjs \$deplibs \$compiler_flags \${wl}-soname \$wl\$soname -o \$lib"
++-archive_expsym_cmds="\$CC -shared \$libobjs \$deplibs \$compiler_flags \${wl}-soname \$wl\$soname \${wl}-retain-symbols-file \$wl\$export_symbols -o \$lib"
+++#archive_cmds="\$CC -shared \$libobjs \$deplibs \$compiler_flags \${wl}-soname \$wl\$soname -o \$lib"
+++#archive_expsym_cmds="\$CC -shared \$libobjs \$deplibs \$compiler_flags \${wl}-soname \$wl\$soname \${wl}-retain-symbols-file \$wl\$export_symbols -o \$lib"
+++archive_cmds="\$LD -shared -soname /usr/local/lib/\$soname -o \$lib \$libobjs \$deplibs \$linker_flags"
+++archive_expsym_cmds="echo \\\"{ global:\\\" > \$lib.exp~cat \$export_symbols | \$SED -e \\\"s/\\\\(.*\\\\)/\\\\1;/\\\" >> \$lib.exp~echo \\\"local: *; };\\\" >> \$lib.exp~
+++	    \$LD -shared -version-script \$lib.exp -soname /usr/local/lib/\$soname -o \$lib \$libobjs \$deplibs \$linker_flags~\$RM \$lib.exp"
++ 
++ # Commands used to build a loadable module if different from building
++ # a shared archive.
++@@ -327,7 +330,7 @@
++ 
++ # Flag to hardcode $libdir into a binary during linking.
++ # This must work even if $libdir does not exist
++-hardcode_libdir_flag_spec="\${wl}-rpath \${wl}\$libdir"
+++hardcode_libdir_flag_spec=""
++ 
++ # If ld is used when linking, flag to hardcode $libdir into a binary
++ # during linking.  This must work even if $libdir does not exist.
++@@ -8962,7 +8965,7 @@
++ # Commands used to build a shared archive.
++ archive_cmds="\$LD -shared -soname /usr/local/lib/\$soname -o \$lib \$libobjs \$deplibs \$linker_flags"
++ archive_expsym_cmds="echo \\\"{ global:\\\" > \$lib.exp~cat \$export_symbols | \$SED -e \\\"s/\\\\(.*\\\\)/\\\\1;/\\\" >> \$lib.exp~echo \\\"local: *; };\\\" >> \$lib.exp~
++-	    \$LD -shared -M \$lib.exp -soname /usr/local/lib/\$soname -o \$lib \$libobjs \$deplibs \$linker_flags~\$RM \$lib.exp"
+++	    \$LD -shared -version-script \$lib.exp -soname /usr/local/lib/\$soname -o \$lib \$libobjs \$deplibs \$linker_flags~\$RM \$lib.exp"
++ 
++ # Commands used to build a loadable module if different from building
++ # a shared archive.

@@ -1,0 +1,25 @@
+*** ./Install-OSR6.osr6	Sun Sep  4 19:40:06 2005
+--- ./Install-OSR6	Sun Sep  4 19:41:16 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rake
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ ruby install.rb 2>&1 | tee $MOUT
++ 
+*** ./Build-OSR6.osr6	Sun Sep  4 19:40:57 2005
+--- ./Build-OSR6	Sun Sep  4 19:40:51 2005
+***************
+*** 0 ****
+--- 1,3 ----
++ #!/bin/sh
++ 
++ true

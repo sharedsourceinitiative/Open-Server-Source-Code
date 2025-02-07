@@ -1,0 +1,15 @@
+#!/bin/sh
+
+platform=`uname`
+
+if [ "$platform" = "UnixWare" ]
+then
+   rm -f Prep-UW7.out
+   ./Build-UW7 -p 2>&1 | tee Prep-UW7.out
+fi
+
+if [ "$platform" = "SCO_SV" ]
+then
+   rm -f Prep-OSR5.out
+   ./Build-OSR5 -p 2>&1 | tee Prep-OSR5.out
+fi

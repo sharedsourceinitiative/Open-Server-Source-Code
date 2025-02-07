@@ -1,0 +1,216 @@
+*** ./src/include/lib.h.osr6 Thu Nov 13 00:21:50 2003
+--- ./src/include/lib.h Tue May 17 12:05:04 2005
+***************
+*** 80,85 ****
+  #ifndef HAVE_MKSTEMP
+  /* since mkstemp() is defined as a real C++ function if taken from
+     groff's mkstemp.cpp we need a declaration */
+  int mkstemp(char *tmpl);
+  #endif /* HAVE_MKSTEMP */
+  
+--- 80,86 ----
+  #ifndef HAVE_MKSTEMP
+  /* since mkstemp() is defined as a real C++ function if taken from
+     groff's mkstemp.cpp we need a declaration */
++ #ifndef __USLC__
+  int mkstemp(char *tmpl);
+  #endif
+  #endif /* HAVE_MKSTEMP */
+***************
+*** 81,86 ****
+  /* since mkstemp() is defined as a real C++ function if taken from
+     groff's mkstemp.cpp we need a declaration */
+  int mkstemp(char *tmpl);
+  #endif /* HAVE_MKSTEMP */
+  
+  int mksdir(char *tmpl);
+--- 82,88 ----
+     groff's mkstemp.cpp we need a declaration */
+  #ifndef __USLC__
+  int mkstemp(char *tmpl);
++ #endif
+  #endif /* HAVE_MKSTEMP */
+  
+  int mksdir(char *tmpl);
+***************
+*** 122,127 ****
+  #ifdef HAVE_STRNCASECMP
+  #ifdef NEED_DECLARATION_STRNCASECMP
+  // SunOS's string.h fails to declare this.
+  extern "C" { int strncasecmp(const char *, const char *, int); }
+  #endif /* NEED_DECLARATION_STRNCASECMP */
+  #else /* not HAVE_STRNCASECMP */
+--- 124,130 ----
+  #ifdef HAVE_STRNCASECMP
+  #ifdef NEED_DECLARATION_STRNCASECMP
+  // SunOS's string.h fails to declare this.
++ #ifndef __USLC__
+  extern "C" { int strncasecmp(const char *, const char *, int); }
+  #endif
+  #endif /* NEED_DECLARATION_STRNCASECMP */
+***************
+*** 123,128 ****
+  #ifdef NEED_DECLARATION_STRNCASECMP
+  // SunOS's string.h fails to declare this.
+  extern "C" { int strncasecmp(const char *, const char *, int); }
+  #endif /* NEED_DECLARATION_STRNCASECMP */
+  #else /* not HAVE_STRNCASECMP */
+  extern "C" { int strncasecmp(const char *, const char *, size_t); }
+--- 126,132 ----
+  // SunOS's string.h fails to declare this.
+  #ifndef __USLC__
+  extern "C" { int strncasecmp(const char *, const char *, int); }
++ #endif
+  #endif /* NEED_DECLARATION_STRNCASECMP */
+  #else /* not HAVE_STRNCASECMP */
+  extern "C" { int strncasecmp(const char *, const char *, size_t); }
+*** ./src/roff/groff/groff.cpp.osr6 Wed Apr  7 07:40:23 2004
+--- ./src/roff/groff/groff.cpp Tue May 17 12:05:04 2005
+***************
+*** 45,50 ****
+  #define XREG ".X"
+  
+  #ifdef NEED_DECLARATION_PUTENV
+  extern "C" {
+    int putenv(const char *);
+  }
+--- 45,51 ----
+  #define XREG ".X"
+  
+  #ifdef NEED_DECLARATION_PUTENV
++ #ifndef __USLC__
+  extern "C" {
+    int putenv(const char *);
+  }
+***************
+*** 48,53 ****
+  extern "C" {
+    int putenv(const char *);
+  }
+  #endif /* NEED_DECLARATION_PUTENV */
+  
+  // The number of commands must be in sync with MAX_COMMANDS in pipeline.h
+--- 49,55 ----
+  extern "C" {
+    int putenv(const char *);
+  }
++ #endif
+  #endif /* NEED_DECLARATION_PUTENV */
+  
+  // The number of commands must be in sync with MAX_COMMANDS in pipeline.h
+*** ./src/roff/troff/input.cpp.osr6 Wed May  5 09:41:58 2004
+--- ./src/roff/troff/input.cpp Tue May 17 12:05:04 2005
+***************
+*** 42,47 ****
+  #include "nonposix.h"
+  
+  #ifdef NEED_DECLARATION_PUTENV
+  extern "C" {
+    int putenv(const char *);
+  }
+--- 42,48 ----
+  #include "nonposix.h"
+  
+  #ifdef NEED_DECLARATION_PUTENV
++ #ifndef __USLC__
+  extern "C" {
+    int putenv(const char *);
+  }
+***************
+*** 45,50 ****
+  extern "C" {
+    int putenv(const char *);
+  }
+  #endif /* NEED_DECLARATION_PUTENV */
+  
+  #define MACRO_PREFIX "tmac."
+--- 46,52 ----
+  extern "C" {
+    int putenv(const char *);
+  }
++ #endif
+  #endif /* NEED_DECLARATION_PUTENV */
+  
+  #define MACRO_PREFIX "tmac."
+***************
+*** 64,69 ****
+  
+  extern "C" const char *program_name;
+  extern "C" const char *Version_string;
+  
+  #ifdef COLUMN
+  void init_column_requests();
+--- 66,75 ----
+  
+  extern "C" const char *program_name;
+  extern "C" const char *Version_string;
++ 
++ extern void end_diversions();
++ extern void title();
++ void process_input_stack();
+  
+  #ifdef COLUMN
+  void init_column_requests();
+*** ./src/preproc/pic/pic.h.osr6 Fri Apr 18 23:05:27 2003
+--- ./src/preproc/pic/pic.h Tue May 17 12:05:04 2005
+***************
+*** 39,44 ****
+  #endif /* NEED_DECLARATION_RAND */
+  
+  #ifdef NEED_DECLARATION_SRAND
+  #undef srand
+  extern "C" {
+  #ifdef RET_TYPE_SRAND_IS_VOID
+--- 39,45 ----
+  #endif /* NEED_DECLARATION_RAND */
+  
+  #ifdef NEED_DECLARATION_SRAND
++ #ifndef __USLC__
+  #undef srand
+  extern "C" {
+  #ifdef RET_TYPE_SRAND_IS_VOID
+***************
+*** 47,52 ****
+    int srand(unsigned int);
+  #endif
+  }
+  #endif /* NEED_DECLARATION_SRAND */
+  
+  #ifndef HAVE_FMOD
+--- 48,54 ----
+    int srand(unsigned int);
+  #endif
+  }
++ #endif
+  #endif /* NEED_DECLARATION_SRAND */
+  
+  #ifndef HAVE_FMOD
+*** ./Configure-OSR6.osr6 Tue May 17 12:05:04 2005
+--- ./Configure-OSR6 Tue May 17 12:33:47 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ YACC=byacc
++ export CC CXX YACC
++ rm -f mout-configure
++ ./configure $* --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.osr6	2005-07-05 18:25:18.970000003 -0700
++++ Install-OSR6	2005-07-05 18:26:04.120000003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/groff
++prefix=$D/usr
++export prefix
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D/usr
++make install prefix=$D/usr 2>&1 | tee $MOUT

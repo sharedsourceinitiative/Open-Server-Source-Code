@@ -1,0 +1,79 @@
+--- ./RULES/i386-unixware-cc.rul.uw	2003-05-31 16:07:48.000000000 +0000
++++ ./RULES/i386-unixware-cc.rul	2004-12-09 05:53:45.192480002 +0000
+@@ -26,7 +26,7 @@
+ CPPFLAGS=	$(CPPOPTS) $(CPPOPTX)
+ CFLAGS=		$(COPTS) $(CWARNOPTS) $(COPTOPT) $(COPTX)
+ 
+-OSDEFS=		-DUNIXWARE -DSVR4
++OSDEFS=		-DUNIXWARE -DSVR4 -DHAVE_LARGEFILES
+ CPPOPTS=	-I. -I$(ARCHDIR) -I$(OINCSDIR) $(INCDIRS:%=-I%) $(OSDEFS) 
+ COPTS=		
+ CWOPTS=		-v
+--- ./libscg/scsi-unixware.c.uw	2004-01-15 00:18:21.000000000 +0000
++++ ./libscg/scsi-unixware.c	2004-12-09 17:11:59.230000014 +0000
+@@ -74,7 +74,8 @@
+ #define	SCAN_HBA	"%d:%d,%d,%d:%7s : %n"
+ #define	SCAN_DEV	"%d,%d,%d:%7s : %n"
+ 
+-#define	PRIM_HBA	"/dev/hba/hba1"
++#define	PRIM_HBA	"/dev/hba/hba0"	/* OpenServer 6 */
++#define	SCND_HBA	"/dev/hba/hba1"	/* UnixWare 7 */
+ #define	SCSI_CFG	"LC_ALL=C /etc/scsi/pdiconfig -l"
+ 
+ #define	SCAN_ALL	"LIBSCG_SCAN_ALL"
+@@ -202,14 +203,17 @@
+ 	char		**evsave;
+ extern	char		**environ;
+ 
+-	/* Check for validity of primary hostbus adapter node */
+-
++	/* Check for validity of primary hostbus adapter node (OSR6) */
+ 	if (stat(PRIM_HBA, &stbuf) < 0) {
+-		if (scgp->errstr)
+-			js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
+-				"Can not stat() primary hba (%s)",
+-				PRIM_HBA);
+-		return (-1);
++		/* Check for second hostbus adapter node (1st on UW 7) */
++		if (stat(SCND_HBA, &stbuf) < 0) {
++			if (scgp->errstr) {
++				js_snprintf(scgp->errstr, SCSI_ERRSTR_SIZE,
++					"Can not stat() primary hba (%s)",
++					PRIM_HBA);
++				return (-1);
++			}
++		}
+ 	}
+ 
+ 	if (!S_ISCHR(stbuf.st_mode)) {
+--- ./mkisofs/Makefile.uw	2004-02-22 15:13:43.000000000 +0000
++++ ./mkisofs/Makefile	2004-12-09 05:53:45.192480015 +0000
+@@ -23,7 +23,7 @@
+ TARGET=		mkisofs
+ SYMLINKS=	mkhybrid
+ #CPPOPTS +=	-DADD_FILES
+-CPPOPTS +=	-DUSE_LARGEFILES
++CPPOPTS +=	-DUSE_LARGEFILES -DHAVE_LARGEFILES
+ #
+ # Comment out if you do not like to ignore deep directories
+ # when Rock Ridge is not in use
+--- ./cdrecord/cdrecord.dfl.uw	2004-12-09 05:53:45.152160011 +0000
++++ ./cdrecord/cdrecord.dfl	2004-12-09 05:53:45.192480028 +0000
+@@ -38,5 +38,5 @@
+ plextor=	1,4,0	-1	-1	""
+ sanyo=		1,4,0	-1	-1	burnfree
+ yamaha=		1,5,0	-1	-1	""
+-ide=		0,0,0	-1	-1	burnfree
++ide=		1,0,0	-1	-1	burnfree
+ cdrom=		0,6,0	2	1m	""
+--- ./cdda2wav/local.cnf.in.uw	2003-09-04 08:35:46.000000000 +0000
++++ ./cdda2wav/local.cnf.in	2004-12-09 05:53:45.192480041 +0000
+@@ -129,7 +129,7 @@
+ CDDA2WAVDEFS=-DCD_DEVICE=$(DEF_DEVICE) -DFILENAME=$(DEF_FILE) \
+ -DUNDERSAMPLING=$(DEF_UNDERSAMPLING) -DVERSION=$(CUR_VERSION) \
+ -DBITS_P_S=$(DEF_BITS) -DCHANNELS=$(DEF_CHANNELS) -DAUDIOTYPE=$(DEF_TYPE) \
+--DDURATION=$(DEF_TIME) -DDEF_INTERFACE=$(INTERFACE) -DUSE_PARANOIA=1 \
++-DDURATION=$(DEF_TIME) -DDEF_INTERFACE=$(INTERFACE) \
+ -DDEFAULT_SPEED=$(DEF_SPEED) $(WANT_CDINDEX_SUPPORT) $(WANT_CDDB_SUPPORT) \
+ -DCDDBHOST=$(CDDB_SERVERHOST) -DCDDBPORT=$(CDDB_SERVERPORT) $(HAVE_IOCTL) \
+ $(HAVE_SOUND) -DSOUND_DEV=$(SOUND_DEVICE) -DNSECTORS=$(NSECTORS) \

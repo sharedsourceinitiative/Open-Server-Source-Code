@@ -1,0 +1,105 @@
+--- ./rpcgen/rpc_cout.c.00	1999-12-12 04:17:51.000000000 -0800
++++ ./rpcgen/rpc_cout.c	2008-12-17 08:28:43.640000043 -0800
+@@ -103,6 +103,7 @@
+ 		break;
+ 	default:
+ 	  /* can't happen */
++		break;
+ 	}
+ 	print_trailer();
+ }
+@@ -667,6 +668,7 @@
+ 
+   default:
+     /* ?... do nothing I guess */
++  break;
+   }
+ }
+ 
+--- ./rpcgen/rpc_hout.c.00	1999-12-12 04:17:51.000000000 -0800
++++ ./rpcgen/rpc_hout.c	2008-12-17 08:28:43.640000065 -0800
+@@ -108,6 +108,7 @@
+ 		break;
+ 	  default:
+ 	    /* ?... shouldn't happen I guess */
++		break;
+ 	}
+ }
+ 
+--- ./rpcinfo/rpcinfo.c.00	1999-12-12 10:05:00.000000000 -0800
++++ ./rpcinfo/rpcinfo.c	2008-12-17 08:28:43.650000009 -0800
+@@ -47,9 +47,11 @@
+ #include <netdb.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
++#include <netinet/in_systm.h>
+ #include <arpa/inet.h>
+ #include <netinet/ip.h>
+ #include <rpc/rpc.h>
++#include <rpc/rpcent.h>
+ #include <rpc/pmap_prot.h>
+ #include <rpc/pmap_clnt.h>
+ #include <signal.h>
+--- ./Configure-OSR6.00	2008-12-17 08:28:43.650000029 -0800
++++ ./Configure-OSR6	2008-12-17 08:28:43.650000026 -0800
+@@ -0,0 +1,21 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2 -Kpthread -Kalloca"
++CXXFLAGS="-O2 -Kpthread -Kalloca"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc"
++  CXX="CC"
++fi
++export CC CXX CFLAGS NM M4 INSTALL CXXFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local --with-c-compiler=cc \
++            --installroot=/v/tmp/netkitrpc 2>&1 | tee mout-configure
+--- ./configure.00	2000-07-29 11:00:28.000000000 -0700
++++ ./configure	2008-12-17 08:28:43.650000044 -0800
+@@ -139,7 +139,7 @@
+ fi
+ 
+ LDFLAGS=
+-LIBS=
++LIBS="-lsocket -lnsl"
+ 
+ rm -f __conftest*
+ 
+@@ -176,9 +176,9 @@
+         CFLAGS="$CFLAGS -D__USE_BSD_SIGNAL"
+     else
+         echo 'no'
+-        echo 'This package needs BSD signal semantics to run.'
+-        rm -f __conftest*
+-        exit
++#       echo 'This package needs BSD signal semantics to run.'
++#       rm -f __conftest*
++#       exit
+     fi
+ fi
+ rm -f __conftest*
+--- ./Install-OSR6.00	2008-12-17 08:28:43.660000002 -0800
++++ ./Install-OSR6	2008-12-17 08:29:29.170000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++D=/v/tmp/netkitrpc
++MOUT=mout-install
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D/usr/local/bin
++mkdir -p $D/usr/local/man/man1
++mkdir -p $D/usr/local/man/man8
++make install 2>&1 | tee $MOUT
++

@@ -1,0 +1,55 @@
+*** ./makefile.in.osr6 Wed May  4 17:37:59 2005
+--- ./makefile.in Tue May 17 12:30:58 2005
+***************
+*** 2,8 ****
+  #
+  # UNIX template-makefile for Berkeley Yacc
+  
+! THIS		= yacc
+  
+  #### Start of system configuration section. ####
+  
+--- 2,9 ----
+  #
+  # UNIX template-makefile for Berkeley Yacc
+  
+! THIS		= byacc
+! THAT		= yacc
+  
+  #### Start of system configuration section. ####
+  
+***************
+*** 78,84 ****
+  actual_bin = `echo $(THIS)$x        | $(TRANSFORM_BIN)`
+  actual_man = `echo $(THIS).$(manext)| $(TRANSFORM_MAN)`
+  
+! all : $(THIS)$x
+  
+  install: all installdirs
+  	$(INSTALL_PROGRAM) $(THIS)$x $(bindir)/$(actual_bin)
+--- 79,85 ----
+  actual_bin = `echo $(THIS)$x        | $(TRANSFORM_BIN)`
+  actual_man = `echo $(THIS).$(manext)| $(TRANSFORM_MAN)`
+  
+! all : $(THIS)$x $(THIS).$(manext)
+  
+  install: all installdirs
+  	$(INSTALL_PROGRAM) $(THIS)$x $(bindir)/$(actual_bin)
+***************
+*** 98,103 ****
+  
+  $(THIS)$x : $(OBJS)
+  	@ECHO_LD@$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+  
+  $(THIS).man : $(THIS).1
+  	- nroff -man $(srcdir)/$(THIS).1 >$@
+--- 99,107 ----
+  
+  $(THIS)$x : $(OBJS)
+  	@ECHO_LD@$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
++ 
++ $(THIS).1 : $(THAT).1
++ 	- cp $(THAT).1 $(THIS).1
+  
+  $(THIS).man : $(THIS).1
+  	- nroff -man $(srcdir)/$(THIS).1 >$@

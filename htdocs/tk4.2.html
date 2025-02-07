@@ -1,0 +1,92 @@
+<HTML>
+<!-- $ Last Modified: $Date: $: -->
+
+<HEAD>
+<TITLE>
+Tk4.2 (Skunkware97)</TITLE>
+<LINK REV="made" HREF="mailto:hops@sco.com">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFF0" TEXT="#000000">
+<CENTER>
+<H1>
+Tk4.2 (Skunkware97)
+</H1>
+</CENTER>
+
+<P>
+These packages are binary runtimes (for SCO UnixWare and OpenServer)
+and the sources and documentation for <STRONG>Tk</STRONG>,
+an X11 toolkit implemented 
+with the 
+<A HREF="./tcl7.6.html">Tcl</A> 
+scripting language 
+</P>
+<P>The information here corresponds to Tk 4.2, patch level 2 for Tk 4.2,
+released January 31, 1997.   This
+is actually the first official patch release for Tk 4.2: patch level 1
+was only released for the Macintosh.  Tk 4.2 is designed to work with
+Tcl 7.6 and may not work with any other version of Tcl.
+</P>
+
+
+<H2>Summary of changes in Tk 4.2 </H2>
+
+<P>  Tk 4.2 is a minor release.  The main changes are a revision of the
+gridder, a new set of standard dialog boxes, and a new virtual event
+mechanism.  See below for details.  There should be no backward
+incompatibilities in Tk 4.2 except for two small changes related to the
+gridder.  
+</P>
+
+<P>  Here are the new features in Tk 4.2.  The release also includes several
+bug fixes.  See the "changes" file in the source package 
+for a complete list of all changes.
+</P>
+<OL>
+
+    <LI>  The grid geometry manager has been completely rewritten:
+        <UL>
+        <LI>  The layout algorithm produces much better layouts than before,
+          particularly where rows or columns were stretchable.
+        <LI> There is a new -pad option for rows and columns.
+        <LI> The command "grid forget" has been renamed "grid remove",
+          and "grid forget" now has semantics like "pack forget".
+        <LI> The "grid" command no longer accepts floating-point values
+          for row or column weights: integers must be used.
+        </UL>
+
+    <LI> There are new commands for creating common dialog boxes:
+    tk_chooseColor, tk_getOpenFile, tk_getSaveFile and tk_messageBox.
+    These use native dialog boxes if they are available.  Examples of
+    the dialogs are available in the widget demo.
+
+    <LI> There is a new virtual event mechanism for handling events in a
+    more portable way.  See the new command "event".  It also allows
+    events (both physical and virtual) to be generated dynamically.
+    The Macintosh now generates <<Cut>>, <<Copy>>, <<Paste>>, and <<Clear>>
+    events from the edit menu.        
+</OL>
+
+<P>  The only incompatible changes in this release are the last two for the
+gridder ("grid forget" and integer row/column weights).  Most scripts
+that ran under Tk 4.1 should also work under Tk 4.2 with no changes.
+</P>
+
+<H2> Info Resources </H2>
+<UL>
+        
+    <LI> <A HREF="http://www.cs.uoregon.edu/research/tcl/faqs/tk/">Tk FAQ </A>
+
+    <LI> <A HREF="http://www.tcltk.com/blt/">BLT </A>
+    
+    <LI> <A HREF="http://www.xpi.com/tix/">tix </A>
+    <LI> <A HREF="./tcl7.6.html#tclInfo">
+    Other Information resources </A>  are as for Tcl.
+</UL>
+                                                             
+<!---------------------------------------------------------------->
+<HR>
+Skunkware 97
+</BODY>
+</HTML>

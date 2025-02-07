@@ -1,0 +1,33 @@
+*** ./c++/cursesw.cc.osr6 Sat Oct 25 08:02:46 2003
+--- ./c++/cursesw.cc Sat May 28 19:11:53 2005
+***************
+*** 25,30 ****
+  
+  #include "internal.h"
+  #include "cursesw.h"
+  
+  MODULE_ID("$Id: cursesw.cc,v 1.26 2003/10/25 15:02:46 tom Exp $")
+  
+--- 25,31 ----
+  
+  #include "internal.h"
+  #include "cursesw.h"
++ extern "C" int vsscanf(const char *, const char *, _VA_LIST);
+  
+  MODULE_ID("$Id: cursesw.cc,v 1.26 2003/10/25 15:02:46 tom Exp $")
+  
+*** ./Configure-OSR6.osr6 Sat May 28 19:11:53 2005
+--- ./Configure-OSR6 Sat May 28 19:12:34 2005
+***************
+*** 0 ****
+--- 1,10 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CC="gcc -D_REENTRANT"
++ CXX="g++ -D_REENTRANT"
++ export CC CXX CFLAGS
++ rm -f mout-configure
++ ./configure --prefix=/usr/gnu --without-curses-h --disable-overwrite --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

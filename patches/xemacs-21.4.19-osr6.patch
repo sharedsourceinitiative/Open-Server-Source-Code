@@ -1,0 +1,51 @@
+*** ./Build-OSR6.00	Thu Jun  1 14:09:17 2006
+--- ./Build-OSR6	Thu Jun  1 14:09:11 2006
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ CFLAGS="-O2"
++ CXXFLAGS=$CFLAGS
++ NM="/usr/ccs/bin/nm -p"
++ PKGS=../xemacs-all-packages.tar.bz2
++ 
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS CXXFLAGS NM PATH
++ 
++ # Extract the packages
++ [ -f $PKGS ] && bzcat $PKGS | tar xf -
++ 
++ rm -f mout-configure
++ libtoolize -c -f --copy --force
++ ./configure --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin \
++             --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include \
++             2>&1 | tee mout-configure
++ /usr/gnu/bin/make 2>&1 | tee mout
+*** ./Install-OSR6.00	Thu Jun  1 14:10:34 2006
+--- ./Install-OSR6	Thu Jun  1 14:24:05 2006
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ export PATH
++ VER=21.4.19
++ D=/u/tmp/xemacs-$VER-root
++ 
++ rm -rf $D
++ mkdir -p $D
++ 
++ /usr/gnu/bin/make prefix=$D/usr install 2>&1 | tee mout-install
++ 
++ cp -pR xemacs-packages $D/usr/lib/xemacs/xemacs-packages

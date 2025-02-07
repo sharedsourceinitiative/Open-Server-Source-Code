@@ -1,0 +1,111 @@
+--- ./config/Makefile.sysv5.00	2005-06-07 22:18:24.000000000 -0700
++++ ./config/Makefile.sysv5	2005-06-07 22:18:21.122714000 -0700
+@@ -0,0 +1,24 @@
++# Copyright INRIA
++
++FFLAGS = $(FC_OPTIONS)
++
++bin/scilex: scilex-lib 
++	@x=1;if test -f $@; then  \
++		x=`find $(MAINSCI) $(DEFAULTS) $(LIBR)  \( -name '*.a' -o -name '*.o' \) \
++		-newer $@ -print | wc -l `; \
++	fi;\
++	if test $$x -ne 0; then \
++		$(RM) $@; \
++		echo "linking"; \
++		$(FC) $(FFLAGS) -o $@ $(MAINSCI) $(DEFAULTS) $(FC_LDFLAGS) $(LIBR)  \
++			$(TCLTK_LIBS) $(XLIBS) $(TERMCAPLIB) -ldl; \
++	else \
++		echo bin/scilex is up to date ; \
++	fi
++
++#used in bin/scilab -link 
++
++show	: 
++	@echo $(FC) $(FFLAGS) -o $@ $(MAINSCI) $(DEFAULTS) $(FC_LDFLAGS) $(LIBR) \
++	$(TCLTK_LIBS) $(XLIBS) $(TERMCAPLIB) -ldl;
++	
+--- ./routines/Javasci/Makefile.sysv5.00	2005-06-07 22:20:19.000000000 -0700
++++ ./routines/Javasci/Makefile.sysv5	2005-06-07 22:20:10.773914002 -0700
+@@ -0,0 +1,7 @@
++all1:: $(LIBRARY)
++# options compilation a modifier sous hp, sco, & solaris
++$(LIBRARY): $(OBJS)
++	@echo Creation of $(LIBRARY)
++	@$(RM) $@;
++	@echo "linking";
++	@$(LD) -G -o $@ $(OBJS) $(DEFAULTS) $(LIBR) $(TCLTK_LIBS) $(XLIBS)  $(TERMCAPLIB) $(FLIBS) -ldl -lc
+--- ./configure.in.00	2005-05-25 08:00:45.000000000 -0700
++++ ./configure.in	2005-06-07 22:33:08.281674018 -0700
+@@ -496,6 +496,50 @@
+     AC_F77_LIBRARY_LDFLAGS
+     MAKEFILE_TARGET=Makefile.solaris
+     ;;
++# SCO OpenServer 6 and UnixWare 7
++  *-*-sysv5*)
++    # standard compilers
++    CC=cc
++    CC_OPTIONS='-O -DNDEBUG -DSVR4 -DSYSV -Dsolaris'
++    CC_LDFLAGS=
++    if test "$WITH_G77" != yes; then    
++      #AC_CHECK_PROG(F77,f77,yes,no)
++      AC_CHECK_PROGS(F77,f77 f90 f2c-f77,no)
++      if test "$F77" = no; then
++        AC_MSG_ERROR([Unable to configure: Fortran f77 compiler not found])
++      fi
++      FC="$F77"
++    fi
++    #FC="$F77"
++    FC_OPTIONS=-O
++    FC_OPTIONS_O0=
++    FC_LDFLAGS=
++    LD=ld
++    LD_LDFLAGS=
++    if test "$enable_debug" = yes; then 
++      CC_OPTIONS='-g -DSVR4 -DSYSV -Dsolaris'
++      FC_OPTIONS=-g
++    fi
++    # GNU compilers
++    if test "$WITH_GCC" = yes; then
++      CC=gcc
++      CC_OPTIONS='-O2 -DNDEBUG -DSVR4 -DSYSV -Dsolaris'
++      if test "$enable_debug" = yes; then 
++        CC_OPTIONS='-g -DSVR4 -DSYSV -Dsolaris'
++      fi
++    fi
++    if test "$WITH_G77" = yes; then
++      FC=g77
++      FC_OPTIONS=-O2
++      FC_OPTIONS_O0=
++      FC_LDFLAGS='-t' 
++      if test "$enable_debug" = yes; then 
++        FC_OPTIONS=-g
++      fi
++    fi
++    AC_F77_LIBRARY_LDFLAGS
++    MAKEFILE_TARGET=Makefile.sysv5
++    ;;
+ # Linux, old binary format a.out (NO LONGER SUPPORTED)
+   *-pc-linux-gnuaout)
+     LIEEELIB=
+--- ./Configure-OSR6.00	2005-06-07 22:34:30.000000000 -0700
++++ ./Configure-OSR6	2005-06-07 22:34:19.785994011 -0700
+@@ -0,0 +1,18 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS
++libtoolize -c -f
++autoconf -f
++rm -f mout-configure
++./configure --prefix=/usr \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

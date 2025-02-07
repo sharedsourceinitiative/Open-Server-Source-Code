@@ -1,0 +1,48 @@
+*** ./extsrc/_bsddb.c.osr6	Mon Jun  6 11:09:39 2005
+--- ./extsrc/_bsddb.c	Sat Sep  3 11:40:58 2005
+***************
+*** 85,90 ****
+--- 85,91 ----
+  /* --------------------------------------------------------------------- */
+  
+  #include <stddef.h>   /* for offsetof() */
++ #include <sys/types.h>
+  #include <Python.h>
+  #include <db.h>
+  
+*** ./Build-OSR6.osr6	Sat Sep  3 11:38:30 2005
+--- ./Build-OSR6	Sat Sep  3 11:38:24 2005
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout
++ python setup.py build 2>&1 | tee mout
+*** ./Install-OSR6.osr6	Sat Sep  3 11:38:36 2005
+--- ./Install-OSR6	Sat Sep  3 11:40:01 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ python setup.py install 2>&1 | tee $MOUT
++ 

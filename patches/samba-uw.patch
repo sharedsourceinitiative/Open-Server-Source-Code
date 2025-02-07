@@ -1,0 +1,1408 @@
+--- ./source/smbwrapper/smbw.c.uw	2005-02-25 09:59:24.000000000 -0800
++++ ./source/smbwrapper/smbw.c	2005-05-27 12:36:05.850000051 -0700
+@@ -21,6 +21,12 @@
+ #include "includes.h"
+ #include "realcalls.h"
+ 
++#if defined(HAVE_UNIXWARE_ACLS)
++#define SETACL          ACL_SET
++#define GETACL          ACL_GET
++#define GETACLCNT       ACL_CNT
++#endif
++
+ pstring smbw_cwd;
+ 
+ static struct smbw_file *smbw_files;
+@@ -1444,7 +1450,7 @@
+ /***************************************************** 
+ say no to acls
+ *******************************************************/
+- int smbw_acl(const char *pathp, int cmd, int nentries, aclent_t *aclbufp)
++ int smbw_acl(const char *pathp, int cmd, int nentries, void *aclbufp)
+ {
+ 	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+ 	errno = ENOSYS;
+@@ -1456,7 +1462,7 @@
+ /***************************************************** 
+ say no to acls
+ *******************************************************/
+- int smbw_facl(int fd, int cmd, int nentries, aclent_t *aclbufp)
++ int smbw_facl(int fd, int cmd, int nentries, void *aclbufp)
+ {
+ 	if (cmd == GETACL || cmd == GETACLCNT) return 0;
+ 	errno = ENOSYS;
+--- ./source/smbd/service.c.uw	2005-03-11 05:47:02.000000000 -0800
++++ ./source/smbd/service.c	2005-05-27 12:36:05.850000070 -0700
+@@ -272,7 +272,7 @@
+ 	struct passwd *pass = NULL;
+ 	BOOL guest = False;
+ 	connection_struct *conn;
+-	struct stat st;
++	SMB_STRUCT_STAT st;
+ 	fstring user;
+ 	fstring dev;
+ 
+--- ./source/smbd/chgpasswd.c.uw	2005-02-25 09:59:26.000000000 -0800
++++ ./source/smbd/chgpasswd.c	2005-05-27 12:36:05.850000095 -0700
+@@ -805,12 +805,12 @@
+ 		/* IDEAL Case: passwords are in unicode, and we can
+ 		 * read use the password encrypted with the NT hash 
+ 		 */
+-		password_encrypted = password_encrypted_with_nt_hash;
+-		encryption_key = nt_pw;
++		password_encrypted = (char *)password_encrypted_with_nt_hash;
++		encryption_key = (const char *)nt_pw;
+ 	} else if (lanman_pw && lm_pass_set) {
+ 		/* password may still be in unicode, but use LM hash version */
+-		password_encrypted = password_encrypted_with_lm_hash;
+-		encryption_key = lanman_pw;
++		password_encrypted = (char *)password_encrypted_with_lm_hash;
++		encryption_key = (const char *)lanman_pw;
+ 	} else if (nt_pass_set) {
+ 		DEBUG(1, ("NT password change supplied for user %s, but we have no NT password to check it with\n", 
+ 			  user));
+@@ -836,7 +836,7 @@
+ 	/* 
+ 	 * Decrypt the password with the key 
+ 	 */
+-	SamOEMhash( password_encrypted, encryption_key, 516);
++	SamOEMhash( (unsigned char *)password_encrypted, (const unsigned char *)encryption_key, 516);
+ 
+ 	if ( !decode_pw_buffer(password_encrypted, new_passwd, new_passwd_size, &new_pw_len, 
+ 			       nt_pass_set ? STR_UNICODE : STR_ASCII)) {
+@@ -945,12 +945,12 @@
+ 	BOOL found = False;
+ 	int i, pwHisLen, curr_pwHisLen;
+ 
+-	account_policy_get(AP_PASSWORD_HISTORY, &pwHisLen);
++	account_policy_get(AP_PASSWORD_HISTORY, (uint32 *)(&pwHisLen));
+ 	if (pwHisLen == 0) {
+ 		return False;
+ 	}
+ 
+-	pwhistory = pdb_get_pw_history(sampass, &curr_pwHisLen);
++	pwhistory = pdb_get_pw_history(sampass, (uint32 *)(&curr_pwHisLen));
+ 	if (!pwhistory || curr_pwHisLen == 0) {
+ 		return False;
+ 	}
+@@ -969,8 +969,8 @@
+ 		return True;
+ 	}
+ 
+-	dump_data(100, new_nt_p16, NT_HASH_LEN);
+-	dump_data(100, pwhistory, PW_HISTORY_ENTRY_LEN*pwHisLen);
++	dump_data(100, (char *)new_nt_p16, NT_HASH_LEN);
++	dump_data(100, (char *)pwhistory, PW_HISTORY_ENTRY_LEN*pwHisLen);
+ 
+ 	memset(zero_md5_nt_pw, '\0', SALTED_MD5_HASH_LEN);
+ 	for (i=0; i<pwHisLen; i++) {
+--- ./source/printing/printing.c.uw	2005-03-11 05:47:03.000000000 -0800
++++ ./source/printing/printing.c	2005-05-27 12:37:42.870000046 -0700
+@@ -1035,7 +1035,7 @@
+ 		snprintf(key, sizeof(key), "MSG_PENDING/%s", sharename);
+ 
+ 		if ( check_pending 
+-			&& tdb_fetch_uint32( pdb->tdb, key, &msg_pending_time ) 
++			&& tdb_fetch_uint32( pdb->tdb, key, (uint32 *)(&msg_pending_time) ) 
+ 			&& msg_pending_time > 0
+ 			&& msg_pending_time <= time_now 
+ 			&& (time_now - msg_pending_time) < 60 ) 
+--- ./source/aparser/Makefile.uw	2005-02-25 09:59:29.000000000 -0800
++++ ./source/aparser/Makefile	2005-05-27 12:36:05.860000007 -0700
+@@ -1,5 +1,5 @@
+-CFLAGS=-Wall -g
+-CC=gcc
++CFLAGS=
++CC=cc
+ 
+ OBJ = vluke.o parser.o 
+ AWKPROGS=dump.awk harness.awk header.awk parsefn.awk main.awk parsetree.awk template.awk util.awk
+--- ./source/param/loadparm.c.uw	2005-03-11 05:47:03.000000000 -0800
++++ ./source/param/loadparm.c	2005-05-27 12:36:05.860000041 -0700
+@@ -1521,8 +1521,8 @@
+ 	Globals.bAllowTrustedDomains = True;
+ 
+ 	string_set(&Globals.szTemplateShell, "/bin/false");
+-	string_set(&Globals.szTemplateHomedir, "/home/%D/%U");
+-	string_set(&Globals.szTemplatePrimaryGroup, "nobody");
++	string_set(&Globals.szTemplateHomedir, "/usr/%D/%U");
++	string_set(&Globals.szTemplatePrimaryGroup, "nogroup");
+ 	string_set(&Globals.szWinbindSeparator, "\\");
+ 	string_set(&Globals.szAclCompat, "");
+ 	string_set(&Globals.szCupsServer, "");
+--- ./source/auth/pass_check.c.uw	2005-02-25 09:59:29.000000000 -0800
++++ ./source/auth/pass_check.c	2005-05-27 12:36:05.870000003 -0700
+@@ -23,6 +23,16 @@
+ 
+ #include "includes.h"
+ 
++#ifdef OSR6
++#define AUTH_MAX_PASSWD_LENGTH          80
++#define AUTH_SALT_SIZE                  2
++#define AUTH_CLEARTEXT_SEG_CHARS        8
++#define AUTH_CIPHERTEXT_SEG_CHARS       11
++#define AUTH_SEGMENTS(len)              ((((int)len)-1)/AUTH_CLEARTEXT_SEG_CHARS+1)
++#define AUTH_CIPHERTEXT_SIZE(segments)  (AUTH_SALT_SIZE+(segments)*AUTH_CIPHERTEXT_SEG_CHARS+1)
++#define AUTH_MAX_PW_SEG                 (AUTH_MAX_PASSWD_LENGTH/AUTH_CLEARTEXT_SEG_CHARS)
++#endif
++
+ #undef DBGC_CLASS
+ #define DBGC_CLASS DBGC_AUTH
+ 
+@@ -397,7 +407,7 @@
+ }
+ #endif
+ 
+-#ifdef OSF1_ENH_SEC
++#if defined(OSF1_ENH_SEC) || defined(OSR6)
+ /****************************************************************************
+ an enhanced crypt for OSF1
+ ****************************************************************************/
+@@ -502,7 +512,7 @@
+ 		return NT_STATUS_OK;
+ #endif /* WITH_DFS */
+ 
+-#ifdef OSF1_ENH_SEC
++#if defined(OSF1_ENH_SEC) || defined(OSR6)
+ 	
+ 	ret = (strcmp(osf1_bigcrypt(password, this_salt),
+ 		      this_crypted) == 0);
+--- ./source/nsswitch/nss.h.uw	2005-05-27 12:36:05.870000010 -0700
++++ ./source/nsswitch/nss.h	2005-05-27 12:36:05.870000013 -0700
+@@ -0,0 +1,58 @@
++/*-
++ * Copyright (c) 2003 Networks Associates Technology, Inc.
++ * All rights reserved.
++ *
++ * This software was developed for the FreeBSD Project by
++ * Jacques A. Vidrine, Safeport Network Services, and Network
++ * Associates Laboratories, the Security Research Division of Network
++ * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035
++ * ("CBOSS"), as part of the DARPA CHATS research program.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ *
++ * $FreeBSD: /repoman/r/ncvs/src/include/nss.h,v 1.2 2004/01/09 13:43:49 nectar Exp $
++ *
++ * Compatibility header for the GNU C Library-style nsswitch interface.
++ */
++#ifndef _NSS_H_
++#define _NSS_H_
++
++#include <nsswitch.h>
++
++enum nss_status {
++	NSS_STATUS_TRYAGAIN = -2,
++	NSS_STATUS_UNAVAIL,
++	NSS_STATUS_NOTFOUND,
++	NSS_STATUS_SUCCESS,
++	NSS_STATUS_RETURN
++};
++
++#define __nss_compat_result(rv, err)		\
++((rv == NSS_STATUS_TRYAGAIN && err == ERANGE) ? NS_RETURN : \
++ (rv == NSS_STATUS_TRYAGAIN) ? NS_TRYAGAIN :	\
++ (rv == NSS_STATUS_UNAVAIL)  ? NS_UNAVAIL  :	\
++ (rv == NSS_STATUS_NOTFOUND) ? NS_NOTFOUND :	\
++ (rv == NSS_STATUS_SUCCESS)  ? NS_SUCCESS  :	\
++ (rv == NSS_STATUS_RETURN)   ? NS_RETURN   : 0)
++
++#endif
++
+--- ./source/nsswitch/nss_compat.c.uw	2005-05-27 12:36:05.870000019 -0700
++++ ./source/nsswitch/nss_compat.c	2005-05-27 12:36:05.870000022 -0700
+@@ -0,0 +1,272 @@
++/*-
++ * Copyright (c) 2003 Networks Associates Technology, Inc.
++ * All rights reserved.
++ *
++ * This software was developed for the FreeBSD Project by
++ * Jacques A. Vidrine, Safeport Network Services, and Network
++ * Associates Laboratories, the Security Research Division of Network
++ * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035
++ * ("CBOSS"), as part of the DARPA CHATS research program.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ *
++ * Compatibility shims for the GNU C Library-style nsswitch interface.
++ */
++#include <sys/cdefs.h>
++//__FBSDID("$FreeBSD: /repoman/r/ncvs/src/lib/libc/net/nss_compat.c,v 1.3 2004/03/30 15:56:15 nectar Exp $");
++
++//#include "namespace.h"
++#include <sys/param.h>
++#include <errno.h>
++#include "nss.h"
++#include <stdio.h>
++#include "nsswitch.h"
++//#include <pthread.h>
++//#include <pthread_np.h>
++//#include "un-namespace.h"
++//#include "libc_private.h"
++
++
++struct group;
++struct passwd;
++
++//static int	terminator;
++
++/*#define DECLARE_TERMINATOR(x)					\
++//static pthread_key_t	 _term_key_##x;				\
++//static void							\
++//_term_create_##x(void)						\
++//{								\
++//	(void)_pthread_key_create(&_term_key_##x, NULL);	\
++//}								\
++//static void		*_term_main_##x;			\
++//static pthread_once_t	 _term_once_##x = PTHREAD_ONCE_INIT
++
++//#define SET_TERMINATOR(x, y)						\
++//do {									\
++//	if (!__isthreaded || _pthread_main_np())			\
++//		_term_main_##x = (y);					\
++//	else {								\
++//			(void)_pthread_once(&_term_once_##x, _term_create_##x);	\
++//			(void)_pthread_setspecific(_term_key_##x, y);		\
++//	}								\
++} while (0)
++//
++//#define CHECK_TERMINATOR(x)					\
++//(!__isthreaded || _pthread_main_np() ?				\
++//   (_term_main_##x) :						\
++//  ((void)_pthread_once(&_term_once_##x, _term_create_##x),	\
++//    _pthread_getspecific(_term_key_##x)))
++
++
++
++//DECLARE_TERMINATOR(group);*/
++
++int __nss_compat_getgrnam_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(const char *, struct group *, char *, size_t, int *);
++	const char	*name;
++	struct group	*grp;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++
++	fn = mdata;
++	name = va_arg(ap, const char *);
++	grp = va_arg(ap, struct group *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(name, grp, buffer, bufsize, errnop);
++	status = __nss_compat_result(status, *errnop);
++	if (status == NS_SUCCESS)
++		*(struct group **)retval = grp;
++	return (status);
++}
++
++
++int __nss_compat_getgrgid_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(gid_t, struct group *, char *, size_t, int *);
++	gid_t		 gid;
++	struct group	*grp;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++	
++	fn = mdata;
++	gid = va_arg(ap, gid_t);
++	grp = va_arg(ap, struct group *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(gid, grp, buffer, bufsize, errnop);
++	status = __nss_compat_result(status, *errnop);
++	if (status == NS_SUCCESS)
++		*(struct group **)retval = grp;
++	return (status);
++}
++
++
++int __nss_compat_getgrent_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(struct group *, char *, size_t, int *);
++	struct group	*grp;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++
++	//if (CHECK_TERMINATOR(group))
++	//	return (NS_NOTFOUND);
++	fn = mdata;
++	grp = va_arg(ap, struct group *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(grp, buffer, bufsize, errnop);
++	status = __nss_compat_result(status, *errnop);
++	if (status == NS_SUCCESS)
++		*(struct group **)retval = grp;
++	//else if (status != NS_RETURN)
++	//	SET_TERMINATOR(group, &terminator);
++	return (status);
++}
++
++
++int __nss_compat_setgrent(void *retval, void *mdata, va_list ap)
++{
++
++	//SET_TERMINATOR(group, NULL);
++	((int (*)(void))mdata)();
++	return (NS_UNAVAIL);
++}
++
++
++int __nss_compat_endgrent(void *retval, void *mdata, va_list ap)
++{
++
++	//SET_TERMINATOR(group, NULL);
++	((int (*)(void))mdata)();
++	return (NS_UNAVAIL);
++}
++
++
++
++//DECLARE_TERMINATOR(passwd);
++
++
++int __nss_compat_getpwnam_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(const char *, struct passwd *, char *, size_t, int *);
++	const char	*name;
++	struct passwd	*pwd;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++
++	fn = mdata;
++	name = va_arg(ap, const char *);
++	pwd = va_arg(ap, struct passwd *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(name, pwd, buffer, bufsize, errnop);
++	fprintf(stderr, "compat_r=%d\n", status);
++	status = __nss_compat_result(status, *errnop);
++	fprintf(stderr, "compat_r2=%d\n", status);
++	if (status == NS_SUCCESS)
++		*(struct passwd **)retval = pwd;
++	return (status);
++}
++
++
++int __nss_compat_getpwuid_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(uid_t, struct passwd *, char *, size_t, int *);
++	uid_t		 uid;
++	struct passwd	*pwd;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++	
++	fn = mdata;
++	uid = va_arg(ap, uid_t);
++	pwd = va_arg(ap, struct passwd *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(uid, pwd, buffer, bufsize, errnop);
++	status = __nss_compat_result(status, *errnop);
++	if (status == NS_SUCCESS)
++		*(struct passwd **)retval = pwd;
++	return (status);
++}
++
++
++int __nss_compat_getpwent_r(void *retval, void *mdata, va_list ap)
++{
++	int (*fn)(struct passwd *, char *, size_t, int *);
++	struct passwd	*pwd;
++	char		*buffer;
++	int		*errnop;
++	size_t		 bufsize;
++	enum nss_status	 status;
++
++	//if (CHECK_TERMINATOR(passwd))
++	//	return (NS_NOTFOUND);
++	fn = mdata;
++	pwd = va_arg(ap, struct passwd *);
++	buffer = va_arg(ap, char *);
++	bufsize = va_arg(ap, size_t);
++	errnop = va_arg(ap, int *);
++	status = fn(pwd, buffer, bufsize, errnop);
++	status = __nss_compat_result(status, *errnop);
++	if (status == NS_SUCCESS)
++		*(struct passwd **)retval = pwd;
++	//else if (status != NS_RETURN)
++	//	SET_TERMINATOR(passwd, &terminator);
++	return (status);
++}
++
++
++int __nss_compat_setpwent(void *retval, void *mdata, va_list ap)
++{
++
++	//SET_TERMINATOR(passwd, NULL);
++	((int (*)(void))mdata)();
++	return (NS_UNAVAIL);
++}
++
++
++int __nss_compat_endpwent(void *retval, void *mdata, va_list ap)
++{
++
++	//SET_TERMINATOR(passwd, NULL);
++	((int (*)(void))mdata)();
++	return (NS_UNAVAIL);
++}
++
+--- ./source/nsswitch/winbind_nss_uw7.c.uw	2005-05-27 12:36:05.870000028 -0700
++++ ./source/nsswitch/winbind_nss_uw7.c	2005-05-27 12:36:05.870000031 -0700
+@@ -0,0 +1,160 @@
++/* 
++   Unix SMB/CIFS implementation.
++
++   AIX loadable authentication module, providing identification 
++   routines against Samba winbind/Windows NT Domain
++
++   Copyright (C) Aaron Collins 2003
++   
++   This library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Library General Public
++   License as published by the Free Software Foundation; either
++   version 2 of the License, or (at your option) any later version.
++   
++   This library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Library General Public License for more details.
++   
++   You should have received a copy of the GNU Library General Public
++   License along with this library; if not, write to the
++   Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++   Boston, MA  02111-1307, USA.   
++*/
++
++#include "winbind_client.h"
++#include <nsswitch.h>
++#include <iaf.h>
++#include <ia.h>
++
++
++#define NSDB_GROUP		"group"
++#define NSDB_PASSWD		"passwd"
++
++#define NSS_METHOD_PROTOTYPE(method) \
++	int method(void *, void *, va_list)
++
++/* Make sure that the module gets registered needed by freebsd 5.1 */
++
++extern enum nss_status _nss_winbind_getgrent_r(struct group *, char *, size_t,
++    int *);
++extern enum nss_status _nss_winbind_getgrnam_r(const char *, struct group *,
++    char *, size_t, int *);
++extern enum nss_status _nss_winbind_getgrgid_r(gid_t gid, struct group *, char *,
++    size_t, int *);
++extern enum nss_status _nss_winbind_setgrent(void);
++extern enum nss_status _nss_winbind_endgrent(void);
++
++extern enum nss_status _nss_winbind_getpwent_r(struct passwd *, char *, size_t,
++    int *);
++extern enum nss_status _nss_winbind_getpwnam_r(const char *, struct passwd *,
++    char *, size_t, int *);
++extern enum nss_status _nss_winbind_getpwuid_r(gid_t gid, struct passwd *, char *,
++    size_t, int *);
++extern enum nss_status _nss_winbind_setpwent(void);
++extern enum nss_status _nss_winbind_endpwent(void);
++
++NSS_METHOD_PROTOTYPE(__nss_compat_getgrnam_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_getgrgid_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_getgrent_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_setgrent);
++NSS_METHOD_PROTOTYPE(__nss_compat_endgrent);
++
++NSS_METHOD_PROTOTYPE(__nss_compat_getpwnam_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_getpwuid_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_getpwent_r);
++NSS_METHOD_PROTOTYPE(__nss_compat_setpwent);
++NSS_METHOD_PROTOTYPE(__nss_compat_endpwent);
++
++NSS_METHOD_PROTOTYPE(_nss_winbind_openinfo);
++
++static ns_mtab methods[] = {
++{ NSDB_GROUP, "getgrnam_r", __nss_compat_getgrnam_r, (void *) _nss_winbind_getgrnam_r },
++{ NSDB_GROUP, "getgrgid_r", __nss_compat_getgrgid_r, _nss_winbind_getgrgid_r },
++{ NSDB_GROUP, "getgrent_r", __nss_compat_getgrent_r, _nss_winbind_getgrent_r },
++{ NSDB_GROUP, "endgrent",   __nss_compat_setgrent,   _nss_winbind_setgrent },
++{ NSDB_GROUP, "setgrent",   __nss_compat_endgrent,   _nss_winbind_endgrent },
++
++{ NSDB_PASSWD, "getpwnam_r", __nss_compat_getpwnam_r, _nss_winbind_getpwnam_r },
++{ NSDB_PASSWD, "getpwuid_r", __nss_compat_getpwuid_r, _nss_winbind_getpwuid_r },
++{ NSDB_PASSWD, "getpwent_r", __nss_compat_getpwent_r, _nss_winbind_getpwent_r },
++{ NSDB_PASSWD, "endpwent",   __nss_compat_setpwent,   _nss_winbind_setpwent },
++{ NSDB_PASSWD, "setpwent",   __nss_compat_endpwent,   _nss_winbind_endpwent },
++
++{ "iaf",	"ia_openinfo",	_nss_winbind_openinfo, 0},
++};
++
++ns_mtab *
++nss_module_register(const char *source, unsigned int *mtabsize,
++    nss_module_unregister_fn *unreg)
++{
++        *mtabsize = sizeof(methods)/sizeof(methods[0]);
++        *unreg = NULL;
++        return (methods);
++}
++
++/* int ia_openinfo(const char  * logname, uinfo_t  * uinfo); */
++int 
++_nss_winbind_openinfo(void *rv, void *mdata, va_list ap)
++{
++	const char *name;
++	struct passwd p;
++	char buf[512];
++	int *errnop, *ret = rv;
++	enum nss_status status;
++	int n, dlen, slen;
++	uinfo_t *uipp = NULL;
++	uinfo_t uip;
++
++	name = va_arg(ap, const char *);
++	uipp = va_arg(ap, uinfo_t *);
++
++	*uipp = 0;
++	
++	status = _nss_winbind_getpwnam_r(name, &p, buf, 512, errnop);
++	status = __nss_compat_result(status, *errnop);
++
++	if (status == NS_SUCCESS) {
++		dlen = strlen(p.pw_dir);
++		slen = strlen(p.pw_shell);
++
++		/* struct + 1 group + dir + shell */
++		n = sizeof(*uip) + 1 + sizeof(gid_t) + dlen + 1 + slen + 1;
++
++		if ((uip = malloc(n)) == NULL) {
++			return NS_TRYAGAIN;
++		}
++
++		bzero(uip, n);
++
++		strncpy(uip->ia_name, p.pw_name, sizeof(uip->ia_name));
++		strncpy(uip->ia_pwdp, p.pw_passwd, sizeof(uip->ia_pwdp));
++		uip->ia_uid = p.pw_uid;
++		uip->ia_gid = p.pw_gid;
++		uip->ia_lstchg = -1;
++		uip->ia_min = -1;
++		uip->ia_max = -1;
++		uip->ia_warn = -1;
++		uip->ia_inact = -1;
++		uip->ia_expire = -1;
++
++		uip->ia_dirsz = dlen;
++		uip->ia_shsz = slen;
++		uip->ia_lvlcnt = 0;
++		uip->ia_sgidcnt = 1;
++
++		uip->ia_lvlp = (level_t *)&uip[1];
++		uip->ia_sgidp = (gid_t *)&uip[1];
++		uip->ia_dirp = (char *)&uip->ia_sgidp[1];
++		uip->ia_shellp = &uip->ia_dirp[dlen + 1];
++		*uip->ia_sgidp = p.pw_gid;
++		strcpy(uip->ia_dirp, p.pw_dir);
++		strcpy(uip->ia_shellp, p.pw_shell);
++
++		*ret = 0;
++		*uipp = uip;
++	}
++
++	fprintf(stderr, "ia_openinfo: status=%d\n", status);
++	return status;
++}
+--- ./source/nsswitch/winbind_nss.h.uw	2005-02-25 09:59:29.000000000 -0800
++++ ./source/nsswitch/winbind_nss.h	2005-05-27 12:36:05.870000044 -0700
+@@ -58,6 +58,10 @@
+ 
+ #else /* Nothing's defined. Neither gnu nor sun nor hp */
+ 
++#include "nss.h"
++typedef enum nss_status NSS_STATUS;
++
++/*
+ typedef enum
+ {
+   NSS_STATUS_SUCCESS=0,
+@@ -65,6 +69,7 @@
+   NSS_STATUS_UNAVAIL=2,
+   NSS_STATUS_TRYAGAIN=3
+ } NSS_STATUS;
++*/
+ 
+ #endif
+ 
+--- ./source/nsswitch/wb_common.c.uw	2005-02-25 09:59:30.000000000 -0800
++++ ./source/nsswitch/wb_common.c	2005-05-27 12:36:05.870000061 -0700
+@@ -234,7 +234,8 @@
+ 		struct timeval tv;
+ 		fd_set w_fds;
+ 		int ret;
+-		int connect_errno = 0, errnosize;
++		int connect_errno = 0; 
++		size_t errnosize;
+ 
+ 		if (wait_time >= CONNECT_TIMEOUT)
+ 			goto error_out;
+@@ -249,7 +250,7 @@
+ 				ret = select(fd + 1, NULL, &w_fds, NULL, &tv);
+ 
+ 				if (ret > 0) {
+-					errnosize = sizeof(connect_errno);
++					errnosize = (size_t)sizeof(connect_errno);
+ 
+ 					ret = getsockopt(fd, SOL_SOCKET,
+ 							SO_ERROR, &connect_errno, &errnosize);
+--- ./source/lib/charcnv.c.uw	2005-02-25 09:59:32.000000000 -0800
++++ ./source/lib/charcnv.c	2005-05-27 12:36:05.880000015 -0700
+@@ -70,7 +70,7 @@
+ 		setlocale(LC_ALL, "");
+ #endif
+ 		ln = nl_langinfo(CODESET);
+-		if (ln) {
++		if (ln && ln[0] != '\0') {
+ 			/* Check whether the charset name is supported
+ 			   by iconv */
+ 			smb_iconv_t handle = smb_iconv_open(ln,"UCS-2LE");
+--- ./source/lib/iconv.c.uw	2005-02-25 09:59:31.000000000 -0800
++++ ./source/lib/iconv.c	2005-05-27 12:36:05.880000034 -0700
+@@ -642,15 +642,15 @@
+ 
+ 	*inbytesleft = in_left;
+ 	*outbytesleft = out_left;
+-	*inbuf = c;
+-	*outbuf = uc;	
++	*inbuf = (const char *)c;
++	*outbuf = (char *)uc;	
+ 	return 0;
+ 
+ error:
+ 	*inbytesleft = in_left;
+ 	*outbytesleft = out_left;
+-	*inbuf = c;
+-	*outbuf = uc;
++	*inbuf = (const char *)c;
++	*outbuf = (char *)uc;
+ 	return -1;
+ }
+ 
+@@ -755,16 +755,16 @@
+ 
+ 	*inbytesleft = in_left;
+ 	*outbytesleft = out_left;
+-	*inbuf  = uc;
+-	*outbuf = c;
++	*inbuf  = (const char *)uc;
++	*outbuf = (char *)c;
+ 	
+ 	return 0;
+ 
+ error:
+ 	*inbytesleft = in_left;
+ 	*outbytesleft = out_left;
+-	*inbuf  = uc;
+-	*outbuf = c;
++	*inbuf  = (const char *)uc;
++	*outbuf = (char *)c;
+ 	return -1;
+ }
+ 
+--- ./source/lib/sysacls.c.uw	2005-03-18 06:56:41.000000000 -0800
++++ ./source/lib/sysacls.c	2005-05-27 12:36:05.880000061 -0700
+@@ -647,7 +647,7 @@
+ 				break;
+ 
+ 			case SMB_ACL_USER:
+-				id = uidtoname(ap->a_id);
++				id = (char *)uidtoname(ap->a_id);
+ 			case SMB_ACL_USER_OBJ:
+ 				tag = "user";
+ 				break;
+@@ -1278,7 +1278,7 @@
+ 				break;
+ 
+ 			case SMB_ACL_USER:
+-				id = uidtoname(ap->a_id);
++				id = (char *)uidtoname(ap->a_id);
+ 			case SMB_ACL_USER_OBJ:
+ 				tag = "user";
+ 				break;
+--- ./source/lib/username.c.uw	2005-02-25 09:59:31.000000000 -0800
++++ ./source/lib/username.c	2005-05-27 12:36:05.890000015 -0700
+@@ -319,7 +319,7 @@
+ 	DEBUG(5,("looking for user %s of domain %s in netgroup %s\n",
+ 		user, mydomain, ngname));
+ 
+-	if (innetgr(ngname, NULL, user, mydomain)) {
++	if (innetgr((char *)ngname, NULL, (char *)user, mydomain)) {
+ 		DEBUG(5,("user_in_netgroup_list: Found\n"));
+ 		return (True);
+ 	} else {
+@@ -335,7 +335,7 @@
+ 		DEBUG(5,("looking for user %s of domain %s in netgroup %s\n",
+ 			lowercase_user, mydomain, ngname));
+ 
+-		if (innetgr(ngname, NULL, lowercase_user, mydomain)) {
++		if (innetgr((char *)ngname, NULL, lowercase_user, mydomain)) {
+ 			DEBUG(5,("user_in_netgroup_list: Found\n"));
+ 			return (True);
+ 		}
+--- ./source/lib/access.c.uw	2005-02-25 09:59:31.000000000 -0800
++++ ./source/lib/access.c	2005-05-27 12:36:05.890000031 -0700
+@@ -91,7 +91,7 @@
+ 			return False;
+ 		}
+ 		
+-		netgroup_ok = innetgr(tok + 1, hostname, (char *) 0, mydomain);
++		netgroup_ok = innetgr((char *)(tok + 1), hostname, (char *) 0, mydomain);
+ 		
+ 		DEBUG(5,("looking for %s of domain %s in netgroup %s gave %s\n", 
+ 			 hostname,
+--- ./source/lib/util_str.c.uw	2005-02-25 09:59:31.000000000 -0800
++++ ./source/lib/util_str.c	2005-05-27 12:36:05.890000056 -0700
+@@ -389,7 +389,7 @@
+ #endif
+ 	push_ucs2(NULL, tmpbuf, p, sizeof(tmpbuf), STR_TERMINATE);
+ 	string_replace_w(tmpbuf, UCS2_CHAR(oldc), UCS2_CHAR(newc));
+-	pull_ucs2(NULL, p, tmpbuf, -1, sizeof(tmpbuf), STR_TERMINATE);
++	pull_ucs2(NULL, (char *)p, tmpbuf, -1, sizeof(tmpbuf), STR_TERMINATE);
+ }
+ 
+ /**
+@@ -799,7 +799,7 @@
+ {
+ 	DATA_BLOB ret_blob = data_blob(NULL, strlen(strhex)/2+1);
+ 
+-	ret_blob.length = strhex_to_str(ret_blob.data, 	
++	ret_blob.length = strhex_to_str((char *)(ret_blob.data), 	
+ 					strlen(strhex), 
+ 					strhex);
+ 
+@@ -1334,7 +1334,7 @@
+ 
+ 	/* for correctness */
+ 	if (!findstr[0]) {
+-		return src;
++		return (char *)src;
+ 	}
+ 
+ 	/* Samba does single character findstr calls a *lot*. */
+--- ./source/lib/data_blob.c.uw	2005-02-25 09:59:30.000000000 -0800
++++ ./source/lib/data_blob.c	2005-05-27 12:36:05.890000069 -0700
+@@ -47,7 +47,7 @@
+ 	if (p) {
+ 		ret.data = smb_xmemdup(p, length);
+ 	} else {
+-		ret.data = SMB_XMALLOC_ARRAY(char, length);
++		ret.data = (uint8 *)(SMB_XMALLOC_ARRAY(char, length));
+ 	}
+ 	ret.length = length;
+ 	ret.free = free_data_blob;
+--- ./source/lib/substitute.c.uw	2005-02-25 09:59:31.000000000 -0800
++++ ./source/lib/substitute.c	2005-05-27 12:36:05.890000087 -0700
+@@ -279,7 +279,7 @@
+ 
+ 	if (lp_nis_home_map()) {
+ 		char *home_path_start;
+-		char *automount_value = automount_lookup(user_name);
++		char *automount_value = automount_lookup((char *)user_name);
+ 
+ 		if(strlen(automount_value) > 0) {
+ 			home_path_start = strchr_m(automount_value,':');
+@@ -322,7 +322,7 @@
+ 
+ 	if (lp_nis_home_map()) {
+ 	        int home_server_len;
+-		char *automount_value = automount_lookup(user_name);
++		char *automount_value = automount_lookup((char *)user_name);
+ 		home_server_len = strcspn(automount_value,":");
+ 		DEBUG(5, ("NIS lookup succeeded.  Home server length: %d\n",home_server_len));
+ 		if (home_server_len > sizeof(pstring))
+--- ./source/lib/privileges.c.uw	2005-03-11 05:47:03.000000000 -0800
++++ ./source/lib/privileges.c	2005-05-27 12:36:05.890000103 -0700
+@@ -492,7 +492,7 @@
+ 		return 0;
+ 	}
+ 
+-	add_sid_to_array( &sid, &priv->sids.list, &priv->sids.count );
++	add_sid_to_array( &sid, &priv->sids.list, (int *)(&priv->sids.count) );
+ 	
+ 	return 0;
+ }
+--- ./source/libsmb/clikrb5.c.uw	2005-02-25 09:59:32.000000000 -0800
++++ ./source/libsmb/clikrb5.c	2005-05-27 12:36:05.900000003 -0700
+@@ -526,7 +526,7 @@
+ {
+ 	static krb5_data kdata;
+ 
+-	kdata.data = krb5_principal_get_comp_string(context, principal, i);
++	kdata.data = (void *)krb5_principal_get_comp_string(context, principal, i);
+ 	kdata.length = strlen(kdata.data);
+ 	return &kdata;
+ }
+--- ./source/libsmb/clireadwrite.c.uw	2005-02-25 09:59:33.000000000 -0800
++++ ./source/libsmb/clireadwrite.c	2005-05-27 12:36:05.900000021 -0700
+@@ -52,7 +52,7 @@
+ 	SSVAL(cli->outbuf,smb_mid,cli->mid + i);
+ 
+ 	if (bigoffset)
+-		SIVAL(cli->outbuf,smb_vwv10,(offset>>32) & 0xffffffff);
++	  SIVAL(cli->outbuf,smb_vwv10,((SMB_BIG_UINT)offset>>32) & 0xffffffff);
+ 
+ 	return cli_send_smb(cli);
+ }
+@@ -305,7 +305,7 @@
+ 	      smb_buf(cli->outbuf) - smb_base(cli->outbuf));
+ 
+ 	if (large_writex)
+-		SIVAL(cli->outbuf,smb_vwv12,(offset>>32) & 0xffffffff);
++	  SIVAL(cli->outbuf,smb_vwv12,((SMB_BIG_UINT)offset>>32) & 0xffffffff);
+ 	
+ 	p = smb_base(cli->outbuf) + SVAL(cli->outbuf,smb_vwv11);
+ 	memcpy(p, buf, size);
+--- ./source/passdb/passdb.c.uw	2005-02-25 09:59:35.000000000 -0800
++++ ./source/passdb/passdb.c	2005-05-27 12:36:05.900000045 -0700
+@@ -1910,7 +1910,7 @@
+ 					PW_HISTORY_ENTRY_LEN);
+ 			}
+ 		}
+-		if (!pdb_set_pw_history(sampass, pw_hist, pwHistLen, PDB_SET)) {
++		if (!pdb_set_pw_history(sampass, (const uint8 *)pw_hist, pwHistLen, PDB_SET)) {
+ 			SAFE_FREE(pw_hist);
+ 			ret = False;
+ 			goto done;
+--- ./source/passdb/pdb_interface.c.uw	2005-03-11 05:47:04.000000000 -0800
++++ ./source/passdb/pdb_interface.c	2005-05-27 12:36:05.900000069 -0700
+@@ -60,13 +60,13 @@
+ 		
+ 		if (pdb_get_init_flags(pass, PDB_LMPASSWD) != PDB_DEFAULT) 
+ 		{
+-			lm_pwd = pdb_get_lanman_passwd(pass);
++			lm_pwd = (const char *)pdb_get_lanman_passwd(pass);
+ 			if (lm_pwd) 
+ 				pdb_set_lanman_passwd(pass, NULL, PDB_CHANGED);
+ 		}
+ 		if (pdb_get_init_flags(pass, PDB_NTPASSWD) != PDB_DEFAULT) 
+ 		{
+-			nt_pwd = pdb_get_nt_passwd(pass);
++			nt_pwd = (const char *)pdb_get_nt_passwd(pass);
+ 			if (nt_pwd) 
+ 				pdb_set_nt_passwd(pass, NULL, PDB_CHANGED);
+ 		}
+@@ -244,8 +244,8 @@
+ 	/* disable acccounts with no passwords (that has not 
+ 	   been allowed by the  ACB_PWNOTREQ bit */
+ 	
+-	lm_pw = pdb_get_lanman_passwd( sam_acct );
+-	nt_pw = pdb_get_nt_passwd( sam_acct );
++	lm_pw = (const char *)pdb_get_lanman_passwd( sam_acct );
++	nt_pw = (const char *)pdb_get_nt_passwd( sam_acct );
+ 	acb_flags = pdb_get_acct_ctrl( sam_acct );
+ 	if ( !lm_pw && !nt_pw && !(acb_flags&ACB_PWNOTREQ) ) {
+ 		acb_flags |= ACB_DISABLED;
+@@ -278,8 +278,8 @@
+ 	/* disable acccounts with no passwords (that has not 
+ 	   been allowed by the  ACB_PWNOTREQ bit */
+ 	
+-	lm_pw = pdb_get_lanman_passwd( sam_acct );
+-	nt_pw = pdb_get_nt_passwd( sam_acct );
++	lm_pw = (const char *)pdb_get_lanman_passwd( sam_acct );
++	nt_pw = (const char *)pdb_get_nt_passwd( sam_acct );
+ 	acb_flags = pdb_get_acct_ctrl( sam_acct );
+ 	if ( !lm_pw && !nt_pw && !(acb_flags&ACB_PWNOTREQ) ) {
+ 		acb_flags |= ACB_DISABLED;
+--- ./source/include/vfs.h.uw	2005-02-25 09:59:38.000000000 -0800
++++ ./source/include/vfs.h	2005-05-27 12:36:05.900000086 -0700
+@@ -474,7 +474,7 @@
+ 
+ #define SMB_VFS_HANDLE_SET_DATA(handle, datap, free_fn, type, ret) { \
+ 	if (!(handle)) { \
+-		DEBUG(0,("%s() failed to set handle->data!\n",FUNCTION_MACRO)); \
++		DEBUG(0,("%s() failed to set vfs_handle->data!\n",FUNCTION_MACRO)); \
+ 		ret; \
+ 	} else { \
+ 		if ((handle)->free_data) { \
+--- ./source/include/local.h.uw	2005-03-11 05:47:05.000000000 -0800
++++ ./source/include/local.h	2005-05-27 12:36:05.900000098 -0700
+@@ -98,7 +98,7 @@
+ 
+ /* the default guest account - normally set in the Makefile or smb.conf */
+ #ifndef GUEST_ACCOUNT
+-#define GUEST_ACCOUNT "nobody"
++#define GUEST_ACCOUNT "nouser"
+ #endif
+ 
+ /* user to test password server with as invalid in security=server mode. */
+--- ./source/tdb/Makefile.uw	2005-02-25 09:59:44.000000000 -0800
++++ ./source/tdb/Makefile	2005-05-27 12:36:05.910000002 -0700
+@@ -3,7 +3,7 @@
+ #
+ 
+ CFLAGS = -DSTANDALONE -DTDB_DEBUG -g -DHAVE_MMAP=1
+-CC = gcc
++CC = cc
+ 
+ ADMINPROGS = tdbdump tdbbackup
+ PROGS = tdbtest tdbtool tdbtorture
+@@ -14,19 +14,19 @@
+ admintools: $(ADMINPROGS)
+ 
+ tdbtest: tdbtest.o $(TDB_OBJ)
+-	$(CC) $(CFLAGS) -o tdbtest tdbtest.o $(TDB_OBJ) -lgdbm
++	$(CC) $(CFLAGS) -o tdbtest tdbtest.o $(TDB_OBJ) -lgdbm ../bin/libsmbclient.a
+ 
+ tdbtool: tdbtool.o $(TDB_OBJ)
+-	$(CC) $(CFLAGS) -o tdbtool tdbtool.o $(TDB_OBJ)
++	$(CC) $(CFLAGS) -o tdbtool tdbtool.o $(TDB_OBJ) ../bin/libsmbclient.a
+ 
+ tdbtorture: tdbtorture.o $(TDB_OBJ)
+-	$(CC) $(CFLAGS) -o tdbtorture tdbtorture.o $(TDB_OBJ)
++	$(CC) $(CFLAGS) -o tdbtorture tdbtorture.o $(TDB_OBJ) ../bin/libsmbclient.a
+ 
+ tdbdump: tdbdump.o $(TDB_OBJ)
+-	$(CC) $(CFLAGS) -o tdbdump tdbdump.o $(TDB_OBJ)
++	$(CC) $(CFLAGS) -o tdbdump tdbdump.o $(TDB_OBJ) ../bin/libsmbclient.a
+ 
+ tdbbackup: tdbbackup.o $(TDB_OBJ)
+-	$(CC) $(CFLAGS) -o tdbbackup tdbbackup.o $(TDB_OBJ)
++	$(CC) $(CFLAGS) -o tdbbackup tdbbackup.o $(TDB_OBJ) ../bin/libsmbclient.a
+ 
+ clean:
+ 	rm -f $(PROGS) *.o *~ *% core test.db test.tdb test.gdbm
+--- ./source/tdb/tdbutil.c.uw	2005-02-25 09:59:44.000000000 -0800
++++ ./source/tdb/tdbutil.c	2005-05-27 12:36:05.910000020 -0700
+@@ -43,7 +43,7 @@
+ static TDB_DATA make_tdb_data(const char *dptr, size_t dsize)
+ {
+ 	TDB_DATA ret;
+-	ret.dptr = dptr;
++	ret.dptr = (char *)dptr;
+ 	ret.dsize = dsize;
+ 	return ret;
+ }
+@@ -57,7 +57,7 @@
+ 	/* Allow tdb_chainlock to be interrupted by an alarm. */
+ 	int ret;
+ 	gotalarm = 0;
+-	tdb_set_lock_alarm(&gotalarm);
++	tdb_set_lock_alarm((sig_atomic_t *)(&gotalarm));
+ 
+ 	if (timeout) {
+ 		CatchSignal(SIGALRM, SIGNAL_CAST gotalarm_sig);
+--- ./source/tdb/tdbdump.c.uw	2005-02-25 09:59:44.000000000 -0800
++++ ./source/tdb/tdbdump.c	2005-05-27 12:38:56.240000011 -0700
+@@ -34,7 +34,7 @@
+ 
+ static void print_data(TDB_DATA d)
+ {
+-	unsigned char *p = d.dptr;
++	unsigned char *p = (unsigned char *)(d.dptr);
+ 	int len = d.dsize;
+ 	while (len--) {
+ 		if (isprint(*p) && !strchr("\"\\", *p)) {
+--- ./source/tdb/tdbtool.c.uw	2005-02-25 09:59:44.000000000 -0800
++++ ./source/tdb/tdbtool.c	2005-05-27 12:42:53.620000019 -0700
+@@ -375,16 +375,16 @@
+ 	return 0;
+ #else
+ 	printf("\nkey %d bytes\n", key.dsize);
+-	print_asc(key.dptr, key.dsize);
++	print_asc((unsigned char *)(key.dptr), key.dsize);
+ 	printf("\ndata %d bytes\n", dbuf.dsize);
+-	print_data(dbuf.dptr, dbuf.dsize);
++	print_data((unsigned char *)(dbuf.dptr), dbuf.dsize);
+ 	return 0;
+ #endif
+ }
+ 
+ static int print_key(TDB_CONTEXT *the_tdb, TDB_DATA key, TDB_DATA dbuf, void *state)
+ {
+-	print_asc(key.dptr, key.dsize);
++	print_asc((unsigned char *)(key.dptr), key.dsize);
+ 	printf("\n");
+ 	return 0;
+ }
+--- ./source/utils/editreg.c.uw	2005-02-25 09:59:42.000000000 -0800
++++ ./source/utils/editreg.c	2005-05-27 12:36:05.910000055 -0700
+@@ -326,24 +326,39 @@
+  * Structures for dealing with the on-disk format of the registry
+  */
+ 
++#ifdef IVAL
++#undef IVAL
++#endif
+ #define IVAL(buf) ((unsigned int) \
+                    (unsigned int)*((unsigned char *)(buf)+3)<<24| \
+                    (unsigned int)*((unsigned char *)(buf)+2)<<16| \
+                    (unsigned int)*((unsigned char *)(buf)+1)<<8| \
+                    (unsigned int)*((unsigned char *)(buf)+0)) 
+ 
++#ifdef SVAL
++#undef SVAL
++#endif
+ #define SVAL(buf) ((unsigned short) \
+                    (unsigned short)*((unsigned char *)(buf)+1)<<8| \
+                    (unsigned short)*((unsigned char *)(buf)+0)) 
+ 
++#ifdef CVAL
++#undef CVAL
++#endif
+ #define CVAL(buf) ((unsigned char)*((unsigned char *)(buf)))
+ 
++#ifdef SIVAL
++#undef SIVAL
++#endif
+ #define SIVAL(buf, val) \
+             ((((unsigned char *)(buf))[0])=(unsigned char)((val)&0xFF),\
+              (((unsigned char *)(buf))[1])=(unsigned char)(((val)>>8)&0xFF),\
+              (((unsigned char *)(buf))[2])=(unsigned char)(((val)>>16)&0xFF),\
+              (((unsigned char *)(buf))[3])=(unsigned char)((val)>>24))
+ 
++#ifdef SSVAL
++#undef SSVAL
++#endif
+ #define SSVAL(buf, val) \
+             ((((unsigned char *)(buf))[0])=(unsigned char)((val)&0xFF),\
+              (((unsigned char *)(buf))[1])=(unsigned char)((val)>>8))
+@@ -362,6 +377,9 @@
+  * DateTime struct for Windows
+  */
+ 
++#ifdef NTTIME
++#undef NTTIME
++#endif
+ typedef struct date_time_s {
+   unsigned int low, high;
+ } NTTIME;
+@@ -435,6 +453,9 @@
+   ACE *aces[1];
+ } ACL;
+ 
++#ifdef SEC_DESC
++#undef SEC_DESC
++#endif
+ typedef struct sec_desc_s {
+   unsigned int rev, type;
+   sid_t *owner, *group;
+@@ -751,9 +772,9 @@
+   new_path = (char *)SMB_MALLOC(path_len + 1 + strlen(key_tree->name) + 1);
+   if (!new_path) return 0; /* Errors? */
+   new_path[0] = '\0';
+-  strcat(new_path, path);
+-  strcat(new_path, key_tree->name);
+-  strcat(new_path, "\\");
++  pstrcat(new_path, path);
++  pstrcat(new_path, key_tree->name);
++  pstrcat(new_path, "\\");
+ 
+   /*
+    * Now, iterate through the values in the val_list 
+@@ -3830,34 +3851,34 @@
+     return;
+   }
+   if (flags & 0x01) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "OI");
++    pstrcat(flg_output, "OI");
+   }
+   if (flags & 0x02) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "CI");
++    pstrcat(flg_output, "CI");
+   }
+   if (flags & 0x04) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "NP");
++    pstrcat(flg_output, "NP");
+   }
+   if (flags & 0x08) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "IO");
++    pstrcat(flg_output, "IO");
+   }
+   if (flags & 0x10) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "IA");
++    pstrcat(flg_output, "IA");
+   }
+   if (flags == 0xF) {
+-    if (some) strcat(flg_output, ",");
++    if (some) pstrcat(flg_output, ",");
+     some = 1;
+-    strcat(flg_output, "VI");
++    pstrcat(flg_output, "VI");
+   }
+   fprintf(stdout, " %s", flg_output);
+ }
+--- ./source/script/installswat.sh.uw	2005-02-25 09:59:43.000000000 -0800
++++ ./source/script/installswat.sh	2005-05-27 12:36:05.910000068 -0700
+@@ -103,6 +103,7 @@
+               fi
+           fi
+           for f in $SRCDIR../docs/$dir/images/*.png; do
++              if [ "$f" = "$SRCDIR../docs/$dir/images/*.png" ]; then break; fi
+               FNAME=$INSTALLDIR/images/`basename $f`
+               echo $FNAME
+               cp $f $FNAME || echo Cannot install $FNAME. Does $USER have privileges?
+--- ./source/configure.in.uw	2005-03-11 05:47:05.000000000 -0800
++++ ./source/configure.in	2005-05-27 12:36:05.970000021 -0700
+@@ -813,9 +813,9 @@
+ 
+ ],
+ 	samba_cv_optimize_out_funcation_calls=yes,samba_cv_optimize_out_funcation_calls=no)])
+-if test x"$samba_cv_optimize_out_funcation_calls" = x"yes"; then
+-   AC_DEFINE(HAVE_COMPILER_WILL_OPTIMIZE_OUT_FNS,1,[Whether the compiler will optimize out function calls])
+-fi
++#if test x"$samba_cv_optimize_out_funcation_calls" = x"yes"; then
++#   AC_DEFINE(HAVE_COMPILER_WILL_OPTIMIZE_OUT_FNS,1,[Whether the compiler will optimize out function calls])
++#fi
+ 
+ ############################################
+ # check for unix domain sockets
+@@ -1297,12 +1297,14 @@
+ 		*sco*) AC_DEFINE(SCO,1,[Whether the host os is sco unix])
+ 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+ 			;;
+-		*unixware*) AC_DEFINE(UNIXWARE,1,[Whether the host os is unixware])
+-			BLDSHARED="true"
+-			LDSHFLAGS="-shared"
+-			SONAMEFLAG="-Wl,-soname,"
++		*unixware*|*UnixWare*|*sysv5*) BLDSHARED="true"
++			LDSHFLAGS="-G"
++			SONAMEFLAG="-Wl,-h,"
+ 			PICFLAGS="-KPIC"
++                        AC_DEFINE(UNIXWARE,1,[Whether the host os is unixware])
+ 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
++		        AC_DEFINE(SYSV,1,[Whether this is a system V system])
++			AC_DEFINE(HAVE_MEMSET,1,[Whether memset() is available])
+ 			;;
+ 		*next2*) AC_DEFINE(NEXT2,1,[Whether the host os is NeXT v2])
+ 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+@@ -1323,13 +1325,6 @@
+ 			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+ 			;;
+ 
+-		*sysv5*) AC_DEFINE(SYSV,1,[Whether this is a system V system])
+-			if [ test "$GCC" != yes ]; then
+-				AC_DEFINE(HAVE_MEMSET,1,[Whether memset() is available])
+-			fi
+-			LDSHFLAGS="-G"
+-			AC_DEFINE(STAT_ST_BLOCKSIZE,512)
+-			;;
+ 		*vos*) AC_DEFINE(STAT_ST_BLOCKSIZE,4096)
+ 			BLDSHARED="false"
+ 			LDSHFLAGS=""
+@@ -3946,7 +3941,7 @@
+   yes)
+ 
+ 	case "$host_os" in
+-	*sysv5*)
++	*unixware*|*UnixWare*|*sysv5*)
+ 		AC_MSG_RESULT(Using UnixWare ACLs)
+ 		AC_DEFINE(HAVE_UNIXWARE_ACLS,1,[Whether UnixWare ACLs are available])
+ 		;;
+@@ -4340,6 +4335,14 @@
+ 		    nsswitch/winbind_nss_linux.o"
+ 		WINBIND_NSS_EXTRA_LIBS="-lsocket"
+ 		;;
++        *unixware*|*sysv5*|*UnixWare*)
++                # UW714+ winbind client is implemented as a wrapper around
++                # the Linux version.
++                WINBIND_NSS_EXTRA_OBJS="nsswitch/winbind_nss_uw7.o \
++                    nsswitch/nss_compat.o \
++                    nsswitch/winbind_nss_linux.o"
++                WINBIND_NSS_EXTA_LIBS="-lsocket -lnsl"
++                ;;
+ 	*hpux11*)
+ 		WINBIND_NSS_EXTRA_OBJS="nsswitch/winbind_nss_solaris.o"
+ 		;;
+--- ./source/config.guess.uw	2005-02-25 09:59:28.000000000 -0800
++++ ./source/config.guess	2005-05-27 12:36:06.080000010 -0700
+@@ -1013,6 +1013,11 @@
+         # Use sysv4.2uw... so that sysv4* matches it.
+ 	echo ${UNAME_MACHINE}-pc-sysv4.2uw${UNAME_VERSION}
+ 	exit 0 ;;
++     i*86:5:UnixWare:7.*)
++         # Additional variants of Unixware.
++         # Use sysv4.2uw... so that sysv4* matches it.
++       echo ${UNAME_MACHINE}-pc-sysv4.2uw${UNAME_VERSION}
++       exit 0 ;;
+     i*86:OS/2:*:*)
+ 	# If we were able to find `uname', then EMX Unix compatibility
+ 	# is probably installed.
+--- ./source/Makefile.in.uw	2005-03-11 05:47:02.000000000 -0800
++++ ./source/Makefile.in	2005-05-27 12:36:06.100000009 -0700
+@@ -1151,7 +1151,7 @@
+ bin/CP850.@SHLIBEXT@: $(CP850_OBJ:.o=.@PICSUFFIX@)
+ 	@echo "Building plugin $@"
+ 	@$(SHLD) $(LDSHFLAGS) -o $@ $(CP850_OBJ:.o=.@PICSUFFIX@) \
+-		@SONAMEFLAG@`basename $@`
++		@SONAMEFLAG@`basename $@` -L./bin -lsmbclient
+ 
+ bin/CP437.@SHLIBEXT@: $(CP437_OBJ:.o=.@PICSUFFIX@)
+ 	@echo "Building plugin $@"
+--- ./examples/VFS/configure.in.uw	2005-02-25 09:59:51.000000000 -0800
++++ ./examples/VFS/configure.in	2005-05-27 12:36:06.110000002 -0700
+@@ -175,7 +175,7 @@
+ 
+ # these are the defaults, good for lots of systems
+ HOST_OS="$host_os"
+-LDSHFLAGS="-shared"
++LDSHFLAGS="-G"
+ SONAMEFLAG="#"
+ SHLD="\${CC}"
+ PICFLAGS=""
+--- ./examples/VFS/autogen.sh.uw	2005-02-25 09:59:51.000000000 -0800
++++ ./examples/VFS/autogen.sh	2005-05-27 12:36:06.110000015 -0700
+@@ -49,8 +49,8 @@
+ 
+ rm -rf autom4te*.cache
+ 
+-echo "$0: running $AUTOHEADER"
+-$AUTOHEADER || exit 1
++#echo "$0: running $AUTOHEADER"
++#$AUTOHEADER || exit 1
+ 
+ echo "$0: running $AUTOCONF"
+ $AUTOCONF || exit 1
+--- ./examples/VFS/skel_opaque.c.uw	2005-02-25 09:59:51.000000000 -0800
++++ ./examples/VFS/skel_opaque.c	2005-05-27 12:36:06.120000004 -0700
+@@ -83,7 +83,7 @@
+ 
+ static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+ {
+-	return vfswrap_seekdir(NULL, conn, dirp, offset);
++	vfswrap_seekdir(NULL, conn, dirp, offset);
+ }
+ 
+ static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+@@ -93,7 +93,7 @@
+ 
+ static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+ {
+-	return vfswrap_rewinddir(NULL, conn, dirp);
++	vfswrap_rewinddir(NULL, conn, dirp);
+ }
+ 
+ static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- ./examples/VFS/skel_transparent.c.uw	2005-02-25 09:59:51.000000000 -0800
++++ ./examples/VFS/skel_transparent.c	2005-05-27 12:36:06.130000003 -0700
+@@ -82,7 +82,7 @@
+ 
+ static void skel_seekdir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp, long offset)
+ {
+-	return SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
++	SMB_VFS_NEXT_SEEKDIR(handle, conn, dirp, offset);
+ }
+ 
+ static long skel_telldir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+@@ -92,7 +92,7 @@
+ 
+ static void skel_rewinddir(vfs_handle_struct *handle, connection_struct *conn, DIR *dirp)
+ {
+-	return SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
++	SMB_VFS_NEXT_REWINDDIR(handle, conn, dirp);
+ }
+ 
+ static int skel_mkdir(vfs_handle_struct *handle, connection_struct *conn, const char *path, mode_t mode)
+--- ./examples/pdb/Makefile.uw	2005-02-25 09:59:51.000000000 -0800
++++ ./examples/pdb/Makefile	2005-05-27 12:36:06.130000016 -0700
+@@ -1,24 +1,30 @@
+ # Makefile for samba-pdb examples
+ # Variables
+ 
+-CC = gcc
++CC = cc
+ LIBTOOL = libtool
+ 
+ SAMBA_SRC = ../../source
+ SAMBA_INCL = ../../source/include
+ UBIQX_SRC = ../../source/ubiqx
+ SMBWR_SRC = ../../source/smbwrapper
+-CFLAGS = -I$(SAMBA_SRC) -I$(SAMBA_INCL) -I$(UBIQX_SRC) -I$(SMBWR_SRC) -Wall -g -I/usr/include/heimdal -fPIC
++CFLAGS = -I$(SAMBA_SRC) -I$(SAMBA_INCL) -I$(UBIQX_SRC) -I$(SMBWR_SRC) -I/usr/include/heimdal -KPIC
+ PDB_OBJS = test.la
+ 
+ # Default target
+ 
+ default: $(PDB_OBJS)
+ 
++test.la: libtest.la
++	cp libtest.la test.la
++
++libtest.la: test.lo
++	$(LIBTOOL) --mode=link $(CC) -G -o $@ test.lo $(LDFLAGS)
++
+ # Pattern rules
+ 
+ %.la: %.lo
+-	$(LIBTOOL) --mode=link $(CC) -module -o $@ $< $(LDFLAGS) -rpath /usr/lib/samba/pdb/
++	$(LIBTOOL) --mode=link $(CC) -G -o $@ $< $(LDFLAGS)
+ 
+ %.lo: %.c
+ 	$(LIBTOOL) --mode=compile $(CC) $(CPPFLAGS) $(CFLAGS) -c $<

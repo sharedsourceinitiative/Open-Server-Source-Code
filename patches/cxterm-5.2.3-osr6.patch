@@ -1,0 +1,50 @@
+--- ./utils/Makefile.in.00	2003-05-06 00:40:20.000000000 -0700
++++ ./utils/Makefile.in	2005-06-29 00:22:47.947688003 -0700
+@@ -462,12 +462,12 @@
+ 	uninstall-info-am uninstall-man uninstall-man1
+ 
+ cit2tit$(EXEEXT): cit2tit.c ../cxterm/HZutil.o
+-	gcc $(INCLUDES) -c cit2tit.c
+-	gcc $(LIBS) -o $@ cit2tit.o ../cxterm/HZutil.o
++	cc $(INCLUDES) -c cit2tit.c
++	cc $(LIBS) -o $@ cit2tit.o ../cxterm/HZutil.o
+ 
+ tit2cit$(EXEEXT): tit2cit.c ../cxterm/HZutil.o
+-	gcc $(INCLUDES) -c tit2cit.c
+-	gcc $(LIBS) -o $@ tit2cit.o ../cxterm/HZutil.o
++	cc $(INCLUDES) -c tit2cit.c
++	cc $(LIBS) -o $@ tit2cit.o ../cxterm/HZutil.o
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+--- ./configure.00	2003-05-06 00:40:16.000000000 -0700
++++ ./configure	2005-06-29 00:19:53.071688003 -0700
+@@ -9405,7 +9405,7 @@
+ done
+ 
+ 
+-LIBS="$X_LIBS -lXaw -lXt -lXmu $X_PRE_LIBS -lncurses -lXext -lX11 -lXpm -lm"
++LIBS="$X_LIBS -lXaw -lXt -lXmu $X_PRE_LIBS -lncurses -lXext -lX11 -lXpm -lm -lsocket"
+ 
+                                                                                                     ac_config_files="$ac_config_files dict/ks/Makefile dict/big5/Makefile dict/jis/Makefile dict/Makefile dict/gb/Makefile Makefile utils/Makefile cxterm/Makefile fonts/Makefile scripts/Makefile"
+ cat >confcache <<\_ACEOF
+--- ./Configure-OSR6.00	2005-06-29 00:23:21.000000000 -0700
++++ ./Configure-OSR6	2005-06-29 00:21:53.602088011 -0700
+@@ -0,0 +1,17 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2 -D_EFTSAFE -DSYSV -DSVR4"
++NM="/usr/ccs/bin/nm -p"
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT -Wall"
++  CXX="g++ -D_REENTRANT -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM
++rm -f mout-configure
++./configure --prefix=/usr \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

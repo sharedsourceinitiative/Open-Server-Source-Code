@@ -1,0 +1,748 @@
+--- ./util/wmaker.inst.in.uw	2003-11-11 19:39:05.930000005 +0000
++++ ./util/wmaker.inst.in	2003-11-11 19:39:07.020000007 +0000
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # Install Window Maker for the current user
+ #
+@@ -312,27 +312,27 @@
+ }
+ 
+ wmaker_found=0
+-#for xinit in .xinitrc .Xclients .xsession; do
+-#     test ! -f "$HOME/$xinit" && continue
+-#     res="`grep wmaker $HOME/$xinit`"
+-#     if test "x$res" != x; then
+-#     	wmaker_found=1
+-#	break
+-#     fi
+-#done
+-
+-#if test $wmaker_found = 1; then
+-#	echo "Found Window Maker to already be your default window manager."
+-#	show_end_message
+-#	exit 0
+-#fi
++for xinit in .xinitrc .Xclients .xsession; do
++     test ! -f "$HOME/$xinit" && continue
++     res="`grep wmaker $HOME/$xinit`"
++     if test "x$res" != x; then
++     	wmaker_found=1
++	break
++     fi
++done
++
++if test $wmaker_found = 1; then
++	echo "Found Window Maker to already be your default window manager."
++	show_end_message
++	exit 0
++fi
+ 
+ 
+ trap "show_end_message;exit" 2
+ 
+-#echo
+-#echo "Now the .xinitrc, .Xclients or .xsession script must be updated so that"
+-#echo "it calls wmaker when you start an X session."
++echo
++echo "Now the .xinitrc script must be updated so that"
++echo "it calls wmaker when you start an X session."
+ #echo "Type the name of the file that must be changed (normally .xinitrc)."
+ #echo "If the file already exists, it will be backed up with a .old.$DATE "
+ #echo "extension"
+@@ -341,14 +341,14 @@
+ 
+ #if test "x$file" = "x"; then
+ #	echo "Using .xinitrc as a default value"
+-#	file=.xinitrc
++	file=.xinitrc
+ #fi
+ 
+-#if [ -f $USERDIR/$file ]; then
+-#	mv $USERDIR/$file $USERDIR/$file.old.$DATE
+-#fi
++if [ -f $USERDIR/$file ]; then
++	mv $USERDIR/$file $USERDIR/$file.old.$DATE
++fi
+ 
+-# make_script $USERDIR/$file
++make_script $USERDIR/$file
+ 
+ show_end_message
+ 
+--- ./WindowMaker/menu.bg.uw	2003-11-11 19:39:06.330000001 +0000
++++ ./WindowMaker/menu.bg	2003-11-11 19:39:07.020000027 +0000
+@@ -160,8 +160,8 @@
+ 		"Çàïàçè êîëåêöèÿòà èêîíêè" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name,Enter file name:)"
+ 		"Ïîñîáèå çà íàñòðîéêè" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Èçãëåä" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps 
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu 
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps 
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu 
+ 	"Èçõîä"	MENU
+ 		"Ðåñòàðòèðàíå" RESTART
+ 		"Èçõîä..."  EXIT
+--- ./WindowMaker/menu.ca.uw	2003-11-11 19:39:06.340000001 +0000
++++ ./WindowMaker/menu.ca	2003-11-11 19:39:07.020000046 +0000
+@@ -154,8 +154,8 @@
+                 "Guardar Joc d'Icones" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+ 		"WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+         "Aparença" END
+-	"WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++	"WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+         "Sortir"        MENU
+                 "Rearrancar" RESTART
+                 "Sortir..."  EXIT
+--- ./WindowMaker/menu.cz.uw	2003-11-11 19:39:06.340000030 +0000
++++ ./WindowMaker/menu.cz	2003-11-11 19:39:07.030000006 +0000
+@@ -75,8 +75,8 @@
+                 "Ulo¾it sadu ikon" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name,Enter file name:)"
+                 "Konfiguraèní nástroj" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+          "Vzhled" END
+-         "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-         "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++         "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++         "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+  	 "Konec"  MENU
+ // 'Restartovat' není opravdu pøíli¹ èeské slovo, najde nìkdo lep¹í ?
+ 		"Restartovat" RESTART
+--- ./WindowMaker/menu.da.uw	2003-11-11 19:39:06.340000049 +0000
++++ ./WindowMaker/menu.da	2003-11-11 19:39:07.030000025 +0000
+@@ -148,8 +148,8 @@
+                 "Gem Tema" SHEXEC getstyle -t $HOME/GNUstep/Library/WindowMaker/Themes/"%a(Tema navn,Indtast navn:)"
+                 "Gem Ikonsæt" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Ikonsæt navn,Indtast navn:)"
+         "Udseende" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+         "Afslut" MENU
+                 "Genstart" RESTART
+                 "Afslut..."  EXIT
+--- ./WindowMaker/menu.de.uw	2003-11-11 19:39:06.340000068 +0000
++++ ./WindowMaker/menu.de	2003-11-11 19:39:07.030000044 +0000
+@@ -65,8 +65,8 @@
+ 		"Arbeitsplatz sichern" SAVE_SESSION
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Arbeitsplatz" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu.de
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu.de
+ 	"Beenden"	MENU
+ 		"Neustart" RESTART
+ 		"Beenden..."  EXIT
+--- ./WindowMaker/menu.el.uw	2003-11-11 19:39:06.340000095 +0000
++++ ./WindowMaker/menu.el	2003-11-11 19:39:07.040000003 +0000
+@@ -163,8 +163,8 @@
+ 		"ÁðïèÞêåõóç ÏìÜäáò Åéêïíéäßùí" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(¼íïìá ÏìÜäáò,ÃñÜøå ôï üíïìá ôïõ áñ÷åßïõ:)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPref
+ 	"ÅìöÜíéóç" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"¸îïäïò" MENU
+ 		 "Åðáíåêêßíçóç" RESTART
+ 		 "¸îïäïò..."  EXIT
+--- ./WindowMaker/menu.es.uw	2003-11-11 19:39:06.350000003 +0000
++++ ./WindowMaker/menu.es	2003-11-11 19:39:07.040000023 +0000
+@@ -70,8 +70,8 @@
+ 	"Configurar Area de Trabajo ..." END
+         "Areas de Trabajo ..." WORKSPACE_MENU
+         "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu.es
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu.es
+ 	"Salir ..."	MENU
+ 		"Reinicializar" RESTART
+ 		"Salir"  EXIT
+--- ./WindowMaker/menu.fi.uw	2003-11-11 19:39:06.350000022 +0000
++++ ./WindowMaker/menu.fi	2003-11-11 19:39:07.040000042 +0000
+@@ -153,8 +153,8 @@
+ 		"Tallenna kuvakkeet" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Kuvakesetin nimi,Kirjoita tiedostonnimi:)"
+ 		"Asetukset" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Ulkonäkö" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"Lopeta"	MENU
+ 		"Käynnistä WM uudelleen" RESTART
+ 		"Lopeta"  EXIT
+--- ./WindowMaker/menu.fr.uw	2003-11-11 19:39:06.350000041 +0000
++++ ./WindowMaker/menu.fr	2003-11-11 19:39:07.040000061 +0000
+@@ -199,8 +199,8 @@
+ 		"Sauver le jeu d'icônes" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Nom du jeu d'icônes,Entrez un nom de fichier:)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Apparence" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu.fr
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu.fr
+ 
+ 	"Quitter" MENU
+ 		"Redémarrer" RESTART
+--- ./WindowMaker/menu.gl.uw	2003-11-11 19:39:06.360000000 +0000
++++ ./WindowMaker/menu.gl	2003-11-11 19:39:07.050000003 +0000
+@@ -69,9 +69,9 @@
+ 		"Fechar" EXEC xlock -allowroot -usefirst
+ 		"Grabar Area de traballo" SAVE_SESSION
+ 	"Area Traballo" END
+-	"WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
++	"WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
+         "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu	
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu	
+ 	"Sair"	MENU
+ 		"Reinicializar" RESTART
+ 		"Sair..."  EXIT
+--- ./WindowMaker/menu.he.uw	2003-11-11 19:39:06.360000019 +0000
++++ ./WindowMaker/menu.he	2003-11-11 19:39:07.050000022 +0000
+@@ -135,8 +135,8 @@
+ 		"Save IconSet" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+ 		"WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"äàøî" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"äàéöé"	MENU
+ 		"ìåçúéà" RESTART
+ 		"...àö"  EXIT
+--- ./WindowMaker/menu.hr.uw	2003-11-11 19:39:06.360000038 +0000
++++ ./WindowMaker/menu.hr	2003-11-11 19:39:07.050000041 +0000
+@@ -135,8 +135,8 @@
+ 		"Snimi set ikona" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+        	"Izgled" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu 
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu 
+ 	"Izlaz"	MENU
+ 		"Ponovo startaj" RESTART
+ 		"Izlaz"  EXIT
+--- ./WindowMaker/menu.hu.uw	2003-11-11 19:39:06.360000057 +0000
++++ ./WindowMaker/menu.hu	2003-11-11 19:39:07.050000060 +0000
+@@ -154,8 +154,8 @@
+ 		"Ikonbeállítások mentése" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Ikonbeállítások mentése,Add meg a fájl nevét:)"
+ 		"Konfiguráló program" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Megjelenés" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 	"Kilépés"	MENU
+ 		"Újraindítás" RESTART
+ 		"Kilépés..."  EXIT
+--- ./WindowMaker/menu.it.uw	2003-11-11 19:39:06.360000076 +0000
++++ ./WindowMaker/menu.it	2003-11-11 19:39:07.060000013 +0000
+@@ -70,8 +70,8 @@
+ #endif
+ 		"Salva area di lavoro" SAVE_SESSION
+ 	"Area di lavoro" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu.it
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu.it
+ 	
+ 	"Uscire"	MENU
+ 		"Restart" RESTART
+--- ./WindowMaker/menu.ja.uw	2003-11-11 19:39:06.370000003 +0000
++++ ./WindowMaker/menu.ja	2003-11-11 19:39:07.290000010 +0000
+@@ -140,8 +140,8 @@
+ 		"¸½ºß¤Î¥¢¥¤¥³¥ó½¸¤ò¥»¡¼¥Ö" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"³°´Ñ" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"½ªÎ»"	MENU
+ 		"ºÆµ¯Æ°" RESTART
+ 		"½ªÎ»..."  EXIT
+--- ./WindowMaker/menu.ko.uw	2003-11-11 19:39:06.370000026 +0000
++++ ./WindowMaker/menu.ko	2003-11-11 19:39:07.290000030 +0000
+@@ -150,8 +150,8 @@
+ 			"±×·¡µð¾ðÆ®" END
+ 		"¹è°æÈ­¸é" END
+ 	"ÀÛ¾÷È¯°æ" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"È­¸éÀá±Ý" SHORTCUT SHIFT+META+L EXEC xlock -allowroot -usefirst -nice +20
+ 	"Á¾    ·á" MENU
+ 		"Àç ½Ã ÀÛ" RESTART
+--- ./WindowMaker/menu.nl.uw	2003-11-11 19:39:06.370000045 +0000
++++ ./WindowMaker/menu.nl	2003-11-11 19:39:07.300000006 +0000
+@@ -60,8 +60,8 @@
+ 		"Blokkeren" EXEC xlock -allowroot -usefirst
+ 		"Opslaan werkplaats" SAVE_SESSION
+ 	"Werkplaats" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"Exit"	MENU
+ 		"Herstart" RESTART
+ 		"Afsluiten..."  EXIT
+--- ./WindowMaker/menu.no.uw	2003-11-11 19:39:06.540000001 +0000
++++ ./WindowMaker/menu.no	2003-11-11 19:39:07.300000025 +0000
+@@ -136,8 +136,8 @@
+ 		"Lagre Ikonsett" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Utseende" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"Avslutt"	MENU
+ 		"Restart" RESTART
+ 		"Avslutt WindowMaker..."  EXIT 
+--- ./WindowMaker/menu.pl.uw	2003-11-11 19:39:06.540000020 +0000
++++ ./WindowMaker/menu.pl	2003-11-11 19:39:07.300000044 +0000
+@@ -151,8 +151,8 @@
+ 		"Zapamiêtanie Ustawieñ Ikon" EXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Ustawienia ikon,wpisz nazwe pliku:)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Wygl±d" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 	"Wyj¶cie" MENU
+ 		"Prze³adowanie"    RESTART
+ 		"Wyj¶cie..."       EXIT
+--- ./WindowMaker/menu.pt.uw	2003-11-11 19:39:06.540000039 +0000
++++ ./WindowMaker/menu.pt	2003-11-11 19:39:07.300000063 +0000
+@@ -144,8 +144,8 @@
+ 		"Salvar Configuração de Ícones" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Nome do Conjunto de Ícones)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Appearance" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"Sair"	MENU
+ 		"Reiniciar" RESTART
+--- ./WindowMaker/menu.ro.uw	2003-11-11 19:39:06.540000058 +0000
++++ ./WindowMaker/menu.ro	2003-11-11 19:39:07.310000003 +0000
+@@ -153,8 +153,8 @@
+ 		"Salveazã Setul de Iconiþe" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name,Enter file name:)"
+ 		"Utilitar de Configurare" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Configurare" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 	"Ieºire" MENU
+ 		"Repornire" RESTART
+ 		"Ieºi"  EXIT
+--- ./WindowMaker/menu.ru.uw	2003-11-11 19:39:06.540000077 +0000
++++ ./WindowMaker/menu.ru	2003-11-11 19:39:07.400000013 +0000
+@@ -87,8 +87,8 @@
+ 		"óÔÉÌÉ" OPEN_MENU styles.menu
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"÷ÎÅÛÎÉÊ ×ÉÄ" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"÷ÙÈÏÄ"	MENU
+ 		"ðÅÒÅÚÁÐÕÓÔÉÔØ" RESTART
+--- ./WindowMaker/menu.se.uw	2003-11-11 19:39:06.550000015 +0000
++++ ./WindowMaker/menu.se	2003-11-11 19:39:07.400000032 +0000
+@@ -143,8 +143,8 @@
+ 		"Spara ikonuppsättning" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Utseende" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"Avsluta"	MENU
+ 		"Starta om" RESTART
+--- ./WindowMaker/menu.sk.uw	2003-11-11 19:39:06.550000034 +0000
++++ ./WindowMaker/menu.sk	2003-11-11 19:39:07.400000051 +0000
+@@ -167,8 +167,8 @@
+ 		"Ulo¾i» sadu ikon" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Meno sady ikon,Zadajte názov súboru:)"
+ 		"Konfiguraèný nástroj" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Vzhµad" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"Koniec" MENU
+ 		"Re¹tartova»" RESTART
+--- ./WindowMaker/menu.sl.uw	2003-11-11 19:39:06.550000053 +0000
++++ ./WindowMaker/menu.sl	2003-11-11 19:39:07.400000070 +0000
+@@ -143,8 +143,8 @@
+ 		"Shrani zbirko ikon" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Izgled" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"Izhod"	MENU
+ 		"Ponovno za¾eni" RESTART
+--- ./WindowMaker/menu.tr.uw	2003-11-11 19:39:06.550000072 +0000
++++ ./WindowMaker/menu.tr	2003-11-11 19:39:07.400000089 +0000
+@@ -130,8 +130,8 @@
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 
+ 	"Görünüm" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 
+ 	"Çýkýþ"	MENU
+ 		"Yeniden Baþlat" RESTART
+--- ./WindowMaker/menu.zh_TW.Big5.uw	2003-11-11 19:39:06.560000013 +0000
++++ ./WindowMaker/menu.zh_TW.Big5	2003-11-11 19:39:07.410000013 +0000
+@@ -151,8 +151,8 @@
+ 		"Àx¦s¹Ï¥Ü¶°" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(¹Ï¥Ü¶°¦WºÙ)"
+ 		"°¾¦n³]©w¤½¥Îµ{¦¡" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"¥~Æ[" END
+-	"WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-	"SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++	"WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++	"SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"Â÷¶}"	MENU
+ 		"­«·s±Ò°Ê" RESTART
+ 		"Â÷¶}..."  EXIT
+--- ./WindowMaker/plmenu.uw	2003-11-11 19:39:06.560000032 +0000
++++ ./WindowMaker/plmenu	2003-11-11 19:39:07.410000032 +0000
+@@ -46,8 +46,8 @@
+   ("Save IconSet", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("Preferences Utility", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+  ("Exit",
+   ("Restart", RESTART),
+   ("Exit", EXIT)
+--- ./WindowMaker/plmenu.bg.uw	2003-11-11 19:39:06.570000017 +0000
++++ ./WindowMaker/plmenu.bg	2003-11-11 19:39:07.410000051 +0000
+@@ -46,8 +46,8 @@
+   ("Çàïàçè êîëåêöèÿòà èêîíêè", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("Ïîñîáèå çà íàñòðîéêè", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+  ("Èçõîä",
+   ("Ðåñòàðòèðàíå", RESTART),
+   ("Èçõîä...", EXIT)
+--- ./WindowMaker/plmenu.da.uw	2003-11-11 19:39:06.590000003 +0000
++++ ./WindowMaker/plmenu.da	2003-11-11 19:39:07.410000070 +0000
+@@ -146,8 +146,8 @@
+                 ("Gem Ikonsæt", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(Ikonsæt navn,Indtast navn:)"),
+                 ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+         ),
+-        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+-        ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),
++        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++        ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),
+         (
+         "Afslut",
+                 ("Genstart", RESTART),
+--- ./WindowMaker/plmenu.de.uw	2003-11-11 19:39:06.600000001 +0000
++++ ./WindowMaker/plmenu.de	2003-11-11 19:39:07.420000003 +0000
+@@ -46,8 +46,8 @@
+   ("Iconsatz speichern", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(Iconsatz-Name)\""),
+   ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")   
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu.de"),
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu.de"),
+  ("Beenden",
+   ("Neustart", RESTART),
+   ("Beenden...", EXIT)
+--- ./WindowMaker/plmenu.es.uw	2003-11-11 19:39:06.600000022 +0000
++++ ./WindowMaker/plmenu.es	2003-11-11 19:39:07.420000023 +0000
+@@ -46,8 +46,8 @@
+   ("Guardar iconos", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("Preferencias", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu.es"),
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu.es"),
+  ("Salir",
+   ("Reiniciar", RESTART),
+   ("Salir", EXIT)
+--- ./WindowMaker/plmenu.fi.uw	2003-11-11 19:39:06.630000001 +0000
++++ ./WindowMaker/plmenu.fi	2003-11-11 19:39:07.420000043 +0000
+@@ -157,8 +157,8 @@
+ 		"/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs"
+ 		)
+ 	),
+-        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+-	("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),
++        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++	("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),
+ 	(
+ 	"Lopeta",
+ 		("Käynnistä WM uudelleen", RESTART),
+--- ./WindowMaker/plmenu.fr.uw	2003-11-11 19:39:06.730000003 +0000
++++ ./WindowMaker/plmenu.fr	2003-11-11 19:39:07.420000063 +0000
+@@ -44,8 +44,8 @@
+    ("Sauver le jeu d'icônes", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets /\"%a(Nom du jeu d'icônes,Entrez un nom de fichier:)\""),
+    ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")   
+   ),
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu.fr"), 
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu.fr"), 
+  ("Quitter",
+    ("Redémarrer", RESTART),
+    ("Quitter...", EXIT)
+--- ./WindowMaker/plmenu.hr.uw	2003-11-11 19:39:06.730000024 +0000
++++ ./WindowMaker/plmenu.hr	2003-11-11 19:39:07.430000003 +0000
+@@ -141,8 +141,8 @@
+       SHEXEC,
+       "getstyle -t $HOME/GNUstep/Library/WindowMaker/Themes/\"%a(Theme name)\""
+     ),
+-    ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+-    ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"), 
++    ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++    ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"), 
+   (
+     Izlaz,
+     ("Ponovo startaj", RESTART),
+--- ./WindowMaker/plmenu.it.uw	2003-11-11 19:39:06.740000020 +0000
++++ ./WindowMaker/plmenu.it	2003-11-11 19:39:07.430000023 +0000
+@@ -46,8 +46,8 @@
+   ("Salva il set icone", EXEC, "geticonset ~/GNUstep/Library/WindowMaker/IconSets/\"%a(Nome IconSet)\""),
+   ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")   
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu.it"), 
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu.it"), 
+  ("Esci",
+   ("Riavvia", RESTART),
+   ("Esci...", EXIT)
+--- ./WindowMaker/plmenu.ja.uw	2003-11-11 19:39:06.770000023 +0000
++++ ./WindowMaker/plmenu.ja	2003-11-11 19:39:07.430000043 +0000
+@@ -57,8 +57,8 @@
+   ("¸½ºß¤Î¥¢¥¤¥³¥ó¥»¥Ã¥È¤ò¥»¡¼¥Ö", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("ÀßÄê¥æ¡¼¥Æ¥£¥ê¥Æ¥£", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ),
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),
+  ("½ªÎ»",
+   ("ºÆµ¯Æ°", RESTART),
+   ("½ªÎ»", EXIT)
+--- ./WindowMaker/plmenu.ko.uw	2003-11-11 19:39:06.750000015 +0000
++++ ./WindowMaker/plmenu.ko	2003-11-11 19:39:07.430000063 +0000
+@@ -48,8 +48,8 @@
+     )
+    )
+   ),
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+  ("Á¾    ·á",
+   ("Àç ½Ã ÀÛ", RESTART),
+   ("Á¾    ·á", EXIT)
+--- ./WindowMaker/plmenu.pl.uw	2003-11-11 19:39:06.750000034 +0000
++++ ./WindowMaker/plmenu.pl	2003-11-11 19:39:07.430000083 +0000
+@@ -48,8 +48,8 @@
+ 		("Zapamiêtanie Ustawieñ Ikon", EXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/'%a(Ustawienia ikon,Wpisz nazwe pliku:)'"),
+                 ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")   
+ 	),
+-        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+-        ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++        ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++        ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+ 	("Wyj¶cie",
+ 		("Prze³adowanie",    RESTART),
+ 		("Wyj¶cie...",       EXIT)
+--- ./WindowMaker/plmenu.ro.uw	2003-11-11 19:39:06.760000018 +0000
++++ ./WindowMaker/plmenu.ro	2003-11-11 19:39:07.440000014 +0000
+@@ -46,8 +46,8 @@
+   ("Salveazã Setul de Iconiþe", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("Utilitar de Configurare", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+  ("Ieºire",
+   ("Repornire", RESTART),
+   ("Ieºi", EXIT)
+--- ./WindowMaker/plmenu.sk.uw	2003-11-11 19:39:06.760000037 +0000
++++ ./WindowMaker/plmenu.sk	2003-11-11 19:39:07.440000034 +0000
+@@ -46,8 +46,8 @@
+   ("Ulo¾i» sadu ikon", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(IconSet name)\""),
+   ("Konfiguraèný nástroj", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")
+   ), 
+- ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),
+- ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),
++ ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),
++ ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),
+  ("Koniec",
+   ("Re¹tartova»", RESTART),
+   ("Koniec", EXIT)
+--- ./WindowMaker/plmenu.zh_CN.uw	2003-11-11 19:39:06.770000001 +0000
++++ ./WindowMaker/plmenu.zh_CN	2003-11-11 19:39:07.440000054 +0000
+@@ -46,8 +46,8 @@
+   ("±£´æÍ¼±ê¼¯", SHEXEC, "geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/\"%a(Í¼±ê¼¯Ãû)\""),
+   ("WPrefs", EXEC, "/usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs")   
+   ), 
+-  ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_wmapps"),                      
+-  ("SuSE", OPEN_MENU, "/etc/WindowMaker/SuSE/SuSE_menu"),                         
++  ("WindowMaker", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_wmapps"),                      
++  ("SCO", OPEN_MENU, "/etc/WindowMaker/SCO/SCO_menu"),                         
+  ("ÍË³ö",
+   ("ÖØÐÂÆô¶¯", RESTART),
+   ("ÍË³ö...", EXIT)
+--- ./WindowMaker/menu.cs.uw	2003-11-11 19:39:06.340000014 +0000
++++ ./WindowMaker/menu.cs	2003-11-11 19:39:07.450000006 +0000
+@@ -75,8 +75,8 @@
+                 "Ulo¾it sadu ikon" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name,Enter file name:)"
+                 "Konfiguraèní nástroj" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs
+          "Vzhled" END
+-         "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-         "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++         "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++         "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+  	 "Konec"  MENU
+ // 'Restartovat' není opravdu pøíli¹ èeské slovo, najde nìkdo lep¹í ?
+ 		"Restartovat" RESTART
+--- ./WindowMaker/plmenu.cs.uw	2003-11-11 19:39:06.580000012 +0000
++++ ./WindowMaker/plmenu.cs	2003-11-11 19:39:07.450000026 +0000
+@@ -143,12 +143,12 @@
+          (
+          "WindowMaker",
+          OPEN_MENU,
+-         "/etc/WindowMaker/SuSE/SuSE_wmapps"
++         "/etc/WindowMaker/SCO/SCO_wmapps"
+          ),
+          (
+-         "SuSE",
++         "SCO",
+          OPEN_MENU,
+-         "/etc/WindowMaker/SuSE/SuSE_menu"
++         "/etc/WindowMaker/SCO/SCO_menu"
+          ),
+  	 (
+  	 "Konec",
+--- ./WindowMaker/menu.uw	2003-11-11 19:39:06.320000084 +0000
++++ ./WindowMaker/menu	2003-11-11 19:39:07.460000003 +0000
+@@ -156,8 +156,8 @@
+ 		"Save IconSet" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(IconSet name,Enter file name:)"
+ 		"Preferences Utility" EXEC /usr/local/GNUstep/Apps/WPrefs.app/WPrefs
+ 	"Appearance" END
+-	"WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps
+-	"SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu
++	"WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps
++	"SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu
+ 	"Exit"	MENU
+ 		"Restart" RESTART
+ 		"Exit"  EXIT
+--- ./WindowMaker/menu.zh_CN.uw	2003-11-11 19:39:06.550000091 +0000
++++ ./WindowMaker/menu.zh_CN	2003-11-11 19:39:07.480000003 +0000
+@@ -153,8 +153,8 @@
+ 		"±£´æÍ¼±ê¼¯" SHEXEC geticonset $HOME/GNUstep/Library/WindowMaker/IconSets/"%a(Í¼±ê¼¯Ãû,ÊäÈëÎÄ¼þÃû:)"
+                 "WPrefs" EXEC /usr/X11R6/GNUstep/Apps/WPrefs.app/WPrefs         
+ 	"Íâ¹Û" END
+-        "WindowMaker" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_wmapps              
+-        "SuSE" OPEN_MENU /etc/WindowMaker/SuSE/SuSE_menu                        
++        "WindowMaker" OPEN_MENU /etc/WindowMaker/SCO/SCO_wmapps              
++        "SCO" OPEN_MENU /etc/WindowMaker/SCO/SCO_menu                        
+ 	"ÍË³ö"	MENU
+ 		"ÖØÐÂÆô¶¯" RESTART
+ 		"ÍË³ö..."  EXIT
+--- ./windowmaker.uw	2003-11-11 19:39:05.930000020 +0000
++++ ./windowmaker	2003-11-11 19:39:07.600000001 +0000
+@@ -13,7 +13,7 @@
+ 
+ 	wmaker.inst
+ 
+-	setstyle /usr/X11R6/share/WindowMaker/Themes/SuSE.themed
++	setstyle /usr/X11R6/share/WindowMaker/Themes/SCO.themed
+ 
+ 	test $? = 0 || exit 1
+ }
+--- ./configure.uw	2002-07-02 00:37:46.000000000 +0000
++++ ./configure	2003-11-11 19:40:46.330000068 +0000
+@@ -2963,11 +2963,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -4935,7 +4935,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -5378,18 +5378,6 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
+-  sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-    hardcode_libdir_flag_spec=
+-    hardcode_shlibpath_var=no
+-    runpath_var='LD_RUN_PATH'
+-    ;;
+-
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec='-L$libdir'
+@@ -5421,13 +5409,14 @@
+     runpath_var=LD_RUN_PATH
+     ;;
+ 
+-  sysv5uw7* | unixware7*)
++  sysv5* | unixware7*)
+     no_undefined_flag='${wl}-z ${wl}text'
+     if test "$GCC" = yes; then
+       archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     else
+       archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     fi
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     runpath_var='LD_RUN_PATH'
+     hardcode_shlibpath_var=no
+     ;;

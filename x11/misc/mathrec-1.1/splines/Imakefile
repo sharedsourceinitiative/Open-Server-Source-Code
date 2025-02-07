@@ -1,0 +1,41 @@
+/*************************************************************************
+ *                                                                       *
+ *  Copyright (c) 1992, 1993 Ronald Joe Record                           *
+ *                                                                       *
+ *  All rights reserved. No part of this program or publication may be   *
+ *  reproduced, transmitted, transcribed, stored in a retrieval system,  *
+ *  or translated into any language or computer language, in any form or *
+ *  by any means, electronic, mechanical, magnetic, optical, chemical,   *
+ *  biological, or otherwise, without the prior written permission of:   *
+ *                                                                       *
+ *      Ronald Joe Record (408) 458-3718                                 *
+ *      212 Owen St., Santa Cruz, California 95062 USA                   *
+ *                                                                       *
+ *************************************************************************/
+
+#
+#	Imakefile for splines, by Ron Record
+#
+        DEPLIBS = $(DEPXLIB)
+         BINDIR = /usr/local/bin
+      SPLINEDIR = $(DESTDIR)/usr/local/mathrec/splines
+         MANDIR = /usr/local/man/man1
+      MANSUFFIX = 1
+#	Uncomment the following line if your system doesn't support prototypes 
+#    PROTODEFINE = -D_NO_PROTO
+        DEFINES = $(PROTODEFINE)
+       INCLUDES = -I. -I../libXrr
+         CFLAGS = -O $(DEFINES) $(INCLUDES) $(CDEBUGFLAGS)
+LOCAL_LIBRARIES = ../libXrr/libXrr.a $(XLIB)
+  SYS_LIBRARIES = -lm $(NAPLIB)
+
+           SRCS = splines.c
+           OBJS = splines.o
+
+SimpleProgramTarget(splines)
+
+install:: install.man
+	@if [ ! -d $(SPLINEDIR) ]; then mkdir -p $(SPLINEDIR); fi
+	@cd ./params; set -x; for file in *; do \
+		$(INSTALL) -c $(INSTBINFLAGS) $$file $(SPLINEDIR); \
+	done

@@ -1,0 +1,90 @@
+*** ./Build-OSR6.osr6	Thu Dec 13 11:34:31 2007
+--- ./Build-OSR6	Thu Dec 13 12:13:29 2007
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ CFLAGS="-O2"
++ CXXFLAGS=$CFLAGS
++ NM="/usr/ccs/bin/nm -p"
++ #PKGS=../xemacs-all-packages.tar.bz2
++ 
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS CXXFLAGS NM PATH
++ 
++ # Extract the packages
++ #[ -f $PKGS ] && bzcat $PKGS | tar xf -
++ 
++ rm -f mout-configure
++ libtoolize -c -f --copy --force
++ ./configure --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin \
++             --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include \
++             2>&1 | tee mout-configure
++ /usr/gnu/bin/make 2>&1 | tee mout
+*** ./Install-OSR6.osr6	Thu Dec 13 11:34:31 2007
+--- ./Install-OSR6	Thu Dec 13 12:15:02 2007
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ PATH=/usr/gnu/bin:$PATH
++ export PATH
++ VER=22.1
++ D=/u/tmp/emacs-$VER-root
++ 
++ rm -rf $D
++ mkdir -p $D
++ 
++ /usr/gnu/bin/make prefix=$D/usr \
++                   exec_prefix=$D/usr \
++                   bindir=$D/usr/bin \
++                   install 2>&1 | tee mout-install
+*** ./configure.osr6	Fri May 25 05:43:29 2007
+--- ./configure	Thu Dec 13 12:16:16 2007
+***************
+*** 3125,3132 ****
+  				OVERRIDE_CPPFLAGS=" "
+  				;;
+        *-sysv4.2uw* )	  	opsys=unixware; NON_GNU_CPP=/lib/cpp ;;
+!       *-sysv5uw* )	  	opsys=unixware; NON_GNU_CPP=/lib/cpp ;;
+!       *-sysv5OpenUNIX* )  	opsys=unixware; NON_GNU_CPP=/lib/cpp ;;
+        *-386bsd* )	        opsys=386bsd ;;
+        *-nextstep* )             opsys=nextstep ;;
+        ## Otherwise, we'll fall through to the generic opsys code at the bottom.
+--- 3125,3131 ----
+  				OVERRIDE_CPPFLAGS=" "
+  				;;
+        *-sysv4.2uw* )	  	opsys=unixware; NON_GNU_CPP=/lib/cpp ;;
+!       *-sysv5* )	  	opsys=unixware; NON_GNU_CPP=/lib/cpp ;;
+        *-386bsd* )	        opsys=386bsd ;;
+        *-nextstep* )             opsys=nextstep ;;
+        ## Otherwise, we'll fall through to the generic opsys code at the bottom.
+***************
+*** 3187,3194 ****
+      *-sysv2.2 | *-sysvr2.2 )		opsys=usg5-2-2 ;;
+      *-sysv3* | *-sysvr3* )		opsys=usg5-3 ;;
+      *-sysv4.2uw* )			opsys=unixware ;;
+!     *-sysv5uw* )			opsys=unixware ;;
+!     *-sysv5OpenUNIX* )			opsys=unixware ;;
+      *-sysv4.1* | *-sysvr4.1* )
+  	NON_GNU_CPP=/usr/lib/cpp
+  	opsys=usg5-4 ;;
+--- 3186,3192 ----
+      *-sysv2.2 | *-sysvr2.2 )		opsys=usg5-2-2 ;;
+      *-sysv3* | *-sysvr3* )		opsys=usg5-3 ;;
+      *-sysv4.2uw* )			opsys=unixware ;;
+!     *-sysv5* )				opsys=unixware ;;
+      *-sysv4.1* | *-sysvr4.1* )
+  	NON_GNU_CPP=/usr/lib/cpp
+  	opsys=usg5-4 ;;

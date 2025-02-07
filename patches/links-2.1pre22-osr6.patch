@@ -1,0 +1,74 @@
+*** ./Configure-OSR6.osr6	Wed Jul 12 16:18:51 2006
+--- ./Configure-OSR6	Wed Jul 12 16:18:51 2006
+***************
+*** 0 ****
+--- 1,38 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ if [ -x configure ]
++ then
++     ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST \
++             --enable-javascript \
++             --without-libfl \
++             --enable-graphics \
++             --without-gpm \
++             --with-ssl=/usr \
++             --without-svgalib \
++             --without-fb \
++             --without-directfb \
++             --without-sdl \
++             --without-pmshell \
++             --without-atheos \
++             --with-x \
++             --with-libjpeg \
++             --with-libtiff \
++             2>&1 | tee mout-configure
++ else
++     [ -f Makefile.PL ] && perl Makefile.PL 2>&1 | tee mout-configure
++ fi
+*** ./links.h.osr6	Mon May 29 13:37:44 2006
+--- ./links.h	Wed Jul 12 16:18:51 2006
+***************
+*** 65,71 ****
+  #endif
+  #ifndef _XOPEN_SOURCE
+  #define X_S
+! #define _XOPEN_SOURCE   5       /* The 5 is a kludge to get a strptime() prototype in NetBSD */
+  #endif
+  #ifdef HAVE_TIME_H
+  #ifdef TIME_WITH_SYS_TIME
+--- 65,71 ----
+  #endif
+  #ifndef _XOPEN_SOURCE
+  #define X_S
+! #define _XOPEN_SOURCE   500       /* The 5 is a kludge to get a strptime() prototype in NetBSD */
+  #endif
+  #ifdef HAVE_TIME_H
+  #ifdef TIME_WITH_SYS_TIME
+*** ./Install-OSR6.osr6	Wed Jul 12 16:21:32 2006
+--- ./Install-OSR6	Wed Jul 12 16:22:06 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/links
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

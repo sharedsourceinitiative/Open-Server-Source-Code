@@ -1,0 +1,26 @@
+--- ./libncftp/ftw.c.00	2006-06-18 17:53:03.000000000 -0700
++++ ./libncftp/ftw.c	2009-07-04 12:58:11.120000017 -0700
+@@ -110,7 +110,7 @@
+ 		memcpy(dp, p, sz);
+ 		return (dp);
+ 	}
+-#elif defined(HAVE_READDIR_R) && ( (defined(SOLARIS) && (SOLARIS < 250)) || (defined(SCO)) || (defined(IRIX) && (IRIX < 6)) )
++#elif defined(HAVE_READDIR_R) && ( (defined(SOLARIS) && (SOLARIS < 250)) || (defined(IRIX) && (IRIX < 6)) )
+ 	struct dirent *p;
+ 	p = readdir_r(dir, dp);
+ 	if (p != NULL)
+--- ./Makefile.in.00	2006-08-05 14:42:30.000000000 -0700
++++ ./Makefile.in	2009-07-04 13:00:26.940000010 -0700
+@@ -44,7 +44,11 @@
+ 	@( cd ./sh_util ; $(MAKE) "CC=$(CC)" "CFLAGS=$(CFLAGS)" )
+ 	@( cd ./vis ; $(MAKE) "CC=$(CC)" "CFLAGS=$(CFLAGS)" )
+ 	-@test -z "$(DESTDIR)" || mkdir -p "$DESTDIR" 2>/dev/null
+-	-mkdir "$(DESTDIR)$(prefix)" "$(DESTDIR)$(BINDIR)" "$(DESTDIR)$(SYSCONFDIR)" "$(DESTDIR)$(mandir)" "$(DESTDIR)$(mandir)/man1" 2>/dev/null
++	-mkdir -p "$(DESTDIR)$(prefix)" 2>/dev/null
++	-mkdir -p "$(DESTDIR)$(BINDIR)" 2>/dev/null
++	-mkdir -p "$(DESTDIR)$(SYSCONFDIR)" 2>/dev/null
++	-mkdir -p "$(DESTDIR)$(mandir)" 2>/dev/null
++	-mkdir -p "$(DESTDIR)$(mandir)/man1" 2>/dev/null
+ 	-@echo '..... Installing the programs .....'
+ 	$(INSTALL_PROGRAM) bin/ncftp@EXEEXT@ "$(DESTDIR)$(BINDIR)/ncftp@EXEEXT@"
+ 	$(INSTALL_PROGRAM) bin/ncftpget@EXEEXT@ "$(DESTDIR)$(BINDIR)/ncftpget@EXEEXT@"

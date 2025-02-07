@@ -1,0 +1,89 @@
+#!/bin/bash
+
+VER=3.0.14a
+ROOT=/u/tmp/samba-$VER-root
+BLD=/usr/src/sco/samba
+
+umask 022
+cd $BLD
+cd samba-$VER
+rm -rf $ROOT
+mkdir -p $ROOT/usr/share/doc/packages/samba \
+    $ROOT/usr/share/doc/packages/samba-vscan \
+    $ROOT/usr/share/doc/packages/samba/docbook \
+    $ROOT/etc/openldap/schema \
+    $ROOT/etc/samba \
+    $ROOT/etc/init.d \
+    $ROOT/lib \
+    $ROOT/sbin \
+    $ROOT/usr/include \
+    $ROOT/usr/lib/python/lib-dynload \
+    $ROOT/usr/lib/samba/config \
+    $ROOT/usr/lib/samba/vfs \
+    $ROOT/usr/lib/samba/pdb \
+    $ROOT/usr/lib/samba/rpc \
+    $ROOT/usr/lib/samba/auth \
+    $ROOT/usr/lib/samba/charset \
+    $ROOT/usr/lib/samba/idmap \
+    $ROOT/usr/man \
+    $ROOT/usr/share/samba/swat \
+    $ROOT/usr/bin \
+    $ROOT/usr/sbin \
+    $ROOT/var/adm \
+    $ROOT/var/lib/samba/netlogon \
+    $ROOT/var/lib/samba/drivers/W32X86 \
+    $ROOT/var/lib/samba/drivers/WIN40 \
+    $ROOT/var/lib/samba/drivers/W32ALPHA \
+    $ROOT/var/lib/samba/drivers/W32MIPS \
+    $ROOT/var/lib/samba/drivers/W32PPC \
+    $ROOT/var/lib/samba/printing \
+    $ROOT/var/lib/samba/profiles \
+    $ROOT/var/log/samba \
+    $ROOT/var/run/samba \
+    $ROOT/var/spool/samba \
+    $ROOT/var/lock/subsys
+
+/usr/gnu/bin/make -C source/ DESTDIR=$ROOT install BINDIR=/usr/bin CONFIGFILE=/etc/samba/smb.conf DRIVERFILE=/etc/samba/printers.def LIBDIR=/usr/lib/samba LMHOSTSFILE=/etc/samba/lmhosts LOCKDIR=/var/lib/samba LOGFILEBASE=/var/log/samba MANDIR=/usr/man SBINDIR=/usr/sbin SMB_PASSWD_FILE=/etc/samba/smbpasswd SWATDIR=/usr/share/samba/swat
+
+/usr/gnu/bin/make -C source/ DESTDIR=$ROOT installmodules LIBDIR=/usr/lib/samba
+mkdir -p examples/scripts
+cp -p source/script/creategroup examples/scripts
+cp -p source/script/mksmbpasswd.sh examples/scripts
+
+touch $ROOT/var/lock/subsys/smbfs
+rm -f /usr/src/sco/BUILD/samba-$VER/filelist-samba
+touch /usr/src/sco/BUILD/samba-$VER/filelist-samba
+rm -f /usr/src/sco/BUILD/samba-$VER/filelist-samba-winbind
+touch /usr/src/sco/BUILD/samba-$VER/filelist-samba-winbind
+install -m 0755 source/nsswitch/libnss_wins.so $ROOT/lib/libnss_wins.so.2
+cp -p source/bin/smbfilter $ROOT/usr/bin/
+cp -p source/bin/smbget $ROOT/usr/bin/
+rm -f $ROOT/usr/lib/samba/libsmbclient.so
+install -m 0755 source/bin/libsmbclient.a $ROOT/usr/lib
+install -m 0755 source/bin/libsmbclient.so $ROOT/usr/lib/libsmbclient.so.0
+ln -s /usr/lib/libsmbclient.so.0 $ROOT/usr/lib/libsmbclient.so
+install -m 0644 source/include/libsmbclient.h $ROOT/usr/include
+install -m 0755 source/bin/debug2html $ROOT/usr/bin/
+install -m 0755 source/bin/log2pcap $ROOT/usr/bin/
+install -m 0755 source/bin/smbtorture $ROOT/usr/bin/
+install -m 0755 source/bin/talloctort $ROOT/usr/bin/
+install -m 0755 source/bin/msgtest source/bin/masktest source/bin/locktest source/bin/locktest2 $ROOT/usr/bin/
+install -m 0755 source/bin/nsstest $ROOT/usr/bin/
+install -m 0755 source/bin/vfstest $ROOT/usr/bin/
+install -m 0755 source/tdb/tdbdump source/tdb/tdbtest source/tdb/tdbtool source/tdb/tdbtorture $ROOT/usr/bin/
+install -m 0755 examples/VFS/shadow_copy_test.so examples/VFS/skel_opaque.so examples/VFS/skel_transparent.so $ROOT/usr/lib/samba/vfs/
+/usr/gnu/bin/make -C examples/VFS/samba-vscan-0.3.5 install DESTDIR=$ROOT
+install -m 0700 ldapsmb-1.31/ldapsmb $ROOT/usr/sbin/
+VFS="/usr/src/sco/BUILD/samba-$VER/examples/VFS"
+VSCAN="/usr/src/sco/BUILD/samba-$VER/examples/VFS/samba-vscan-0.3.5"
+PDB="/usr/src/sco/BUILD/samba-$VER/examples/pdb"
+dirs="/usr/src/sco/BUILD/samba-$VER/examples/pdb  /usr/src/sco/BUILD/samba-$VER/examples/VFS"
+make -C /usr/src/sco/BUILD/samba-$VER/examples/pdb clean
+make -C /usr/src/sco/BUILD/samba-$VER/examples/VFS clean
+cp -p source/smbwrapper/README $ROOT/usr/share/doc/packages/samba/README.smbwrapper
+rm -rf docs/yodldocs
+cp -pR docs/history docs/htmldocs docs/registry docs/REVISION docs/Samba-Developers-Guide.pdf docs/Samba-Guide.pdf docs/Samba-HOWTO-Collection.pdf docs/THANKS $ROOT/usr/share/doc/packages/samba
+rm -rf $ROOT/usr/share/doc/packages/samba/docbook
+cp -pR examples/ $ROOT/usr/share/doc/packages/samba
+install -d $ROOT/etc/slp.reg.d
+install -m 0644 /usr/src/sco/SOURCES/samba.reg $ROOT/etc/slp.reg.d/

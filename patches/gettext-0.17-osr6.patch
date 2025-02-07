@@ -1,0 +1,101 @@
+--- ./gettext-runtime/intl/lock.h.00	2007-11-04 16:56:16.000000000 -0800
++++ ./gettext-runtime/intl/lock.h	2009-01-05 10:02:31.170000020 -0800
+@@ -772,6 +772,12 @@
+ 
+ /* ------------------------- gl_rwlock_t datatype ------------------------- */
+ 
++#ifndef DEFAULTRWLOCK
++#ifdef PTHREAD_RWLOCK_INITIALIZER
++#define DEFAULTRWLOCK PTHREAD_RWLOCK_INITIALIZER
++#endif
++#endif
++
+ typedef rwlock_t gl_rwlock_t;
+ # define gl_rwlock_define(STORAGECLASS, NAME) \
+     STORAGECLASS rwlock_t NAME;
+--- ./gettext-runtime/intl/localealias.c.00	2006-10-31 04:41:52.000000000 -0800
++++ ./gettext-runtime/intl/localealias.c	2009-01-05 10:03:10.780000018 -0800
+@@ -59,6 +59,7 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ 
+ #include "gettextP.h"
+ 
+--- ./gettext-tools/libgettextpo/lock.h.00	2007-11-04 17:03:48.000000000 -0800
++++ ./gettext-tools/libgettextpo/lock.h	2009-01-05 10:02:31.180000013 -0800
+@@ -771,6 +771,12 @@
+ 
+ /* ------------------------- gl_rwlock_t datatype ------------------------- */
+ 
++#ifndef DEFAULTRWLOCK
++#ifdef PTHREAD_RWLOCK_INITIALIZER
++#define DEFAULTRWLOCK PTHREAD_RWLOCK_INITIALIZER
++#endif
++#endif
++
+ typedef rwlock_t gl_rwlock_t;
+ # define gl_rwlock_define(STORAGECLASS, NAME) \
+     STORAGECLASS rwlock_t NAME;
+--- ./gettext-tools/gnulib-lib/lock.h.00	2007-11-04 17:02:31.000000000 -0800
++++ ./gettext-tools/gnulib-lib/lock.h	2009-01-05 10:02:31.180000041 -0800
+@@ -771,6 +771,12 @@
+ 
+ /* ------------------------- gl_rwlock_t datatype ------------------------- */
+ 
++#ifndef DEFAULTRWLOCK
++#ifdef PTHREAD_RWLOCK_INITIALIZER
++#define DEFAULTRWLOCK PTHREAD_RWLOCK_INITIALIZER
++#endif
++#endif
++
+ typedef rwlock_t gl_rwlock_t;
+ # define gl_rwlock_define(STORAGECLASS, NAME) \
+     STORAGECLASS rwlock_t NAME;
+--- ./Configure-OSR6.00	2009-01-05 10:02:31.210000010 -0800
++++ ./Configure-OSR6	2009-01-05 10:02:31.210000007 -0800
+@@ -0,0 +1,28 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -I/usr/gnu/include -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -I/usr/gnu/include -O2 -Wall"
++  LIBS=""
++fi
++PATH=/usr/local/bin:/usr/bin:/usr/gnu/bin:$PATH
++LDFLAGS="-L/usr/local/lib"
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL LIBS
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --disable-shared --enable-static \
++            --enable-threads=posix \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2009-01-05 10:02:31.220000014 -0800
++++ ./Install-OSR6	2009-01-05 10:02:31.220000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gettextdev
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++

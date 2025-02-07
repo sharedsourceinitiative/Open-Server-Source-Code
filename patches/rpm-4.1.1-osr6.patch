@@ -1,0 +1,2746 @@
+--- ./db/common/db_err.c.osr6	2003-01-18 06:04:50.000000000 -0800
++++ ./db/common/db_err.c	2005-06-05 20:09:34.466624005 -0700
+@@ -19,6 +19,12 @@
+ #include <string.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++extern int      vsnprintf(char *, size_t, const char *, _VA_LIST);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/db_am.h"
+--- ./db/db/db.c.osr6	2003-01-18 06:04:50.000000000 -0800
++++ ./db/db/db.c	2005-06-05 20:09:34.566624009 -0700
+@@ -51,6 +51,11 @@
+ #include <string.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/db_shash.h"
+--- ./db/db/db_pr.c.osr6	2003-01-18 06:04:50.000000000 -0800
++++ ./db/db/db_pr.c	2005-06-05 20:09:34.626624014 -0700
+@@ -20,6 +20,11 @@
+ #include <unistd.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/db_shash.h"
+--- ./db/dist/Makefile.in.osr6	2003-01-18 06:04:52.000000000 -0800
++++ ./db/dist/Makefile.in	2005-06-05 20:09:34.666624011 -0700
+@@ -57,7 +57,7 @@
+ 
+ LDFLAGS=	@LDFLAGS@
+ LIBS=		@LIBS@
+-LIBSO_LIBS=	@LIBSO_LIBS@
++LIBSO_LIBS=	@LIBSO_LIBS@ -lsocket -lnsl
+ 
+ libdb=		libdb.a
+ libso_base=	libdb
+--- ./db/dist/configure.osr6	2003-01-18 06:04:55.000000000 -0800
++++ ./db/dist/configure	2005-06-05 20:09:34.756624007 -0700
+@@ -16056,7 +16056,6 @@
+ echo "${ECHO_T}$ac_cv_search_sched_yield" >&6
+ if test "$ac_cv_search_sched_yield" != no; then
+   test "$ac_cv_search_sched_yield" = "none required" || LIBS="$ac_cv_search_sched_yield $LIBS"
+-  LOAD_LIBS="$LOAD_LIBS -lrt"
+ fi
+ 
+ fi
+--- ./db/dist/configure.ac.osr6	2003-01-18 06:04:55.000000000 -0800
++++ ./db/dist/configure.ac	2005-06-05 20:09:34.826624013 -0700
+@@ -409,7 +409,7 @@
+ #	sched_yield function
+ #	pthreads, socket and math libraries
+ AC_CHECK_FUNC(sched_yield,,
+-    AC_SEARCH_LIBS(sched_yield, rt, LOAD_LIBS="$LOAD_LIBS -lrt"))
++    AC_SEARCH_LIBS(sched_yield, rt, LOAD_LIBS="$LOAD_LIBS"))
+ 
+ # XXX
+ # We can't check for pthreads in the same way we did the test for sched_yield
+--- ./db/env/env_region.c.osr6	2003-01-18 06:05:01.000000000 -0800
++++ ./db/env/env_region.c	2005-06-05 20:09:34.946544012 -0700
+@@ -19,6 +19,11 @@
+ #include <unistd.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_shash.h"
+ #include "dbinc/lock.h"
+--- ./db/env/env_open.c.osr6	2003-01-18 06:05:01.000000000 -0800
++++ ./db/env/env_open.c	2005-06-05 20:09:35.066544015 -0700
+@@ -17,6 +17,7 @@
+ #include <ctype.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ #include <unistd.h>
+ #endif
+ 
+--- ./db/env/env_recover.c.osr6	2003-01-18 06:05:01.000000000 -0800
++++ ./db/env/env_recover.c	2005-06-05 20:09:35.126544011 -0700
+@@ -31,6 +31,11 @@
+ #include <string.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/db_shash.h"
+--- ./db/log/log_put.c.osr6	2003-01-18 06:05:03.000000000 -0800
++++ ./db/log/log_put.c	2005-06-05 20:09:35.166544007 -0700
+@@ -29,6 +29,11 @@
+ #include <unistd.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/crypto.h"
+ #include "dbinc/hmac.h"
+--- ./db/qam/qam_files.c.osr6	2003-01-18 06:05:11.000000000 -0800
++++ ./db/qam/qam_files.c	2005-06-05 20:09:35.216544010 -0700
+@@ -18,6 +18,11 @@
+ #include <string.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/qam.h"
+--- ./db/qam/qam_method.c.osr6	2003-01-18 06:05:11.000000000 -0800
++++ ./db/qam/qam_method.c	2005-06-05 20:09:35.256544008 -0700
+@@ -17,6 +17,11 @@
+ #include <string.h>
+ #endif
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "db_int.h"
+ #include "dbinc/db_page.h"
+ #include "dbinc/db_shash.h"
+--- ./db/rpc_server/c/db_server_svc.c.osr6	2002-08-14 09:32:00.000000000 -0700
++++ ./db/rpc_server/c/db_server_svc.c	2005-06-05 20:09:35.316544011 -0700
+@@ -5,6 +5,10 @@
+ 
+ #include "db_config.h"
+ 
++#ifndef PORTMAP
++#define PORTMAP
++#endif
++
+ #ifndef NO_SYSTEM_INCLUDES
+ #include <rpc/rpc.h>
+ #include <rpc/pmap_clnt.h>
+--- ./zlib/gzio.c.osr6	2003-03-04 11:04:53.000000000 -0800
++++ ./zlib/gzio.c	2005-06-05 20:09:35.376544015 -0700
+@@ -8,6 +8,10 @@
+ /* @(#) $Id: gzio.c,v 1.9.2.1 2003/03/04 19:04:53 jbj Exp $ */
+ 
+ #include <stdio.h>
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern FILE *fdopen(int, const char *);
++#endif
+ 
+ #include "zutil.h"
+ 
+--- ./zlib/minigzip.c.osr6	2002-03-17 07:46:23.000000000 -0800
++++ ./zlib/minigzip.c	2005-06-05 20:09:35.446544001 -0700
+@@ -24,6 +24,10 @@
+ #else
+    extern void exit  OF((int));
+ #endif
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern int      fileno(FILE *);
++#endif
+ 
+ #ifdef USE_MMAP
+ #  include <sys/types.h>
+--- ./file/Makefile.in.osr6	2003-03-07 11:17:08.000000000 -0800
++++ ./file/Makefile.in	2005-06-05 20:09:35.486544013 -0700
+@@ -121,7 +121,7 @@
+ noinst_PROGRAMS = file
+ 
+ file_SOURCES = file.c
+-file_LDFLAGS = -all-static
++file_LDFLAGS =
+ file_LDADD = libfmagic.la
+ 
+ man_MAGIC = magic.@fsect@
+@@ -310,7 +310,7 @@
+ DEFS = @DEFS@
+ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I.
+ LDFLAGS = @LDFLAGS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lgetopt
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/apprentice.Plo \
+--- ./file/configure.osr6	2003-03-07 11:17:10.000000000 -0800
++++ ./file/configure	2005-06-05 20:09:35.586544020 -0700
+@@ -10366,7 +10366,6 @@
+   if test $ac_cv_var_daylight = yes; then
+ 
+ cat >>confdefs.h <<\_ACEOF
+-#define HAVE_DAYLIGHT 1
+ _ACEOF
+ 
+   fi
+--- ./file/print.c.osr6	2003-01-24 11:41:56.000000000 -0800
++++ ./file/print.c	2005-06-05 20:09:35.746544009 -0700
+@@ -29,6 +29,11 @@
+ #include "file.h"
+ #include "debug.h"
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      vsnprintf(char *, size_t, const char *, _VA_LIST);
++#endif
++
+ FILE_RCSID("@(#)Id: print.c,v 1.38 2002/07/03 18:37:44 christos Exp ")
+ 
+ /*@access fmagic @*/
+--- ./file/system.h.osr6	2003-01-24 11:41:56.000000000 -0800
++++ ./file/system.h	2005-06-05 20:09:35.786544000 -0700
+@@ -42,7 +42,7 @@
+ /*@=declundef @*/
+ #endif
+ 
+-#if defined(__LCLINT__)
++#if defined(__LCLINT__) || defined(__svr4__)
+ /*@-declundef @*/
+ /*@exits@*/
+ extern void error(int status, int errnum, const char *format, ...)
+--- ./file/compress.c.osr6	2003-01-24 11:41:56.000000000 -0800
++++ ./file/compress.c	2005-06-05 20:09:35.816544009 -0700
+@@ -3,6 +3,13 @@
+ #include "file.h"
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) || _XOPEN_SOURCE_EXTENDED - 0 < 1 \
++        && _XOPEN_SOURCE - 0 < 500 \
++        && __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      mkstemp(char *);
++#endif
++
+ FILE_RCSID("@(#)Id: compress.c,v 1.25 2002/07/03 18:26:37 christos Exp ")
+ 
+ /*@access fmagic @*/
+--- ./popt/Makefile.in.osr6	2003-03-07 11:16:14.000000000 -0800
++++ ./popt/Makefile.in	2005-06-05 20:09:35.966464015 -0700
+@@ -89,7 +89,7 @@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ INSTOBJEXT = @INSTOBJEXT@
+ INTLBISON = @INTLBISON@
+-INTLLIBS = @INTLLIBS@
++INTLLIBS = -lgnuintl
+ INTLOBJS = @INTLOBJS@
+ INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+ LIB = @LIB@
+@@ -135,13 +135,13 @@
+ 
+ noinst_PROGRAMS = test1 test2 test3
+ test1_SOURCES = test1.c
+-test1_LDFLAGS = -all-static
++test1_LDFLAGS =
+ test1_LDADD = $(usrlib_LTLIBRARIES)
+ test2_SOURCES = test2.c
+-test2_LDFLAGS = -all-static
++test2_LDFLAGS =
+ test2_LDADD = $(usrlib_LTLIBRARIES)
+ test3_SOURCES = test3.c
+-test3_LDFLAGS = -all-static
++test3_LDFLAGS =
+ test3_LDADD = $(usrlib_LTLIBRARIES)
+ 
+ noinst_SCRIPTS = testit.sh
+@@ -192,7 +192,7 @@
+ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I.
+ CPPFLAGS = @CPPFLAGS@
+ LDFLAGS = @LDFLAGS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lgnuintl
+ depcomp = $(SHELL) $(top_srcdir)/../depcomp
+ am__depfiles_maybe = depfiles
+ @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/findme.Plo ./$(DEPDIR)/popt.Plo \
+--- ./beecrypt/configure.osr6	2003-03-07 11:16:44.000000000 -0800
++++ ./beecrypt/configure	2005-06-05 20:09:36.096464012 -0700
+@@ -1022,8 +1022,8 @@
+   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+   --enable-debug          creates debugging code default=no
+   --enable-optimized      enables the assembler optimizations default depends on --enable-debug value
+-  --enable-threads        enables multithread support de fault=yes
+-  --enable-aio            enables asynchronous i/o for entropy gathering default=yes
++  --enable-threads        enables multithread support default=yes
++  --enable-aio            enables asynchronous i/o for entropy gathering default=no
+   --disable-dependency-tracking Speeds up one-time builds
+   --enable-dependency-tracking  Do not reject slow dependency extractors
+   --enable-shared=PKGS  build shared libraries default=yes
+@@ -1970,6 +1970,7 @@
+     fi
+ 
+ fi;
++ac_enable_optimized=no
+ 
+ # Check whether --enable-threads or --disable-threads was given.
+ if test "${enable_threads+set}" = set; then
+@@ -2004,7 +2005,7 @@
+     fi
+ 
+ else
+-   ac_enable_aio=yes
++   ac_enable_aio=no
+ fi;
+ 
+ 
+--- ./rpmio/Makefile.in.osr6	2003-03-07 11:17:35.000000000 -0800
++++ ./rpmio/Makefile.in	2005-06-05 20:09:36.206464008 -0700
+@@ -101,7 +101,7 @@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ INSTOBJEXT = @INSTOBJEXT@
+ INTLBISON = @INTLBISON@
+-INTLLIBS = @INTLLIBS@
++INTLLIBS = -lgnuintl
+ INTLOBJS = @INTLOBJS@
+ INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+ LDFLAGS_NPTL = @LDFLAGS_NPTL@
+@@ -237,7 +237,7 @@
+ librpmio_la_LDFLAGS = -release 4.1 -L/var/tmp/rpm-root$(usrlibdir) \
+ 	$(top_builddir)/file/libfmagic.la \
+ 	@WITH_ZLIB_LIB@ \
+-	-lrt -lpthread
++	-lthread
+ 
+ librpmio_la_LIBADD = $(BEECRYPTLOBJS)
+ librpmio_la_DEPENDENCIES = .created
+@@ -246,27 +246,27 @@
+ tdigest_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tdir_SOURCES = tdir.c
+-tdir_LDFLAGS = -all-static
++tdir_LDFLAGS =
+ tdir_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tfts_SOURCES = tfts.c
+-tfts_LDFLAGS = -all-static
++tfts_LDFLAGS =
+ tfts_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tglob_SOURCES = tglob.c
+-tglob_LDFLAGS = -all-static
++tglob_LDFLAGS =
+ tglob_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tinv_SOURCES = tinv.c
+-tinv_LDFLAGS = -all-static
++tinv_LDFLAGS =
+ tinv_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tkey_SOURCES = tkey.c
+-tkey_LDFLAGS = -all-static
++tkey_LDFLAGS =
+ tkey_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ tring_SOURCES = tring.c
+-tring_LDFLAGS = -all-static
++tring_LDFLAGS =
+ tring_LDADD = librpmio.la $(top_builddir)/popt/libpopt.la
+ 
+ trpmio_SOURCES = trpmio.c
+@@ -322,7 +322,7 @@
+ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+ CPPFLAGS = @CPPFLAGS@
+ LDFLAGS = @LDFLAGS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lgnuintl
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/argv.Plo ./$(DEPDIR)/digest.Plo \
+--- ./rpmio/fts.c.osr6	2003-01-18 08:13:17.000000000 -0800
++++ ./rpmio/fts.c	2005-06-05 20:09:36.246464016 -0700
+@@ -53,7 +53,7 @@
+ #   define _STAT_VER		0
+ #   define __fxstat64(_stat_ver, _fd, _sbp)	fstat((_fd), (_sbp))
+ #endif
+-#if defined(sun)
++#if defined(sun) || defined(__svr4__)
+ #   define __errno_location()	(&errno)
+ #   define dirfd(dirp)		-1
+ #   define _STAT_VER		0
+--- ./rpmio/fts.h.osr6	2003-01-18 08:13:17.000000000 -0800
++++ ./rpmio/fts.h	2005-06-05 20:09:36.306464004 -0700
+@@ -51,7 +51,7 @@
+ # define	_LARGEFILE64_SOURCE
+ #endif
+ 
+-#if defined(sun)
++#if defined(sun) || defined(__svr4__)
+ # define _D_EXACT_NAMLEN(d) ((d)->d_reclen)
+ #endif
+ 
+--- ./rpmio/rpmrpc.c.osr6	2003-02-28 08:24:09.000000000 -0800
++++ ./rpmio/rpmrpc.c	2005-06-05 20:09:36.336464010 -0700
+@@ -1286,7 +1286,7 @@
+     dp->d_ino = i + 1;		/* W2DO? */
+     dp->d_reclen = 0;		/* W2DO? */
+ 
+-#if !defined(hpux) && !defined(sun)
++#if !defined(hpux) && !defined(sun) && !defined(__svr4__)
+     dp->d_off = 0;		/* W2DO? */
+ /*@-boundsread@*/
+     dp->d_type = dt[i];
+--- ./rpmio/rpmio.c.osr6	2003-02-28 08:25:29.000000000 -0800
++++ ./rpmio/rpmio.c	2005-06-05 20:09:36.376464015 -0700
+@@ -38,6 +38,11 @@
+ /*@unchecked@*/
+ extern int h_errno;
+ #endif
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern FILE *fdopen(int, const char *);
++extern int      fileno(FILE *);
++#endif
+ 
+ #ifndef IPPORT_FTP
+ #define IPPORT_FTP	21
+--- ./rpmio/rpmlog.c.osr6	2003-02-28 08:29:22.000000000 -0800
++++ ./rpmio/rpmlog.c	2005-06-05 20:09:36.446464009 -0700
+@@ -8,6 +8,11 @@
+ #include "rpmlog.h"
+ #include "debug.h"
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      vsnprintf(char *, size_t, const char *, _VA_LIST);
++#endif
++
+ #ifndef va_copy
+ # ifdef __va_copy
+ #  define va_copy(DEST,SRC) __va_copy((DEST),(SRC))
+--- ./rpmio/macro.c.osr6	2003-01-18 06:04:35.000000000 -0800
++++ ./rpmio/macro.c	2005-06-05 20:09:36.496464001 -0700
+@@ -50,6 +50,12 @@
+ 
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) && (__STDC__ - 0 != 0 \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE))
++extern FILE     *popen(const char *, const char *);
++extern int      pclose(FILE *);
++#endif
++
+ #if defined(__LCLINT__)
+ /*@-exportheader@*/
+ extern const unsigned short int **__ctype_b_loc (void) /*@*/;
+--- ./rpmdb/Makefile.in.osr6	2003-03-07 11:17:35.000000000 -0800
++++ ./rpmdb/Makefile.in	2005-06-05 20:09:36.546464017 -0700
+@@ -222,7 +222,7 @@
+ EXTRA_PROGRAMS = tjfn
+ 
+ tjfn_SOURCES = tjfn.c
+-tjfn_LDFLAGS = -all-static
++tjfn_LDFLAGS =
+ tjfn_LDADD = librpmdb.la
+ 
+ pkgincdir = $(pkgincludedir)
+@@ -860,7 +860,7 @@
+ 	$(LINT) $(DEFS) $(INCLUDES) $(librpmdb_la_SOURCES)
+ 
+ tdbi: librpmdb.la tdbi.o
+-	$(LINK) -all-static $@.o $< $(mylibpaths) $(mylibs) $(LIBS)
++	$(LINK) $@.o $< $(mylibpaths) $(mylibs) $(LIBS)
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+--- ./rpmdb/fprint.c.osr6	2002-07-08 07:21:27.000000000 -0700
++++ ./rpmdb/fprint.c	2005-06-05 20:09:36.576464012 -0700
+@@ -10,6 +10,34 @@
+ #include "fprint.h"
+ #include "debug.h"
+ 
++#ifndef _POSIX_PATH_MAX
++# define _POSIX_PATH_MAX 255
++#endif
++
++#if !defined PATH_MAX && defined _PC_PATH_MAX
++# define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
++#endif
++
++/* Don't include sys/param.h if it already has been.  */
++#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
++# include <sys/param.h>
++#endif
++
++#if !defined(_XOPEN_SOURCE) || _XOPEN_SOURCE_EXTENDED - 0 < 1 \
++        && _XOPEN_SOURCE - 0 < 500 \
++        && __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern char     *realpath(const char *, char *);
++#endif /*defined(_XOPEN_SOURCE) && ...*/
++
++#if !defined PATH_MAX && defined MAXPATHLEN
++# define PATH_MAX MAXPATHLEN
++#endif
++
++#ifndef PATH_MAX
++# define PATH_MAX _POSIX_PATH_MAX
++#endif
++
+ fingerPrintCache fpCacheCreate(int sizeHint)
+ {
+     fingerPrintCache fpc;
+--- ./rpmdb/legacy.c.osr6	2003-03-04 16:23:23.000000000 -0800
++++ ./rpmdb/legacy.c	2005-06-05 20:09:36.616464012 -0700
+@@ -182,7 +182,7 @@
+ 	    break;
+ 	}
+ 
+-#ifdef	MADV_SEQUENTIAL
++#if defined(MADV_SEQUENTIAL) && !defined(__svr4__)
+         xx = madvise(mapped, fsize, MADV_SEQUENTIAL);
+ #endif
+ 
+--- ./rpmdb/rpmdb.c.osr6	2003-03-14 10:05:32.000000000 -0800
++++ ./rpmdb/rpmdb.c	2005-06-05 20:09:36.656464015 -0700
+@@ -12,6 +12,20 @@
+ #include <sys/file.h>
+ #include <signal.h>
+ #include <sys/signal.h>
++#include <sys/types.h>
++
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern int      sigaction(int, const struct sigaction *, struct sigaction *);
++extern int      sigaddset(sigset_t *, int);
++extern int      sigdelset(sigset_t *, int);
++extern int      sigemptyset(sigset_t *);
++extern int      sigfillset(sigset_t *);
++extern int      sigismember(const sigset_t *, int);
++extern int      sigpending(sigset_t *);
++extern int      sigprocmask(int, const sigset_t *, sigset_t *);
++extern int      sigsuspend(const sigset_t *);
++#endif
+ 
+ #ifndef	DYING	/* XXX already in "system.h" */
+ /*@-noparams@*/
+--- ./lib/query.c.osr6	2003-03-04 07:34:23.000000000 -0800
++++ ./lib/query.c	2005-06-05 20:09:36.736464015 -0700
+@@ -5,10 +5,25 @@
+ 
+ #include "system.h"
+ 
++#ifndef _POSIX_PATH_MAX
++# define _POSIX_PATH_MAX 255
++#endif
++
++#if !defined PATH_MAX && defined _PC_PATH_MAX
++# define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
++#endif
++
++/* Don't include sys/param.h if it already has been.  */
++#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
++# include <sys/param.h>
++#endif
++
++#if !defined PATH_MAX && defined MAXPATHLEN
++# define PATH_MAX MAXPATHLEN
++#endif
++
+ #ifndef PATH_MAX
+-/*@-incondefs@*/	/* FIX: long int? */
+-# define PATH_MAX 255
+-/*@=incondefs@*/
++# define PATH_MAX _POSIX_PATH_MAX
+ #endif
+ 
+ #include <rpmcli.h>
+@@ -22,6 +37,13 @@
+ 
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) || _XOPEN_SOURCE_EXTENDED - 0 < 1 \
++        && _XOPEN_SOURCE - 0 < 500 \
++        && __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern char     *realpath(const char *, char *);
++#endif /*defined(_XOPEN_SOURCE) && ...*/
++
+ /**
+  */
+ static void printFileInfo(char * te, const char * name,
+--- ./lib/fsm.c.osr6	2003-03-03 13:28:12.000000000 -0800
++++ ./lib/fsm.c	2005-06-05 20:09:36.776464015 -0700
+@@ -879,7 +879,7 @@
+ 	    rdbuf = fsm->rdbuf;
+ 	    fsm->rdbuf = (char *) mapped;
+ 	    fsm->rdlen = nmapped = st->st_size;
+-#if defined(MADV_DONTNEED)
++#if defined(MADV_DONTNEED) && !defined(__svr4__)
+ 	    xx = madvise(mapped, nmapped, MADV_DONTNEED);
+ #endif
+ 	}
+@@ -909,7 +909,7 @@
+ #if HAVE_MMAP
+ 	if (mapped != (void *)-1) {
+ 	    xx = msync(mapped, nmapped, MS_ASYNC);
+-#if defined(MADV_DONTNEED)
++#if defined(MADV_DONTNEED) && !defined(__svr4__)
+ 	    xx = madvise(mapped, nmapped, MADV_DONTNEED);
+ #endif
+ 	    /*@-noeffect@*/ xx = munmap(mapped, nmapped) /*@=noeffect@*/;
+--- ./lib/signature.c.osr6	2003-03-03 08:21:13.000000000 -0800
++++ ./lib/signature.c	2005-06-05 20:09:36.816464011 -0700
+@@ -4,6 +4,11 @@
+ 
+ #include "system.h"
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #include "rpmio_internal.h"
+ #include <rpmlib.h>
+ #include <rpmmacro.h>	/* XXX for rpmGetPath() */
+@@ -29,6 +34,10 @@
+ #if !defined(__GLIBC__)
+ char ** environ = NULL;
+ #endif
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern FILE *fdopen(int, const char *);
++#endif
+ 
+ int rpmLookupSignatureType(int action)
+ {
+--- ./lib/rpminstall.c.osr6	2003-03-03 11:16:51.000000000 -0800
++++ ./lib/rpminstall.c	2005-06-05 20:09:36.966384014 -0700
+@@ -16,6 +16,11 @@
+ #include "misc.h"	/* XXX for rpmGlob() */
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) && (__STDC__ - 0 != 0 \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE))
++extern char     *mktemp(char *);
++#endif
++
+ /*@access rpmts @*/	/* XXX ts->goal, ts->dbmode */
+ /*@access IDTX @*/
+ /*@access IDT @*/
+--- ./lib/psm.c.osr6	2003-03-06 10:01:47.000000000 -0800
++++ ./lib/psm.c	2005-06-05 20:09:37.026384018 -0700
+@@ -8,6 +8,19 @@
+ #include <signal.h>
+ #include <sys/signal.h>
+ 
++#if __STDC__ - 0 != 0 && !defined(_XOPEN_SOURCE) \
++        && !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
++extern int      sigaction(int, const struct sigaction *, struct sigaction *);
++extern int      sigaddset(sigset_t *, int);
++extern int      sigdelset(sigset_t *, int);
++extern int      sigemptyset(sigset_t *);
++extern int      sigfillset(sigset_t *);
++extern int      sigismember(const sigset_t *, int);
++extern int      sigpending(sigset_t *);
++extern int      sigprocmask(int, const sigset_t *, sigset_t *);
++extern int      sigsuspend(const sigset_t *);
++#endif
++
+ #include <rpmio_internal.h>
+ #include <rpmlib.h>
+ #include <rpmmacro.h>
+--- ./lib/rpmchecksig.c.osr6	2003-03-03 08:32:12.000000000 -0800
++++ ./lib/rpmchecksig.c	2005-06-05 20:09:37.076384010 -0700
+@@ -17,6 +17,11 @@
+ #include "misc.h"	/* XXX for makeTempFile() */
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) && (__STDC__ - 0 != 0 \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE))
++extern char     *mktemp(char *);
++#endif
++
+ /*@access FD_t @*/		/* XXX stealing digests */
+ /*@access pgpDig @*/
+ /*@access pgpDigParams @*/
+--- ./lib/rpmps.c.osr6	2003-01-18 06:04:25.000000000 -0800
++++ ./lib/rpmps.c	2005-06-05 20:09:37.126384007 -0700
+@@ -11,6 +11,11 @@
+ #include "misc.h"
+ #include "debug.h"
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ /*@access fnpyKey @*/
+ /*@access rpmProblem @*/
+ 
+--- ./lib/rpmrc.c.osr6	2003-03-03 08:24:46.000000000 -0800
++++ ./lib/rpmrc.c	2005-06-05 20:09:37.156384018 -0700
+@@ -14,6 +14,7 @@
+ #define __power_pc() 0
+ #endif
+ 
++#include "rpmio_internal.h"
+ #include <rpmlib.h>
+ #include <rpmmacro.h>
+ 
+--- ./lib/misc.c.osr6	2003-03-04 09:00:30.000000000 -0800
++++ ./lib/misc.c	2005-06-05 20:09:37.196384010 -0700
+@@ -18,6 +18,11 @@
+ #include "misc.h"
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) && __STDC__ - 0 != 0 \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      putenv(char *);
++#endif
++
+ rpmRC rpmMkdirPath (const char * dpath, const char * dname)
+ {
+     struct stat st;
+--- ./lib/package.c.osr6	2003-03-06 10:02:36.000000000 -0800
++++ ./lib/package.c	2005-06-05 20:09:37.246384015 -0700
+@@ -19,6 +19,11 @@
+ #include "signature.h"
+ #include "debug.h"
+ 
++#if __STDC__ - 0 != 0 || defined(_XOPEN_SOURCE) \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE)
++extern int      snprintf(char *, size_t, const char *, ...);
++#endif
++
+ #define	alloca_strdup(_s)	strcpy(alloca(strlen(_s)+1), (_s))
+ 
+ /*@access pgpDig @*/
+--- ./build/rpmfc.c.osr6	2003-03-03 14:07:22.000000000 -0800
++++ ./build/rpmfc.c	2005-06-05 20:09:37.316384016 -0700
+@@ -1,6 +1,8 @@
+ #include "system.h"
++#include <libgen.h>
+ 
+ #include <signal.h>	/* getOutputFrom() */
++#include <sys/signal.h>	/* getOutputFrom() */
+ 
+ #include <rpmbuild.h>
+ #include <argv.h>
+--- ./build/parseChangelog.c.osr6	2002-06-23 12:47:12.000000000 -0700
++++ ./build/parseChangelog.c	2005-06-05 20:09:37.346384003 -0700
+@@ -39,6 +39,7 @@
+ 	/*@modifies *secs @*/
+ {
+     struct tm time;
++    extern long     timezone;
+     char * p, * pe, * q, ** idx;
+     char * date = strcpy(alloca(strlen(datestr) + 1), datestr);
+ /*@observer@*/ static char * days[] =
+--- ./build/parsePrep.c.osr6	2002-08-07 07:20:45.000000000 -0700
++++ ./build/parsePrep.c	2005-06-05 20:09:37.386384001 -0700
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "system.h"
++#include <libgen.h>
+ 
+ #include <rpmio_internal.h>
+ #include <rpmbuild.h>
+--- ./misc/getwd.c.osr6	1998-10-08 03:40:42.000000000 -0700
++++ ./misc/getwd.c	2005-06-05 20:09:37.416384007 -0700
+@@ -17,6 +17,27 @@
+ 
+ #include "system.h"
+ 
++#ifndef _POSIX_PATH_MAX
++# define _POSIX_PATH_MAX 255
++#endif
++
++#if !defined PATH_MAX && defined _PC_PATH_MAX
++# define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
++#endif
++
++/* Don't include sys/param.h if it already has been.  */
++#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
++# include <sys/param.h>
++#endif
++
++#if !defined PATH_MAX && defined MAXPATHLEN
++# define PATH_MAX MAXPATHLEN
++#endif
++
++#ifndef PATH_MAX
++# define PATH_MAX _POSIX_PATH_MAX
++#endif
++
+ /* Get the current working directory into PATHNAME */
+ 
+ char *
+--- ./misc/realpath.c.osr6	1998-10-08 03:40:45.000000000 -0700
++++ ./misc/realpath.c	2005-06-05 20:09:37.446384004 -0700
+@@ -19,16 +19,25 @@
+ extern int errno;
+ #endif
+ 
+-#ifndef PATH_MAX
+-#ifdef _POSIX_VERSION
+-#define PATH_MAX _POSIX_PATH_MAX
+-#else
+-#ifdef MAXPATHLEN
+-#define PATH_MAX MAXPATHLEN
+-#else
+-#define PATH_MAX 1024
++#ifndef _POSIX_PATH_MAX
++# define _POSIX_PATH_MAX 255
++#endif
++
++#if !defined PATH_MAX && defined _PC_PATH_MAX
++# define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
+ #endif
++
++/* Don't include sys/param.h if it already has been.  */
++#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
++# include <sys/param.h>
++#endif
++
++#if !defined PATH_MAX && defined MAXPATHLEN
++# define PATH_MAX MAXPATHLEN
+ #endif
++
++#ifndef PATH_MAX
++# define PATH_MAX _POSIX_PATH_MAX
+ #endif
+ 
+ #define MAX_READLINKS 32
+--- ./python/Makefile.in.osr6	2003-03-07 11:17:34.000000000 -0800
++++ ./python/Makefile.in	2005-06-05 20:09:37.486384005 -0700
+@@ -252,13 +252,13 @@
+ noinst_PROGRAMS = poptmodule.so
+ 
+ rpmmodule_so_SOURCES = 
+-rpmmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-soname,rpmmodule.so
++rpmmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-h,rpmmodule.so
+ 
+ _rpmdb_so_SOURCES = _rpmdb.c
+-_rpmdb_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-soname,_rpmdb.so
++_rpmdb_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-h,_rpmdb.so
+ 
+ poptmodule_so_SOURCES = poptmodule.c
+-poptmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-soname,poptmodule.so
++poptmodule_so_LDFLAGS = $(mylibs) $(LIBS) -shared -Wl,-h,poptmodule.so
+ 
+ noinst_LTLIBRARIES = librpmmodule.la
+ librpmmodule_la_SOURCES = rpmmodule.c header-py.c \
+--- ./tools/Makefile.in.osr6	2003-03-07 11:17:37.000000000 -0800
++++ ./tools/Makefile.in	2005-06-05 20:09:37.526384021 -0700
+@@ -101,7 +101,7 @@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ INSTOBJEXT = @INSTOBJEXT@
+ INTLBISON = @INTLBISON@
+-INTLLIBS = @INTLLIBS@
++INTLLIBS = -lgnuintl
+ INTLOBJS = @INTLOBJS@
+ INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+ LDFLAGS_NPTL = @LDFLAGS_NPTL@
+@@ -237,7 +237,7 @@
+ 
+ 
+ pkgbindir = @RPMCONFIGDIR@
+-pkgbin_PROGRAMS = debugedit javadeps rpmcache rpmdeps rpmfile
++pkgbin_PROGRAMS = javadeps rpmcache rpmdeps rpmfile
+ 
+ bin_PROGRAMS = rpmgraph
+ 
+@@ -273,7 +273,7 @@
+ noinst_PROGRAMS = convertdb1$(EXEEXT) dump$(EXEEXT) dumpdb$(EXEEXT) \
+ 	rpmarchive$(EXEEXT) rpmheader$(EXEEXT) rpmlead$(EXEEXT) \
+ 	rpmsignature$(EXEEXT)
+-pkgbin_PROGRAMS = debugedit$(EXEEXT) javadeps$(EXEEXT) rpmcache$(EXEEXT) \
++pkgbin_PROGRAMS = javadeps$(EXEEXT) rpmcache$(EXEEXT) \
+ 	rpmdeps$(EXEEXT) rpmfile$(EXEEXT)
+ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS) $(pkgbin_PROGRAMS)
+ 
+@@ -355,11 +355,11 @@
+ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+ CPPFLAGS = @CPPFLAGS@
+ LDFLAGS = @LDFLAGS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lgnuintl
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/convertdb1.Po \
+-@AMDEP_TRUE@	./$(DEPDIR)/debugedit.Po ./$(DEPDIR)/dump.Po \
++@AMDEP_TRUE@	./$(DEPDIR)/dump.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/dumpdb.Po ./$(DEPDIR)/hashtab.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/javadeps.Po ./$(DEPDIR)/rpmarchive.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/rpmcache.Po ./$(DEPDIR)/rpmdeps.Po \
+@@ -510,7 +510,6 @@
+ 	-rm -f *.tab.c
+ 
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertdb1.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debugedit.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dumpdb.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hashtab.Po@am__quote@
+--- ./tools/rpmfile.c.osr6	2003-01-24 11:41:56.000000000 -0800
++++ ./tools/rpmfile.c	2005-06-05 20:09:37.556384012 -0700
+@@ -30,6 +30,9 @@
+ #include "patchlevel.h"
+ #include "debug.h"
+ 
++extern void error(int status, int errnum, const char *format, ...)
++        __attribute__ ((__format__ (__printf__, 3, 4)));
++
+ FILE_RCSID("@(#)Id: file.c,v 1.66 2002/07/03 19:00:41 christos Exp ")
+ 
+ /*@access fmagic @*/
+--- ./ccs-osr6.osr6	2005-06-05 20:09:37.606384003 -0700
++++ ./ccs-osr6	2005-06-05 20:09:37.606384000 -0700
+@@ -0,0 +1,28 @@
++#!/bin/sh
++
++scriptname="$0"
++step="$1"
++keywords="$2"
++pkglist="$3"
++
++# Source in the standard functions library, ccsSetup.sh
++. ccsSetup.sh
++
++doPostExport() {
++    chown rpm:rpm /var/lib/rpm/[A-Z]*
++}
++
++doPostUnExport() {
++    /etc/userdel rpm
++    /etc/groupdel rpm
++}
++
++ccs_return_value=0
++
++case "$step" in
++        POST_EXPORT) doPostExport ;;
++        PRE_UNEXPORT) doPostUnExport ;;
++esac
++
++exit $ccs_return_value
++
+--- ./cqs-osr6.osr6	2005-06-05 20:09:37.636384009 -0700
++++ ./cqs-osr6	2005-06-05 20:09:37.636384006 -0700
+@@ -0,0 +1,30 @@
++#!/bin/sh
++
++CMT="RPM User Account" 
++
++chkrpm() {
++    echo "ADD=1" > /tmp/chk$$
++    awk ' BEGIN { FS=":" } { print $1 } ' $1 | while read f
++    do
++        [ "$f" = "rpm" ] && echo "ADD=" > /tmp/chk$$
++    done
++}
++
++addgrprpm() {
++    groupadd rpm
++}
++
++addusrrpm() {
++    useradd -g rpm -d /var/lib/rpm -s /bin/false -c "$CMT" rpm
++}
++
++chkrpm /etc/group
++. /tmp/chk$$
++[ "$ADD" ] && addgrprpm
++chkrpm /etc/passwd
++. /tmp/chk$$
++[ "$ADD" ] && {
++    addusrrpm
++}
++rm -f /tmp/chk$$
++
+--- ./macros-osr6.osr6	2005-06-05 20:09:37.696384001 -0700
++++ ./macros-osr6	2005-06-05 20:13:08.269504014 -0700
+@@ -0,0 +1,1150 @@
++#/*! \page config_macros Default configuration: /usr/lib/rpm/macros
++# \verbatim
++#
++# $Id: macros.in,v 1.120.2.3 2003/03/04 19:04:50 jbj Exp $
++#
++# This is a global RPM configuration file. All changes made here will
++# be lost when the rpm package is upgraded. Any per-system configuration
++# should be added to /etc/rpm/macros, while per-user configuration should
++# be added to ~/.rpmmacros.
++#
++#==============================================================================
++# Macro naming conventions (preliminary):
++#
++#	Macros that begin with an underscore are "local" in the sense that
++#	they (if used) will not be exported in rpm headers. Some macros
++#	that don't start with an underscore (but look like they should)
++#	are compatible with macros generated by rpm-2.5.x and will be made
++#	more consistent in a future release.
++#
++
++#==============================================================================
++# ---- A macro that expands to nothing.
++#
++%nil			%{!?nil}
++
++#==============================================================================
++# ---- filesystem macros.
++#
++%_usr			/usr
++%_usrsrc		%{_usr}/src
++%_var			/var
++
++#==============================================================================
++# ---- Generally useful path macros.
++#
++%__awk			nawk
++%__bzip2		/sbin/bzip2
++%__cat			/usr/bin/cat
++%__chgrp		/usr/bin/chgrp
++%__chmod		/usr/bin/chmod
++%__chown		/usr/bin/chown
++%__cp			/sbin/cp
++%__cpio			/usr/bin/cpio
++%__file			/usr/bin/file
++%__gpg			/usr/bin/gpg
++%__grep			/usr/bin/grep
++%__gzip			/usr/bin/gzip
++%__id			/usr/bin/id
++%__install		/usr/gnu/bin/install
++%__ln_s			ln -s
++%__make			/usr/gnu/bin/make
++%__mkdir		/usr/bin/mkdir
++%__mkdir_p		/usr/bin/mkdir -p
++%__mv			/sbin/mv
++%__patch		/usr/gnu/bin/patch
++%__perl			/usr/bin/perl
++%__pgp			/usr/bin/pgp
++%__python		/usr/bin/python
++%__rm			/sbin/rm
++%__rsh			/usr/bin/rsh
++%__sed			/usr/bin/sed
++%__ssh			/usr/bin/ssh
++%__tar			/usr/gnu/bin/tar
++%__unzip		/usr/bin/unzip
++
++#==============================================================================
++# ---- Build system path macros.
++#
++%__ar                   ar
++%__as                   as
++%__cc                   cc
++%__cpp                  /usr/ccs/lib/cpp
++%__cxx                  CC
++%__ld                   /bin/ld
++%__nm                   /bin/nm
++%__objcopy              /usr/gnu/bin/objcopy
++%__objdump              /usr/gnu/bin/objdump
++%__ranlib               :
++%__remsh                %{__rsh}
++%__strip                /bin/strip
++
++# XXX avoid failures if tools are not installed when rpm is built.
++%__libtoolize		libtoolize -c -f
++%__aclocal		aclocal
++%__autoheader		autoheader
++%__automake		automake -a -c -f
++%__autoconf		autoconf -f
++
++#==============================================================================
++# ---- Required rpmrc macros.
++#	Macros that used to be initialized as a side effect of rpmrc parsing.
++#	These are the default values that can be overridden by other
++#	(e.g. per-platform, per-system, per-packager, per-package) macros.
++#
++#	The directory where sources/patches will be unpacked and built.
++%_builddir		%{_topdir}/BUILD
++
++#	The interpreter used for build scriptlets.
++%_buildshell		/bin/bash
++
++#	The path to the bzip2 executable (legacy, use %{__bzip2} instead).
++%_bzip2bin		%{__bzip2}
++
++#	The location of the rpm database file(s).
++%_dbpath		%{_var}/lib/rpm
++
++#	The location of the rpm database file(s) after "rpm --rebuilddb".
++%_dbpath_rebuild	%{_dbpath}
++
++#
++#	Path to script that creates debug symbols in a /usr/lib/debug
++#	shadow tree.
++%__debug_install_post   \
++   /usr/lib/rpm/find-debuginfo.sh %{_builddir}/%{?buildsubdir}\
++%{nil}
++
++#	Template for debug information sub-package.
++%debug_package \
++%ifnarch noarch\
++%global __debug_package 1\
++%package debug\
++Summary: Debug information for package %{name}\
++Group: Development/Debug\
++AutoReqProv: 0\
++%description debug\
++This package provides debug information for package %{name}.\
++Debug information is useful when developing applications that use this\
++package or when debugging this package.\
++%files debug -f debugfiles.list\
++%defattr(-,root,root)\
++%endif\
++%{nil}
++
++%_defaultdocdir		%{_usr}/share/doc/packages
++
++#	The path to the gzip executable (legacy, use %{__gzip} instead).
++%_gzipbin		%{__gzip}
++
++#	The number of changelog entries kept when installing (legacy, unused in
++#	rpm-4.0.1 and later).
++%_instchangelog		5
++
++#	The path to the pgp executable (legacy, use %{__pgp} instead).
++%_pgpbin		%{__pgp}
++
++#	The directory where newly built binary packages will be written.
++%_rpmdir		%{_topdir}/RPMS
++
++#	A template used to generate the output binary package file name
++#	(legacy).
++%_rpmfilename		%{_build_name_fmt}
++
++#	The default signature type.
++%_signature		none
++
++#	The directory where sources/patches from a source package will be
++#	installed. This is also where sources/patches are found when building.
++%_sourcedir		%{_topdir}/SOURCES
++
++#	The directory where the spec file from a source package will be
++#	installed.
++%_specdir		%{_topdir}/SPECS
++
++#	The directory where newly built source packages will be written.
++%_srcrpmdir		%{_topdir}/SRPMS
++
++#	Directory where temporaray files can be created.
++%_tmppath		%{_var}/tmp
++
++#	Path to top of build area.
++%_topdir		%{_usrsrc}/sco
++
++#	The path to the unzip executable (legacy, use %{__unzip} instead).
++%_unzipbin		%{__unzip}
++
++#==============================================================================
++# ---- Optional rpmrc macros.
++#	Macros that are initialized as a side effect of rpmrc and/or spec
++#	file parsing.
++#
++#	Configurable build root path, same as BuildRoot: in a specfile.
++#	(Note: the configured macro value will override the spec file value).
++#
++#%buildroot
++
++#	The sub-directory (relative to %{_builddir}) where sources are compiled.
++#	This macro is set after processing %setup, either explicitly from the
++#	value given to -n or the default name-version.
++#
++#%buildsubdir
++
++#	Configurable distribution information, same as Distribution: tag in a
++#	specfile.
++#
++#%distribution
++
++#	Configurable distribution URL, same as DistURL: tag in a specfile.
++#	The URL will be used to supply reliable information to tools like
++#	rpmfind.
++#
++# Note: You should not configure with disturl (or build packages with
++# the DistURL: tag) unless you are willing to supply content in a
++# yet-to-be-determined format at the URL specified.
++#
++#%disturl
++
++#	Boolean (i.e. 1 == "yes", 0 == "no") that controls whether files
++#	marked as %doc should be installed.
++#%_excludedocs
++
++#	The port and machine name of a FTP proxy host running TIS firewall.
++#
++#%_ftpport
++#%_ftpproxy
++
++#	The signature to use and the location of configuration files for
++#	signing packages with GNU gpg.
++#
++#%_gpg_name
++#%_gpg_path
++
++#	The port and machine name of an HTTP proxy host.
++#
++#%_httpport
++#%_httpproxy
++
++#	The PATH put into the environment before running %pre/%post et al.
++#
++%_install_script_path	/usr/gnu/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin
++
++#	A colon separated list of desired locales to be installed;
++#	"all" means install all locale specific files.
++#	
++%_install_langs	all
++
++#	The value of CLASSPATH in build scriptlets (iff configured).
++#	
++#%_javaclasspath	all
++
++#	Import packaging conventions from jpackage.org (prefixed with _
++#	to avoid name collisions).
++#	
++%_javadir      /usr/java
++%_javadocdir   %{_javadir}/bin/javadoc
++
++#
++#	Deprecated.
++#
++#%_langpatt
++
++#	A colon separated list of paths where files should *not* be installed.
++#	Usually, these are network file system mount points.
++#
++#%_netsharedpath
++
++#	(experimental)
++#	The type of pattern match used on rpmdb iterator selectors:
++#	"default"	simple glob-like regex, periods will be escaped,
++#			splats will have period prepended, full "^...$" match
++#			required. Also, file path tags will use glob(7).
++#	"strcmp"	compare strings
++#	"regex"		regex(7) patterns using regcomp(3)/regexec(3)
++#	"glob"		glob(7) patterns using fnmatch(3)
++#
++%_query_selector_match	default
++
++#	Configurable packager information, same as Packager: in a specfile.
++#
++#%packager
++
++#	Compression type and level for source/binary package payloads.
++#		"w9.gzdio"	gzip level 9 (default).
++#		"w9.bzdio"	bzip2 level 9.
++#
++#%_source_payload	w9.gzdio
++#%_binary_payload	w9.gzdio
++
++#	The signature to use and the location of configuration files for
++#	signing packages with PGP.
++#
++#%_pgp_name
++#%_pgp_path
++
++#	Configurable vendor information, same as Vendor: in a specfile.
++#
++#%vendor
++
++#==============================================================================
++# ---- Build configuration macros.
++#
++# Package version macro.
++#	The type of package to produce, for compatibility with legacy
++#	versions of rpm.
++#
++# This is an rpm version, e.g. 30005 means to produce packaging compatible
++# with rpm-3.0.5. At the moment, values < 30005 (i.e. compatibility with
++# version before rpm-3.0.5) are not supported. The only incompatible change
++# in rpm packaging since rpm-3.0.5 has been to replace a 3 with a 4 in the
++# rpmlead, so there's little need to use any value greater than 30005.
++#
++%_package_version	30005
++
++#
++# Script gets packaged file list on input and buildroot as first parameter.
++# Returns list of unpackaged files, i.e. files in $RPM_BUILD_ROOT not packaged.
++#
++# Note: Disable (by commenting out) for legacy compatibility.
++%__check_files         /usr/lib/rpm/check-files %{buildroot}
++
++#
++# Should unpackaged files in a build root terminate a build?
++#
++# Note: The default value should be 0 for legacy compatibility.
++%_unpackaged_files_terminate_build	1
++
++#
++# Should missing %doc files in the build directory terminate a build?
++#
++# Note: The default value should be 0 for legacy compatibility.
++%_missing_doc_files_terminate_build	1
++
++#
++# Use internal dependency generator rather than external helpers?
++%_use_internal_dependency_generator	0
++
++#
++# Path to scripts to autogenerate package dependencies,
++#
++# Note: Used iff _use_internal_dependency_generator is zero.
++#%__find_provides	/usr/lib/rpm/rpmdeps --provides
++#%__find_requires	/usr/lib/rpm/rpmdeps --requires
++%__find_provides	/usr/lib/rpm/find-provides
++%__find_requires	/usr/lib/rpm/find-requires
++#%__find_conflicts	???
++#%__find_obsoletes	???
++
++#
++# Path to scripts to autogenerate per-interpreter package dependencies,
++#
++# Note: Used iff _use_internal_dependency_generator is non-zero. The
++# helpers are also used by /usr/lib/rpm/rpmdeps {--provides|--requires).
++#%__perl_provides	/usr/lib/rpm/perldeps --provides
++#%__perl_requires	/usr/lib/rpm/perldeps --requires
++%__perl_provides	/usr/lib/rpm/perl.prov
++%__perl_requires	/usr/lib/rpm/perl.req
++
++#
++# fixowner, fixgroup, and fixperms are run at the end of hardcoded setup
++# These macros are necessary only for legacy compatibility, and have moved
++# to per-platform macro configuration (i.e. /usr/lib/rpm/<arch>-<os>/macros)
++#
++# Note: These are no longer enabled by default.
++#%__id_u		%{__id} -u
++#%__chown_Rhf		%{__chown} -Rhf
++#%__chgrp_Rhf		%{__chgrp} -Rhf
++#%_fixowner		[ `%{__id_u}` = '0' ] && %{__chown_Rhf} root
++#%_fixgroup		[ `%{__id_u}` = '0' ] && %{__chgrp_Rhf} sys
++#%_fixperms		%{__chmod} -Rf a+rX,g-w,o-w
++#
++
++#==============================================================================
++# ---- Database configuration macros.
++#	Macros used to configure Berkley db parameters.
++#
++# rpmdb macro configuration values are a colon (or white space) separated
++# list of tokens, with an optional '!' negation to explicitly disable bit
++# values, or a "=value" if a parameter. A per-tag value is used (e.g.
++# %_dbi_config_Packages) if defined, otherwise a per-rpmdb default
++# (e.g. %_dbi_config). The configuration is also conditioned on the
++# existence of an internal %{_rpmdb_rebuild} switch to permit changing
++# the configuration while rebuilding an rpmdb database.
++#
++# The rpmdb configuration tokens are in a popt table in rpmdb/dbconfig.c,
++# see that for the latest gory details. Note carefully that, unless you
++# are writing an rpm installer, you shouldn't have to touch *any* of these
++# parameters.
++#
++# Here's a short list of the tokens, with a guess of whether the option is
++# useful:
++#	(nothing)	currently used in rpm, known to work.
++#	"+++"		under development, will be supported in rpm eventually.
++#	"???"		I have no clue, you're mostly on your own.
++#
++# If you do find yourself inclined to fiddle, here's what I see (shrug):
++# 1) Only the value of mp_size has any serious impact on overall performance,
++#    and you will need ~256Kb to handle a typical machine install.
++# 2) Only the Packages hash, because of the size of the values (i.e. headers),
++#    will ever need tuning. Diddle the pagesize if you're interested, although
++#    I believe that you will find pagesize=512 "best".
++# 3) Adding nofsync increases speed, but risks total data loss. Fiddle shared
++#    and/or mp_size instead.
++# 4) btree is faster than hash, but would require some painful rpm release
++#    engineering to convert everbody's databases to btree, not gonna happen
++#    soon.
++#
++# See the db3-devel package, or http://www.sleepycat.com for Berkeley db-3.x
++# documentation.
++#
++#   token	works?	Berkeley db flag or value
++#==================================================
++#---------------------- DBENV->open parameters and tunable values:
++#   mmapsize=16Mb	DBENV->set_mp_mmapsize
++#   cachesize=1Mb	DBENV->set_cachesize, DB->set_cachesize
++#---------------------- DBENV->open and DB->open common bits:
++#   create		DB_CREATE
++#   thread	???	DB_THREAD	(useless w/o posix mutexes on linux)
++#---------------------- DBENV->open bits:
++#   joinenv		DB_JOIN_ENV
++#   mpool		DB_INIT_MPOOL
++#   cdb		+++	DB_INIT_CDB
++#   txn		???	DB_INIT_TXN
++#   log		???	DB_INIT_LOG
++#   lock	???	DB_INIT_LOCK
++#   recover	???	DB_RECOVER
++#   recover_fatal ???	DB_RECOVER_FATAL
++#   use_environ	???	DB_USE_ENVIRON
++#   use_environ_root ??? DB_USE_ENVIRON_ROOT
++#   private	+++	DB_PRIVATE
++#   lockdown	???	DB_LOCKDOWN
++#   shared	+++	DB_SYSTEM_MEM
++#---------------------- DB->open parameters and tunable values:
++#   pagesize=512 +++	DB->set_pagesize
++#---------------------- DB->open bits:
++#   excl	???	DB_EXCL
++#   nommap	???	DB_NOMMAP
++#   rdonly		DB_RDONLY
++#---------------------- DB->open types:
++#   btree		DB_BTREE
++#   hash		DB_HASH
++#   recno	???	DB_RECNO
++#   queue	???	DB_QUEUE
++#   unknown	+++	DB_UNKNOWN
++#---------------------- DB->set_flags bits:
++#   bt_dup	+++	(btree only) DB_DUP
++#   bt_dupsort	+++	(btree only) DB_DUPSORT
++#   ht_dup	+++	(hash only) DB_DUP
++#   ht_dupsort	+++	(hash only) DB_DUPSORT
++#----------------------- rpmdb specific configuration:
++#   usedbenv		(always on) Use db3 environment?
++#   verify		(db3 only) Verify Packages db after RW close?
++#   lockdbfd		(always on for Packages) Use fcntl(2) locking ?
++#   nofsync		Disable fsync(2) call performed after db3 writes?
++#   temporary		Unlink file when closing.
++#
++
++# XXX Use transactions and logs for rpmdb durability (no clue yet):
++#%__dbi_other			create joinenv mpool txn log \
++#				mp_mmapsize=8Mb mp_size=512Kb
++
++# Use a CDB database model for concurrent access.
++# XXX Add "private" here for legacy interoperation transiting to glibc+nptl.
++%__dbi_cdb			create cdb mpool mp_mmapsize=16Mb mp_size=1Mb
++
++%__dbi_other			%{?_tmppath:tmpdir=%{_tmppath}} %{?__dbi_cdb}
++
++# Note: adding nofsync here speeds up --rebuilddb a lot.
++%__dbi_rebuild			nofsync !log !txn !cdb
++%__dbi_transient		%{__dbi_rebuild} temporary private
++%__dbi_perms			perms=0644
++
++#
++#--- Hash database configuration
++%__dbi_htconfig	\
++  hash		\
++  %{__dbi_other}\
++  %{__dbi_perms}\
++%{nil}
++
++%__dbi_htconfig_current		%{__dbi_htconfig}
++%__dbi_htconfig_rebuild		%{__dbi_htconfig} %{__dbi_rebuild}
++
++%_dbi_htconfig		\
++  %{?_rpmdb_rebuild:%{__dbi_htconfig_rebuild}}\
++  %{!?_rpmdb_rebuild:%{__dbi_htconfig_current}}\
++%{nil}
++
++#
++#--- Btree database configuration
++%__dbi_btconfig	\
++  btree		\
++  %{__dbi_other}\
++  %{__dbi_perms}\
++%{nil}
++
++%__dbi_btconfig_current		%{__dbi_btconfig}
++%__dbi_btconfig_rebuild		%{__dbi_btconfig} %{__dbi_rebuild}
++
++%_dbi_btconfig		\
++  %{?_rpmdb_rebuild:%{__dbi_btconfig_rebuild}}\
++  %{!?_rpmdb_rebuild:%{__dbi_btconfig_current}}\
++%{nil}
++
++# The list of tags for which indices will be built.
++%_dbi_tags	Packages:Name:Basenames:Group:Requirename:Providename:Conflictname:Triggername:Dirnames:Requireversion:Provideversion:Installtid:Sigmd5:Sha1header:Filemd5s:Depends:Pubkeys
++
++# "Packages" should have shared/exclusive fcntl(2) lock using "lockdbfd".
++%_dbi_config_Packages		%{_dbi_htconfig} lockdbfd
++
++# "Depends" is a per-transaction cache of known dependency resolutions.
++%_dbi_config_Depends		%{_dbi_htconfig} temporary private
++
++%_dbi_config_Dirnames		%{_dbi_btconfig}
++%_dbi_config_Requireversion	%{_dbi_btconfig}
++%_dbi_config_Provideversion	%{_dbi_btconfig}
++%_dbi_config_Installtid		%{_dbi_btconfig}
++%_dbi_config_Removetid		%{_dbi_btconfig}
++
++# XXX legacy configuration.
++# Choose db interface:
++#	3	native db3 interface.
++#
++# There are two macros so that --rebuilddb can convert db1 -> db3.
++#
++%_dbapi			3
++%_dbapi_rebuild		3
++
++%_dbi_config	%{_dbi_htconfig}
++
++#==============================================================================
++# ---- GPG/PGP/PGP5 signature macros.
++#	Macro(s) to hold the arguments passed to GPG/PGP for package
++#	signing and verification.
++#
++%__gpg_check_password_cmd	%{__gpg} \
++	gpg --batch --no-verbose --passphrase-fd 3 -u "%{_gpg_name}" -so -
++%__pgp_check_password_cmd	%{__pgp} \
++	pgp +batchmode=on +verbose=0 "%{_pgp_name}" -sf
++%__pgp5_check_password_cmd	%{__pgp} \
++	pgps +batchmode=on +verbose=0 +armor=off "%{_pgp_name}" -f
++
++%__gpg_sign_cmd			%{__gpg} \
++	gpg --batch --no-verbose --no-armor --passphrase-fd 3 --no-secmem-warning \
++	-u "%{_gpg_name}" -sbo %{__signature_filename} %{__plaintext_filename}
++%__pgp_sign_cmd			%{__pgp} \
++	pgp +batchmode=on +verbose=0 +armor=off \
++	"+myname=%{_pgp_name}" -sb %{__plaintext_filename} %{__signature_filename}
++%__pgp5_sign_cmd		%{__pgp} \
++	pgps +batchmode=on +verbose=0 +armor=off \
++	"+myname=%{_pgp_name}" -b %{__plaintext_filename} -o %{__signature_filename}
++
++# XXX rpm-4.1 verifies signatures using beecrypt.
++#%__gpg_verify_cmd		%{__gpg} \
++#	gpg --batch --no-verbose --verify --no-secmem-warning \
++#	%{__signature_filename} %{__plaintext_filename}
++#%__pgp_verify_cmd		%{__pgp} \
++#	pgp +batchmode=on +verbose=0 \
++#	%{__signature_filename} %{__plaintext_filename}
++#%__pgp5_verify_cmd		%{__pgp} \
++#	pgpv +batchmode=on +verbose=0 \
++#	+OutputInformationFD=1 +OutputWarningFD=1 \
++#	-o %{__signature_filename} %{__plaintext_filename}
++
++#
++# XXX rpm-4.1 verifies prelinked libraries using a prelink undo helper.
++#	Normally this macro is defined in /etc/rpm/macros.prelink, installed
++#	with the prelink package. If the macro is undefined, then prelinked
++#	shared libraries contents are MD5 digest verified (as usual), rather
++#	than MD5 verifying the output of the prelink undo helper.
++#
++#	Note: The 2nd token is used as argv[0] and "library" is a
++#	placeholder that will be deleted and replaced with the appropriate
++#	library file path.
++#%__prelink_undo_cmd     /usr/sbin/prelink prelink -y library
++
++#==============================================================================
++# ---- Transaction macros.
++#	Macro(s) used to parameterize transactions.
++#
++#	The output binary package file name template used when building
++#	binary packages.
++#
++# XXX	Note: escaped %% for use in headerSprintf()
++%_build_name_fmt	%%{ARCH}/%%{NAME}-%%{VERSION}-%%{RELEASE}-%%{OS}.%%{ARCH}.rpm
++
++#	The default transaction color. This value is a set of bits to
++#	determine file and dependency affinity for this arch.
++#		0	uncolored (i.e. use only arch as install hint)
++#		1	Elf32 permitted
++#		2	Elf64 permitted
++%_transaction_color	0
++
++#	The path to the dependency universe database. The default value
++#	is the rpmdb-sco location. The macro is usually defined in
++#	/etc/rpm/macros.solve, installed with the rpmdb-sco package.
++#%_solve_dbpath	/usr/lib/rpmdb/%{_arch}-%{_vendor}-%{_os}/sco
++
++#	The path to the dependency universe packages. This should
++#	be a path to the packages contained in the solve database.
++#%_solve_pkgsdir	/mnt/sco/test/latest-i386/SCO/RPMS/
++
++#	The output binary package file name template used when suggesting
++#	binary packages that solve a dependency. The macro is usually defined
++#	in /etc/rpm/macros.solve, installed with the rpmdb-sco package.
++#
++# XXX	Note: escaped %% for use in headerSprintf()
++#%_solve_name_fmt	%{?_solve_pkgsdir}%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
++
++#	The output binary package file name template used when repackaging
++#	erased packages.
++#
++# XXX	Note: escaped %% for use in headerSprintf()
++%_repackage_name_fmt	%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
++
++#	The directory in which erased packages will be saved when using
++#	the --repackage option.
++%_repackage_dir		/var/spool/repackage
++
++#	A path (i.e. URL) prefix that is pre-pended to %{_repackage_dir}.
++%_repackage_root	%{nil}
++
++#	If non-zero, all erasures will be automagically repackaged.
++%_repackage_all_erasures	0
++
++#	Verify digest/signature flags for various rpm modes:
++#	     1	--nohdrchk	if set, don't check rpmdb headers
++#
++#	The checking overhead is ~11ms per header for digests/signatures;
++#	each header from the database is checked only when first encountered
++#	for each database open.
++#
++#	Note: the %_vsflags_erase applies to --upgrade/--freshen modes as
++#	well as --erase.
++#
++%__vsflags		0
++%_vsflags_build		%{__vsflags}
++%_vsflags_erase		%{__vsflags}
++%_vsflags_install	%{__vsflags}
++%_vsflags_query		%{__vsflags}
++%_vsflags_rebuilddb	%{__vsflags}
++%_vsflags_up2date	%{__vsflags}
++%_vsflags_verify	%{__vsflags}
++
++#	Relations between package names that cause dependency loops
++#	with legacy packages that cannot be fixed. Relations are
++#	specified as
++#		p>q
++#	where package p has a Requires: on something that package q Provides:
++#
++# XXX	Note: that there cannot be any whitespace within the string "p>q",
++#	and that both p and q are package names (i.e. no version/release).
++#
++#%_dependency_whiteout_5_2		\
++#	pam>pamconfig
++#%_dependency_whiteout_6_1		\
++#	pilot-link-devel>pilot-link
++#%_dependency_whiteout_6_2		\
++#	egcs-c++>libstdc++
++%_dependency_whiteout_7_0		\
++	pango-gtkbeta-devel>pango-gtkbeta\
++	XFree86>Mesa			\
++	compat-glibc>db2		\
++	compat-glibc>db1		\
++	pam>initscripts			\
++	initscripts>sysklogd
++%_dependency_whiteout_7_1		\
++	arts>kdelibs-sound
++%_dependency_whiteout_7_2		\
++	libgnomeprint15>gnome-print	\
++	nautilus>nautilus-mozilla	\
++	tcl>postgresql-tcl
++#%_dependency_whiteout_8_0		\
++#	perl>perl-Parse-RecDescent	\
++#	XFree86-libs>XFree86-Mesa-libGL	\
++#	perl>perl-Filter		\
++#	perl>mrtg			\
++#	perl>mod_perl			\
++#	mysql>perl-DBD-MySQL		\
++#	ghostscript>gimp-print		\
++#	arts>kde2-compat		\
++#	perl-Date-Calc>perl-Bit-Vector	\
++#	glibc-debug>glibc-devel
++
++%_dependency_whiteout			\
++	libtermcap>bash			\
++	modutils>vixie-cron		\
++	ypbind>yp-tools			\
++	ghostscript-fonts>ghostscript	\
++	%{?_dependency_whiteout_8_0}	\
++	%{?_dependency_whiteout_7_2}	\
++	%{?_dependency_whiteout_7_1}	\
++	%{?_dependency_whiteout_7_0}	\
++	%{?_dependency_whiteout_6_2}	\
++	%{?_dependency_whiteout_6_1}	\
++	%{?_dependency_whiteout_5_2}	\
++	%{nil}
++
++#
++# Default headerSprintf() output format string for rpm -qa
++#
++# XXX	Note: escaped %% for use in headerSprintf()
++%_query_all_fmt		%%{name}-%%{version}-%%{release}
++
++#==============================================================================
++# ---- Cache configuration macros.
++#	Macro(s) used to configure the universe of headers used to
++#	solve dependencies using rpmcache(8).
++#
++#	Note: These values are specific to my machine, and most certainly
++#	are incorrect for any non-sco.com machine. The macros are
++#	included here only to document the macro names and usage.
++%_bhpath        file://localhost/mnt/dist
++%_bhcoll        @(7.3|7.2|7.1|7.1sbe|7.1k|7.0|7.01j|7.0j|7.0sbe|7.0tc|6.2|6.2ha|6.2ee|6.1|6.0|5.2|5.1|5.0)
++%_bhN           @(SRPMS|i386|alpha|sparc|s390|ia64)
++%_bhVR          SCO
++%_bhA           RPMS
++
++#	The cache database directory.
++%_cache_dbpath		/var/spool/up2date/cache
++
++#==============================================================================
++# ---- per-platform macros.
++#	Macros that are specific to an individual platform. The values here
++#	will be used if the per-platform macro file does not exist..
++#
++%_arch			i386
++%_build_arch		i386
++%_vendor		sco
++%_os			sysv5
++%_gnu			-gnu
++%_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}%{?_gnu}
++
++#
++# Define a generic value for optflags. Normally overridden by per-target macros.
++%optflags		-O2
++
++#
++# Define per-arch and per-os defaults. Normally overridden by per-target macros.
++%__arch_install_post	%{nil}
++%__os_install_post	%{___build_post}
++
++#==============================================================================
++# ---- Scriptlet template templates.
++#	Global defaults used for building scriptlet templates.
++#
++
++%___build_shell		%{?_buildshell:%{_buildshell}}%{!?_buildshell:/bin/bash}
++%___build_args		-e
++%___build_cmd		%{?_sudo:%{_sudo} }%{?_remsh:%{_remsh} %{_remhost} }%{?_remsudo:%{_remsudo} }%{?_remchroot:%{_remchroot} %{_remroot} }%{___build_shell} %{___build_args}
++%___build_pre	\
++  RPM_SOURCE_DIR=\"%{u2p:%{_sourcedir}}\"\
++  RPM_BUILD_DIR=\"%{u2p:%{_builddir}}\"\
++  RPM_OPT_FLAGS=\"%{optflags}\"\
++  RPM_ARCH=\"%{_arch}\"\
++  RPM_OS=\"%{_os}\"\
++  export RPM_SOURCE_DIR RPM_BUILD_DIR RPM_OPT_FLAGS RPM_ARCH RPM_OS\
++  RPM_DOC_DIR=\"%{_docdir}\"\
++  export RPM_DOC_DIR\
++  RPM_PACKAGE_NAME=\"%{name}\"\
++  RPM_PACKAGE_VERSION=\"%{version}\"\
++  RPM_PACKAGE_RELEASE=\"%{release}\"\
++  export RPM_PACKAGE_NAME RPM_PACKAGE_VERSION RPM_PACKAGE_RELEASE\
++  %{?buildroot:RPM_BUILD_ROOT=\"%{u2p:%{buildroot}}\"\
++  export RPM_BUILD_ROOT}\
++  %{?_javaclasspath:CLASSPATH=\"%{_javaclasspath}\"\
++  export CLASSPATH}\
++  \
++  %{verbose:set -x}%{!verbose:exec > /dev/null}\
++  umask 022\
++  cd %{u2p:%{_builddir}}\
++
++
++#%___build_body		%{nil}
++%___build_post		exit 0
++
++%___build_template	#!%{___build_shell}\
++%{___build_pre}\
++%{nil}
++
++#%{___build_body}\
++#%{___build_post}\
++#%{nil}
++
++#==============================================================================
++# ---- Scriptlet templates.
++#	Macro(s) that expand to a command and script that is executed.
++#	CAVEAT: All macro expansions must fit in a BUFSIZ (8192 byte) buffer.
++#
++%__spec_prep_shell	%{___build_shell}
++%__spec_prep_args	%{___build_args}
++%__spec_prep_cmd	%{___build_cmd}
++%__spec_prep_pre	%{___build_pre}
++%__spec_prep_body	%{___build_body}
++%__spec_prep_post	%{___build_post}
++%__spec_prep_template	#!%{__spec_prep_shell}\
++%{__spec_prep_pre}\
++%{nil}
++
++#%{__spec_prep_body}\
++#%{__spec_prep_post}\
++#%{nil}
++
++%__spec_build_shell	%{___build_shell}
++%__spec_build_args	%{___build_args}
++%__spec_build_cmd	%{___build_cmd}
++%__spec_build_pre	%{___build_pre}
++%__spec_build_body	%{___build_body}
++%__spec_build_post	%{___build_post}
++%__spec_build_template	#!%{__spec_build_shell}\
++%{__spec_build_pre}\
++%{nil}
++
++#%{__spec_build_body}\
++#%{__spec_build_post}\
++#%{nil}
++
++%__spec_install_shell	%{___build_shell}
++%__spec_install_args	%{___build_args}
++%__spec_install_cmd	%{___build_cmd}
++%__spec_install_pre	%{___build_pre}
++%__spec_install_body	%{___build_body}
++%__spec_install_post\
++%{?__debug_package:%{__debug_install_post}}\
++%{__arch_install_post}\
++%{__os_install_post}\
++%{nil}
++%__spec_install_template	#!%{__spec_install_shell}\
++%{__spec_install_pre}\
++%{nil}
++
++#%{__spec_install_body}\
++#%{__spec_install_post}\
++#%{nil}
++
++%__spec_check_shell	%{___build_shell}
++%__spec_check_args	%{___build_args}
++%__spec_check_cmd	%{___build_cmd}
++%__spec_check_pre	%{___build_pre}
++%__spec_check_body	%{___build_body}
++%__spec_check_post	%{___build_post}
++%__spec_check_template	#!%{__spec_check_shell}\
++%{__spec_check_pre}\
++%{nil}
++
++#%{__spec_check_body}\
++#%{__spec_check_post}\
++#%{nil}
++
++#%__spec_autodep_shell	%{___build_shell}
++#%__spec_autodep_args	%{___build_args}
++#%__spec_autodep_cmd	%{___build_cmd}
++#%__spec_autodep_pre	%{___build_pre}
++#%__spec_autodep_body	%{___build_body}
++#%__spec_autodep_post	%{___build_post}
++#%__spec_autodep_template	#!%{__spec_autodep_shell}\
++#%{__spec_autodep_pre}\
++#%{nil}
++
++#%{__spec_autodep_body}\
++#%{__spec_autodep_post}\
++#%{nil}
++
++%__spec_clean_shell	%{___build_shell}
++%__spec_clean_args	%{___build_args}
++%__spec_clean_cmd	%{___build_cmd}
++%__spec_clean_pre	%{___build_pre}
++%__spec_clean_body	%{___build_body}
++%__spec_clean_post	%{___build_post}
++%__spec_clean_template	#!%{__spec_clean_shell}\
++%{__spec_clean_pre}\
++%{nil}
++
++#%{__spec_clean_body}\
++#%{__spec_clean_post}\
++#%{nil}
++
++%__spec_rmbuild_shell	%{___build_shell}
++%__spec_rmbuild_args	%{___build_args}
++%__spec_rmbuild_cmd	%{___build_cmd}
++%__spec_rmbuild_pre	%{___build_pre}
++%__spec_rmbuild_body	%{___build_body}
++%__spec_rmbuild_post	%{___build_post}
++%__spec_rmbuild_template	#!%{__spec_rmbuild_shell}\
++%{__spec_rmbuild_pre}\
++%{nil}
++
++#%{__spec_rmbuild_body}\
++#%{__spec_rmbuild_post}\
++#%{nil}
++
++# XXX We don't expand pre/post install scriptlets (yet).
++#%__spec_pre_pre		%{nil}
++#%__spec_pre_post		%{nil}
++#%__spec_post_pre		%{nil}
++#%__spec_post_post		%{nil}
++#%__spec_preun_pre		%{nil}
++#%__spec_preun_post		%{nil}
++#%__spec_postun_pre		%{nil}
++#%__spec_postun_post		%{nil}
++#%__spec_triggerpostun_pre	%{nil}
++#%__spec_triggerpostun_post	%{nil}
++#%__spec_triggerun_pre		%{nil}
++#%__spec_triggerun_post		%{nil}
++#%__spec_triggerin_pre		%{nil}
++#%__spec_triggerin_post		%{nil}
++
++#==============================================================================
++# ---- configure macros.
++#	Macro(s) slavishly copied from autoconf's config.status.
++#
++%_prefix		/usr
++%_exec_prefix		%{_prefix}
++%_bindir		%{_exec_prefix}/bin
++%_sbindir		%{_exec_prefix}/sbin
++%_libexecdir		%{_exec_prefix}/libexec
++%_datadir		%{_prefix}/share
++%_sysconfdir		/etc
++%_sharedstatedir	%{_prefix}/com
++%_localstatedir		/var
++%_lib			lib
++%_libdir		%{_exec_prefix}/%{_lib}
++%_includedir		%{_prefix}/include
++%_oldincludedir		/usr/include
++%_infodir		/usr/gnu/info
++%_mandir		%{_prefix}/man
++
++# Menu directories (from Mandrake Linux)
++%_menudir %{_libdir}/menu
++%_iconsdir %{_datadir}/icons
++%_miconsdir %{_datadir}/icons/mini
++%_liconsdir %{_datadir}/icons/large
++%_initrddir          %{_sysconfdir}/init.d
++
++# Added this one for SDL and any others who may need it
++%_aclocaldir            /usr/share/aclocal
++
++# KDE directories
++%_applnkdir             /opt/kde3/share/applnk
++
++#==============================================================================
++# ---- config.guess platform macros.
++#	Macro(s) similar to the tokens used by configure.
++#
++%_build			%{_host}
++%_build_alias		%{_host_alias}
++%_build_cpu		%{_host_cpu}
++%_build_vendor		%{_host_vendor}
++%_build_os		%{_host_os}
++%_host			i586-sco-sysv5
++%_host_alias		i586-sco-sysv5
++%_host_cpu		i586
++%_host_vendor		sco
++%_host_os		sysv5
++%_target		%{_host}
++%_target_alias		%{_host_alias}
++%_target_cpu		%{_host_cpu}
++%_target_vendor		%{_host_vendor}
++%_target_os		%{_host_os}
++
++#==============================================================================
++# ---- specfile macros.
++#	Macro(s) here can be used reliably for reproducible builds.
++#	(Note: Above is the goal, below are the macros under development)
++#
++# The configure macro does the following:
++#	optionally change to a subdirectory (not implemented).
++#	attempt to update config.guess and config.sub.
++#	run configure with correct prefix, platform, and CFLAGS.
++#	optionally restore current directory (not implemented).
++# The configure macro should be invoked as %configure (rather than %{configure})
++# because the rest of the arguments will be expanded using %*.
++#
++# This is the version of %configure used through rpm-3.0.4.
++#%configure	\
++#  %{?__libtoolize:[ -f configure.in ] && %{__libtoolize} --copy --force} \
++#  CFLAGS="%{optflags}" ./configure %{_target_platform} --prefix=%{_prefix}
++#
++#------------------------------------------------------------------------------
++# This is an improved version of %configure (from PLD team).
++%configure \
++  CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
++  CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
++  FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
++  ./configure --host=%{_host} --build=%{_build} \\\
++	--target=%{_target_platform} \\\
++	--program-prefix=%{?_program_prefix} \\\
++ 	--prefix=%{_prefix} \\\
++	--exec-prefix=%{_exec_prefix} \\\
++	--bindir=%{_bindir} \\\
++	--sbindir=%{_sbindir} \\\
++	--sysconfdir=%{_sysconfdir} \\\
++	--datadir=%{_datadir} \\\
++	--includedir=%{_includedir} \\\
++	--libdir=%{_libdir} \\\
++	--libexecdir=%{_libexecdir} \\\
++	--localstatedir=%{_localstatedir} \\\
++	--sharedstatedir=%{_sharedstatedir} \\\
++	--mandir=%{_mandir} \\\
++	--infodir=%{_infodir}
++
++#------------------------------------------------------------------------------
++# The make install analogue of %configure:
++%makeinstall \
++  make \\\
++	prefix=%{?buildroot:%{buildroot}}%{_prefix} \\\
++	exec_prefix=%{?buildroot:%{buildroot}}%{_exec_prefix} \\\
++	bindir=%{?buildroot:%{buildroot}}%{_bindir} \\\
++	sbindir=%{?buildroot:%{buildroot}}%{_sbindir} \\\
++	sysconfdir=%{?buildroot:%{buildroot}}%{_sysconfdir} \\\
++	datadir=%{?buildroot:%{buildroot}}%{_datadir} \\\
++	includedir=%{?buildroot:%{buildroot}}%{_includedir} \\\
++	libdir=%{?buildroot:%{buildroot}}%{_libdir} \\\
++	libexecdir=%{?buildroot:%{buildroot}}%{_libexecdir} \\\
++	localstatedir=%{?buildroot:%{buildroot}}%{_localstatedir} \\\
++	sharedstatedir=%{?buildroot:%{buildroot}}%{_sharedstatedir} \\\
++	mandir=%{?buildroot:%{buildroot}}%{_mandir} \\\
++	infodir=%{?buildroot:%{buildroot}}%{_infodir} \\\
++  install
++
++#------------------------------------------------------------------------------
++# The GNUconfigure macro does the following:
++#       update config.guess and config.sub.
++#       regenerate all autoconf/automake files
++#       optionally change to a directory (make the directory if requested).
++#       run configure with correct prefix, platform, and CFLAGS.
++#       optionally restore current directory.
++#
++# Based on autogen.sh from GNOME and orginal GNUconfigure
++#
++%GNUconfigure(MCs:)      \
++  CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS; \
++  LDFLAGS="${LDFLAGS:-%{-s:-s}}"  ; export LDFLAGS; \
++  %{-C:_mydir="`pwd`"; %{-M: %{__mkdir} -p %{-C*};} cd %{-C*}} \
++  dirs="`find ${_mydir} -name configure.in -print`"; export dirs; \
++    for coin in `echo ${dirs}` \
++do \
++  dr=`dirname ${coin}`; \
++if test -f ${dr}/NO-AUTO-GEN; then \
++ : \
++else \
++     macrodirs=`sed -n -e 's,AM_ACLOCAL_INCLUDE(\(.*\)),\1,gp' < ${coin}`; \
++    ( cd ${dr}; \
++      aclocalinclude="${ACLOCAL_FLAGS}"; \
++      for k in ${macrodirs}; do \
++        if test -d ${k}; then \
++          aclocalinclude="${aclocalinclude} -I ${k}"; \
++        ##else \
++        ##  echo "**Warning**: No such directory \`${k}'.  Ignored." \
++        fi \
++      done \
++      if grep "^AM_GNU_GETTEXT" configure.in >/dev/null; then \
++        if grep "sed.*POTFILES" configure.in >/dev/null; then \
++          : do nothing -- we still have an old unmodified configure.in \
++        else \
++          test -r ${dr}/aclocal.m4 || touch ${dr}/aclocal.m4; \
++          echo "no" | gettextize --force --copy; \
++          test -r ${dr}/aclocal.m4 && %{__chmod} u+w ${dr}/aclocal.m4; \
++        fi \
++      fi \
++      if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then \
++        %{__libtoolize} --force --copy; \
++      fi \
++      aclocal ${aclocalinclude}; \
++      if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then \
++        %{__autoheader}; \
++      fi \
++      echo "Running automake --gnu ${am_opt} ..."; \
++      %{__automake} --add-missing --gnu ${am_opt}; \
++      %{__autoconf}; \
++    ); \
++  fi \
++done \
++  %{-C:${_mydir}}%{!-C:.}/configure %{_target_platform} --prefix=%{_prefix} --exec-prefix=%{_exec_prefix} --bindir=%{_bindir} --sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} --datadir=%{_datadir} --includedir=%{_includedir} --libdir=%{_libdir} --libexecdir=%{_libexecdir} --localstatedir=%{_localstatedir} --sharedstatedir=%{_sharedstatedir} --mandir=%{_mandir} --infodir=%{_infodir} %* ; \
++  %{-C:cd ${_mydir}; unset _mydir}
++
++#------------------------------------------------------------------------------
++# Useful perl macros (from Artur Frysiak <wiget@t17.ds.pwr.wroc.pl>)
++#
++# For example, these can be used as (from ImageMagick.spec from PLD site)
++#	[...]
++#	BuildPrereq: perl
++#	[...]
++#	%package perl
++#	Summary: libraries and modules for access to ImageMagick from perl
++#	Group: Development/Languages/Perl
++#	Requires: %{name} = %{version}
++#	%requires_eq    perl
++#	[...]
++#	%install
++#	rm -fr $RPM_BUILD_ROOT
++#	install -d $RPM_BUILD_ROOT/%{perl_sitearch}
++#	[...]
++#	%files perl
++#	%defattr(644,root,root,755)
++#	%{perl_sitearch}/Image
++#	%dir %{perl_sitearch}/auto/Image
++#
++%requires_eq()	%(LC_ALL="C" echo '%*' | xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
++%perl_sitearch	%(eval "`perl -V:installsitearch`"; echo $installsitearch)
++%perl_archlib	%(eval "`perl -V:installarchlib`"; echo $installarchlib)
++#------------------------------------------------------------------------------
++# Additional perl macros based on the two above (by Ron Record <rr@sco.com>)
++#
++%perl_version	%(eval "`perl -V:version`"; echo $version)
++%perl_man1ext	%(eval "`perl -V:man1ext`"; echo $man1ext)
++%perl_man3ext	%(eval "`perl -V:man3ext`"; echo $man3ext)
++%perl_man1dir	%(eval "`perl -V:man1dir`"; echo $man1dir)
++%perl_man3dir	%(eval "`perl -V:man3dir`"; echo $man3dir)
++%perl_installbin	%(eval "`perl -V:installbin`"; echo $installbin)
++%perl_installman1dir	%(eval "`perl -V:installman1dir`"; echo $installman1dir)
++%perl_installman3dir	%(eval "`perl -V:installman3dir`"; echo $installman3dir)
++%perl_installarchlib	%(eval "`perl -V:installarchlib`"; echo $installarchlib)
++%perl_installprivlib	%(eval "`perl -V:installprivlib`"; echo $installprivlib)
++%perl_installvendorlib	%(eval "`perl -V:installvendorlib`"; echo $installvendorlib)
++%perl_installvendorarch	%(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
++%perl_sitelib	%(eval "`perl -V:sitelib`"; echo $sitelib)
++%perl_prefix		%{buildroot}
++
++#------------------------------------------------------------------------------
++# Python specific macro definitions (originally from PLD).
++#
++%py_ver			%(python -c "import sys; v=sys.version_info[:2]; print '%%d.%%d'%%v" 2>/dev/null || echo PYTHON-NOT-FOUND)
++%py_prefix		%(python -c "import sys; print sys.prefix" 2>/dev/null || echo PYTHON-NOT-FOUND)
++%py_libdir		%{py_prefix}/lib/python%{py_ver}
++%py_incdir		%{py_prefix}/include/python%{py_ver}
++%py_sitedir		%{py_libdir}/site-packages
++%py_compile(O)	\
++find %1 -name '*.pyc' -exec rm -f {} \\; \
++python -c "import sys, os, compileall; br='%{buildroot}'; compileall.compile_dir(sys.argv[1], ddir=br and (sys.argv[1][len(os.path.abspath(br)):]+'/') or None)" %1 \
++%{-O: \
++find %1 -name '*.pyo' -exec rm -f {} \\; \
++python -O -c "import sys, os, compileall; br='%{buildroot}'; compileall.compile_dir(sys.argv[1], ddir=br and (sys.argv[1][len(os.path.abspath(br)):]+'/') or None)" %1 \
++}
++%py_requires(d) \
++%define minver %py_ver \
++%define maxver %(python -c "import sys; a,b=sys.version_info[:2]; print '%%d.%%d'%%(a,b+1)" 2>/dev/null || echo PYTHON-NOT-FOUND) \
++BuildRequires: python %{-d:python-devel} \
++PreReq: python >= %minver, python < %maxver
++
++
++#------------------------------------------------------------------------------
++# arch macro for all Intel i?86 compatibile processors
++#  (Note: This macro (and it's analogues) will probably be obsoleted when
++#   rpm can use regular expressions against target platforms in macro
++#   conditionals.
++#
++%ix86   i386 i486 i586 i686 athlon
++
++#------------------------------------------------------------------------
++# Use in %install to generate locale specific file lists. For example,
++#
++# %install
++# ...
++# %find_lang %{name}
++# ...
++# %files -f %{name}.lang
++#
++%find_lang	/usr/lib/rpm/find-lang.sh %{buildroot}
++
++# \endverbatim
++#*/
+--- ./rpmrc-osr6.osr6	2005-06-05 20:09:37.726384009 -0700
++++ ./rpmrc-osr6	2005-06-05 20:13:19.168624008 -0700
+@@ -0,0 +1,361 @@
++#/*! \page config_rpmrc Default configuration: /usr/lib/rpm/rpmrc
++# \verbatim
++#
++# $Id: rpmrc.in,v 2.51.2.3 2003/03/04 19:04:50 jbj Exp $
++#
++# This is a global RPM configuration file. All changes made here will
++# be lost when the rpm package is upgraded. Any per-system configuration
++# should be added to /etc/rpmrc, while per-user configuration should
++# be added to ~/.rpmrc.
++#
++#############################################################
++# Values for RPM_OPT_FLAGS for various platforms
++
++optflags: i386 -O2
++optflags: i486 -O2
++optflags: i586 -O2
++optflags: i686 -O2
++optflags: athlon -O2 -g -march=athlon
++optflags: ia64 -O2 -g
++optflags: x86_64 -O2 -g
++
++optflags: alpha -O2 -g -mieee
++optflags: alphaev5 -O2 -g -mieee -mcpu=ev5
++optflags: alphaev56 -O2 -g -mieee -mcpu=ev56
++optflags: alphapca56 -O2 -g -mieee -mcpu=pca56
++optflags: alphaev6 -O2 -g -mieee -mcpu=ev6
++optflags: alphaev67 -O2 -g -mieee -mcpu=ev67
++
++optflags: sparc -O2 -g -m32 -mtune=ultrasparc
++optflags: sparcv9 -O2 -g -m32 -mcpu=ultrasparc
++optflags: sparc64 -O2 -g -m64 -mcpu=ultrasparc
++
++optflags: m68k -O2 -g -fomit-frame-pointer
++
++optflags: ppc -O2 -g -fsigned-char
++optflags: ppciseries -O2 -g -fsigned-char
++optflags: ppcpseries -O2 -g -fsigned-char
++optflags: ppc64 -O2 -g -fsigned-char
++
++optflags: parisc -O2 -g -mpa-risc-1-0
++optflags: hppa1.0 -O2 -g -mpa-risc-1-0
++optflags: hppa1.1 -O2 -g -mpa-risc-1-0
++optflags: hppa1.2 -O2 -g -mpa-risc-1-0
++optflags: hppa2.0 -O2 -g -mpa-risc-1-0
++
++optflags: mips -O2 -g
++optflags: mipsel -O2 -g
++
++optflags: armv3l -O2 -g -fsigned-char -fomit-frame-pointer -march=armv3
++optflags: armv4b -O2 -g -fsigned-char -fomit-frame-pointer -march=armv4
++optflags: armv4l -O2 -g -fsigned-char -fomit-frame-pointer -march=armv4
++
++optflags: atarist -O2 -g -fomit-frame-pointer
++optflags: atariste -O2 -g -fomit-frame-pointer
++optflags: ataritt -O2 -g -fomit-frame-pointer
++optflags: falcon -O2 -g -fomit-frame-pointer
++optflags: atariclone -O2 -g -fomit-frame-pointer
++optflags: milan -O2 -g -fomit-frame-pointer
++optflags: hades -O2 -g -fomit-frame-pointer
++
++optflags: s390 -O2 -g
++optflags: s390x -O2 -g
++
++#############################################################
++# Canonical arch names and numbers
++
++arch_canon:	athlon:	athlon	1
++arch_canon:	i686:	i686	1
++arch_canon:	i586:	i586	1
++arch_canon:	i486:	i486	1
++arch_canon:	i386:	i386	1
++arch_canon:	x86_64:	x86_64	1
++
++arch_canon:	alpha:	alpha	2
++arch_canon:	alphaev5: alphaev5	2
++arch_canon:	alphaev56: alphaev56	2
++arch_canon:	alphapca56:alphapca56	2
++arch_canon:	alphaev6: alphaev6	2
++arch_canon:	alphaev67: alphaev67	2
++
++arch_canon: 	sparc:	sparc	3
++arch_canon: 	sun4:	sparc	3
++arch_canon: 	sun4m:	sparc	3
++arch_canon: 	sun4c:	sparc	3
++arch_canon:	sun4d:  sparc   3
++arch_canon:   sparcv9: sparcv9	3
++# This is really a place holder for MIPS.
++arch_canon:	mips:	mips	4
++
++arch_canon:	ppc:	ppc	5
++arch_canon:	ppciseries:	ppciseries	5
++arch_canon:	ppcpseries:	ppcpseries	5
++
++arch_canon:	m68k:	m68k	6
++arch_canon:	IP:	sgi	7
++arch_canon:     rs6000:	rs6000  8
++arch_canon:     ia64:	ia64	9
++
++arch_canon:	sparc64:sparc64 10
++arch_canon:	sun4u:	sparc64 10
++arch_canon:	mipsel:	mipsel	11
++
++arch_canon:	armv3l: armv3l	12
++arch_canon:     armv4b:	armv4b 	12
++arch_canon:     armv4l:	armv4l 	12
++
++arch_canon:	m68kmint: m68kmint	13
++arch_canon:	atarist: m68kmint	13
++arch_canon:	atariste: m68kmint	13
++arch_canon:	ataritt: m68kmint	13
++arch_canon:	falcon: m68kmint	13
++arch_canon:	atariclone: m68kmint	13
++arch_canon:	milan: m68kmint		13
++arch_canon:	hades: m68kmint		13
++
++arch_canon:	s390: s390	14
++arch_canon:	i370: i370	14
++arch_canon:	s390x: s390x	15
++
++arch_canon:	ppc64:	ppc64	16
++
++arch_canon:	sh: sh		17
++arch_canon:	xtensa: xtensa	18
++
++#############################################################
++# Canonical OS names and numbers
++
++os_canon:	Linux:	Linux	1
++os_canon:	IRIX:	Irix	2
++# This is wrong
++os_canon:	SunOS5:	solaris	3
++os_canon:	SunOS4:	SunOS	4
++
++os_canon:      AmigaOS: AmigaOS 5
++os_canon:          AIX: AIX     5
++os_canon:        HP-UX: hpux10  6
++os_canon:         OSF1: osf1    7
++os_canon:       osf4.0: osf1    7
++os_canon:       osf3.2: osf1    7
++os_canon:      FreeBSD: FreeBSD 8
++os_canon:       SCO_SV: sco_sv  9
++os_canon:	IRIX64: Irix64  10
++os_canon:     NEXTSTEP: NextStep 11
++os_canon:       BSD_OS: bsdi	12
++os_canon:      machten: machten 13
++os_canon:  CYGWIN32_NT: cygwin32 14
++os_canon:  CYGWIN32_95: cygwin32 15
++os_canon:      UNIX_SV: sco_sv 16
++os_canon:         MiNT: FreeMiNT 17
++os_canon:       OS/390: OS/390	18
++os_canon:       VM/ESA: VM/ESA	19
++os_canon:    Linux/390: OS/390	20
++os_canon:    Linux/ESA: VM/ESA	21
++os_canon:     UnixWare: UnixWare 21
++
++#############################################################
++# For a given uname().machine, the default build arch
++
++buildarchtranslate: osfmach3_i686: i386
++buildarchtranslate: osfmach3_i586: i386
++buildarchtranslate: osfmach3_i486: i386
++buildarchtranslate: osfmach3_i386: i386
++
++buildarchtranslate: athlon: i386
++buildarchtranslate: i686: i386
++buildarchtranslate: i586: i386
++buildarchtranslate: i486: i386
++buildarchtranslate: i386: i386
++
++buildarchtranslate: alphaev5: alpha
++buildarchtranslate: alphaev56: alpha
++buildarchtranslate: alphapca56: alpha
++buildarchtranslate: alphaev6: alpha
++buildarchtranslate: alphaev67: alpha
++
++buildarchtranslate: sun4c: sparc
++buildarchtranslate: sun4d: sparc
++buildarchtranslate: sun4m: sparc
++buildarchtranslate: sparcv9: sparc
++buildarchtranslate: sun4u: sparc64
++
++buildarchtranslate: osfmach3_ppc: ppc
++buildarchtranslate: powerpc: ppc
++buildarchtranslate: powerppc: ppc
++buildarchtranslate: ppciseries: ppc
++buildarchtranslate: ppcpseries: ppc
++
++buildarchtranslate: atarist: m68kmint
++buildarchtranslate: atariste: m68kmint
++buildarchtranslate: ataritt: m68kmint
++buildarchtranslate: falcon: m68kmint
++buildarchtranslate: atariclone:	m68kmint
++buildarchtranslate: milan: m68kmint
++buildarchtranslate: hades: m68kmint	
++
++buildarchtranslate: s390: s390
++buildarchtranslate: s390x: s390x
++
++buildarchtranslate: ia64: ia64
++
++buildarchtranslate: x86_64: x86_64
++
++#############################################################
++# Architecture compatibility
++
++arch_compat: alphaev67: alphaev6
++arch_compat: alphaev6: alphapca56
++arch_compat: alphapca56: alphaev56
++arch_compat: alphaev56: alphaev5
++arch_compat: alphaev5: alpha
++arch_compat: alpha: axp noarch
++
++arch_compat: athlon: i686
++arch_compat: i686: i586
++arch_compat: i586: i486
++arch_compat: i486: i386
++arch_compat: i386: noarch
++
++arch_compat: osfmach3_i686: i686 osfmach3_i586
++arch_compat: osfmach3_i586: i586 osfmach3_i486
++arch_compat: osfmach3_i486: i486 osfmach3_i386
++arch_compat: osfmach3_i386: i486
++
++arch_compat: osfmach3_ppc: ppc
++arch_compat: powerpc: ppc
++arch_compat: powerppc: ppc
++arch_compat: ppciseries: ppc
++arch_compat: ppcpseries: ppc
++arch_compat: ppc64: ppc
++arch_compat: ppc: rs6000
++arch_compat: rs6000: noarch
++
++arch_compat: sun4c: sparc
++arch_compat: sun4d: sparc
++arch_compat: sun4m: sparc
++arch_compat: sun4u: sparc64
++arch_compat: sparc64: sparcv9
++arch_compat: sparcv9: sparc
++arch_compat: sparc: noarch
++
++arch_compat: mips: noarch
++arch_compat: mipsel: noarch
++
++arch_compat: hppa2.0: hppa1.2
++arch_compat: hppa1.2: hppa1.1
++arch_compat: hppa1.1: hppa1.0
++arch_compat: hppa1.0: parisc
++arch_compat: parisc: noarch
++
++arch_compat: armv4b: noarch
++arch_compat: armv4l: armv3l
++arch_compat: armv3l: noarch
++
++arch_compat: atarist: m68kmint noarch
++arch_compat: atariste: m68kmint noarch
++arch_compat: ataritt: m68kmint noarch
++arch_compat: falcon: m68kmint noarch
++arch_compat: atariclone: m68kmint noarch
++arch_compat: milan: m68kmint noarch
++arch_compat: hades: m68kmint noarch
++
++arch_compat: i370: noarch
++arch_compat: s390: noarch
++arch_compat: s390x: s390 noarch
++
++arch_compat: ia64: i686 noarch
++
++arch_compat: x86_64: noarch
++
++os_compat:   IRIX64: IRIX
++os_compat: solaris2.7: solaris2.3 solaris2.4 solaris2.5 solaris2.6
++os_compat: solaris2.6: solaris2.3 solaris2.4 solaris2.5
++os_compat: solaris2.5: solaris2.3 solaris2.4
++os_compat: solaris2.4: solaris2.3
++
++os_compat: hpux11.00: hpux10.30
++os_compat: hpux10.30: hpux10.20
++os_compat: hpux10.20: hpux10.10
++os_compat: hpux10.10: hpux10.01
++os_compat: hpux10.01: hpux10.00
++os_compat: hpux10.00: hpux9.07
++os_compat: hpux9.07: hpux9.05
++os_compat: hpux9.05: hpux9.04
++
++os_compat: osf4.0: osf3.2 osf1
++
++os_compat: ncr-sysv4.3: ncr-sysv4.2
++
++os_compat: FreeMiNT: mint MiNT TOS
++os_compat: MiNT: FreeMiNT mint TOS
++os_compat: mint: FreeMiNT MiNT TOS
++os_compat: TOS: FreeMiNT MiNT mint
++
++os_compat: BSD_OS: bsdi
++os_compat: bsdi4.0: bsdi
++
++# UNIX_SV is what the uname system call returns under OKP on UnixWare
++os_compat:   UNIX_SV: SCO_SV
++
++buildarch_compat: ia64: noarch
++
++buildarch_compat: athlon: i686
++buildarch_compat: i686: i586
++buildarch_compat: i586: i486
++buildarch_compat: i486: i386
++buildarch_compat: i386: noarch
++
++buildarch_compat: sun4c: noarch
++buildarch_compat: sun4d: noarch
++buildarch_compat: sun4m: noarch
++buildarch_compat: sun4u: noarch
++buildarch_compat: sparc64: noarch
++buildarch_compat: sparcv9: sparc
++buildarch_compat: sparc: noarch
++
++buildarch_compat: alphaev67: alphaev6
++buildarch_compat: alphaev6: alphapca56
++buildarch_compat: alphapca56: alphaev56
++buildarch_compat: alphaev56: alphaev5
++buildarch_compat: alphaev5: alpha
++buildarch_compat: alpha: noarch
++
++buildarch_compat: m68k: noarch
++
++buildarch_compat: ppciseries: noarch
++buildarch_compat: ppcpseries: noarch
++buildarch_compat: ppc: noarch
++buildarch_compat: ppc64: noarch
++
++buildarch_compat: mips: noarch
++buildarch_compat: mipsel: noarch
++
++buildarch_compat: armv3l: noarch
++buildarch_compat: armv4b: noarch
++buildarch_compat: armv4l: noarch
++
++buildarch_compat: hppa2.0: hppa1.2
++buildarch_compat: hppa1.2: hppa1.1
++buildarch_compat: hppa1.1: hppa1.0
++buildarch_compat: hppa1.0: parisc
++buildarch_compat: parisc: noarch
++
++buildarch_compat: atarist: m68kmint noarch
++buildarch_compat: atariste: m68kmint noarch
++buildarch_compat: ataritt: m68kmint noarch
++buildarch_compat: falcon: m68kmint noarch
++buildarch_compat: atariclone: m68kmint noarch
++buildarch_compat: milan: m68kmint noarch
++buildarch_compat: hades: m68kmint noarch
++
++buildarch_compat: s390: noarch
++buildarch_compat: s390x: noarch
++
++buildarch_compat: ia64: noarch
++
++buildarch_compat: x86_64: noarch
++
++macrofiles:	/usr/lib/rpm/macros:/usr/lib/rpm/%{_target}/macros:/etc/rpm/macros.specspo:/etc/rpm/macros.prelink:/etc/rpm/macros.solve:/etc/rpm/macros.up2date:/etc/rpm/macros:/etc/rpm/%{_target}/macros:~/.rpmmacros
++
++# \endverbatim
++#*/
+--- ./Install-OSR6.osr6	2005-06-05 20:09:37.756384004 -0700
++++ ./Install-OSR6	2005-06-05 20:09:37.756384001 -0700
+@@ -0,0 +1,88 @@
++#!/bin/sh
++
++RPM_BUILD_ROOT=/var/tmp/rpm-4.1.1-root
++SOURCE1=macros-osr6
++SOURCE2=rpmrc-osr6
++SOURCE3=cqs-osr6
++SOURCE4=ccs-osr6
++export RPM_BUILD_ROOT
++
++[ -f mout-install ] && mv mout-install mout-install-prev
++[ "$RPM_BUILD_ROOT" != "/" ] && [ -d $RPM_BUILD_ROOT ] && rm -rf $RPM_BUILD_ROOT
++make DESTDIR="$RPM_BUILD_ROOT" install 2>&1 | tee mout-install
++
++mkdir -p $RPM_BUILD_ROOT/etc/rpm
++mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
++mkdir -p $RPM_BUILD_ROOT/var/lib/rpm
++for dbi in \
++	Basenames Conflictname Dirnames Group Installtid Name Packages \
++	Providename Provideversion Requirename Requireversion Triggername \
++	Filemd5s Pubkeys Sha1header Sigmd5 \
++	__db.001 __db.002 __db.003 __db.004 __db.005 __db.006 __db.007 \
++	__db.008 __db.009
++do
++    touch $RPM_BUILD_ROOT/var/lib/rpm/$dbi
++done
++
++# Install SCO OpenServer source directories, macros, and rpmrc
++[ -d ${RPM_BUILD_ROOT}/usr/src/sco ] || {
++  if [ -d ${RPM_BUILD_ROOT}/usr/src/pc ]
++  then
++    mv ${RPM_BUILD_ROOT}/usr/src/pc ${RPM_BUILD_ROOT}/usr/src/sco
++  else
++    for i in BUILD RPMS SOURCES SPECS SRPMS
++    do
++      mkdir -p ${RPM_BUILD_ROOT}/usr/src/sco/$i
++    done
++    for i in i386 i486 i586 i686 athlon noarch
++    do
++      mkdir ${RPM_BUILD_ROOT}/usr/src/sco/RPMS/$i
++    done
++  fi
++}
++for i in i386 i486 i586 i686 athlon noarch
++do
++  [ -d ${RPM_BUILD_ROOT}/usr/lib/rpm/$i ] || {
++    mkdir ${RPM_BUILD_ROOT}/usr/lib/rpm/$i
++  }
++done
++rm -f ${RPM_BUILD_ROOT}/usr/lib/rpm/macros
++rm -f ${RPM_BUILD_ROOT}/usr/lib/rpm/rpmrc
++install -m 644 ${SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/rpm/macros
++install -m 644 ${SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/rpm/rpmrc
++[ -d ${RPM_BUILD_ROOT}/cntl ] || mkdir ${RPM_BUILD_ROOT}/cntl
++install -m 700 ${SOURCE3} ${RPM_BUILD_ROOT}/cntl/cqs
++install -m 700 ${SOURCE4} ${RPM_BUILD_ROOT}/cntl/ccs
++
++# Fix up some symbolic links
++{ cd $RPM_BUILD_ROOT/usr/lib/rpm
++  rm -f rpmpopt
++  ln -s rpmpopt-4.1 rpmpopt
++  cd ..
++  rm -f librpm-4.1.so
++  ln -s librpm-4.1.so.0.0 librpm-4.1.so
++  rm -f librpmdb-4.1.so
++  ln -s librpmdb-4.1.so.0.0 librpmdb-4.1.so
++  rm -f librpmio-4.1.so
++  ln -s librpmio-4.1.so.0.0 librpmio-4.1.so
++  rm -f librpmbuild-4.1.so
++  ln -s librpmbuild-4.1.so.0.0 librpmbuild-4.1.so
++}
++
++# Get rid of unpackaged files
++{ cd $RPM_BUILD_ROOT
++  rm -rf ./usr/include/beecrypt
++  rm -f ./usr/lib/libbeecrypt.a
++  rm -f ./usr/lib/libbeecrypt.la
++  rm -f ./usr/lib/libbeecrypt.so.2.2.0
++  rm -f ./usr/lib/rpm/Specfile.pm
++  rm -f ./usr/lib/rpm/cpanflute
++  rm -f ./usr/lib/rpm/cpanflute2
++  rm -f ./usr/lib/rpm/rpmdiff
++  rm -f ./usr/lib/rpm/rpmdiff.cgi
++  rm -f ./usr/lib/rpm/sql.prov
++  rm -f ./usr/lib/rpm/sql.req
++  rm -f ./usr/lib/rpm/tcl.req
++  rm -rf ./usr/man/fr
++  rm -rf ./usr/man/ko
++}
+--- ./Build-OSR6.osr6	2005-06-05 20:09:37.786384009 -0700
++++ ./Build-OSR6	2005-06-05 20:09:37.786384006 -0700
+@@ -0,0 +1,27 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CC="gcc -D_REENTRANT"
++CXX="g++ -D_REENTRANT"
++CFLAGS="-O2"
++export CC CXX CFLAGS
++
++# Pickup the standard utilities like mkdir out of /usr/bin rather than /usr/gnu/bin
++PATH=/usr/bin:$PATH
++export PATH
++
++rm -f mout-configure
++
++rm -rf elfutils
++rm -f rpmdb/db.h
++
++./configure --prefix=/usr --sysconfdir=/etc --program-prefix="" \
++	--localstatedir=/var --infodir='/usr/gnu/info' \
++	--mandir='/usr/man' --without-python --without-javaglue \
++      --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++
++# XXX hack out O_DIRECT support in db4 for now.
++perl -pi -e 's/#define HAVE_O_DIRECT 1/#undef HAVE_O_DIRECT/' db3/db_config.h
++
++gmake 2>&1 | tee mout
++
+--- ./configure.osr6	2003-03-07 11:17:41.000000000 -0800
++++ ./configure	2005-06-05 20:09:37.946304009 -0700
+@@ -4759,7 +4759,7 @@
+ 	case "$target" in
+ 		*-*-solaris*)	LDFLAGS_STATIC="-static";;
+ 		*-*-hpux*)	LDFLAGS_STATIC="-static";;
+-		*-*-sysv5uw*)   LDFLAGS_STATUS="-static";; # Unixware has no shared libthread.
++		*-*-sysv5*)     LDFLAGS_STATUS="";;
+ 		*-*-*)		LDFLAGS_STATIC="-all-static";;
+ 	esac
+ elif test X"$CC" = Xcc ; then
+@@ -4770,6 +4770,7 @@
+ 		*-*-aix*)	LDFLAGS_STATIC="-static";;  # -Wl,-bnso doesn't seem to work...
+ 		*-*-hpux*)	LDFLAGS_STATIC="-static";;
+ 		*-*-solaris*)	LDFLAGS_STATIC="-static";;
++		*-*-sysv5*)     LDFLAGS_STATUS="";;
+ 		*-*-irix*)	LDFLAGS_STATIC="-static";;  #should be -non_shared, but can't
+ 											# link because of crt1.o then.
+ 		*-*-ultrix*)	LDFLAGS_STATIC="-all-static";;  #ultrix doesn't have shared libs.
+@@ -7987,9 +7988,8 @@
+     no_undefined_flag=' -z text'
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++    archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -17083,7 +17083,7 @@
+   rpathdirs=
+   ltrpathdirs=
+   names_already_handled=
+-  names_next_round='intl '
++  names_next_round='gnuintl '
+   while test -n "$names_next_round"; do
+     names_this_round="$names_next_round"
+     names_next_round=
+@@ -17644,7 +17644,7 @@
+ 
+ 
+ if test X$gt_cv_func_gettext_libintl = Xyes ; then
+-    LIBS="-lintl $LIBS"
++    LIBS="-lgnuintl $LIBS"
+ fi
+ 
+ echo "$as_me:$LINENO: checking for ANSI C header files" >&5
+--- ./build.c.osr6	2003-03-04 07:35:25.000000000 -0800
++++ ./build.c	2005-06-05 20:09:38.096304013 -0700
+@@ -14,6 +14,13 @@
+ #include "build.h"
+ #include "debug.h"
+ 
++#if !defined(_XOPEN_SOURCE) && (__STDC__ - 0 != 0 \
++        || defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE))
++extern FILE     *popen(const char *, const char *);
++extern int      pclose(FILE *);
++extern char     *mktemp(char *);
++#endif
++
+ /*@access rpmts @*/	/* XXX compared with NULL @*/
+ /*@access rpmdb @*/		/* XXX compared with NULL @*/
+ /*@access FD_t @*/		/* XXX compared with NULL @*/
+--- popt/configure.00	2003-03-07 11:16:17.000000000 -0800
++++ popt/configure	2005-07-02 15:00:15.910000037 -0700
+@@ -5299,11 +5299,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -6898,7 +6898,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -7348,9 +7348,8 @@
+     no_undefined_flag=' -z text'
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++    archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -7834,7 +7833,7 @@
+ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+   version_type=linux
+   library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
+-  soname_spec='${libname}${release}.so$major'
++  soname_spec='${libname}${release}.so'
+   shlibpath_var=LD_LIBRARY_PATH
+   case $host_vendor in
+     sni)

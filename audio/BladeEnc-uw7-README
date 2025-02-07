@@ -1,0 +1,28 @@
+BladeEnc is a program to generate MP3 files from WAV 
+or AIFF sound files. It produces very good quality 
+output and is probably the fastest free encoder
+around (especially at higher bit-rates.)
+
+The source code is not available at the moment, but
+Tord Jansson, the author, is preparing to release
+a GPL version in the near future.
+
+The Skunkware distribution of BladeEnc 0.76 consists
+of:
+
+BladeEnc076-SCO-UW7.pkg.gz
+README-UW7 (this file)
+
+After having gunzip'd the pkg install it by executing
+(as root):
+
+#pkgadd -d <full-pathname-of-package>
+
+Once installed see the man page 'bladeenc' for details
+on use.
+
+My thanks to Tord Jansson for giving permission to 
+include BladeEnc in Skunkware.
+
+Jon
+14/12/98

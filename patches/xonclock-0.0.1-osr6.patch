@@ -1,0 +1,227 @@
+*** ./src/xonclock.c.osr6 Tue May 17 21:59:50 2005
+--- ./src/xonclock.c Wed May 18 17:07:35 2005
+***************
+*** 46,51 ****
+  #include "placement.h"
+  #include "eprintf.h"
+  
+  #include "images/xonclock.xpm"
+  
+  EPRINTF_INIT;
+--- 46,62 ----
+  #include "placement.h"
+  #include "eprintf.h"
+  
++ #ifndef ITIMER_REAL
++ #define ITIMER_REAL     0
++ #define ITIMER_VIRTUAL  1
++ #define ITIMER_PROF     2
++ 
++ struct  itimerval {
++         struct  timeval it_interval;    /* timer interval */
++         struct  timeval it_value;       /* current value */
++ };
++ #endif
++ 
+  #include "images/xonclock.xpm"
+  
+  EPRINTF_INIT;
+***************
+*** 86,93 ****
+  volatile sig_atomic_t signal_time_in_progress = 0;
+  
+  /* to setup timer */
+! struct itimerval itime = {};
+! struct itimerval otime = {};
+  
+  Display* display = NULL;	/* main display */
+  Window window;			/* clock window (shaped) */
+--- 97,104 ----
+  volatile sig_atomic_t signal_time_in_progress = 0;
+  
+  /* to setup timer */
+! struct itimerval itime;
+! struct itimerval otime;
+  
+  Display* display = NULL;	/* main display */
+  Window window;			/* clock window (shaped) */
+***************
+*** 91,97 ****
+  
+  Display* display = NULL;	/* main display */
+  Window window;			/* clock window (shaped) */
+! XEvent x_event = {};		/* event to send within timer signal proc */
+  
+  /* Imlib stuff */
+  ImlibData* im_id = NULL;
+--- 102,108 ----
+  
+  Display* display = NULL;	/* main display */
+  Window window;			/* clock window (shaped) */
+! XEvent x_event;			/* event to send within timer signal proc */
+  
+  /* Imlib stuff */
+  ImlibData* im_id = NULL;
+***************
+*** 114,120 ****
+  {
+  
+  	/* main work is doing in cache */
+! 	xo_cache_t xo_cache = {};
+  
+  	/* some X stuff */
+  	Screen* screen = NULL;
+--- 125,131 ----
+  {
+  
+  	/* main work is doing in cache */
+! 	xo_cache_t xo_cache;
+  
+  	/* some X stuff */
+  	Screen* screen = NULL;
+***************
+*** 119,126 ****
+  	/* some X stuff */
+  	Screen* screen = NULL;
+  	int screen_num;
+! 	XSetWindowAttributes wins_attribs = {};
+! 	XWindowAttributes win_attribs = {};
+  	unsigned int width = 0, height = 0;	/* clock window sizes */
+  	unsigned long ul_flags = 0;
+  	GC gc;					/* working GC */
+--- 130,137 ----
+  	/* some X stuff */
+  	Screen* screen = NULL;
+  	int screen_num;
+! 	XSetWindowAttributes wins_attribs;
+! 	XWindowAttributes win_attribs;
+  	unsigned int width = 0, height = 0;	/* clock window sizes */
+  	unsigned long ul_flags = 0;
+  	GC gc;					/* working GC */
+***************
+*** 129,137 ****
+  						 * clock hands) */
+  
+  	/* clock hand color and geometry */
+! 	clock_hand_t hand_sec = {};
+! 	clock_hand_t hand_min = {};
+! 	clock_hand_t hand_hour = {};
+  
+  	/* for getopt_long */
+  	int next_option;
+--- 140,148 ----
+  						 * clock hands) */
+  
+  	/* clock hand color and geometry */
+! 	clock_hand_t hand_sec;
+! 	clock_hand_t hand_min;
+! 	clock_hand_t hand_hour;
+  
+  	/* for getopt_long */
+  	int next_option;
+***************
+*** 150,156 ****
+  	unsigned char alpha;
+  
+  	/* work with signals */
+! 	struct sigaction sa = {};
+  	sigset_t sa_set;
+  
+  	/* startup sleep time */
+--- 161,167 ----
+  	unsigned char alpha;
+  
+  	/* work with signals */
+! 	struct sigaction sa;
+  	sigset_t sa_set;
+  
+  	/* startup sleep time */
+***************
+*** 499,505 ****
+  	xo_bzero(&sa, sizeof(struct sigaction));
+  	sigemptyset(&sa_set);
+  	sa.sa_handler = &sig_time;
+! 	sa.sa_flags = SA_NOMASK;
+  	sa.sa_mask = sa_set;
+  	sigaction(SIGALRM, &sa, NULL);
+  
+--- 510,516 ----
+  	xo_bzero(&sa, sizeof(struct sigaction));
+  	sigemptyset(&sa_set);
+  	sa.sa_handler = &sig_time;
+! 	sa.sa_flags = SA_NODEFER;
+  	sa.sa_mask = sa_set;
+  	sigaction(SIGALRM, &sa, NULL);
+  
+***************
+*** 507,513 ****
+  	xo_bzero(&sa, sizeof(struct sigaction));
+  	sigemptyset(&sa_set);
+  	sa.sa_handler = &sig_term;
+! 	sa.sa_flags = SA_ONESHOT;
+  	sa.sa_mask = sa_set;
+  	sigaction(SIGINT, &sa, NULL);
+  	sigaction(SIGTERM, &sa, NULL);
+--- 518,524 ----
+  	xo_bzero(&sa, sizeof(struct sigaction));
+  	sigemptyset(&sa_set);
+  	sa.sa_handler = &sig_term;
+! 	sa.sa_flags = SA_RESETHAND;
+  	sa.sa_mask = sa_set;
+  	sigaction(SIGINT, &sa, NULL);
+  	sigaction(SIGTERM, &sa, NULL);
+***************
+*** 628,634 ****
+  void
+  sig_time(int signum)
+  {
+! 	XExposeEvent ev = {};
+  	if (!signal_time_in_progress) {
+  		XO_FLAG_ON(signal_time_in_progress);
+  		XO_FLAG_ON(signal_time);
+--- 639,645 ----
+  void
+  sig_time(int signum)
+  {
+! 	XExposeEvent ev;
+  	if (!signal_time_in_progress) {
+  		XO_FLAG_ON(signal_time_in_progress);
+  		XO_FLAG_ON(signal_time);
+*** ./src/Makefile.in.osr6 Wed May 18 15:07:25 2005
+--- ./src/Makefile.in Wed May 18 16:57:30 2005
+***************
+*** 91,97 ****
+  am_xonclock_OBJECTS = xonclock.$(OBJEXT) eprintf.$(OBJEXT) \
+  	placement.$(OBJEXT) cache.$(OBJEXT)
+  xonclock_OBJECTS = $(am_xonclock_OBJECTS)
+! xonclock_LDADD = $(LDADD)
+  xonclock_DEPENDENCIES =
+  xonclock_LDFLAGS =
+  
+--- 91,97 ----
+  am_xonclock_OBJECTS = xonclock.$(OBJEXT) eprintf.$(OBJEXT) \
+  	placement.$(OBJEXT) cache.$(OBJEXT)
+  xonclock_OBJECTS = $(am_xonclock_OBJECTS)
+! xonclock_LDADD = -lgetopt $(LDADD)
+  xonclock_DEPENDENCIES =
+  xonclock_LDFLAGS =
+  
+*** ./configure.osr6 Wed May 18 15:07:21 2005
+--- ./configure Wed May 18 16:57:30 2005
+***************
+*** 1682,1688 ****
+  ###
+  # add our C flags
+  #
+! CFLAGS="$CFLAGS -O2 -Wall -pipe"
+  
+  ###
+  # checks for GNU programs
+--- 1682,1688 ----
+  ###
+  # add our C flags
+  #
+! CFLAGS="$CFLAGS -O2"
+  
+  ###
+  # checks for GNU programs

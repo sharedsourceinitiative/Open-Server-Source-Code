@@ -1,0 +1,17 @@
+*** ./Build-OSR6.00 Sat May 21 20:49:44 2005
+--- ./Build-OSR6 Sat May 21 20:49:34 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --with-apxs=/usr/lib/apache/bin/apxs 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* dso 2>&1 | tee $MOUT

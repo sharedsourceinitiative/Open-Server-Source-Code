@@ -1,0 +1,7 @@
+echo "Making tags files"
+make tags
+echo "Backing up previous shar file, if any"
+[ -f xtopo.shar ] && mv xtopo.shar xtopo.shar-
+echo "Creating new shar file"
+shar README Imakefile Makefile.std Package *.c *.h *.LOCAL *.man tags TAGS > xtopo.shar
+echo "Done"

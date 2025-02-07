@@ -1,0 +1,173 @@
+*** ./src/conky.h.00	Tue Aug 30 12:52:01 2005
+--- ./src/conky.h	Sun Sep 11 22:42:43 2005
+***************
+*** 43,54 ****
+  
+  #include <sys/socket.h>
+  
+! #define ERR(s, varargs...) \
+! fprintf(stderr, "Conky: " s "\n", ##varargs)
+  
+  /* critical error */
+! #define CRIT_ERR(s, varargs...) \
+! { fprintf(stderr, "Conky: " s "\n", ##varargs);  exit(EXIT_FAILURE); }
+  
+  struct i8k_struct {
+  	char *version;
+--- 43,54 ----
+  
+  #include <sys/socket.h>
+  
+! #define ERR(s) \
+! fprintf(stderr, "Conky: " s "\n")
+  
+  /* critical error */
+! #define CRIT_ERR(s) \
+! { fprintf(stderr, "Conky: " s "\n");  exit(EXIT_FAILURE); }
+  
+  struct i8k_struct {
+  	char *version;
+*** ./src/fs.c.00	Sun Aug 21 17:22:53 2005
+--- ./src/fs.c	Sun Sep 11 22:47:26 2005
+***************
+*** 41,51 ****
+  		if (fs_stats[i].fd <= 0)
+  			break;
+  
+! 		fstatfs(fs_stats[i].fd, &s);
+  
+  		fs_stats[i].size = (long long) s.f_blocks * s.f_bsize;
+  		/* bfree (root) or bavail (non-roots) ? */
+! 		fs_stats[i].avail = (long long) s.f_bavail * s.f_bsize;
+  	}
+  }
+  
+--- 41,51 ----
+  		if (fs_stats[i].fd <= 0)
+  			break;
+  
+! 		fstatfs(fs_stats[i].fd, &s, sizeof (struct statfs), 0);
+  
+  		fs_stats[i].size = (long long) s.f_blocks * s.f_bsize;
+  		/* bfree (root) or bavail (non-roots) ? */
+! 		fs_stats[i].avail = (long long) s.f_bfree * s.f_bsize;
+  	}
+  }
+  
+*** ./configure.00	Sun Sep 11 15:52:02 2005
+--- ./configure	Sun Sep 11 22:40:18 2005
+***************
+*** 3587,3593 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3587,3593 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3595,3601 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3595,3601 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 6983,6989 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6983,6989 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7660,7668 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7660,7667 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 14155,14161 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 14154,14160 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 19863,19868 ****
+--- 19862,19870 ----
+      WANT_KVM=yes
+      WANT_DEVSTAT=yes
+      ;;
++   SCO_SV*)
++     WANT_SYSINFO=yes
++     ;;
+  #  NetBSD*)
+  #    WANT_KVM=yes
+  #    WANT_OSSLIB=yes
+***************
+*** 23760,23771 ****
+  
+  
+  
+- CFLAGS="$CFLAGS -Wall -W"
+- 
+- 
+- 
+- 
+- 
+  cat >confcache <<\_ACEOF
+  # This file is a shell script that caches the results of configure
+  # tests run on this system so they can be shared between configure
+--- 23762,23767 ----

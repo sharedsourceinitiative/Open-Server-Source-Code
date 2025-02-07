@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<TITLE>coral</TITLE>
+</HEAD>
+<BODY>
+<H1>coral</H1>
+<P>
+Calculate and display an aggregating particle
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record
+<DT><B>Restrictions</B>
+<DD>Copyright 1993, 1994 Ronald Joe Record
+<DT><B>Availability</B>
+<DD>
+The mathrec source code is freely redistributable. The author maintains
+binary distributions for SCO OpenServer and UnixWare 7. These distributions
+and the source code are available via:
+<BR>
+<A HREF="http://www.sco.com/skunkware/x11/apps/index.html#mathrec">
+http://www.sco.com/skunkware/x11/apps/index.html#mathrec</A>.
+<DT><B>Description</B>
+<DD>
+The idea here is to calculate and display aggregating particles.
+In order to accomplish this, a modified random walk algorithm is used.
+Initial particles are "seeded" at the "bottom" or the "sea". Particles
+are then "dropped" randomly from above. When a particle comes within a
+pixel of an already existent particle, it "sticks". After N particles 
+have "stuck", the color is incremented. Thus, color indicates "age".
+<DT><B>Acknowledgements</B>
+<DD>
+The algorithm was derived from lectures given by Dietmar Saupe at the 
+University of California at Santa Cruz. Assistance with colormaps and 
+spinning color wheels and X was gleaned from Hiram Clawson and Stacey Campbell.
+<DT><B>Build</B>
+<DD>
+To build the coral binary, either use the Imakefile or the sample makefile,
+Makefile.std. If your system doesn't support prototypes, uncomment the 
+PROTODEFINE line of the Imakefile.
+<P>
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile coral.
+<P>
+The manual page can be formatted by typing "nroff -man coral.man > coral.6X".
+<DT><B>Install</B>
+<DD>
+To install coral, copy the coral binary to the desired location (the sample
+makefile puts it in /usr/games/X11)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/games/X11/doc for games and imaging software), then add that location
+to your MANPATH.
+<DT><B>Productivity</B>
+<DD>None
+<DT><B>Safety</B>
+<DD>I have used this for years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual page.
+
+<DT><B>Verification</B>
+<DD>
+You can test coral by just invoking it with no arguments. It should display
+a 512x480 image. Some workstations may be slow to calculate and display the
+coral growth as there are many calculations involved.
+<P>
+Some "interesting" ways to run coral are as follows :
+<BR>
+% coral -F -n 10 -d
+<BR>
+(use the full screen, calculate 10 maps in demo mode)
+<BR>
+% coral -R
+<BR>
+(display on the root window)
+<BR>
+% coral -o coralgrowth.ppm
+<BR>
+(calculate and display with default parameters and save the resulting image
+ as a PPM file called coralgrowth.ppm. this can be viewed later using xv or 
+ any PPM viewing utility)
+<DT><B>Feedback</B>
+<DD>
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

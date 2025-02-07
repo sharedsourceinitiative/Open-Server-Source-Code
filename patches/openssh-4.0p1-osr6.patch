@@ -1,0 +1,30 @@
+*** ./Build-OSR6.00 Thu May 12 21:38:28 2005
+--- ./Build-OSR6 Sat May  7 07:57:14 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ rm -f mout mout-configure mout-install
++ ./Configure-OSR6
++ make 2>&1 | tee mout
++ make install 2>&1 | tee mout-install
+*** ./Configure-OSR6.00 Thu May 12 21:38:35 2005
+--- ./Configure-OSR6 Sat May  7 07:57:14 2005
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ HOST=i386-sco-sysv5
++ PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig:/usr/lib/pkgconfig
++ export PKG_CONFIG_PATH
++ 
++ rm -f config.status config.log
++ ./configure --host=$HOST \
++             --build=$HOST \
++             --prefix=/usr/local \
++             --with-ssl-dir=/usr/local/ssl \
++             --with-privsep-user=nouser \
++             --with-privsep-path=/usr/local/var/empty \
++             2>&1 | tee mout-configure

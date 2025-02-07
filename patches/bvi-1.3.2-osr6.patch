@@ -1,0 +1,12 @@
+*** ./Install-OSR6.00	Thu Jul 27 17:02:47 2006
+--- ./Install-OSR6	Thu Jul 27 17:03:00 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/bvi
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

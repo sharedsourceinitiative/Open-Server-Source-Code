@@ -1,0 +1,40 @@
+--- ./configure.uw	2003-02-02 15:09:40.000000000 +0000
++++ ./configure	2003-11-10 17:53:53.720000081 +0000
+@@ -3173,11 +3173,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -5608,8 +5608,7 @@
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -12837,11 +12836,11 @@
+ use_mmx_asm=no
+ if test $use_x86_asm = yes; then
+     save_ac_ext=$ac_ext
+-    ac_ext=S
++    ac_ext=s
+ 
+     echo "$as_me:$LINENO: checking compiler support for MMX" >&5
+ echo $ECHO_N "checking compiler support for MMX... $ECHO_C" >&6
+-    cp $srcdir/gdk-pixbuf/pixops/scale_line_22_33_mmx.S conftest.S
++    cp $srcdir/gdk-pixbuf/pixops/scale_line_22_33_mmx.S conftest.s
+     if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+   (eval $ac_compile) 2>&5
+   ac_status=$?

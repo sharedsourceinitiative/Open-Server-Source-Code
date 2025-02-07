@@ -1,0 +1,20 @@
+--- ./pth_lib.c.00	2009-01-06 19:58:11.000000000 -0800
++++ ./pth_lib.c	2009-01-06 19:58:28.000000000 -0800
+@@ -357,7 +357,6 @@
+     rc += pth_pqueue_elements(&pth_RQ);
+     rc += pth_pqueue_elements(&pth_WQ);
+     rc += pth_pqueue_elements(&pth_SQ);
+-    rc += pth_pqueue_elements(&pth_DQ);
+     if (rc == 1 /* just our main thread */)
+         return TRUE;
+     else
+--- ./Configure-OSR5.00	2009-01-06 19:58:51.000000000 -0800
++++ ./Configure-OSR5	2009-01-06 19:58:51.000000000 -0800
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++MOUT=mout-configure
++rm -f $MOUT
++./configure --enable-shared --enable-pthread \
++            --prefix=/usr --mandir=/usr/man --with-fdsetsize=9999 \
++            2>&1 | tee $MOUT

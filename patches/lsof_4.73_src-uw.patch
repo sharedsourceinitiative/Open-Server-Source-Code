@@ -1,0 +1,11 @@
+--- ./dialects/uw/machine.h.00	2004-10-17 21:56:40.000000000 +0000
++++ ./dialects/uw/machine.h	2004-12-13 21:04:39.910000018 +0000
+@@ -394,7 +394,7 @@
+  * (the one that its user logged on with) of the lsof process.
+  */
+ 
+-/* #define	HASSECURITY	1 */
++#define	HASSECURITY	1
+ 
+ 
+ /*

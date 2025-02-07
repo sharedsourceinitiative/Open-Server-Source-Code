@@ -1,0 +1,28 @@
+*** ./Configure-OSR6.osr6 Tue May 31 21:34:08 2005
+--- ./Configure-OSR6 Tue May 31 21:34:23 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --prefix=/usr/gnu \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.osr6	2005-07-03 18:04:46.290000003 -0700
++++ Install-OSR6	2005-07-03 18:11:37.260000011 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/patch
++prefix=$D/usr/gnu
++export prefix
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install prefix=$D/usr/gnu 2>&1 | tee $MOUT

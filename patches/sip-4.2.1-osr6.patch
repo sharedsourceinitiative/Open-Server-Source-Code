@@ -1,0 +1,163 @@
+*** ./specs/unixware-cc.osr6	Sun Mar  6 02:30:23 2005
+--- ./specs/unixware-cc	Tue Aug 30 14:45:40 2005
+***************
+*** 1,5 ****
+  #
+! # $Id: unixware-cc,v 1.2 2004/01/21 18:33:33 phil Exp $
+  #
+  # qmake configuration for unixware-cc
+  #
+--- 1,5 ----
+  #
+! # $Id: qt/qmake.conf   3.3.3   edited May 27 2003 $
+  #
+  # qmake configuration for unixware-cc
+  #
+***************
+*** 24,37 ****
+  QMAKE_CFLAGS_RELEASE	= -O
+  QMAKE_CFLAGS_DEBUG	= -g
+  QMAKE_CFLAGS_SHLIB	= -KPIC
+! QMAKE_CFLAGS_YACC	= -Wf,--diag_suppress,111 -Wf,--diag_suppress,177
+! QMAKE_CFLAGS_THREAD	= -Kthread
+  
+  QMAKE_CXX		= CC
+! QMAKE_CXXFLAGS		= $$QMAKE_CFLAGS -Wf,--display_error_number -Wf,--diag_suppress,838
+  QMAKE_CXXFLAGS_WARN_ON	= $$QMAKE_CFLAGS_WARN_ON
+  QMAKE_CXXFLAGS_WARN_OFF	= $$QMAKE_CFLAGS_WARN_OFF
+! QMAKE_CXXFLAGS_RELEASE	= $$QMAKE_CFLAGS_RELEASE -Tused
+  QMAKE_CXXFLAGS_DEBUG	= $$QMAKE_CFLAGS_DEBUG
+  QMAKE_CXXFLAGS_SHLIB	= $$QMAKE_CFLAGS_SHLIB
+  QMAKE_CXXFLAGS_YACC	= $$QMAKE_CFLAGS_YACC
+--- 24,37 ----
+  QMAKE_CFLAGS_RELEASE	= -O
+  QMAKE_CFLAGS_DEBUG	= -g
+  QMAKE_CFLAGS_SHLIB	= -KPIC
+! QMAKE_CFLAGS_YACC	= -Wf,--diag_suppress -Wf,111 -Wf,--diag_suppress -Wf,177
+! QMAKE_CFLAGS_THREAD	= -Kpthread
+  
+  QMAKE_CXX		= CC
+! QMAKE_CXXFLAGS		= $$QMAKE_CFLAGS -Wf,--display_error_number -Wf,--diag_suppress -Wf,838
+  QMAKE_CXXFLAGS_WARN_ON	= $$QMAKE_CFLAGS_WARN_ON
+  QMAKE_CXXFLAGS_WARN_OFF	= $$QMAKE_CFLAGS_WARN_OFF
+! QMAKE_CXXFLAGS_RELEASE	= $$QMAKE_CFLAGS_RELEASE
+  QMAKE_CXXFLAGS_DEBUG	= $$QMAKE_CFLAGS_DEBUG
+  QMAKE_CXXFLAGS_SHLIB	= $$QMAKE_CFLAGS_SHLIB
+  QMAKE_CXXFLAGS_YACC	= $$QMAKE_CFLAGS_YACC
+***************
+*** 39,60 ****
+  
+  QMAKE_INCDIR		=
+  QMAKE_LIBDIR		=
+! QMAKE_INCDIR_X11	=
+! QMAKE_LIBDIR_X11	= /usr/X/lib
+  QMAKE_INCDIR_QT		= $(QTDIR)/include
+  QMAKE_LIBDIR_QT		= $(QTDIR)/lib
+! QMAKE_INCDIR_OPENGL	=
+! QMAKE_LIBDIR_OPENGL	=
+  
+  QMAKE_LINK		= CC
+  QMAKE_LINK_SHLIB	= CC
+  QMAKE_LFLAGS		=
+  QMAKE_LFLAGS_RELEASE	=
+  QMAKE_LFLAGS_DEBUG	=
+! QMAKE_LFLAGS_SHLIB	= -G
+  QMAKE_LFLAGS_PLUGIN	= $$QMAKE_LFLAGS_SHLIB
+  QMAKE_LFLAGS_SONAME	= -h$$LITERAL_WHITESPACE
+! QMAKE_LFLAGS_THREAD	= -Kthread
+  QMAKE_RPATH		= -R
+  
+  QMAKE_LIBS		=
+--- 39,60 ----
+  
+  QMAKE_INCDIR		=
+  QMAKE_LIBDIR		=
+! QMAKE_INCDIR_X11	= /usr/X11R6/include
+! QMAKE_LIBDIR_X11	= /usr/X11R6/lib
+  QMAKE_INCDIR_QT		= $(QTDIR)/include
+  QMAKE_LIBDIR_QT		= $(QTDIR)/lib
+! QMAKE_INCDIR_OPENGL	= /usr/X11R6/include/GL
+! QMAKE_LIBDIR_OPENGL	= /usr/X11R6/lib
+  
+  QMAKE_LINK		= CC
+  QMAKE_LINK_SHLIB	= CC
+  QMAKE_LFLAGS		=
+  QMAKE_LFLAGS_RELEASE	=
+  QMAKE_LFLAGS_DEBUG	=
+! QMAKE_LFLAGS_SHLIB	= -G -Wl,-Bexport
+  QMAKE_LFLAGS_PLUGIN	= $$QMAKE_LFLAGS_SHLIB
+  QMAKE_LFLAGS_SONAME	= -h$$LITERAL_WHITESPACE
+! QMAKE_LFLAGS_THREAD	= -Kpthread
+  QMAKE_RPATH		= -R
+  
+  QMAKE_LIBS		=
+***************
+*** 65,71 ****
+  QMAKE_LIBS_QT_THREAD	= -lqt-mt
+  
+  QMAKE_LIBS_OPENGL	= -lGLU -lGL -lXmu -lXt
+! QMAKE_LIBS_OPENGL_QT	= -lGL -lXmu
+  
+  QMAKE_LIBS_THREAD	=
+  
+--- 65,71 ----
+  QMAKE_LIBS_QT_THREAD	= -lqt-mt
+  
+  QMAKE_LIBS_OPENGL	= -lGLU -lGL -lXmu -lXt
+! QMAKE_LIBS_OPENGL_QT	= -lGL -lXmu -lXt
+  
+  QMAKE_LIBS_THREAD	=
+  
+*** ./siplib/sip.h.osr6	Sun Mar  6 02:30:26 2005
+--- ./siplib/sip.h	Tue Aug 30 14:52:43 2005
+***************
+*** 20,25 ****
+--- 20,29 ----
+  
+  #include <Python.h>
+  
++ #ifdef truncate
++ #undef truncate
++ #endif
++ 
+  /*
+   * There is a mis-feature somewhere with the Borland compiler.  This works
+   * around it.
+*** ./Configure-OSR6.osr6	Tue Aug 30 14:45:40 2005
+--- ./Configure-OSR6	Tue Aug 30 14:50:12 2005
+***************
+*** 0 ****
+--- 1,17 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ QTDIR=/opt/kde
++ export CC CXX CFLAGS NM QTDIR
++ rm -f mout-configure
++ python configure.py \
++        -p unixware-cc \
++        -b /usr/bin \
++        -d /usr/lib/python2.4/site-packages \
++        -e /usr/include/python2.4 \
++        -v /usr/share/sip \
++        2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Tue Aug 30 14:45:40 2005
+--- ./Install-OSR6	Tue Aug 30 14:45:40 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/sip
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

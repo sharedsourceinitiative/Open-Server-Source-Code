@@ -1,0 +1,183 @@
+for k=1 to 1000
+clear screen
+print"---------------------------------------------------------------"
+print color("cyan","red") "Think of a question then press return."
+print color("cyan","red")"Notice how the response relates to your question."
+input a$
+print"---------------------------------------------------------------"
+z=int(ran(5))
+for a=1 to 3
+if a=1 then i$="Your issue card is "
+endif
+if a=2 then i$="Your denial card is "
+print
+endif
+if a=3 then i$="Your outcome card is "
+print
+endif
+print i$;
+
+c=int(ran(46))
+if c=0 then f$="Self Trust"
+g$="Have courage to walk your own path and trust yourself."
+endif
+if c=2 then f$="Move Forward"
+g$="To achieve your dreams, take the risk of moving forward."
+endif
+if c=3 then f$="Inevitable"
+g$="There is no need to put off the inevitable."
+endif
+if c=4 then f$="Community"
+g$="Put yourself around those who understand you."
+endif
+if c=5 then f$="Safe"
+g$="Remember that the Universe protects you."
+endif
+if c=6 then f$="Work"
+g$="Work should feel like play."
+endif
+if c=7 then f$="Grief"
+g$="If you feel grief, don't be ashamed.  Let it out."
+endif
+if c=8 then f$="Congruence"
+g$="When something is right for you, you feel safe and calm."
+endif
+if c=9 then f$="Worry"
+g$="Worry stems from a lack of trust in yourself and the Universe."
+endif
+if c=10 then f$="Plenty"
+g$="Life offers plenty of wealth, joy, and love."
+endif
+if c=11 then f$="Journey"
+g$="Life is a journey, an endless series of destinations."
+endif
+if c=12 then f$="Shedding"
+g$="It is important to shed what isn't working."
+endif
+if c=13 then f$="Strength"
+g$="By showing the strength to defeat your fears you become free."
+endif
+if c=14 then f$="Self Love"
+g$="You deserve your own love."
+endif
+if c=15 then f$="Fear"
+g$="Fear is the root of suffering."
+endif
+if c=16 then f$="Right Timing"
+g$="Appropriate timing is crucial for success."
+endif
+if c=17 then f$="Gentleness"
+g$="When we feel secure we treat ourselves and others gently."
+endif
+if c=18 then f$="Anxiety"
+g$="Anxiety harms your mind and body."
+endif
+if c=19 then f$="Shame"
+g$="Shame is a form of self-punishment no one deserves."
+endif
+if c=20 then f$="Deception"
+g$="Be fully honest to yourself and others."
+endif
+if c=21 then f$="Bliss"
+g$="Remember that life can be full of bliss."
+endif
+if c=22 then f$="Action"
+g$="Through mindful action we create what we want."
+endif
+if c=23 then f$="Allow"
+g$="Now is not a time to force things."
+endif
+if c=24 then f$="Pleasure"
+g$="Treat yourself.  Nurture yourself.  Do what you love."
+endif
+if c=25 then f$="Take Your Time"
+g$="There is no need to rush.  You have all the time you need."
+endif
+if c=26 then f$="Love"
+g$="Love is the core of who we are."
+endif
+if c=27 then f$="Originality"
+g$="Living is a creative process.  Be original."
+endif
+if c=28 then f$="Eternal"
+g$="We are eternal, limitless beings that need never suffer or die."
+endif
+if c=29 then f$="Expression"
+g$="By expressing ourselves we open our hearts to love."
+endif
+if c=30 then f$="Expanding"
+g$="It is a time of expanding knowledge and connections."
+endif
+if c=31 then f$="Conflicted"
+g$="When you feel conflicted listen to your body."
+endif
+if c=32 then f$="Power"
+g$="In a period of transformation you realize great power."
+endif
+if c=33 then f$="Knowing"
+g$="Within you awaits a calm sense of knowing."
+endif
+if c=34 then f$="Freedom"
+g$="Break away from forces that hold you back."
+endif
+if c=35 then f$="Attention"
+g$="You create your reality with your attention."
+endif
+if c=36 then f$="Leap of Faith"
+g$="It may be time to take a leap of faith."
+endif
+if c=37 then f$="Balance"
+g$="Balance and utilize your yin and yang qualities."
+endif
+if c=38 then f$="Gratitude"
+g$="Being grateful for what you have brings inner peace."
+endif
+if c=39 then f$="Pain"
+g$="We needlessly create pain through poor choices."
+endif
+if c=40 then f$="Inner Peace"
+g$="Contentment comes from an inner sense of peace."
+endif
+if c=41 then f$="Incongruence"
+g$="If something doesn't fit, you will feel it in your body."
+endif
+if c=42 then f$="Release"
+g$="Release any attempts to control others."
+endif
+if c=43 then f$="Faith"
+g$="Have faith in yourself and the Universe."
+endif
+if c=44 then f$="Clarity"
+g$="Nothing can fool your inner truth."
+endif
+if c=45 then f$="Holding Back"
+g$="Holding back your gifts brings sadness and creates distance."
+endif
+if c=46 then f$="Joy"
+g$="Don't take life too seriously."
+endif
+
+print color("blue","cyan") " ";
+print color("blue","cyan") f$;
+print color("blue","cyan") " "
+
+print color("cyan","blue") chr$(34);
+print color("cyan","blue") g$;
+print color("cyan","blue") chr$(34)
+next a
+print"---------------------------------------------------------------"
+print color("cyan","red")"For adults only.  You are responsible for any choices you make."
+print color("cyan","red")"This free software may be downloaded at http://ropi.net/ftr.htm"
+print color("cyan","red")"If you choose, you may pay any amount at http://ropi.net/payment"
+print color("cyan","blue")"Please visit $9 & Once in a Lifetime Tarot Readings at"
+print color("cyan","blue")"http://ropi.net/tarot    Copyright 1999 by Chris Ehren Life"
+print"---------------------------------------------------------------"
+print
+print"Enter 'e' or 'E' to end."
+print"Enter any other key to continue."
+input a$
+if a$="e" then end
+endif
+if a$="E" then end
+endif
+next k

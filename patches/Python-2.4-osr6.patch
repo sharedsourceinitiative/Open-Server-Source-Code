@@ -1,0 +1,871 @@
+*** ./Lib/distutils/util.py.osr6	Sat Jul 17 23:14:42 2004
+--- ./Lib/distutils/util.py	Wed Aug 31 20:31:32 2005
+***************
+*** 51,56 ****
+--- 51,59 ----
+          # i386, etc.
+          # XXX what about Alpha, SPARC, etc?
+          return  "%s-%s" % (osname, machine)
++     elif osname[:5] == "SCO_SV":
++         if release[0] >= "6":
++             osname = "unixware7"
+      elif osname[:5] == "sunos":
+          if release[0] >= "5":           # SunOS 5 == Solaris 2
+              osname = "solaris"
+*** ./Lib/plat-unixware7/regen.osr6	Tue Jul 31 01:47:55 2001
+--- ./Lib/plat-unixware7/regen	Wed Aug 31 20:31:32 2005
+***************
+*** 1,6 ****
+  #! /bin/sh
+! case `uname -sr` in
+  UnixWare*)	;;
+  *)	echo Probably not on a UnixWare system 1>&2
+  	exit 1;;
+  esac
+--- 1,7 ----
+  #! /bin/sh
+! case `uname -sv` in
+  UnixWare*)	;;
++ SCO_SV*6*)	;;
+  *)	echo Probably not on a UnixWare system 1>&2
+  	exit 1;;
+  esac
+*** ./Modules/socketmodule.c.osr6	Sun Nov  7 06:24:25 2004
+--- ./Modules/socketmodule.c	Wed Aug 31 20:31:32 2005
+***************
+*** 61,68 ****
+--- 61,77 ----
+  
+  */
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
++ 
+  #undef MAX
+  #define MAX(x, y) ((x) < (y) ? (y) : (x))
+  
+*** ./Modules/_ssl.c.osr6	Wed Aug  4 07:59:00 2004
+--- ./Modules/_ssl.c	Wed Aug 31 20:31:32 2005
+***************
+*** 7,12 ****
+--- 7,13 ----
+  
+  */
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  enum py_ssl_error {
+  	/* these mirror ssl.h */
+*** ./Modules/_bsddb.c.osr6	Fri Sep  3 18:36:59 2004
+--- ./Modules/_bsddb.c	Wed Aug 31 20:31:47 2005
+***************
+*** 85,90 ****
+--- 85,91 ----
+  /* --------------------------------------------------------------------- */
+  
+  #include <stddef.h>   /* for offsetof() */
++ #include <sys/types.h>
+  #include <Python.h>
+  #include <db.h>
+  
+***************
+*** 466,472 ****
+  /* Callback used to save away more information about errors from the DB
+   * library. */
+  static char _db_errmsg[1024];
+! static void _db_errorCallback(const char* prefix, char* msg)
+  {
+      strcpy(_db_errmsg, msg);
+  }
+--- 467,473 ----
+  /* Callback used to save away more information about errors from the DB
+   * library. */
+  static char _db_errmsg[1024];
+! static void _db_errorCallback(const DB_ENV *db_env, const char* prefix, const char* msg)
+  {
+      strcpy(_db_errmsg, msg);
+  }
+***************
+*** 2146,2154 ****
+  
+      MYDB_BEGIN_ALLOW_THREADS;
+  #if (DBVER >= 33)
+!     err = self->db->stat(self->db, &sp, flags);
+  #else
+!     err = self->db->stat(self->db, &sp, NULL, flags);
+  #endif
+      MYDB_END_ALLOW_THREADS;
+      RETURN_IF_ERR();
+--- 2147,2155 ----
+  
+      MYDB_BEGIN_ALLOW_THREADS;
+  #if (DBVER >= 33)
+!     err = self->db->stat(self->db, (DB_TXN *)(&sp), NULL, flags);
+  #else
+!     err = self->db->stat(self->db, &sp, flags);
+  #endif
+      MYDB_END_ALLOW_THREADS;
+      RETURN_IF_ERR();
+***************
+*** 2408,2416 ****
+  
+      MYDB_BEGIN_ALLOW_THREADS;
+  #if (DBVER >= 33)
+!     err = self->db->stat(self->db, &sp, flags);
+  #else
+!     err = self->db->stat(self->db, &sp, NULL, flags);
+  #endif
+      MYDB_END_ALLOW_THREADS;
+  
+--- 2409,2417 ----
+  
+      MYDB_BEGIN_ALLOW_THREADS;
+  #if (DBVER >= 33)
+!     err = self->db->stat(self->db, (DB_TXN *)(&sp), NULL, flags);
+  #else
+!     err = self->db->stat(self->db, &sp, flags);
+  #endif
+      MYDB_END_ALLOW_THREADS;
+  
+***************
+*** 4903,4909 ****
+  
+  #if (DBVER >= 33)
+      ADD_INT(d, DB_LSTAT_ABORTED);
+!     ADD_INT(d, DB_LSTAT_ERR);
+      ADD_INT(d, DB_LSTAT_FREE);
+      ADD_INT(d, DB_LSTAT_HELD);
+  #if (DBVER == 33)
+--- 4904,4910 ----
+  
+  #if (DBVER >= 33)
+      ADD_INT(d, DB_LSTAT_ABORTED);
+!     ADD_INT(d, DB_LSTAT_EXPIRED);
+      ADD_INT(d, DB_LSTAT_FREE);
+      ADD_INT(d, DB_LSTAT_HELD);
+  #if (DBVER == 33)
+*** ./Modules/nismodule.c.osr6	Fri Jul  9 17:57:37 2004
+--- ./Modules/nismodule.c	Wed Aug 31 20:31:32 2005
+***************
+*** 10,19 ****
+  
+  /* NIS module implementation */
+  
+  #include "Python.h"
+  
+  #include <sys/time.h>
+- #include <sys/types.h>
+  #include <rpc/rpc.h>
+  #include <rpcsvc/yp_prot.h>
+  #include <rpcsvc/ypclnt.h>
+--- 10,19 ----
+  
+  /* NIS module implementation */
+  
++ #include <sys/types.h>
+  #include "Python.h"
+  
+  #include <sys/time.h>
+  #include <rpc/rpc.h>
+  #include <rpcsvc/yp_prot.h>
+  #include <rpcsvc/ypclnt.h>
+*** ./Modules/Setup.osr6	Thu May 12 00:46:46 2005
+--- ./Modules/Setup	Wed Aug 31 20:31:32 2005
+***************
+*** 147,153 ****
+  # modules are to be built as shared libraries (see above for more
+  # detail; also note that *static* reverses this effect):
+  
+! #*shared*
+  
+  # GNU readline.  Unlike previous Python incarnations, GNU readline is
+  # now incorporated in an optional module, configured in the Setup file
+--- 147,153 ----
+  # modules are to be built as shared libraries (see above for more
+  # detail; also note that *static* reverses this effect):
+  
+! *shared*
+  
+  # GNU readline.  Unlike previous Python incarnations, GNU readline is
+  # now incorporated in an optional module, configured in the Setup file
+***************
+*** 157,221 ****
+  # it, depending on your system -- see the GNU readline instructions.
+  # It's okay for this to be a shared library, too.
+  
+! #readline readline.c -lreadline -ltermcap
+  
+  
+  # Modules that should always be present (non UNIX dependent):
+  
+! #array arraymodule.c	# array objects
+! #cmath cmathmodule.c # -lm # complex math library functions
+! #math mathmodule.c # -lm # math library functions, e.g. sin()
+! #struct structmodule.c	# binary structure packing/unpacking
+! #time timemodule.c # -lm # time operations and variables
+! #operator operator.c	# operator.add() and similar goodies
+! #_weakref _weakref.c	# basic weak reference support
+! #_testcapi _testcapimodule.c    # Python C API test module
+  
+  #unicodedata unicodedata.c    # static Unicode character database
+  
+  # access to ISO C locale support
+! #_locale _localemodule.c  # -lintl
+  
+  
+  # Modules with some UNIX dependencies -- on by default:
+  # (If you have a really backward UNIX, select and socket may not be
+  # supported...)
+  
+! #fcntl fcntlmodule.c	# fcntl(2) and ioctl(2)
+! #pwd pwdmodule.c		# pwd(3) 
+! #grp grpmodule.c		# grp(3)
+! #select selectmodule.c	# select(2); not on ancient System V
+  
+  # Memory-mapped files (also works on Win32).
+! #mmap mmapmodule.c
+  
+  # CSV file helper
+! #_csv _csv.c
+  
+  # Socket module helper for socket(2)
+! #_socket socketmodule.c
+  
+  # Socket module helper for SSL support; you must comment out the other
+  # socket line above, and possibly edit the SSL variable:
+! #SSL=/usr/local/ssl
+! #_ssl _ssl.c \
+! #	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+! #	-L$(SSL)/lib -lssl -lcrypto
+  
+  # The crypt module is now disabled by default because it breaks builds
+  # on many systems (where -lcrypt is needed), e.g. Linux (I believe).
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! #crypt cryptmodule.c # -lcrypt	# crypt(3); needs -lcrypt on some systems
+  
+  
+  # Some more UNIX dependent modules -- off by default, since these
+  # are not supported by all UNIX systems:
+  
+! #nis nismodule.c -lnsl	# Sun yellow pages -- not everywhere
+! #termios termios.c	# Steen Lumholt's termios module
+! #resource resource.c	# Jeremy Hylton's rlimit interface
+  
+  
+  # Multimedia modules -- off by default.
+--- 157,221 ----
+  # it, depending on your system -- see the GNU readline instructions.
+  # It's okay for this to be a shared library, too.
+  
+! readline readline.c -lreadline -ltermcap
+  
+  
+  # Modules that should always be present (non UNIX dependent):
+  
+! array arraymodule.c	# array objects
+! cmath cmathmodule.c -lm # complex math library functions
+! math mathmodule.c -lm # math library functions, e.g. sin()
+! struct structmodule.c	# binary structure packing/unpacking
+! time timemodule.c -lm # time operations and variables
+! operator operator.c	# operator.add() and similar goodies
+! _weakref _weakref.c	# basic weak reference support
+! _testcapi _testcapimodule.c    # Python C API test module
+  
+  #unicodedata unicodedata.c    # static Unicode character database
+  
+  # access to ISO C locale support
+! _locale _localemodule.c  -lgnuintl
+  
+  
+  # Modules with some UNIX dependencies -- on by default:
+  # (If you have a really backward UNIX, select and socket may not be
+  # supported...)
+  
+! fcntl fcntlmodule.c	# fcntl(2) and ioctl(2)
+! pwd pwdmodule.c		# pwd(3) 
+! grp grpmodule.c		# grp(3)
+! select selectmodule.c	# select(2); not on ancient System V
+  
+  # Memory-mapped files (also works on Win32).
+! mmap mmapmodule.c
+  
+  # CSV file helper
+! _csv _csv.c
+  
+  # Socket module helper for socket(2)
+! _socket socketmodule.c
+  
+  # Socket module helper for SSL support; you must comment out the other
+  # socket line above, and possibly edit the SSL variable:
+! SSL=/usr
+! _ssl _ssl.c \
+! 	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+! 	-L$(SSL)/lib -lssl -lcrypto
+  
+  # The crypt module is now disabled by default because it breaks builds
+  # on many systems (where -lcrypt is needed), e.g. Linux (I believe).
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! crypt cryptmodule.c -lcrypt	# crypt(3); needs -lcrypt on some systems
+  
+  
+  # Some more UNIX dependent modules -- off by default, since these
+  # are not supported by all UNIX systems:
+  
+! nis nismodule.c -lnsl	# Sun yellow pages -- not everywhere
+! termios termios.c	# Steen Lumholt's termios module
+! resource resource.c	# Jeremy Hylton's rlimit interface
+  
+  
+  # Multimedia modules -- off by default.
+***************
+*** 224,230 ****
+  # These represent audio samples or images as strings:
+  
+  #audioop audioop.c	# Operations on audio samples
+! #imageop imageop.c	# Operations on images
+  #rgbimg rgbimgmodule.c	# Read SGI RGB image files (but coded portably)
+  
+  
+--- 224,230 ----
+  # These represent audio samples or images as strings:
+  
+  #audioop audioop.c	# Operations on audio samples
+! imageop imageop.c	# Operations on images
+  #rgbimg rgbimgmodule.c	# Read SGI RGB image files (but coded portably)
+  
+  
+***************
+*** 232,243 ****
+  # Message-Digest Algorithm, described in RFC 1321.  The necessary files
+  # md5c.c and md5.h are included here.
+  
+! #md5 md5module.c md5c.c
+  
+  
+  # The sha module implements the SHA checksum algorithm.
+  # (NIST's Secure Hash Algorithm.)
+! #sha shamodule.c
+  
+  
+  # SGI IRIX specific modules -- off by default.
+--- 232,243 ----
+  # Message-Digest Algorithm, described in RFC 1321.  The necessary files
+  # md5c.c and md5.h are included here.
+  
+! md5 md5module.c md5c.c
+  
+  
+  # The sha module implements the SHA checksum algorithm.
+  # (NIST's Secure Hash Algorithm.)
+! sha shamodule.c
+  
+  
+  # SGI IRIX specific modules -- off by default.
+***************
+*** 289,295 ****
+  
+  # George Neville-Neil's timing module:
+  
+! #timing timingmodule.c
+  
+  
+  # The _tkinter module.
+--- 289,295 ----
+  
+  # George Neville-Neil's timing module:
+  
+! timing timingmodule.c
+  
+  
+  # The _tkinter module.
+***************
+*** 304,310 ****
+  # every system.
+  
+  # *** Always uncomment this (leave the leading underscore in!):
+! # _tkinter _tkinter.c tkappinit.c -DWITH_APPINIT \
+  # *** Uncomment and edit to reflect where your Tcl/Tk libraries are:
+  #	-L/usr/local/lib \
+  # *** Uncomment and edit to reflect where your Tcl/Tk headers are:
+--- 304,315 ----
+  # every system.
+  
+  # *** Always uncomment this (leave the leading underscore in!):
+! _tkinter _tkinter.c tkappinit.c -DWITH_APPINIT \
+! 	-L/usr/gnu/lib \
+! 	-I/usr/gnu/include \
+! 	-ltk8.4 -ltcl8.4 \
+! 	-L/usr/X11R6/lib \
+! 	-lX11
+  # *** Uncomment and edit to reflect where your Tcl/Tk libraries are:
+  #	-L/usr/local/lib \
+  # *** Uncomment and edit to reflect where your Tcl/Tk headers are:
+***************
+*** 336,342 ****
+  #	-lX11
+  
+  # Lance Ellinghaus's syslog module
+! #syslog syslogmodule.c		# syslog daemon interface
+  
+  
+  # Curses support, requring the System V version of curses, often
+--- 341,347 ----
+  #	-lX11
+  
+  # Lance Ellinghaus's syslog module
+! syslog syslogmodule.c		# syslog daemon interface
+  
+  
+  # Curses support, requring the System V version of curses, often
+***************
+*** 345,353 ****
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! #_curses _cursesmodule.c -lcurses -ltermcap
+  # Wrapper for the panel library that's part of ncurses and SYSV curses.
+! #_curses_panel _curses_panel.c -lpanel -lncurses 
+  
+  
+  # Generic (SunOS / SVR4) dynamic loading module.
+--- 350,358 ----
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! _curses _cursesmodule.c -lcurses -ltermcap
+  # Wrapper for the panel library that's part of ncurses and SYSV curses.
+! _curses_panel _curses_panel.c -lpanel -lcurses 
+  
+  
+  # Generic (SunOS / SVR4) dynamic loading module.
+***************
+*** 378,384 ****
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! #gdbm gdbmmodule.c -I/usr/local/include -L/usr/local/lib -lgdbm
+  
+  
+  # Sleepycat Berkeley DB interface.
+--- 383,389 ----
+  #
+  # First, look at Setup.config; configure may have set this for you.
+  
+! gdbm gdbmmodule.c -lgdbm
+  
+  
+  # Sleepycat Berkeley DB interface.
+***************
+*** 394,403 ****
+  # Edit the variables DB and DBLIBVERto point to the db top directory
+  # and the subdirectory of PORT where you built it.
+  #DB=/usr/local/BerkeleyDB.4.0
+- #DBLIBVER=4.0
+  #DBINC=$(DB)/include
+  #DBLIB=$(DB)/lib
+  #_bsddb _bsddb.c -I$(DBINC) -L$(DBLIB) -ldb-$(DBLIBVER)
+  
+  # Historical Berkeley DB 1.85
+  #
+--- 399,409 ----
+  # Edit the variables DB and DBLIBVERto point to the db top directory
+  # and the subdirectory of PORT where you built it.
+  #DB=/usr/local/BerkeleyDB.4.0
+  #DBINC=$(DB)/include
+  #DBLIB=$(DB)/lib
+  #_bsddb _bsddb.c -I$(DBINC) -L$(DBLIB) -ldb-$(DBLIBVER)
++ DBLIBVER=4.3
++ _bsddb _bsddb.c -ldb-$(DBLIBVER)
+  
+  # Historical Berkeley DB 1.85
+  #
+***************
+*** 412,425 ****
+  
+  
+  # Helper module for various ascii-encoders
+! #binascii binascii.c
+  
+  # Fred Drake's interface to the Python parser
+! #parser parsermodule.c
+  
+  # cStringIO and cPickle
+! #cStringIO cStringIO.c
+! #cPickle cPickle.c
+  
+  
+  # Lee Busby's SIGFPE modules.
+--- 418,431 ----
+  
+  
+  # Helper module for various ascii-encoders
+! binascii binascii.c
+  
+  # Fred Drake's interface to the Python parser
+! parser parsermodule.c
+  
+  # cStringIO and cPickle
+! cStringIO cStringIO.c
+! cPickle cPickle.c
+  
+  
+  # Lee Busby's SIGFPE modules.
+***************
+*** 442,448 ****
+  # Andrew Kuchling's zlib module.
+  # This require zlib 1.1.3 (or later).
+  # See http://www.gzip.org/zlib/
+! #zlib zlibmodule.c -I$(prefix)/include -L$(exec_prefix)/lib -lz
+  
+  # Interface to the Expat XML parser
+  #
+--- 448,454 ----
+  # Andrew Kuchling's zlib module.
+  # This require zlib 1.1.3 (or later).
+  # See http://www.gzip.org/zlib/
+! zlib zlibmodule.c -I$(prefix)/include -L$(exec_prefix)/lib -lz
+  
+  # Interface to the Expat XML parser
+  #
+***************
+*** 457,475 ****
+  #
+  #EXPAT_DIR=/usr/local/src/expat-1.95.2
+  #pyexpat pyexpat.c -DHAVE_EXPAT_H -I$(EXPAT_DIR)/lib -L$(EXPAT_DIR) -lexpat
+  
+  
+  # Hye-Shik Chang's CJKCodecs
+  
+  # multibytecodec is required for all the other CJK codec modules
+! #_multibytecodec cjkcodecs/multibytecodec.c
+  
+! #_codecs_cn cjkcodecs/_codecs_cn.c
+! #_codecs_hk cjkcodecs/_codecs_hk.c
+! #_codecs_iso2022 cjkcodecs/_codecs_iso2022.c
+! #_codecs_jp cjkcodecs/_codecs_jp.c
+! #_codecs_kr cjkcodecs/_codecs_kr.c
+! #_codecs_tw cjkcodecs/_codecs_tw.c
+  
+  # Example -- included for reference only:
+  # xx xxmodule.c
+--- 463,482 ----
+  #
+  #EXPAT_DIR=/usr/local/src/expat-1.95.2
+  #pyexpat pyexpat.c -DHAVE_EXPAT_H -I$(EXPAT_DIR)/lib -L$(EXPAT_DIR) -lexpat
++ pyexpat pyexpat.c -DHAVE_EXPAT_H -lexpat
+  
+  
+  # Hye-Shik Chang's CJKCodecs
+  
+  # multibytecodec is required for all the other CJK codec modules
+! _multibytecodec cjkcodecs/multibytecodec.c
+  
+! _codecs_cn cjkcodecs/_codecs_cn.c
+! _codecs_hk cjkcodecs/_codecs_hk.c
+! _codecs_iso2022 cjkcodecs/_codecs_iso2022.c
+! _codecs_jp cjkcodecs/_codecs_jp.c
+! _codecs_kr cjkcodecs/_codecs_kr.c
+! _codecs_tw cjkcodecs/_codecs_tw.c
+  
+  # Example -- included for reference only:
+  # xx xxmodule.c
+*** ./Modules/posixmodule.c.osr6	Wed Oct 13 08:30:56 2004
+--- ./Modules/posixmodule.c	Wed Aug 31 20:31:32 2005
+***************
+*** 864,870 ****
+          PyStructSequence_SET_ITEM(v, 6, PyInt_FromLong(st.st_size));
+  #endif
+  
+! #ifdef HAVE_STAT_TV_NSEC
+  	ansec = st.st_atim.tv_nsec;
+  	mnsec = st.st_mtim.tv_nsec;
+  	cnsec = st.st_ctim.tv_nsec;
+--- 864,870 ----
+          PyStructSequence_SET_ITEM(v, 6, PyInt_FromLong(st.st_size));
+  #endif
+  
+! #if defined(HAVE_STAT_TV_NSEC) && !defined(__USLC__)
+  	ansec = st.st_atim.tv_nsec;
+  	mnsec = st.st_mtim.tv_nsec;
+  	cnsec = st.st_ctim.tv_nsec;
+*** ./Modules/_cursesmodule.c.osr6	Wed Aug  4 07:33:28 2004
+--- ./Modules/_cursesmodule.c	Wed Aug 31 20:31:33 2005
+***************
+*** 2306,2312 ****
+      return NULL;
+    }
+  
+!   return PyString_FromString(unctrl(ch));
+  }
+  
+  static PyObject *
+--- 2306,2312 ----
+      return NULL;
+    }
+  
+!   return PyString_FromString((char *)unctrl(ch));
+  }
+  
+  static PyObject *
+*** ./Python/ceval.c.osr6	Tue Nov 23 10:06:08 2004
+--- ./Python/ceval.c	Wed Aug 31 20:31:33 2005
+***************
+*** 715,721 ****
+  	consts = co->co_consts;
+  	fastlocals = f->f_localsplus;
+  	freevars = f->f_localsplus + f->f_nlocals;
+! 	first_instr = PyString_AS_STRING(co->co_code);
+  	/* An explanation is in order for the next line.
+  
+  	   f->f_lasti now refers to the index of the last instruction
+--- 715,721 ----
+  	consts = co->co_consts;
+  	fastlocals = f->f_localsplus;
+  	freevars = f->f_localsplus + f->f_nlocals;
+! 	first_instr = (unsigned char *)PyString_AS_STRING(co->co_code);
+  	/* An explanation is in order for the next line.
+  
+  	   f->f_lasti now refers to the index of the last instruction
+*** ./Python/compile.c.osr6	Sun Nov  7 06:04:00 2004
+--- ./Python/compile.c	Wed Aug 31 20:31:33 2005
+***************
+*** 509,515 ****
+  
+  	/* Bypass optimization when the lineno table is too complex */
+  	assert(PyString_Check(lineno_obj));
+! 	lineno = PyString_AS_STRING(lineno_obj);
+  	tabsiz = PyString_GET_SIZE(lineno_obj);
+  	if (memchr(lineno, 255, tabsiz) != NULL)
+  		goto exitUnchanged;
+--- 509,515 ----
+  
+  	/* Bypass optimization when the lineno table is too complex */
+  	assert(PyString_Check(lineno_obj));
+! 	lineno = (unsigned char *)PyString_AS_STRING(lineno_obj);
+  	tabsiz = PyString_GET_SIZE(lineno_obj);
+  	if (memchr(lineno, 255, tabsiz) != NULL)
+  		goto exitUnchanged;
+*** ./configure.in.osr6	Sat Nov  6 17:24:11 2004
+--- ./configure.in	Wed Aug 31 20:31:33 2005
+***************
+*** 105,110 ****
+--- 105,117 ----
+  if test -z "$MACHDEP"
+  then
+  	ac_sys_system=`uname -s`
++ 	ac_sys_release=`uname -v`
++ 	if test "$ac_sys_system" = "SCO_SV"; then
++ 	    case $ac_sys_release in
++ 	    6*) ac_sys_system=UnixWare
++ 	        ;;
++ 	    esac
++ 	fi
+  	if test "$ac_sys_system" = "AIX" -o "$ac_sys_system" = "Monterey64" \
+  	-o "$ac_sys_system" = "UnixWare" -o "$ac_sys_system" = "OpenUNIX"; then
+  		ac_sys_release=`uname -v`
+***************
+*** 122,127 ****
+--- 129,135 ----
+  	darwin*) MACHDEP="darwin";;
+  	atheos*) MACHDEP="atheos";;
+          irix646) MACHDEP="irix6";;
++         unixware6) MACHDEP="sco_sv5";;
+  	'')	MACHDEP="unknown";;
+  	esac
+  fi
+***************
+*** 557,563 ****
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+  	  INSTSONAME="$LDLIBRARY".$SOVERSION
+            ;;
+!     Linux*|GNU*|NetBSD*|FreeBSD*)
+  	  LDLIBRARY='libpython$(VERSION).so'
+  	  BLDLIBRARY='-L. -lpython$(VERSION)'
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+--- 565,571 ----
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+  	  INSTSONAME="$LDLIBRARY".$SOVERSION
+            ;;
+!     Linux*|GNU*|NetBSD*|FreeBSD*|UnixWare*)
+  	  LDLIBRARY='libpython$(VERSION).so'
+  	  BLDLIBRARY='-L. -lpython$(VERSION)'
+  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+***************
+*** 730,736 ****
+  	BASECFLAGS="$BASECFLAGS -ieee -std"
+      	;;
+      SCO_SV*)
+! 	BASECFLAGS="$BASECFLAGS -belf -Ki486 -DSCO5"
+  	;;
+      esac
+      ;;
+--- 738,744 ----
+  	BASECFLAGS="$BASECFLAGS -ieee -std"
+      	;;
+      SCO_SV*)
+! 	BASECFLAGS="$BASECFLAGS -Ki486 -DSCO5"
+  	;;
+      esac
+      ;;
+***************
+*** 1355,1361 ****
+  	OpenUNIX*|UnixWare*)
+  		if test "$GCC" = "yes"
+  		then LDSHARED='$(CC) -shared'
+! 		else LDSHARED='$(CC) -G'
+  		fi;;
+  	SCO_SV*) LDSHARED='$(CC) -Wl,-G,-Bexport';;
+  	Monterey*) LDSHARED="cc -G -dy -Bdynamic -Bexport -L/usr/lib/ia64l64";;
+--- 1363,1369 ----
+  	OpenUNIX*|UnixWare*)
+  		if test "$GCC" = "yes"
+  		then LDSHARED='$(CC) -shared'
+! 		else LDSHARED='$(CC) -G -Wl,-Bexport'
+  		fi;;
+  	SCO_SV*) LDSHARED='$(CC) -Wl,-G,-Bexport';;
+  	Monterey*) LDSHARED="cc -G -dy -Bdynamic -Bexport -L/usr/lib/ia64l64";;
+***************
+*** 1390,1396 ****
+  	SCO_SV*)
+  		if test "$GCC" = "yes"
+  		then CCSHARED="-fPIC"
+! 		else CCSHARED="-Kpic -belf"
+  		fi;;
+  	Monterey*) CCSHARED="-G";;
+  	IRIX*/6*)  case $CC in
+--- 1398,1404 ----
+  	SCO_SV*)
+  		if test "$GCC" = "yes"
+  		then CCSHARED="-fPIC"
+! 		else CCSHARED="-Kpic"
+  		fi;;
+  	Monterey*) CCSHARED="-G";;
+  	IRIX*/6*)  case $CC in
+***************
+*** 2285,2290 ****
+--- 2293,2305 ----
+  AC_MSG_CHECKING(getaddrinfo bug)
+  AC_TRY_RUN([
+  #include <sys/types.h>
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
+  #include <netdb.h>
+  #include <string.h>
+  #include <sys/socket.h>
+***************
+*** 2380,2393 ****
+  buggygetaddrinfo=yes
+  ])
+  
+! if test "$buggygetaddrinfo" = "yes"; then
+  	if test "$ipv6" = "yes"; then
+  		echo 'Fatal: You must get working getaddrinfo() function.'
+  		echo '       or you can specify "--disable-ipv6"'.
+  		exit 1
+  	fi
+! else
+  	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
+  fi
+  AC_CHECK_FUNCS(getnameinfo)
+  
+--- 2395,2412 ----
+  buggygetaddrinfo=yes
+  ])
+  
+! if test "$ipv6" = "no"; then
+! 	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
+! else
+!     if test "$buggygetaddrinfo" = "yes"; then
+  	if test "$ipv6" = "yes"; then
+  		echo 'Fatal: You must get working getaddrinfo() function.'
+  		echo '       or you can specify "--disable-ipv6"'.
+  		exit 1
+  	fi
+!     else
+  	AC_DEFINE(HAVE_GETADDRINFO, 1, [Define if you have the getaddrinfo function.])
++     fi
+  fi
+  AC_CHECK_FUNCS(getnameinfo)
+  
+***************
+*** 2426,2431 ****
+--- 2445,2457 ----
+  AC_MSG_CHECKING(for addrinfo)
+  AC_CACHE_VAL(ac_cv_struct_addrinfo,
+  AC_TRY_COMPILE([
++ #define _SVID3
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #ifdef _POSIX_SOURCE
++ #undef _POSIX_SOURCE
++ #endif
+  #		include <netdb.h>],
+  	[struct addrinfo a],
+  	ac_cv_struct_addrinfo=yes,
+*** ./Build-OSR6.osr6	Wed Aug 31 20:31:33 2005
+--- ./Build-OSR6	Wed Aug 31 20:31:33 2005
+***************
+*** 0 ****
+--- 1,30 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ MOUT=mout
++ CC="cc -Kpthread -Kalloca"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ CXX="CC -Kpthread -Kalloca"
++ LDSHARED="$CC -G -Wl,-Bexport"
++ LINKFORSHARED="-Wl,-Bexport"
++ M4=/usr/gnu/bin/m4
++ CCSHARED="-KPIC"
++ POSIXLY_CORRECT=TRUE
++ OPT="-O2 -D_REENTRANT"
++ export CC LDSHARED LINKFORSHARED CCSHARED POSIXLY_CORRECT OPT M4 INSTALL NM CXX
++ 
++ autoconf
++ 
++ rm -f mout-configure
++ ./configure $* --prefix=/usr --disable-ipv6 --enable-shared \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ # Enable zlib module if configure didn't detect it
++ #sed -e "s/^#zlib/zlib/" Modules/Setup > /tmp/zlib$$
++ #cp /tmp/zlib$$ Modules/Setup
++ #rm -f /tmp/zlib$$
++ 
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Wed Aug 31 20:31:33 2005
+--- ./Install-OSR6	Wed Aug 31 20:31:33 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/python
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

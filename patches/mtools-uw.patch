@@ -1,0 +1,89 @@
+--- ./devices.c.uw	2003-09-09 00:59:33.560000107 +0000
++++ ./devices.c	2003-09-09 00:59:35.330000046 +0000
+@@ -910,7 +910,7 @@
+ #endif
+ 
+ 
+-#if (!defined(predefined_devices) && defined(OS_sysv4))
++#if (!defined(predefined_devices) && (defined(OS_sysv4) || defined(OS_sysv5)))
+ #ifdef __uxp__
+ #define predefined_devices
+ struct device devices[] = {
+--- ./init.c.uw	2001-05-20 18:18:12.000000000 +0000
++++ ./init.c	2003-09-09 00:59:35.340000015 +0000
+@@ -308,7 +308,7 @@
+ 	disk_size = (dev.tracks) ? dev.sectors : 512;
+ #endif /* FULL_CYL */
+ 
+-#if (defined OS_sysv4 && !defined OS_solaris)
++#if ((defined(OS_sysv4) || defined(OS_sysv5)) && !defined OS_solaris)
+ 	/*
+ 	 * The driver in Dell's SVR4 v2.01 is unreliable with large writes.
+ 	 */
+--- ./configure.uw	2001-05-26 19:01:44.000000000 +0000
++++ ./configure	2003-09-09 00:59:35.350000068 +0000
+@@ -2674,6 +2674,10 @@
+     LDFLAGS="$LDFLAGS -M2e -i -f 5000"
+ fi
+ 
++if [ $host_os3 = sysv5 ] ; then
++    SHLIB="-lc -L/usr/ucblib -lucb"
++fi
++
+ if [ $host_os2 = sysv4 ] ; then
+     SHLIB="-lc -L/usr/ucblib -lucb"
+ else
+--- ./mtools.h.uw	2003-09-09 00:59:34.290000001 +0000
++++ ./mtools.h	2003-09-09 00:59:35.360000009 +0000
+@@ -8,6 +8,9 @@
+ #include <signal.h>
+ extern int lockf(int, int, off_t);  /* SCO has no proper include file for lockf */
+ #endif 
++#if defined(OS_sysv5)
++#include <sys/signal.h>
++#endif
+ 
+ #define SCSI_FLAG 1
+ #define PRIV_FLAG 2
+--- ./config.c.uw	2001-05-20 18:18:12.000000000 +0000
++++ ./config.c	2003-09-09 01:01:45.530000022 +0000
+@@ -2,6 +2,7 @@
+ #include "mtools.h"
+ #include "codepage.h"
+ #include "mtoolsPaths.h"
++#include <strings.h>
+ 
+ /* global variables */
+ /* they are not really harmful here, because there is only one configuration
+--- ./expand.c.uw	2001-05-20 18:18:12.000000000 +0000
++++ ./expand.c	2003-09-09 01:04:02.500000002 +0000
+@@ -6,6 +6,9 @@
+ 
+ #include "sysincludes.h"
+ #include "mtools.h"
++#include <sys/types.h>
++#include <signal.h>
++#include <stdio.h>
+ 
+ 
+ int safePopenOut(char **command, char *output, int len)
+--- ./file.c.uw	2003-09-09 00:59:33.000000000 +0000
++++ ./file.c	2003-09-09 01:04:52.150000015 +0000
+@@ -6,6 +6,7 @@
+ #include "file.h"
+ #include "htable.h"
+ #include "dirCache.h"
++#include <time.h>
+ 
+ typedef struct File_t {
+ 	Class_t *Class;
+--- ./floppyd_io.c.uw	2003-09-09 00:59:33.000000000 +0000
++++ ./floppyd_io.c	2003-09-09 01:06:14.060000015 +0000
+@@ -16,6 +16,7 @@
+ #include "scsi.h"
+ #include "partition.h"
+ #include "floppyd_io.h"
++#include <stdio.h>
+ 
+ #ifdef USE_FLOPPYD
+ 

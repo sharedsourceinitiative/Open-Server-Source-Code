@@ -1,0 +1,372 @@
+version 5.5
+" ==================================================================
+" Last update:  Sun Aug 01 00:24:00 PDT 1999
+" Purpose:      Setup file for the editor Vim (Vi IMproved)
+" Availability: This file is based on
+"    23K        <URL:http://www.math.fu-berlin.de/~guckes/setup/vimrc.gz>
+"    65K        <URL:http://www.math.fu-berlin.de/~guckes/setup/vimrc>
+"               <URL:http://www.vim.org/rc> (mirror)
+" Author:       Sven Guckes guckes@vim.org (guckes@math.fu-berlin.de)
+"               <URL:http://www.math.fu-berlin.de/~guckes/sven/>
+" Related files:
+"               http://www.math.fu-berlin.de/~guckes/vim/src/emacs.vim
+"               http://www.math.fu-berlin.de/~guckes/vim/src/latex.vim
+"               http://www.math.fu-berlin.de/~guckes/vim/src/html.vim
+"               http://www.math.fu-berlin.de/~guckes/vim/syntax/
+" Note:         Modified for use with Skunkware 99 for UnixWare 7
+"               by Ronald Joe Record (rr@sco.com). See the file
+"               /usr/local/share/vim/vimrc-with-comments for comments
+  nmap  ,e :e ~/.P/
+  map   ,rn :0r ~/.P/txt/New.page.form.html
+  nmap  ,p :!chmod 644 %<CR>
+  iab Ybr <br>
+  iab Yhr <hr>
+  iab Yp  <p>
+  map ,me yiwi<<ESC>ea></<C-R>"><ESC>
+  iab  Ycom  <!--X--><ESC>FXs
+  vmap ,com v`<i<!--<ESC>`>i--><ESC>
+  iab  Ybl  <blockquote></blockquote><ESC>T>i
+  iab  Yb   <b></b><ESC>T>i
+  vmap ,b   "zdi<b><C-R>z</b><ESC>2F>
+  iab  Ycen <center></center><ESC>T>i
+  vmap ,cen "zdi<center><C-M><C-R>z<C-M></center><ESC>T>i
+  iab  Ycod <code></code><ESC>T>i
+  vmap ,cod "zdi<code><C-M><C-R>z<C-M></code><C-M><ESC>T>i
+  iab  Yi   <i></i><ESC>T>i
+  vmap ,i   "zdi<i><C-R>z</i><ESC>T>
+  iab  Ytt   <tt></tt><ESC>T>i
+  vmap ,tt   "zdi<tt><C-R>z</tt><ESC>T>
+  iab  Ypre <pre></pre><ESC>T>i
+  vmap ,pre mz:<ESC>'<O<pre><ESC>'>o</pre><ESC>`z
+  iab  Yxmp <xmp></xmp><ESC>T>i
+  vmap ,xmp mz:<ESC>'<O<xmp><ESC>'>o</xmp><ESC>`z
+  iab  Ytd  <td></td><ESC>T>i
+  vmap ,td  "zdi<td><C-R>z</td><ESC>T>i
+  iab  Ytr  <tr></tr><ESC>T>i
+  vmap ,tr  "zdi<tr><C-R>z</tr><ESC>T>i
+  iab  Yh1 <h1></h1><ESC>T>i
+  vmap ,h1 "zdi<h1><C-R>z</h1><ESC>2F>
+  iab  Yh2 <h2></h2><ESC>T>i
+  vmap ,h2 "zdi<h2><C-R>z</h2><ESC>2F>
+  iab  Yh3 <h3></h3><ESC>T>i
+  vmap ,h3 "zdi<h3><C-R>z</h3><ESC>2F>
+  iab  Yh4 <h4></h4><ESC>T>i
+  vmap ,h4 "zdi<h4><C-R>z</h4><ESC>2F>
+  iab  Yh5 <h5></h5><ESC>T>i
+  vmap ,h5 "zdi<h5><C-R>z</h5><ESC>2F>
+  iab  Yh6 <h6></h6><ESC>T>i
+  vmap ,h6 "zdi<h6><C-R>z</h6><ESC>2F>
+  iab Yol <ol><CR><li><CR></ol><ESC>k
+  iab Yul <ul><CR><li><CR></ul><ESC>k
+  iab Ydl <dl><CR><CR><dt><CR><dd><CR><p><CR><CR></dl><CR><ESC>5kA
+  iab Yli <li>
+  iab Ydt <dt><CR><dd><CR><p><CR><ESC>kA
+  iab Ydp <dt><CR><dd><C-M><p><C-M><ESC>kkkA
+  iab  Yhref <a href=""></a><ESC>?""<CR>a
+  vmap ,href "zdi<a href=""><C-R>z</a><ESC>F"i
+  iab  Ylink <a href=""></a><ESC>?""<CR>a
+  vmap ,link "zdi<a href="<C-R>z"<C-M><C-I>><C-R>z</a><ESC>F"i
+  iab  Yname <a name=""></a><ESC>?""<CR>a
+  vmap ,name "zdi<a name="<C-R>z"<C-M><C-I>><C-R>z</a><ESC>2F>
+  iab  Yimg  <img alt="[]"<C-M>   align=<C-M>     src=""></a><ESC>?""<CR>a
+  iab  Ymail <a href="mailto:"></a><ESC>?:<CR>a
+  vmap ,mail "zdi<a href="mailto:<C-R>z"<C-M><C-I><C-I>><C-R>z</a><ESC>2F>
+  vmap ,Mail "zdi<a href="mailto:<C-R>z"><C-R>z</a><ESC>2F>
+  iab  Ynews <a href="news:"></a><ESC>?:<CR>a
+  vmap ,news "zdi<a href="news:<C-R>z"><C-R>z</a><ESC>2F>
+  iab  Ypage   <C-M>page:<C-I><C-M>link:<C-I><C-M>text:<C-I><ESC>kkA
+  vmap ,Cblu "zdi<FONT COLOR="#0000FF"><C-R>z</FONT>
+  vmap ,Cgre "zdi<FONT COLOR="#00FF00"><C-R>z</FONT>
+  vmap ,Cred "zdi<FONT COLOR="#FF0000"><C-R>z</FONT>
+  imap ;& &amp;
+  imap ;K &copy;
+  imap ;" &quot;
+  imap ;< &lt;
+  imap ;> &gt;
+  imap \Ae &Auml;
+  imap \Oe &Ouml;
+  imap \Ue &Uuml;
+  imap \ae &auml;
+  imap \oe &ouml;
+  imap \ue &uuml;
+  imap \ss &szlig;
+  nmap  ,= :%s/^===\(.*\)$/<h1>\1<\/h1>/c<CR>
+  set noautoindent
+  set   autowrite
+  set nobackup
+  set   backspace=2
+  set   background=dark
+  set nocompatible
+  set   comments=b:#,:%,fb:-,n:>,n:)
+  set   dictionary=/usr/ucblib/dict/words
+  set   digraph
+  set noerrorbells
+
+  set   esckeys
+  set   formatoptions=cqrt
+  set   helpheight=0
+  if version==503
+    set helpfile=/usr/local/share/vim/vim53/doc/help.txt
+  endif
+  if version==504
+    set helpfile=/usr/local/share/vim/vim54/doc/help.txt
+  endif
+  set   hidden
+  set   highlight=8r,db,es,hs,mb,Mr,nu,rs,sr,tb,vr,ws
+  set nohlsearch
+  set noicon
+  set noignorecase
+  set noinsertmode
+  set   iskeyword=@,48-57,_,192-255,-,.,@-@
+  set   joinspaces
+  set   laststatus=2
+  set   lazyredraw
+  set   magic
+  set   modeline
+  set   modelines=1
+  set nonumber
+  set   path=.,,~/.P/vim,~/.P/vim/syntax,~/.P/vim/source,$VIM/syntax/
+  set   report=0
+  set   ruler
+  set   shell=zsh
+  set   shiftwidth=8
+  set   shortmess=at
+  set   showcmd
+  set   showmatch
+  set   showmode
+  set   suffixes=.aux,.bak,.dvi,.gz,.idx,.log,.ps,.swp,.tar
+  set nostartofline
+  set   tabstop=8
+  set   term=$TERM
+  if &term=="xterm"
+  set t_Co=8
+  set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
+  set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+  endif
+  set notextmode
+  set   textwidth=79
+  set notitle
+  set nottyfast
+  set nottybuiltin
+  set   ttyscroll=0
+  set   viminfo=%,'50,\"100,:100,n~/.viminfo
+  set   visualbell
+  set   t_vb=
+  set   whichwrap=<,>
+  set   wildchar=<TAB>
+  set   wrapmargin=1
+  set nowritebackup
+  iab Npi 3.1415926535897932384626433832795028841972
+  iab Ne  2.7182818284590452353602874713526624977573
+  iab Yalpha abcdefghijklmnopqrstuvwxyz
+  iab YALPHA ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  iab Ydigit 1234567890
+  iab Yruler 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+  iab Ypass "You are in a maze of twisty little passages, all alike."
+  iab  Yell  [...]
+  vmap ,ell c[...]<ESC>
+  iab alos also
+  iab aslo also
+  iab charcter character
+  iab charcters characters
+  iab exmaple example
+  iab shoudl should
+  iab seperate separate
+  iab teh the
+  iab nciht nicht
+  iab doer oder
+  iab Dreckfuhler Druckfehler
+  iab Laurant Laurent
+  iab YDDS dash-dash-space
+  iab YKT Komplexitaetstheorie
+  iab YRA Rechnerarchitektur
+  iab YPM Pattern Matching
+  iab YICM International Congress of Mathematicians
+  iab YAW You are welcome!  :-)
+  iab YEV Enjoy Vim!
+  cab ELMALIAS  ~/.elm/aliases.text
+  cab Erc       ~/.elm/elmrc
+  cab Mrc       ~/.muttrc
+  cab Src       ~/.slrnrc
+  cab Zrc       ~/.zshrc
+  cab SIGs      ~/.sigs
+  let SIGS=expand("~/.sigs")
+  let MAILNEWSFILES = "*.article,*.followup,*.letter,mutt*"
+  ab Agnksa   js@xs4all.nl (Jeroen Scheerder)
+  ab Amutt    me@cs.hmc.edu (Michael Elkins)
+  ab Aslrn    davis@space.mit.edu (John E. Davis)
+  ab Avim     bram@vim.org (Bram Moolenaar)
+  iab Nafw    alt.fan.warlord
+  iab Nahbou  alt.humor.best-of-usenet
+  iab Nzedat  bln.announce.fub.zedat.d
+  iab Ncsd    bln.announce.fub.cs.d
+  iab Nce     comp.editors
+  iab Nhtml   comp.infosystems.www.authoring.html
+  iab Nelm    comp.mail.elm
+  iab Npine   comp.mail.pine
+  iab Ndcm    de.comm.mobil
+  iab Nmobil  de.comm.mobil
+  iab Nlynx     comp.infosystems.www.browsers.misc
+  iab Nnetscape comp.infosystems.www.browsers.misc
+  iab Nmutt   comp.mail.mutt
+  iab Nnn     news.software.nn
+  iab Newbie  news.newusers.questions
+  iab Nnsr    news.software.readers
+  iab UFT  Followup-To:
+  iab UMCT Mail-Copies-To: MYADDR
+  iab UNG  Newsgroups:
+  iab URT  Reply-To: MYADDR
+  iab UFUB Organization: Freie Universitaet Berlin
+  ab HPV   http://www.vim.org/
+  ab URLvimfaq    http://www.grafnetix.com/~laurent/vim/faq.html
+  ab FTPVIM        ftp://ftp.fu-berlin.de/pub/misc/editors/vim/
+  ab FTPSCO        ftp://ftp.sco.com/
+  ab FTPSKUNK      ftp://ftp.sco.com/skunkware/
+  ab URLSKUNK      http://www.sco.com/skunkware/
+  ab URLSCO        http://www.sco.com/
+  cab HEMAIL ^\(From\\|Cc\\|To\\|Date\\|Subject\\|Message-ID\\|Message-Id\\|X-\)
+  cab HNEWS  ^\(From\\|Cc\\|To\\|Date\\|Subject\\|Message-ID\\|X-\\|Newsgroups\)
+  iab Ydate <C-R>=strftime("%y%m%d")<CR>
+  iab Ytime <C-R>=strftime("%H:%M")<CR>
+  iab YDT   <C-R>=strftime("%y%m%d %T")<CR>
+  iab YDATE <C-R>=strftime("%a %b %d %T %Z %Y")<CR>
+  map <Del> <C-H>
+  nnoremap Q gq
+  vnoremap Q gq
+  map #tw :set textwidth=<C-R>=col(".")<C-M>
+  map <esc>[14~ :set paste!<c-m>:set paste?<c-m>
+  map K <NUL>
+  map <C-Z> :shell
+  noremap <C-^> <C-^>`"
+  noremap gf gf`"
+  nmap :W :w
+  map :alias map
+  map :which map
+  noremap <C-G> 2<C-G>
+  map ,SO :so ~/.P/vim/syntax/
+  map ,V  :so $VIM/syntax/
+  cnoremap <C-A> <Home>
+  cnoremap <C-F> <Right>
+  cnoremap <C-B> <Left>
+  cnoremap <C-E> <End>
+  cnoremap <ESC>b <S-Left>
+  cnoremap <ESC>f <S-Right>
+  cnoremap <ESC><C-H> <C-W>
+  cnoremap <ESC>[D <Left>
+  cnoremap <ESC>[C <Right>
+  if has("unix")
+    let vimrc='~/.vimrc'
+  else
+    let vimrc='$VIM\_vimrc'
+  endif
+  nn  ,u :source <C-R>=vimrc<CR><CR>
+  nn  ,v :edit   <C-R>=vimrc<CR><CR>
+ imap <Esc>[3~ <C-H>
+ imap        <C-H>
+ cmap        <C-H>
+  cmap ;rcm %s/<C-M>//g
+  nmap ,Sws :%s/ /_/g<C-M>
+  vmap ,Sws :%s/ /_/g<C-M>
+  nmap ,Stws :%s/  *$/_/g<C-M>
+  vmap ,Stws :%s/  *$/_/g<C-M>
+  map ,L  1G/Last update:\s*/e+1<CR>CYDATE<ESC>
+  map ,,L 1G/Last change:\s*/e+1<CR>CYDATE<ESC>
+  map   ,Et :e /tmp/screen-exchange
+  map ,cel :%s/^\s\+$//
+  map ,del :g/^\s\+$/d
+  nmap ,cqel :%s/^[>]\+$//
+  vmap ,cqel  :s/^[><C-I> ]\+$//
+  vmap ,dot :s/\.\+ \+/.  /g
+  vmap ,gary :s/^>[ <C-I>]\+\([^>]\)/> \1/
+  nmap ,ksr :%s/  \+/ /g
+  vmap ,ksr  :s/  \+/ /g
+   map ,Sel :g/^$/,/./-j
+   map ,Sbl :g/^\s*$/,/\S/-j
+  autocmd!
+au! BufNewFile mutt* let @"="X-Editor: Vim-".version." http://www.vim.org\n"|exe 'norm 1G}""P'
+  au BufNewFile,BufRead .letter,mutt*,nn.*,snd.* set tw=78
+au BufEnter *.[ch]      set ai et sw=4 ts=4
+au BufEnter *.pl        set ai et sw=4 ts=4
+au BufEnter *.html      set ai    sw=2 ts=2
+au BufEnter *.shtml     set ai    sw=2 ts=2
+au BufEnter *.java      set ai    sw=4 ts=4
+   map ,dp vip:s/^> //<CR>
+  vmap ,dp    :s/^> //<CR>
+   map ,qp   vip:s/^/> /<CR>
+  vmap ,qp    :s/^/> /<CR>
+  nmap  ##   vip:s/^/#/<CR>
+  vmap  ##      :s/^/#/<CR>
+  vmap ,kpq :s/^> *[a-zA-Z]*>/> >/<C-M>
+  vmap ,fq :s/^> \([-":}\|][ <C-I>]\)/> > /
+  nmap ,we vip:v/HEMAIL/d
+  vmap ,we    :v/HEMAIL/d
+  nmap ,wp vip:v/HNEWS/d
+  vmap ,wp    :v/HNEWS/d
+  imap <C-J> <c-o>gqap
+   map <C-J> gqap
+  nmap ,b r<CR>
+  nmap ,j Vjgq
+  nmap ,B r<CR>Vjgq
+
+  map ,cc 1G}jyykPICc: <ESC>$x
+  map ,mlu 1G}OPriority: urgent<ESC>
+  map ,cs 1G/^Subject: <CR>yypIX-Old-<ESC>-W
+  map ,re 1G/^Sub<CR>:s/\(Re: \)\+/Re: /<CR>
+  map ,Re 1G/^Subject: <C-M>:s/Re: Re\[\([0-9]\+\)\]/Re[\1]/<C-M><C-A>
+  vmap ,( v`<i(<ESC>`>a)<ESC>
+  vmap ,) v`<i(<ESC>`>a)<ESC>
+  map ,hi 1G}oHi!<CR><ESC>
+  map ,ha 1G}oHello, again!<CR><ESC>
+  map ,H G/^\* /e+1<CR>ye1G}oHallo, !<ESC>Po<ESC>
+  map ,kqs G?^> -- $<CR>d}
+  nmap ,at :r ~/.P/txt/
+    map  ,Env `>a\end{ENVNAME}<esc>`<i\begin{ENVNAME}<esc>
+   vmap  ,Env <c-o>,Env
+    map  ,ENV `>o\end{ENVNAME}<esc>`<O\begin{ENVNAME}<esc>
+   vmap  ,ENV <c-o>,ENV
+    map  Y"  ``''<Left><Left>
+  vmap ,dr :!tr A-Za-z N-ZA-Mn-za-m
+
+  map <F4>  :split<C-M>
+  map <F5>  :bp<C-M>
+  map <F6>  :bn<C-M>
+  map <F12> :bd<C-M>
+  map <ESC>[19~ :split<C-M>
+  map <ESC>[20~ :bp<C-M>
+  map <ESC>[23~ :bn<C-M>
+  map <ESC>[31~ :bd<C-M>
+  imap <C-A>  <C-O>0
+  imap <C-D>  <C-O>x
+  imap <C-B>  <left>
+  imap <C-E>  <C-O>$
+  imap <C-F>  <right>
+  imap <C-O>b <C-O>B
+  imap <C-O>f <C-O>W
+   map <ESC>OA <Up>
+   map <ESC>OB <Down>
+   map <ESC>OC <Right>
+   map <ESC>OD <Left>
+  imap <ESC>OA <Up>
+  imap <ESC>OB <Down>
+  imap <ESC>OC <Right>
+  imap <ESC>OD <Left>
+   map <ESC>[A <Up>
+   map <ESC>[B <Down>
+   map <ESC>[C <Right>
+   map <ESC>[D <Left>
+  imap <ESC>[A <Up>
+  imap <ESC>[B <Down>
+  imap <ESC>[C <Right>
+  imap <ESC>[D <Left>
+  if has("syntax")
+      " The following sources the main syntax file,
+      " ie. "$VIM/syntax/syntax.vim", see ":help :syn-on":
+      syntax on
+      " Redefine the color for "Comment":
+      hi! Comment  term=bold  ctermfg=cyan  guifg=Blue
+  endif
+  iab YPATHFILE <C-R>=expand("%:p")<cr>
+  iab YFILE <C-R>=expand("%:t:r")<cr>
+  iab YPATH <C-R>=expand("%:h")<cr>
+ vmap #b y:!netscape -remote "openurl <C-R>""
+  au VimLeave * echo "Thanks for using Vim"version

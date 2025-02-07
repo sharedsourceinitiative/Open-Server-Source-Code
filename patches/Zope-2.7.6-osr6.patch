@@ -1,0 +1,67 @@
+*** ./inst/Makefile.in.osr6 Sun Nov  7 22:37:02 2004
+--- ./inst/Makefile.in Tue May 17 18:23:33 2005
+***************
+*** 27,33 ****
+  FIND=find
+  XARGS=xargs
+  CD=cd
+! LN=ln -sfn
+  CP=cp
+  TAR=tar
+  MKDIR=mkdir -p
+--- 27,33 ----
+  FIND=find
+  XARGS=xargs
+  CD=cd
+! LN=ln -sf
+  CP=cp
+  TAR=tar
+  MKDIR=mkdir -p
+*** ./Configure-OSR6.osr6 Tue May 17 18:21:26 2005
+--- ./Configure-OSR6 Tue May 17 18:21:26 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ #
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --prefix=/usr/zope 2>&1 | tee mout-configure
+*** ./configure.osr6 Sat Feb 12 07:34:21 2005
+--- ./configure Tue May 17 18:21:26 2005
+***************
+*** 12,18 ****
+  
+  # Place the optimal target version number for Zope (as returned by sys.version)
+  # below
+! TARGET="2.3.5"
+  
+  # Order a list of "acceptable" python version numbers (as returned by
+  # sys.version) below in "best" to "worst" order, not including the
+--- 12,18 ----
+  
+  # Place the optimal target version number for Zope (as returned by sys.version)
+  # below
+! TARGET="2.4"
+  
+  # Order a list of "acceptable" python version numbers (as returned by
+  # sys.version) below in "best" to "worst" order, not including the
+***************
+*** 18,24 ****
+  # sys.version) below in "best" to "worst" order, not including the
+  # target version.  Up to six acceptable python versions are allowed.
+  # Do not include the target version number in this list!
+! ACCEPTABLE="2.3.4 2.3.3"
+  
+  # provide the executable names for all the acceptable versions
+  # (and the target version) below
+--- 18,24 ----
+  # sys.version) below in "best" to "worst" order, not including the
+  # target version.  Up to six acceptable python versions are allowed.
+  # Do not include the target version number in this list!
+! ACCEPTABLE="2.3.5 2.3.4 2.3.3"
+  
+  # provide the executable names for all the acceptable versions
+  # (and the target version) below

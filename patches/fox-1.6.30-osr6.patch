@@ -1,0 +1,52 @@
+*** ./include/fxdefs.h.osr6	Thu Nov  9 17:00:26 2006
+--- ./include/fxdefs.h	Fri Nov  9 10:15:08 2007
+***************
+*** 377,383 ****
+  #elif defined(_MSC_VER) || (defined(__BCPLUSPLUS__) && __BORLANDC__ > 0x500) || defined(__WATCOM_INT64__)
+  typedef unsigned __int64       FXulong;
+  typedef __int64                FXlong;
+! #elif defined(__GNUG__) || defined(__GNUC__) || defined(__SUNPRO_CC) || defined(__MWERKS__) || defined(__SC__) || defined(_LONGLONG)
+  typedef unsigned long long     FXulong;
+  typedef long long              FXlong;
+  #else
+--- 377,383 ----
+  #elif defined(_MSC_VER) || (defined(__BCPLUSPLUS__) && __BORLANDC__ > 0x500) || defined(__WATCOM_INT64__)
+  typedef unsigned __int64       FXulong;
+  typedef __int64                FXlong;
+! #elif defined(__GNUG__) || defined(__GNUC__) || defined(__SUNPRO_CC) || defined(__MWERKS__) || defined(__SC__) || defined(_LONGLONG) || defined(__USLC__)
+  typedef unsigned long long     FXulong;
+  typedef long long              FXlong;
+  #else
+*** ./include/xincs.h.osr6	Sun Jan 22 09:58:14 2006
+--- ./include/xincs.h	Fri Nov  9 10:18:31 2007
+***************
+*** 155,160 ****
+--- 155,165 ----
+  #include <sys/mman.h>
+  #endif
+  
++ /* undefine open so this works on OpenServer 6 with large file support */
++ /* fcntl.h defines open as open64 which confuses SVR5 CC */
++ #if defined(open)
++ #undef open
++ #endif
+  
+  // For thread-safe readdir_r, we sometimes need extra
+  // space above and beyond the space for dirent itself
+*** ./Install-OSR6.osr6	Fri Nov  9 10:18:45 2007
+--- ./Install-OSR6	Fri Nov  9 10:18:55 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/fox
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

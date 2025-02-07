@@ -1,0 +1,28 @@
+*** ./Configure-OSR6.00	Tue Nov 29 12:55:53 2005
+--- ./Configure-OSR6	Tue Nov 29 13:11:42 2005
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ AWK="cat #"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export AWK CC CXX CFLAGS NM
++ [ -f configure ] || {
++     rm -f mout-autosetup
++     ./_autosetup 2>&1 | tee mout-autosetup
++ }
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

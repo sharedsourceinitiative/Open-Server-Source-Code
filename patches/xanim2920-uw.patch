@@ -1,0 +1,26 @@
+--- ./Imakefile.uw	2005-03-30 16:56:15.410000033 +0000
++++ ./Imakefile	2005-03-30 16:58:44.220000014 +0000
+@@ -95,8 +95,11 @@
+ XCOMM   Specify any Linker flags needed to allow dynamically loadable modules
+ XCOMM   to link against symbols inside xanim.
+ XCOMM 
++XCOMM ## SCO
++LD_FLAGS = -Wl,-Bexport
++XCOMM
+ XCOMM ## Linux
+-LD_FLAGS = -rdynamic
++XCOMM LD_FLAGS = -rdynamic
+ XCOMM
+ XCOMM ## SunOS/Solaris use:
+ XCOMM LD_FLAGS =
+@@ -451,6 +454,10 @@
+ XCOMM 
+ XCOMM ###########
+ XCOMM 
++INSTALL = /usr/ucb/install
++XCOMM
++XCOMM ###########
++XCOMM
+ XCOMM #########################################################################
+ XCOMM  END OF SECTIONS - No need to look below unless a NOTE told you to.
+ XCOMM #########################################################################

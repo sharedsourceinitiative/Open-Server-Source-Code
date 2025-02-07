@@ -1,0 +1,94 @@
+--- ./src/ui/ui.c.osr6	2003-03-19 04:09:31.000000000 -0800
++++ ./src/ui/ui.c	2005-06-09 08:10:52.412671008 -0700
+@@ -89,8 +89,9 @@
+ #else
+ #define STATUSLINES 11
+ #endif
+-static void ui_mouse (int mousex, int mousey, int mousebuttons,
+-		      int iterchange);
++static void main_loop (void);
++static void ui_mkimages (int , int );
++static void ui_mouse (int , int , int , int );
+ #ifndef exit_xaos
+ #define exit_xaos(i) exit(i)
+ #endif
+--- ./src/include/pixel_t.h.osr6	2002-09-25 08:52:09.000000000 -0700
++++ ./src/include/pixel_t.h	2005-06-09 08:05:39.647711002 -0700
+@@ -1,19 +1,5 @@
+-#if SIZEOF_INT==4
+ typedef unsigned int pixel32_t;
+-#elif SIZEOF_LONG==4
+-typedef unsigned long pixel32_t;
+-#else
+-/*#error define size for pixel32 please */
+-00
+-#endif
+-#if SIZEOF_SHORT==2
+ typedef unsigned short pixel16_t;
+-#elif SIZEOF_INT==2
+-typedef unsigned int pixel16_t;
+-#else
+-/*#error define size for pixel16 please */
+-  00
+-#endif
+ typedef unsigned char pixel8_t;
+ typedef unsigned char ppixel24_t[3];
+ typedef pixel8_t *ppixel8_t;
+--- ./Configure-OSR6.osr6	2005-06-09 08:05:39.687711010 -0700
++++ ./Configure-OSR6	2005-06-09 08:11:58.317391000 -0700
+@@ -0,0 +1,10 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="gcc -D_REENTRANT -DNOASSEMBLY"
++CXX="g++ -D_REENTRANT -DNOASSEMBLY"
++export CC CXX CFLAGS
++rm -f mout-configure
++./configure --prefix=/usr --with-i386asm=no --disable-nls \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.osr6	2003-03-18 00:33:10.000000000 -0800
++++ ./configure	2005-06-09 08:05:39.767631013 -0700
+@@ -4031,7 +4031,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   gt_save_LIBS="$LIBS"
+-		LIBS="$LIBS -lintl $LIBICONV"
++		LIBS="$LIBS -L/usr/gnu/lib -lintl $LIBICONV"
+ 		cat >conftest.$ac_ext <<_ACEOF
+ #line 4036 "configure"
+ #include "confdefs.h"
+@@ -4080,7 +4080,7 @@
+ EOF
+ 
+ 	     if test "$gt_cv_func_gnugettext1_libintl" = "yes"; then
+-	       	       	       	       INTLLIBS="-lintl $LIBICONV"
++	       	       	       	       INTLLIBS="-L/usr/gnu/lib -lintl $LIBICONV"
+ 	     fi
+ 
+ 	     gt_save_LIBS="$LIBS"
+@@ -14921,8 +14921,8 @@
+ #define HAVE_GETTEXT 1
+ EOF
+ 
+- LIBS="$LIBS -lintl"
+- fi
++fi
++LIBS="$LIBS -L/usr/gnu/lib -lintl"
+ 
+ echo "------------------------------------------------------------"
+ echo "Available drivers:"
+--- Install-OSR6.osr6	2005-07-05 10:13:37.130000007 -0700
++++ Install-OSR6	2005-07-05 10:13:58.050000007 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/xaos
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

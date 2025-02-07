@@ -1,0 +1,481 @@
+--- ./contrib/dist/rpm/proftpd.init.sco.00	2008-12-11 18:39:34.430000008 -0800
++++ ./contrib/dist/rpm/proftpd.init.sco	2008-12-11 18:39:34.430000005 -0800
+@@ -0,0 +1,127 @@
++#!/bin/sh
++
++# ProFTPD files
++FTPD_BIN=/usr/sbin/proftpd
++FTPD_CONF=/etc/proftpd.conf
++PIDFILE=/var/run/proftpd.pid
++
++CAT=proftpd.cat
++SCRIPTDIR="/etc/init.d"
++SCRIPT="proftpd"
++PROFTPD_LABEL="ProFTPD"
++STOPNUM="K06"
++STARTNUM="S81"
++
++#############################################################################
++#
++# proftpd_enable
++#
++# add a link to this script into the /etc/rc2.d directory, then start
++# the server
++#
++#############################################################################
++proftpd_enable() {
++  # create the /etc/rc2.d startup file
++  if [ -f /etc/rc2.d/$STARTNUM$SCRIPT ]; then
++    # file already exists
++    test -z "$ISL" && dspmsg $CAT 15 "%s is already enabled.\n" $PROFTPD_LABEL
++  else
++    # link in the file
++    test -z "$ISL" && dspmsg $CAT 16 "Enabling %s ... " $PROFTPD_LABEL
++    ln $SCRIPTDIR/$SCRIPT /etc/rc2.d/$STARTNUM$SCRIPT
++    ln $SCRIPTDIR/$SCRIPT /etc/rc0.d/$STOPNUM$SCRIPT
++    test -z "$ISL" && dspmsg $CAT 17 "done.\n"
++  fi
++}
++
++#############################################################################
++#
++# proftpd_disable
++#
++# remove any links to this script in /etc/rc2.d
++#
++#############################################################################
++proftpd_disable() {
++  # remove the /etc/rc2.d startup file
++  if [ -f /etc/rc2.d/$STARTNUM$SCRIPT ]; then
++    # unlink the file
++    test -z "$ISL" && dspmsg $CAT 18 "Disabling %s ... " $PROFTPD_LABEL
++    rm -f /etc/rc2.d/$STARTNUM$SCRIPT
++    rm -f /etc/rc0.d/$STOPNUM$SCRIPT
++    test -z "$ISL" && dspmsg $CAT 19 "done.\n"
++  else
++    # file does not exist
++    test -z "$ISL" && dspmsg $CAT 20 "%s is already disabled.\n" $PROFTPD_LABEL
++  fi
++}
++
++# If PIDFILE exists, does it point to a proftpd process?
++
++if [ -f $PIDFILE ]; then
++   pid=`cat $PIDFILE`
++fi
++
++if [ ! -x $FTPD_BIN ]; then
++    dspmsg $CAT 16 "$0: $FTPD_BIN: cannot execute"
++    exit 1
++fi
++
++case $1 in
++
++start)
++      if [ -n "$pid" ]; then
++        dspmsg $CAT 10 "%s [PID $pid] is already running.\n" $PROFTPD_LABEL
++        exit 0
++      fi
++
++      if [ -r $FTPD_CONF ]; then
++        dspmsg $CAT 11 "Starting %s ... " $PROFTPD_LABEL
++        $FTPD_BIN -c $FTPD_CONF &
++        dspmsg $CAT 17 "done.\n"
++
++      else
++        dspmsg $CAT 13 "$0: cannot start %s -- $FTPD_CONF missing" PROFTPD_LABEL
++        exit 1
++      fi
++      ;;
++
++stop)
++      if [ -n "$pid" ]; then
++        dspmsg $CAT 12 "Stopping %s ... " $PROFTPD_LABEL
++        kill -15 $pid
++        dspmsg $CAT 17 "done.\n"
++
++      else
++        dspmsg $CAT 14 "%s not running.\n" $PROFTPD_LABEL
++        exit 0
++      fi
++      ;;
++
++restart)
++      if [ -n "$pid" ]; then
++        dspmsg $CAT 15 "Rehashing %s configuration" $PROFTPD_LABEL
++        kill -1 $pid
++
++      else
++        dspmsg $CAT 14 "%s not running.\n" $PROFTPD_LABEL
++        exit 1
++      fi
++      ;;
++
++enable)
++        proftpd_enable
++        ;;
++
++disable)
++        proftpd_disable
++        ;;
++
++*)
++      echo "usage: $0 {start|stop|restart|enable|disable}"
++      exit 1
++      ;;
++
++esac
++
++exit 0
++
+--- ./lib/libltdl/configure.00	2004-10-28 22:17:55.000000000 -0700
++++ ./lib/libltdl/configure	2008-12-11 18:39:34.440000118 -0800
+@@ -3783,7 +3783,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sco3.2v5*)
++sco3.2v5* | sysv5*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+@@ -3791,7 +3791,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -3815,7 +3815,7 @@
+   esac
+   ;;
+ 
+-sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
++sysv5* | unixware7* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ esac
+@@ -7225,7 +7225,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7902,29 +7902,18 @@
+       runpath_var=LD_RUN_PATH
+       ;;
+ 
+-   sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
++   sysv5* | unixware7*)
+       no_undefined_flag='${wl}-z ${wl}text'
+       if test "$GCC" = yes; then
+ 	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+       else
+ 	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+       fi
+       runpath_var='LD_RUN_PATH'
+       hardcode_shlibpath_var=no
+       ;;
+ 
+-    sysv5*)
+-      no_undefined_flag=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-      hardcode_libdir_flag_spec=
+-      hardcode_shlibpath_var=no
+-      runpath_var='LD_RUN_PATH'
+-      ;;
+-
+     uts4*)
+       archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec='-L$libdir'
+@@ -11080,9 +11069,18 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+-    archive_cmds_need_lc_CXX=no
+-    ;;
++  sysv5* | unixware7*)
++      no_undefined_flag_CXX='${wl}-z ${wl}text'
++      if test "$GCC" = yes; then
++	archive_cmds_CXX='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds_CXX='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
++      runpath_var_CXX='LD_RUN_PATH'
++      hardcode_shlibpath_var_CXX=no
++      ;;
++
+   tandem*)
+     case $cc_basename in
+       NCC)
+@@ -14117,7 +14115,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs_F77=no
+ 	cat <<EOF 1>&2
+@@ -14774,7 +14772,7 @@
+       runpath_var=LD_RUN_PATH
+       ;;
+ 
+-   sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
++   sysv5* | unixware7*)
+       no_undefined_flag_F77='${wl}-z ${wl}text'
+       if test "$GCC" = yes; then
+ 	archive_cmds_F77='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+@@ -14785,18 +14783,6 @@
+       hardcode_shlibpath_var_F77=no
+       ;;
+ 
+-    sysv5*)
+-      no_undefined_flag_F77=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-      hardcode_libdir_flag_spec_F77=
+-      hardcode_shlibpath_var_F77=no
+-      runpath_var='LD_RUN_PATH'
+-      ;;
+-
+     uts4*)
+       archive_cmds_F77='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec_F77='-L$libdir'
+--- ./modules/mod_auth_unix.c.00	2006-06-29 10:16:23.000000000 -0700
++++ ./modules/mod_auth_unix.c	2008-12-11 18:39:34.450000020 -0800
+@@ -33,7 +33,7 @@
+ /* AIX has some rather stupid function prototype inconsistencies between
+  * their crypt.h and stdlib.h's setkey() declarations.  *sigh*
+  */
+-#if defined(HAVE_CRYPT_H) && !defined(AIX4) && !defined(AIX5)
++#if defined(HAVE_CRYPT_H) && !defined(AIX4) && !defined(AIX5) && !defined(SYSV5)
+ # include <crypt.h>
+ #endif
+ 
+--- ./sample-configurations/basic.conf.00	2007-03-09 11:01:30.000000000 -0800
++++ ./sample-configurations/basic.conf	2008-12-11 18:39:34.460000017 -0800
+@@ -1,10 +1,25 @@
+ # This is a basic ProFTPD configuration file (rename it to 
+ # 'proftpd.conf' for actual use.  It establishes a single server
+ # and a single anonymous login.  It assumes that you have a user/group
+-# "nobody" and "ftp" for normal operation and anon.
++# "ftp" and "ftp" for normal operation and anon.
+ 
+ ServerName			"ProFTPD Default Installation"
+-ServerType			standalone
++
++# ProFTPD is installed by default as an inetd server and requires
++# no further configuration for basic use. If you wish to run a
++# standalone server, change the ServerType to standalone by commenting
++# out the inetd setting and uncommenting the standalone setting.
++# You will also have to comment out the ftp entry in /etc/inetd.conf,
++# determine the inetd process id (ps -ef | grep inetd), and restart inetd
++# by issuing the command "kill -1 <process id>".
++#
++# Once reconfigured as a standalone server ProFTPD can be started
++# with the command "/etc/init.d/proftpd start" and stopped with the
++# command "/etc/init.d/proftpd stop". Automatic startup after a reboot
++# can be enabld with "/etc/init.d/proftpd enable".
++
++#ServerType			standalone
++ServerType			inetd
+ DefaultServer			on
+ 
+ # Port 21 is the standard FTP port.
+@@ -23,8 +38,8 @@
+ MaxInstances			30
+ 
+ # Set the user and group under which the server will run.
+-User				nobody
+-Group				nogroup
++User				ftp
++Group				ftp
+ 
+ # To cause every FTP user to be "jailed" (chrooted) into their home
+ # directory, uncomment this line.
+@@ -50,6 +65,9 @@
+   # Limit the maximum number of anonymous logins
+   MaxClients			10
+ 
++  # The default ftp user has /bin/false as the login shell
++  RequireValidShell off
++
+   # We want 'welcome.msg' displayed at login, and '.message' displayed
+   # in each newly chdired directory.
+   DisplayLogin			welcome.msg
+--- ./Configure-OSR6.00	2008-12-11 18:39:34.460000035 -0800
++++ ./Configure-OSR6	2008-12-11 18:39:34.460000032 -0800
+@@ -0,0 +1,29 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2 -DSYSV5SCO_SV6"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++export CC CXX CFLAGS NM M4 INSTALL
++rm -f mout-configure
++./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var/run \
++            --mandir=/usr/man --infodir=/usr/gnu/info \
++            --disable-auth-pam \
++            --disable-ipv6 \
++            --enable-openssl=/usr \
++            --enable-dso \
++            --enable-shared --enable-static \
++            --with-libraries=/usr/lib/mysql \
++            --with-includes=/usr/include/mysql \
++            --with-shared=mod_ldap:mod_sql_mysql:mod_sql_postgres:mod_wrap \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2008-12-11 18:39:34.460000049 -0800
++++ ./Install-OSR6	2008-12-11 18:46:59.760000011 -0800
+@@ -0,0 +1,42 @@
++#!/bin/sh
++
++ADD=ProFTPD-1.3.1-SCO-add.tar.bz2
++MOUT=mout-install
++D=/u/tmp/proftpd
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
++[ -d $D/etc/init.d ] || mkdir -p $D/etc/init.d
++cp contrib/dist/rpm/proftpd.init.sco $D/etc/init.d/proftpd
++[ -d $D/usr/share/doc/packages ] || {
++  mkdir -p $D/usr/share/doc/packages
++}
++
++[ -f $D/etc/proftpd.conf ] && {
++  mv $D/etc/proftpd.conf $D/etc/proftpd.conf.default
++}
++
++cp -R doc $D/usr/share/doc/packages/proftpd
++cp COPY* CRED* NE* R* $D/usr/share/doc/packages/proftpd
++[ -d $D/usr/share/doc/packages/proftpd/sample-configurations ] || {
++  mkdir -p $D/usr/share/doc/packages/proftpd/sample-configurations
++}
++cp sample-configurations/* \
++   $D/usr/share/doc/packages/proftpd/sample-configurations
++
++[ -d $D/usr/share/locale ] && rmdir $D/usr/share/locale
++[ -d $D/usr/lib ] && rmdir $D/usr/lib
++
++[ -f ../$ADD ] && {
++  cd ..
++  HERE=`pwd`
++  cd $D
++  bzcat $HERE/$ADD | tar xf -
++}
++
++find $D -name \*\.00 | xargs rm -f
+--- ./configure.00	2007-05-22 14:01:32.000000000 -0700
++++ ./configure	2008-12-11 18:39:34.480000163 -0800
+@@ -3280,7 +3280,7 @@
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -3304,7 +3304,7 @@
+   esac
+   ;;
+ 
+-sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
++sysv5* | unixware7* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ esac
+@@ -6364,7 +6364,7 @@
+       fi
+       ;;
+ 
+-    solaris* | sysv5*)
++    solaris*)
+       if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+ 	ld_shlibs=no
+ 	cat <<EOF 1>&2
+@@ -7041,29 +7041,18 @@
+       runpath_var=LD_RUN_PATH
+       ;;
+ 
+-   sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
++   sysv5* | unixware7*)
+       no_undefined_flag='${wl}-z ${wl}text'
+       if test "$GCC" = yes; then
+ 	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+       else
+ 	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++        archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+       fi
+       runpath_var='LD_RUN_PATH'
+       hardcode_shlibpath_var=no
+       ;;
+ 
+-    sysv5*)
+-      no_undefined_flag=' -z text'
+-      # $CC -shared without GNU ld will not create a library from C++
+-      # object files and a static libstdc++, better avoid it by now
+-      archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-      archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-  		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-      hardcode_libdir_flag_spec=
+-      hardcode_shlibpath_var=no
+-      runpath_var='LD_RUN_PATH'
+-      ;;
+-
+     uts4*)
+       archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+       hardcode_libdir_flag_spec='-L$libdir'
+@@ -10219,9 +10208,18 @@
+ 	;;
+     esac
+     ;;
+-  sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+-    archive_cmds_need_lc_CXX=no
+-    ;;
++   sysv5* | unixware7*)
++      no_undefined_flag_CXX='${wl}-z ${wl}text'
++      if test "$GCC" = yes; then
++	archive_cmds_CXX='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds_CXX='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++        archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
++      runpath_var_CXX='LD_RUN_PATH'
++      hardcode_shlibpath_var_CXX=no
++      ;;
++
+   tandem*)
+     case $cc_basename in
+       NCC)

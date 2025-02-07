@@ -1,0 +1,59 @@
+*** ./Build-OSR5.00	Mon May 12 11:23:09 2008
+--- ./Build-OSR5	Mon May 12 11:23:09 2008
+***************
+*** 0 ****
+--- 1,5 ----
++ #!/bin/sh
++ 
++ rm -f mout-conf mout
++ ruby extconf.rb 2>&1 | tee mout-conf
++ /usr/gnu/bin/make  2>&1 | tee mout
+*** ./Install-OSR5.00	Mon May 12 12:48:10 2008
+--- ./Install-OSR5	Mon May 12 12:48:01 2008
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/oracle7ruby
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ 
++ rm -f mout-install
++ /usr/gnu/bin/make site-install 2>&1 | tee mout-install
+*** ./extconf.rb.00	Wed Dec 20 23:34:18 2000
+--- ./extconf.rb	Mon May 12 12:26:11 2008
+***************
+*** 1,11 ****
+  require 'mkmf'
+  
+! $ORACLE_HOME = ENV['ORACLE_HOME']
+  
+  # Oracle7.3 for Solaris2 / Oracle8i for Linux?
+! $CFLAGS="-I#{$ORACLE_HOME}/rdbms/demo -DHAS_SQLLDA"
+! $LDFLAGS="-L#{$ORACLE_HOME}/lib"
+! ORALIB = "clntsh"
+  
+  ## Oracle8 for Linux
+  #$CFLAGS="-I#{$ORACLE_HOME}/rdbms/demo -DHAS_SQLLDA"
+--- 1,17 ----
+  require 'mkmf'
+  
+! #$ORACLE_HOME = ENV['ORACLE_HOME']
+! $ORACLE_HOME = "/u/oracle"
+! 
+! # Oracle7.3 for SCO OpenServer
+! $CFLAGS="-I#{$ORACLE_HOME}/include -DHAS_SQLLDA"
+! $LDFLAGS="-L#{$ORACLE_HOME}/lib -lclient -lcommon -lgeneric -lsqlnet -lc3v6 -lcommon -lncr -lsqlnet -lepc -lcore3 -lnlsrtl3 -lcore3 -lnlsrtl3 -lsocket -lnsl"
+! ORALIB = "client"
+  
+  # Oracle7.3 for Solaris2 / Oracle8i for Linux?
+! #$CFLAGS="-I#{$ORACLE_HOME}/rdbms/demo -DHAS_SQLLDA"
+! #$LDFLAGS="-L#{$ORACLE_HOME}/lib"
+! #ORALIB = "clntsh"
+  
+  ## Oracle8 for Linux
+  #$CFLAGS="-I#{$ORACLE_HOME}/rdbms/demo -DHAS_SQLLDA"

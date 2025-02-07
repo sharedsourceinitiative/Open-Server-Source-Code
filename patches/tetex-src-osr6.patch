@@ -1,0 +1,96 @@
+--- ./libs/xpdf/goo/gfile.cc.osr6	2004-01-21 17:26:44.000000000 -0800
++++ ./libs/xpdf/goo/gfile.cc	2005-06-09 12:42:42.055348009 -0700
+@@ -30,6 +30,8 @@
+ #include "GString.h"
+ #include "gfile.h"
+ 
++extern "C" FILE        *fdopen(int, const char *);
++
+ // Some systems don't define this, so just make it something reasonably
+ // large.
+ #ifndef PATH_MAX
+--- ./texk/web2c/lib/texmfmp.c.osr6	2004-12-20 11:57:52.000000000 -0800
++++ ./texk/web2c/lib/texmfmp.c	2005-06-09 12:42:42.085348022 -0700
+@@ -1745,7 +1745,7 @@
+ /* Metafont/MetaPost fraction routines. Replaced either by assembler or C.
+    The assembler syntax doesn't work on Solaris/x86.  */
+ #ifndef TeX
+-#if defined (__sun__) || defined (__cplusplus)
++#if defined (__sun__) || defined(__svr4__) || defined (__cplusplus)
+ #define NO_MF_ASM
+ #endif
+ #if defined(WIN32) && !defined(NO_MF_ASM)
+--- ./texk/xdvik/events.c.osr6	2004-11-29 16:45:11.000000000 -0800
++++ ./texk/xdvik/events.c	2005-06-09 12:42:42.165348013 -0700
+@@ -33,6 +33,7 @@
+ # include <fcntl.h>
+ #endif
+ #include <signal.h>
++#include <sys/signal.h>
+ #include <sys/file.h>	/* this defines FASYNC */
+ #ifdef HAVE_SYS_FCNTL_H
+ # include <sys/fcntl.h>  /* Or this might define FASYNC */
+--- ./texk/xdvik/psgs.c.osr6	2005-01-16 10:39:50.000000000 -0800
++++ ./texk/xdvik/psgs.c	2005-06-09 12:42:42.305348015 -0700
+@@ -30,6 +30,7 @@
+ #include <sys/time.h>	/* for timeval */
+ 
+ #include <signal.h>
++#include <sys/signal.h>
+ 
+ /* Condition for retrying a write */
+ #include <errno.h>
+--- ./texk/gsftopk/gsftopk.c.osr6	2004-02-06 13:20:54.000000000 -0800
++++ ./texk/gsftopk/gsftopk.c	2005-06-09 12:42:42.345348014 -0700
+@@ -77,7 +77,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <setjmp.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <fcntl.h>
+ 
+ #include <errno.h>
+@@ -229,7 +229,7 @@
+ #include <kpathsea/tex-make.h>
+ #include <kpathsea/variable.h>
+ #include <c-auto.h>
+-#include <signal.h>
++#include <sys/signal.h>
+ #include <fcntl.h>
+ #include <setjmp.h>
+ 
+--- ./Build-OSR6.osr6	2005-06-09 12:42:42.385348013 -0700
++++ ./Build-OSR6	2005-06-09 12:46:42.416148011 -0700
+@@ -0,0 +1,17 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++CC="gcc -D_REENTRANT"
++CXX="g++ -D_REENTRANT"
++export CC CXX CFLAGS
++rm -f mout-configure
++./configure --prefix=/usr --with-system-ncurses --without-texinfo --without-texi2html \
++            --with-ncurses-libdir=/usr/gnu/lib --with-ncurses-include=/usr/gnu/include \
++            --disable-multiplatform --host=$HOST --target=$HOST --build=$HOST 2>&1 \
++            | tee mout-configure
++
++MOUT=mout
++[ "$1" ] && MOUT=mout-$1
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make world 2>&1 | tee $MOUT
+--- Install-OSR6.osr6	2005-07-05 23:15:43.800000003 -0700
++++ Install-OSR6	2005-07-05 23:16:35.250000003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/tetex
++prefix=$D/usr
++export prefix
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D/usr
++make install prefix=$D/usr 2>&1 | tee $MOUT

@@ -1,0 +1,1040 @@
+*** ./src/orb/dynamic/Makefile.in.osr6	Tue Sep  6 06:16:58 2005
+--- ./src/orb/dynamic/Makefile.in	Sat Oct  1 17:36:08 2005
+***************
+*** 148,154 ****
+  	-I$(top_srcdir)/src/idl/CORBA				\
+  	-I$(top_srcdir)/src/idl/misc				\
+  	-I$(top_srcdir)/src/orb/orb-core			\
+- 	--noskels --nodefskels --nostubs --noidata --noheaders  \
+  	--showcpperrors
+  
+  IDL_FILES = dynamic-defs.idl
+--- 148,153 ----
+***************
+*** 410,416 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 409,415 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+*** ./src/orb/orb-core/Makefile.in.osr6	Tue Sep  6 06:16:58 2005
+--- ./src/orb/orb-core/Makefile.in	Sat Oct  1 17:40:26 2005
+***************
+*** 190,197 ****
+  	-I$(top_srcdir)/src/idl/misc				\
+  	-I$(top_srcdir)/src/idl/interop -I.				\
+  	-D_PRE_3_0_COMPILER_                                    \
+! 	--noskels --nodefskels --nostubs --noidata --noheaders	\
+! 	--define=Object=OObject --define=TypeCode=TTypeCode	\
+          --showcpperrors
+  
+  IDL_FILES = corba-defs.idl iop-defs.idl corba-ops.idl orbit-interface.idl
+--- 190,196 ----
+  	-I$(top_srcdir)/src/idl/misc				\
+  	-I$(top_srcdir)/src/idl/interop -I.				\
+  	-D_PRE_3_0_COMPILER_                                    \
+!         --define=Object=OObject --define=TypeCode=TTypeCode     \
+          --showcpperrors
+  
+  IDL_FILES = corba-defs.idl iop-defs.idl corba-ops.idl orbit-interface.idl
+***************
+*** 203,209 ****
+  
+  IDL_FLAGS_CORBA_OPS = --showcpperrors
+  
+! IDL_FLAGS_INTERFACE = --nostubs --noskels --showcpperrors --noheaders
+  
+  BUILT_SOURCES = $(IFACE_IDLOUT) $(IDLOUT) $(DEFS_IDLOUT) $(OPS_IDLOUT_C) $(OPS_IDLOUT_H)
+  CLEANFILES = $(BUILT_SOURCES)
+--- 202,208 ----
+  
+  IDL_FLAGS_CORBA_OPS = --showcpperrors
+  
+! IDL_FLAGS_INTERFACE = --showcpperrors
+  
+  BUILT_SOURCES = $(IFACE_IDLOUT) $(IDLOUT) $(DEFS_IDLOUT) $(OPS_IDLOUT_C) $(OPS_IDLOUT_H)
+  CLEANFILES = $(BUILT_SOURCES)
+***************
+*** 522,528 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 521,527 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+***************
+*** 538,544 ****
+  
+  $(OPS_IDLOUT_H): corba-ops.idl $(IDL_COMPILER)
+  	-(rm -f $(OPS_IDLOUT_C) $(OPS_IDLOUT_H) || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_CORBA_OPS) --deps .deps/corba-ops.idl.P $<
+  	for I in $(OPS_IDLOUT_C) $(OPS_IDLOUT_H); do								\
+  		sed -e 's,ZZZis_a,_is_a,g' -e 's,ZZis_a,is_a,g' $$I > $$I.out; mv $$I.out $$I;	\
+  	done;											\
+--- 537,543 ----
+  
+  $(OPS_IDLOUT_H): corba-ops.idl $(IDL_COMPILER)
+  	-(rm -f $(OPS_IDLOUT_C) $(OPS_IDLOUT_H) || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_CORBA_OPS) $<
+  	for I in $(OPS_IDLOUT_C) $(OPS_IDLOUT_H); do								\
+  		sed -e 's,ZZZis_a,_is_a,g' -e 's,ZZis_a,is_a,g' $$I > $$I.out; mv $$I.out $$I;	\
+  	done;											\
+***************
+*** 546,552 ****
+  	mv corba-ops-skels.c.out corba-ops-skels.c;
+  $(IFACE_IDLOUT) : orbit-interface.idl $(IDL_COMPILER)
+  	-(rm -f $(IFACE_IDLOUT) || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_INTERFACE) --deps .deps/orbit-interface.idl.P $<
+  
+  dist-hook:
+  	cd $(distdir); rm -f $(BUILT_SOURCES)
+--- 545,551 ----
+  	mv corba-ops-skels.c.out corba-ops-skels.c;
+  $(IFACE_IDLOUT) : orbit-interface.idl $(IDL_COMPILER)
+  	-(rm -f $(IFACE_IDLOUT) || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_INTERFACE) $<
+  
+  dist-hook:
+  	cd $(distdir); rm -f $(BUILT_SOURCES)
+*** ./src/orb/poa/Makefile.in.osr6	Tue Sep  6 06:16:58 2005
+--- ./src/orb/poa/Makefile.in	Sat Oct  1 17:40:46 2005
+***************
+*** 167,174 ****
+  	-I$(top_srcdir)/src/idl/misc				\
+  	-I$(top_srcdir)/src/orb/orb-core			\
+  	-D_PRE_3_0_COMPILER_                                    \
+! 	--noskels --nodefskels --nostubs --noidata --noheaders  \
+! 	--define=Object=OObject --define=TypeCode=TTypeCode	\
+          --showcpperrors
+  
+  IDL_FILES = poa-defs.idl
+--- 167,173 ----
+  	-I$(top_srcdir)/src/idl/misc				\
+  	-I$(top_srcdir)/src/orb/orb-core			\
+  	-D_PRE_3_0_COMPILER_                                    \
+!         --define=Object=OObject --define=TypeCode=TTypeCode     \
+          --showcpperrors
+  
+  IDL_FILES = poa-defs.idl
+***************
+*** 439,445 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 438,444 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+*** ./linc2/src/linc-protocols.c.osr6	Tue Sep  6 04:46:07 2005
+--- ./linc2/src/linc-protocols.c	Sat Oct  1 17:36:08 2005
+***************
+*** 167,177 ****
+  
+   		for (i = 0; i < num; i++) {
+  			adr = (struct sockaddr_in *)&my_ifreqs[i].ifr_ifru.ifru_addr;
+! 			if (strcmp("127.0.0.1", inet_ntoa((struct in_addr)adr->sin_addr)))
+  				break;
+  		}
+  		// will be 127.0.0.1 anyway, if no other address is defined...
+! 		return strncpy(buf, (const char*)inet_ntoa((struct in_addr)adr->sin_addr), len);
+  #else
+  		SOCKET sock;
+  		DWORD nbytes;
+--- 167,177 ----
+  
+   		for (i = 0; i < num; i++) {
+  			adr = (struct sockaddr_in *)&my_ifreqs[i].ifr_ifru.ifru_addr;
+! 			if (strcmp("127.0.0.1", inet_ntoa(adr->sin_addr)))
+  				break;
+  		}
+  		// will be 127.0.0.1 anyway, if no other address is defined...
+! 		return strncpy(buf, (const char*)inet_ntoa(adr->sin_addr), len);
+  #else
+  		SOCKET sock;
+  		DWORD nbytes;
+*** ./include/orbit/dynamic/Makefile.in.osr6	Tue Sep  6 06:16:56 2005
+--- ./include/orbit/dynamic/Makefile.in	Sat Oct  1 17:41:12 2005
+***************
+*** 134,141 ****
+  	-I$(top_srcdir)/src/idl/CORBA				\
+  	-I$(top_srcdir)/src/orb/orb-core			\
+  	-I$(top_srcdir)/src/idl/misc				\
+! 	--define=Object=OObject --define=TypeCode=TTypeCode	\
+! 	--noskels --nodefskels --nostubs --nocommon --noidata	\
+          --showcpperrors 
+  
+  IDL_DIR = $(top_srcdir)/src/orb/dynamic/
+--- 134,140 ----
+  	-I$(top_srcdir)/src/idl/CORBA				\
+  	-I$(top_srcdir)/src/orb/orb-core			\
+  	-I$(top_srcdir)/src/idl/misc				\
+!         --define=Object=OObject --define=TypeCode=TTypeCode     \ 
+          --showcpperrors 
+  
+  IDL_DIR = $(top_srcdir)/src/orb/dynamic/
+***************
+*** 340,346 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 339,345 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+*** ./include/orbit/orb-core/Makefile.in.osr6	Tue Sep  6 06:16:56 2005
+--- ./include/orbit/orb-core/Makefile.in	Sat Oct  1 17:42:25 2005
+***************
+*** 158,170 ****
+  	-I$(top_srcdir)/src/idl/CORBA			\
+  	-I$(top_srcdir)/src/idl/interop			\
+  	-I$(top_srcdir)/src/orb/orb-core		\
+- 	--noskels --nodefskels --nostubs --noidata	\
+- 	--nocommon					\
+          --showcpperrors
+  
+! IDL_FLAGS = $(IDL_FLAGS_NO_DEFS)		\
+! 	 --define=Object=OObject		\
+! 	--define=TypeCode=TTypeCode
+  
+  IDL_FILES = corba-defs.idl iop-defs.idl orbit-interface.idl
+  IDL_DIR = $(top_srcdir)/src/orb/orb-core/
+--- 158,167 ----
+  	-I$(top_srcdir)/src/idl/CORBA			\
+  	-I$(top_srcdir)/src/idl/interop			\
+  	-I$(top_srcdir)/src/orb/orb-core		\
+          --showcpperrors
+  
+! IDL_FLAGS = $(IDL_FLAGS_NO_DEFS) \
+! 	--define=Object=OObject --define=TypeCode=TTypeCode
+  
+  IDL_FILES = corba-defs.idl iop-defs.idl orbit-interface.idl
+  IDL_DIR = $(top_srcdir)/src/orb/orb-core/
+***************
+*** 368,374 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 365,371 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+***************
+*** 382,388 ****
+  
+  orbit-interface.h: $(top_srcdir)/src/orb/orb-core/orbit-interface.idl $(IDL_COMPILER)
+  	-(rm -f orbit-interface.h || true ) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_NO_DEFS) --deps .deps/orbit-interface.idl.P $<
+  # Tell versions [3.59,3.63) of GNU make to not export all variables.
+  # Otherwise a system limit (for SysV at least) may be exceeded.
+  .NOEXPORT:
+--- 379,385 ----
+  
+  orbit-interface.h: $(top_srcdir)/src/orb/orb-core/orbit-interface.idl $(IDL_COMPILER)
+  	-(rm -f orbit-interface.h || true ) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS_NO_DEFS) $<
+  # Tell versions [3.59,3.63) of GNU make to not export all variables.
+  # Otherwise a system limit (for SysV at least) may be exceeded.
+  .NOEXPORT:
+*** ./include/orbit/poa/Makefile.in.osr6	Tue Sep  6 06:16:56 2005
+--- ./include/orbit/poa/Makefile.in	Sat Oct  1 17:42:48 2005
+***************
+*** 140,147 ****
+  	-I$(top_srcdir)/src/idl/CORBA					\
+  	-I$(top_srcdir)/src/orb/orb-core				\
+  	-I$(top_srcdir)/src/idl/misc					\
+! 	--define=Object=OObject --define=TypeCode=TTypeCode		\
+! 	--noskels --nodefskels --nostubs --nocommon --noidata		\
+          --showcpperrors
+  
+  IDL_FILES = poa-defs.idl
+--- 140,146 ----
+  	-I$(top_srcdir)/src/idl/CORBA					\
+  	-I$(top_srcdir)/src/orb/orb-core				\
+  	-I$(top_srcdir)/src/idl/misc					\
+!         --define=Object=OObject --define=TypeCode=TTypeCode     \
+          --showcpperrors
+  
+  IDL_FILES = poa-defs.idl
+***************
+*** 346,352 ****
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) --deps $(*D)/.deps/$(*F).idl.P $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+--- 345,351 ----
+  
+  %.h: $(IDL_DIR)%.idl $(IDL_COMPILER)
+  	-(rm -f $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c || true) > /dev/null
+! 	$(IDL_COMPILER) $(IDL_FLAGS) $<
+  	for I in $(*).h $(*)-stubs.c $(*)-skels.c $(*)-common.c $(*)-imodule.c $(*)-skelimpl.c; do \
+  		if test -f $$I; then \
+  			sed -e 's,OObject,Object,g' -e 's,TTypeCode,TypeCode,g' $$I > $$I.out; \
+*** ./configure.osr6	Tue Sep  6 06:16:52 2005
+--- ./configure	Sat Oct  1 17:36:08 2005
+***************
+*** 3683,3689 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3683,3689 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3691,3697 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3691,3697 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 7222,7228 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 7222,7228 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7899,7907 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7899,7906 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 20279,20301 ****
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gthread-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_CFLAGS=`$PKG_CONFIG --cflags "\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20278,20300 ----
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgthread-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_CFLAGS=`$PKG_CONFIG --cflags "\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20305,20327 ****
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gthread-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_LIBS=`$PKG_CONFIG --libs "\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20304,20326 ----
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgthread-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_LIBS=`$PKG_CONFIG --libs "\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20331,20348 ****
+  
+  if test $pkg_failed = yes; then
+  	ORBIT_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_PKG_ERRORS" 1>&5
+  
+  	{ { echo "$as_me:$LINENO: error: Package requirements (\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 20330,20347 ----
+  
+  if test $pkg_failed = yes; then
+  	ORBIT_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_PKG_ERRORS" 1>&5
+  
+  	{ { echo "$as_me:$LINENO: error: Package requirements (\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+***************
+*** 20350,20359 ****
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+  echo "$as_me: error: Package requirements (\
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 20349,20358 ----
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+  echo "$as_me: error: Package requirements (\
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+***************
+*** 20399,20421 ****
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	libIDL-2.0 >= \$LIBIDL_REQUIRED \\
+! 	glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_IDL_CFLAGS=`$PKG_CONFIG --cflags "\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20398,20420 ----
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	newlibIDL-2.0 >= \$LIBIDL_REQUIRED \\
+! 	newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_IDL_CFLAGS=`$PKG_CONFIG --cflags "\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20425,20447 ****
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	libIDL-2.0 >= \$LIBIDL_REQUIRED \\
+! 	glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_IDL_LIBS=`$PKG_CONFIG --libs "\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20424,20446 ----
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+      { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+! 	newlibIDL-2.0 >= \$LIBIDL_REQUIRED \\
+! 	newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+    ($PKG_CONFIG --exists --print-errors "\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+    pkg_cv_ORBIT_IDL_LIBS=`$PKG_CONFIG --libs "\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20451,20468 ****
+  
+  if test $pkg_failed = yes; then
+  	ORBIT_IDL_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_IDL_PKG_ERRORS" 1>&5
+  
+  	{ { echo "$as_me:$LINENO: error: Package requirements (\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 20450,20467 ----
+  
+  if test $pkg_failed = yes; then
+  	ORBIT_IDL_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_IDL_PKG_ERRORS" 1>&5
+  
+  	{ { echo "$as_me:$LINENO: error: Package requirements (\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+***************
+*** 20470,20479 ****
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+  echo "$as_me: error: Package requirements (\
+! 	libIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 20469,20478 ----
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+  echo "$as_me: error: Package requirements (\
+! 	newlibIDL-2.0 >= $LIBIDL_REQUIRED \
+! 	newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+***************
+*** 20518,20538 ****
+  
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gthread-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_ORBIT_NAME_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20517,20537 ----
+  
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgthread-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_ORBIT_NAME_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20541,20561 ****
+  fi
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= \$GLIB_REQUIRED \\
+! 	gobject-2.0 >= \$GLIB_REQUIRED \\
+! 	gthread-2.0 >= \$GLIB_REQUIRED \\
+! 	gmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_ORBIT_NAME_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 20540,20560 ----
+  fi
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"newglib-2.0 >= \$GLIB_REQUIRED \\
+! 	newgobject-2.0 >= \$GLIB_REQUIRED \\
+! 	newgthread-2.0 >= \$GLIB_REQUIRED \\
+! 	newgmodule-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_ORBIT_NAME_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 20564,20590 ****
+  fi
+  
+  if test $pkg_failed = yes; then
+! 	ORBIT_NAME_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_NAME_PKG_ERRORS" 1>&5
+  
+! 	{ { echo "$as_me:$LINENO: error: Package requirements (glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+  Alternatively you may set the ORBIT_NAME_CFLAGS and ORBIT_NAME_LIBS environment variables
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+! echo "$as_me: error: Package requirements (glib-2.0 >= $GLIB_REQUIRED \
+! 	gobject-2.0 >= $GLIB_REQUIRED \
+! 	gthread-2.0 >= $GLIB_REQUIRED \
+! 	gmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 20563,20589 ----
+  fi
+  
+  if test $pkg_failed = yes; then
+! 	ORBIT_NAME_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$ORBIT_NAME_PKG_ERRORS" 1>&5
+  
+! 	{ { echo "$as_me:$LINENO: error: Package requirements (newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+  Alternatively you may set the ORBIT_NAME_CFLAGS and ORBIT_NAME_LIBS environment variables
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+! echo "$as_me: error: Package requirements (newglib-2.0 >= $GLIB_REQUIRED \
+! 	newgobject-2.0 >= $GLIB_REQUIRED \
+! 	newgthread-2.0 >= $GLIB_REQUIRED \
+! 	newgmodule-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+***************
+*** 23291,23297 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpopt  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 23290,23296 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpopt -lgnuintl $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 23350,23356 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_popt_poptStrippedArgv" >&5
+  echo "${ECHO_T}$ac_cv_lib_popt_poptStrippedArgv" >&6
+  if test $ac_cv_lib_popt_poptStrippedArgv = yes; then
+!   POPT_LIBS=-lpopt
+  else
+    { { echo "$as_me:$LINENO: error: You must have popt version 1.5 or greater installed." >&5
+  echo "$as_me: error: You must have popt version 1.5 or greater installed." >&2;}
+--- 23349,23355 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_popt_poptStrippedArgv" >&5
+  echo "${ECHO_T}$ac_cv_lib_popt_poptStrippedArgv" >&6
+  if test $ac_cv_lib_popt_poptStrippedArgv = yes; then
+!   POPT_LIBS="-lpopt -lgnuintl"
+  else
+    { { echo "$as_me:$LINENO: error: You must have popt version 1.5 or greater installed." >&5
+  echo "$as_me: error: You must have popt version 1.5 or greater installed." >&2;}
+***************
+*** 24591,24602 ****
+  
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= \$GLIB_REQUIRED gobject-2.0 >= \$GLIB_REQUIRED gthread-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_LINC_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 24590,24601 ----
+  
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"newglib-2.0 >= \$GLIB_REQUIRED newgobject-2.0 >= \$GLIB_REQUIRED newgthread-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_LINC_CFLAGS=`$PKG_CONFIG --cflags "newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 24605,24616 ****
+  fi
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= \$GLIB_REQUIRED gobject-2.0 >= \$GLIB_REQUIRED gthread-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_LINC_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+--- 24604,24615 ----
+  fi
+  if test -n "$PKG_CONFIG"; then
+          if test -n "$PKG_CONFIG" && \
+!     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"newglib-2.0 >= \$GLIB_REQUIRED newgobject-2.0 >= \$GLIB_REQUIRED newgthread-2.0 >= \$GLIB_REQUIRED\"") >&5
+!   ($PKG_CONFIG --exists --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED") 2>&5
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; then
+!   pkg_cv_LINC_LIBS=`$PKG_CONFIG --libs "newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED" 2>/dev/null`
+  else
+    pkg_failed=yes
+  fi
+***************
+*** 24619,24636 ****
+  fi
+  
+  if test $pkg_failed = yes; then
+! 	LINC_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$LINC_PKG_ERRORS" 1>&5
+  
+! 	{ { echo "$as_me:$LINENO: error: Package requirements (glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+  Alternatively you may set the LINC_CFLAGS and LINC_LIBS environment variables
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+! echo "$as_me: error: Package requirements (glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+--- 24618,24635 ----
+  fi
+  
+  if test $pkg_failed = yes; then
+! 	LINC_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED"`
+  	# Put the nasty error message in config.log where it belongs
+  	echo "$LINC_PKG_ERRORS" 1>&5
+  
+! 	{ { echo "$as_me:$LINENO: error: Package requirements (newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+  Alternatively you may set the LINC_CFLAGS and LINC_LIBS environment variables
+  to avoid the need to call pkg-config.  See the pkg-config man page for
+  more details." >&5
+! echo "$as_me: error: Package requirements (newglib-2.0 >= $GLIB_REQUIRED newgobject-2.0 >= $GLIB_REQUIRED newgthread-2.0 >= $GLIB_REQUIRED) were not met.
+  Consider adjusting the PKG_CONFIG_PATH environment variable if you
+  installed software in a non-standard prefix.
+  
+*** ./ltmain.sh.osr6	Tue Jun 28 07:33:00 2005
+--- ./ltmain.sh	Sat Oct  1 17:36:08 2005
+***************
+*** 1519,1525 ****
+  	continue
+  	;;
+  
+!      -mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe)
+  	compiler_flags="$compiler_flags $arg"
+  	compile_command="$compile_command $arg"
+  	finalize_command="$finalize_command $arg"
+--- 1519,1528 ----
+  	continue
+  	;;
+  
+!      -mt|-mthreads)
+! 	continue
+! 	;;
+!      -Kpthread|-kthread|-Kthread|-pthread|-pthreads|--thread-safe)
+  	compiler_flags="$compiler_flags $arg"
+  	compile_command="$compile_command $arg"
+  	finalize_command="$finalize_command $arg"
+***************
+*** 2006,2012 ****
+  	lib=
+  	found=no
+  	case $deplib in
+! 	-mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe)
+  	  if test "$linkmode,$pass" = "prog,link"; then
+  	    compile_deplibs="$deplib $compile_deplibs"
+  	    finalize_deplibs="$deplib $finalize_deplibs"
+--- 2009,2015 ----
+  	lib=
+  	found=no
+  	case $deplib in
+! 	-Kpthread|-kthread|-Kthread|-pthread|-pthreads|--thread-safe)
+  	  if test "$linkmode,$pass" = "prog,link"; then
+  	    compile_deplibs="$deplib $compile_deplibs"
+  	    finalize_deplibs="$deplib $finalize_deplibs"
+*** ./Install-OSR6.osr6	Sat Oct  1 17:36:08 2005
+--- ./Install-OSR6	Sat Oct  1 17:36:08 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/ORBit2
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

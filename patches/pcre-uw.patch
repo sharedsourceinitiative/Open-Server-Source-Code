@@ -1,0 +1,77 @@
+--- ./configure.uw	2003-11-12 02:57:02.510000076 +0000
++++ ./configure	2003-11-12 02:57:02.650000074 +0000
+@@ -2841,11 +2841,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -2916,7 +2916,7 @@
+ irix*)
+   symcode='[BCDEGRST]'
+   ;;
+-solaris* | sysv5*)
++solaris*)
+   symcode='[BDT]'
+   ;;
+ sysv4)
+@@ -4917,7 +4917,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -5293,18 +5293,6 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
+-  sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-    hardcode_libdir_flag_spec=
+-    hardcode_shlibpath_var=no
+-    runpath_var='LD_RUN_PATH'
+-    ;;
+-
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec='-L$libdir'
+@@ -5336,13 +5324,14 @@
+     runpath_var=LD_RUN_PATH
+     ;;
+ 
+-  sysv5uw7* | unixware7*)
++  sysv5* | unixware7*)
+     no_undefined_flag='${wl}-z ${wl}text'
+     if test "$GCC" = yes; then
+       archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     else
+       archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     fi
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+     runpath_var='LD_RUN_PATH'
+     hardcode_shlibpath_var=no
+     ;;
+--- ./install-sh.uw	2003-08-21 10:43:07.000000000 +0000
++++ ./install-sh	2003-11-12 02:57:34.930000010 +0000
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # install - install a program, script, or datafile
+ # This comes from X11R5 (mit/util/scripts/install.sh).

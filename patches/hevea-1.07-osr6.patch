@@ -1,0 +1,35 @@
+*** ./Makefile.00 Mon Sep 29 01:54:53 2003
+--- ./Makefile Sat May  7 00:49:08 2005
+***************
+*** 1,6 ****
+  ################## Configuration parameters
+  # Compile using ocamlopt, to use ocamlc set TARGET=byte
+! TARGET=opt
+  # Library directory of hevea
+  LIBDIR=/usr/local/lib/hevea
+  # Where to install programms
+--- 1,7 ----
+  ################## Configuration parameters
+  # Compile using ocamlopt, to use ocamlc set TARGET=byte
+! #TARGET=opt
+! TARGET=byte
+  # Library directory of hevea
+  LIBDIR=/usr/local/lib/hevea
+  # Where to install programms
+***************
+*** 6,12 ****
+  # Where to install programms
+  BINDIR=/usr/local/bin
+  # C preprocessor with proper options (don't ask)
+! CPP=cpp -E -P
+  #Some alternatives...
+  #CPP=/lib/cpp -E -P  (Old fashioned Unix)
+  #CPP=gcc -E -P -x c  (If you have gcc)
+--- 7,13 ----
+  # Where to install programms
+  BINDIR=/usr/local/bin
+  # C preprocessor with proper options (don't ask)
+! CPP=/usr/ccs/lib/cpp -E -P
+  #Some alternatives...
+  #CPP=/lib/cpp -E -P  (Old fashioned Unix)
+  #CPP=gcc -E -P -x c  (If you have gcc)

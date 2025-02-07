@@ -1,0 +1,100 @@
+--- ./lib/gettext.c.osr6	2000-08-30 13:13:33.000000000 -0700
++++ ./lib/gettext.c	2005-06-12 13:39:10.506041038 -0700
+@@ -1209,13 +1209,13 @@
+       unsigned char *value;
+       unsigned char *cp;
+ 
+-      if (fgets (buf, sizeof buf, fp) == NULL)
++      if (fgets ((char *)buf, sizeof buf, fp) == NULL)
+ 	/* EOF reached.  */
+ 	break;
+ 
+       /* Possibly not the whole line fits into the buffer.  Ignore
+ 	 the rest of the line.  */
+-      if (strchr (buf, '\n') == NULL)
++      if (strchr ((char *)buf, '\n') == NULL)
+ 	{
+ 	  char altbuf[BUFSIZ];
+ 	  do
+@@ -1268,8 +1268,8 @@
+ 	      if (nmap >= maxmap)
+ 		extend_alias_table ();
+ 
+-	      alias_len = strlen (alias) + 1;
+-	      value_len = strlen (value) + 1;
++	      alias_len = strlen ((char *)alias) + 1;
++	      value_len = strlen ((char *)value) + 1;
+ 
+ 	      if (string_space_act + alias_len + value_len > string_space_max)
+ 		{
+--- ./src/Makefile.in.osr6	2001-01-22 10:14:16.000000000 -0800
++++ ./src/Makefile.in	2005-06-12 13:37:44.202921006 -0700
+@@ -155,7 +155,7 @@
+ LDFLAGS = @LDFLAGS@
+ LIBS = @LIBS@
+ ANSI2KNR = @ANSI2KNR@
+-librecode_la_LIBADD = 
++librecode_la_LIBADD = -lgettextpo -L/usr/gnu/lib -lintl
+ librecode_la_OBJECTS =  argmatch$U.lo charname$U.lo combine$U.lo \
+ fr-charname$U.lo hash$U.lo iconv$U.lo libiconv$U.lo localcharset$U.lo \
+ merged$U.lo names$U.lo outer$U.lo quotearg$U.lo recode$U.lo \
+--- ./ltconfig.osr6	2000-08-02 18:21:13.000000000 -0700
++++ ./ltconfig	2005-06-12 13:37:44.262921022 -0700
+@@ -1196,7 +1196,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -1482,9 +1482,8 @@
+     no_undefined_flag=' -z text'
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linkopts'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linkopts~$rm $lib.exp'
++    archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linkopts'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linkopts'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -2063,7 +2062,15 @@
+   need_version=yes
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv5*)
++  version_type=linux
++  library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
++  soname_spec='${libname}${release}.so$major'
++  deplibs_check_method='pass_all'
++  shlibpath_var=LD_LIBRARY_PATH
++  ;;
++
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   version_type=linux
+   library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
+   soname_spec='${libname}${release}.so$major'
+--- ./configure.osr6	2001-01-03 08:40:32.000000000 -0800
++++ ./configure	2005-06-12 13:37:44.342921011 -0700
+@@ -3399,7 +3399,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lintl  $LIBS"
++LIBS="-L/usr/gnu/lib -lintl  $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 3405 "configure"
+ #include "confdefs.h"
+@@ -3445,7 +3445,7 @@
+ 
+       echo "$ac_t""$with_included_gettext" 1>&6
+       if test $with_included_gettext$ac_cv_func_gettext = nono; then
+-        LIBS="$LIBS -lintl"
++        LIBS="$LIBS -L/usr/gnu/lib -lintl"
+       fi
+     else
+       with_included_gettext=yes

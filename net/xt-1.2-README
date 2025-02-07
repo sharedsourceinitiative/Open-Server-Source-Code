@@ -1,0 +1,38 @@
+Start of the man page for xt:
+
+XT(1)                                UNIX                      (printed 7/8/97)
+
+Name
+        xt - communications program using telnet
+
+Syntax
+        xt [ [-nhostname] | [-sscript] ]
+
+Description
+        Xt connects to a remote host using the telnet protocol. It can manage
+        an interactive session or be called from cron(C).  It has various means
+        for transferring files between computers, and can be partially or
+        totally under the control of scripts.
+
+   ....    ....    ....
+
+Description used in the Compuserve Libraries:
+
+Too many features to list them all. Supports shell escapes; capture to disk
+files; transmit from disk files; powerful script language includes access to
+shell commands & variables; built-in CompuServe B+ support; access to
+external transfer protocols.
+
+XT 1.2 TELNET B+ B-PLUS PROTOCOL COMMUNICATIONS
+XT: source code, scriptable telnet program
+
+   ....    ....    ....
+
+
+Jean-Pierre Radley wrote this program, based on xc, which is based on xcomm.
+Further historical notes are in the README in the source code tree.
+
+The canonical source location is in the /pub directory of ftp.jpr.com.
+
+
+In a word: telnet with scripting and capture files...

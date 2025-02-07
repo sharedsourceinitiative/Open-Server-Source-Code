@@ -1,0 +1,9 @@
+--- ./Build-OSR6.osr6	2005-06-15 13:05:31.988872013 -0700
++++ ./Build-OSR6	2005-06-15 13:09:44.878632011 -0700
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++rm -f mout
++python setup.py bdist_rpm --group "Application/Multimedia" 2>&1 | tee mout
++
++echo "Binary and Source rpms in ./dist/"

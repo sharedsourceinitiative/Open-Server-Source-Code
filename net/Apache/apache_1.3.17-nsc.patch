@@ -1,0 +1,174 @@
+--- src/main/http_main.c.00	Wed Jan 24 08:29:00 2001
++++ src/main/http_main.c	Tue Jan 30 12:46:38 2001
+@@ -3370,6 +3370,15 @@
+     }
+ #endif
+ 
++#ifdef PARALLELSVR  /* We want to run servers in parallel - e.g. on a cluster */
++#ifdef SO_PARALLELSVR
++    one = 1;
++    /* This won't succeed if we're not running on an SCO Non-Stop Cluster */
++    /* so we don't bother to check the return value or write a log entry */
++    setsockopt(s, SOL_SOCKET, SO_PARALLELSVR, (char *)&one, sizeof(int));
++#endif
++#endif
++
+ #ifdef MPE
+ /* MPE requires CAP=PM and GETPRIVMODE to bind to ports less than 1024 */
+     if (ntohs(server->sin_port) < 1024)
+--- src/support/apachectl.00	Mon Jan 15 09:06:34 2001
++++ src/support/apachectl	Tue Jan 30 13:42:50 2001
+@@ -21,11 +21,36 @@
+ # |||||||||||||||||||| START CONFIGURATION SECTION  ||||||||||||||||||||
+ # --------------------                              --------------------
+ # 
++# Are we running NSC?
++ONALL=
++if [ -d "/usr/bin" ]
++then
++    NSCBIN="/usr/bin"
++else
++    NSCBIN="/sbin"
++fi
++
++if [ -x $NSCBIN/clusternode_num ]
++then
++        NODE=`$NSCBIN/clusternode_num 2>/dev/null`
++        if [ "$NODE" != "" ]
++        then
++            ONALL="onnode -p"
++        else
++            ONALL=
++            NSCARG="-DNODE_0"
++        fi
++else
++        ONALL=
++        NSCARG="-DNODE_0"
++fi
++# 
++
+ # the path to your PID file
+ PIDFILE=/usr/local/apache/logs/httpd.pid
+ #
+ # the path to your httpd binary, including options if necessary
+-HTTPD='/usr/local/apache/src/httpd'
++HTTPD=/usr/local/apache/bin/httpd
+ #
+ # a command that outputs a formatted text version of the HTML at the
+ # url given on the command line.  Designed for lynx, however other
+@@ -47,31 +72,51 @@
+ 
+ for ARG in $@ $ARGS
+ do
+-    # check for pidfile
++  # check for pidfile(s)
++  node=1
++  if [ "$ONALL" ]
++  then
++   numnodes=`cluster -n`
++  else
++   numnodes=1
++  fi
++  while [ $node -le $numnodes ]
++  do
++    if [ "$ONALL" ]
++    then
++      PIDFILE=/usr/local/apache/logs/httpd.pid
++      ONODE="on node $node"
++      ONALL="onnode -p $node"
++      NSCARG="-DNODE_$node -DNSC"
++    else
++      PIDFILE=/usr/local/apache/logs/httpd.pid
++      ONODE=
++    fi
+     if [ -f $PIDFILE ] ; then
+ 	PID=`cat $PIDFILE`
+ 	if [ "x$PID" != "x" ] && kill -0 $PID 2>/dev/null ; then
+-	    STATUS="httpd (pid $PID) running"
++	    STATUS="httpd (pid $PID) running $ONODE"
+ 	    RUNNING=1
+ 	else
+-	    STATUS="httpd (pid $PID?) not running"
++	    STATUS="httpd (pid $PID?) not running $ONODE"
+ 	    RUNNING=0
+ 	fi
+     else
+-	STATUS="httpd (no pid file) not running"
++	STATUS="httpd (no pid file) not running $ONODE"
+ 	RUNNING=0
+     fi
++    node=`expr $node + 1`
+ 
+     case $ARG in
+     start)
+ 	if [ $RUNNING -eq 1 ]; then
+-	    echo "$0 $ARG: httpd (pid $PID) already running"
++	    echo "$0 $ARG: httpd (pid $PID) already running $ONODE"
+ 	    continue
+ 	fi
+-	if $HTTPD ; then
+-	    echo "$0 $ARG: httpd started"
++	if $ONALL $HTTPD $NSCARG ; then
++	    echo "$0 $ARG: httpd started $ONODE"
+ 	else
+-	    echo "$0 $ARG: httpd could not be started"
++	    echo "$0 $ARG: httpd could not be started $ONODE"
+ 	    ERROR=3
+ 	fi
+ 	;;
+@@ -90,18 +135,18 @@
+     restart)
+ 	if [ $RUNNING -eq 0 ]; then
+ 	    echo "$0 $ARG: httpd not running, trying to start"
+-	    if $HTTPD ; then
+-		echo "$0 $ARG: httpd started"
++	    if $ONALL $HTTPD $NSCARG ; then
++		echo "$0 $ARG: httpd started $ONODE"
+ 	    else
+-		echo "$0 $ARG: httpd could not be started"
++		echo "$0 $ARG: httpd could not be started $ONODE"
+ 		ERROR=5
+ 	    fi
+ 	else
+ 	    if $HTTPD -t >/dev/null 2>&1; then
+ 		if kill -HUP $PID ; then
+-		    echo "$0 $ARG: httpd restarted"
++		    echo "$0 $ARG: httpd restarted $ONODE"
+ 		else
+-		    echo "$0 $ARG: httpd could not be restarted"
++		    echo "$0 $ARG: httpd could not be restarted $ONODE"
+ 		    ERROR=6
+ 		fi
+ 	    else
+@@ -114,18 +159,18 @@
+     graceful)
+ 	if [ $RUNNING -eq 0 ]; then
+ 	    echo "$0 $ARG: httpd not running, trying to start"
+-	    if $HTTPD ; then
+-		echo "$0 $ARG: httpd started"
++	    if $ONALL $HTTPD $NSCARG ; then
++		echo "$0 $ARG: httpd started $ONODE"
+ 	    else
+-		echo "$0 $ARG: httpd could not be started"
++		echo "$0 $ARG: httpd could not be started $ONODE"
+ 		ERROR=5
+ 	    fi
+ 	else
+ 	    if $HTTPD -t >/dev/null 2>&1; then
+ 		if kill -USR1 $PID ; then
+-		    echo "$0 $ARG: httpd gracefully restarted"
++		    echo "$0 $ARG: httpd gracefully restarted $ONODE"
+ 		else
+-		    echo "$0 $ARG: httpd could not be restarted"
++		    echo "$0 $ARG: httpd could not be restarted $ONODE"
+ 		    ERROR=7
+ 		fi
+ 	    else
+@@ -167,6 +212,7 @@
+     ;;
+ 
+     esac
++  done
+ 
+ done
+ 

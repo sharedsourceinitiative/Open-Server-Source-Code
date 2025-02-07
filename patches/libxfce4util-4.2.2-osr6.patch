@@ -1,0 +1,292 @@
+*** ./libxfce4util/libxfce4util-config.h.in.osr6 Sun May 15 00:51:30 2005
+--- ./libxfce4util/libxfce4util-config.h.in Fri May 20 21:30:42 2005
+***************
+*** 34,40 ****
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS;
+  
+  #define LIBXFCE4UTIL_MAJOR_VERSION	@LIBXFCE4UTIL_VERSION_MAJOR@
+  #define LIBXFCE4UTIL_MINOR_VERSION	@LIBXFCE4UTIL_VERSION_MINOR@
+--- 34,40 ----
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS
+  
+  #define LIBXFCE4UTIL_MAJOR_VERSION	@LIBXFCE4UTIL_VERSION_MAJOR@
+  #define LIBXFCE4UTIL_MINOR_VERSION	@LIBXFCE4UTIL_VERSION_MINOR@
+***************
+*** 48,53 ****
+         && LIBXFCE4UTIL_MINOR_VERSION == (minor) \
+         && LIBXFCE4UTIL_MICRO_VERSION >= (micro)))
+  
+! G_END_DECLS;
+  
+  #endif	/* !__LIBXFCE4UTIL_LIBXFCE4UTIL_CONFIG_H__ */
+--- 48,53 ----
+         && LIBXFCE4UTIL_MINOR_VERSION == (minor) \
+         && LIBXFCE4UTIL_MICRO_VERSION >= (micro)))
+  
+! G_END_DECLS
+  
+  #endif	/* !__LIBXFCE4UTIL_LIBXFCE4UTIL_CONFIG_H__ */
+*** ./libxfce4util/xfce-generics.h.osr6 Sun May 15 00:51:30 2005
+--- ./libxfce4util/xfce-generics.h Fri May 20 21:30:42 2005
+***************
+*** 30,36 ****
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS;
+  
+  #define XFCE_GENERIC_STACK(Type)                                            \
+    struct                                                                    \
+--- 30,36 ----
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS
+  
+  #define XFCE_GENERIC_STACK(Type)                                            \
+    struct                                                                    \
+***************
+*** 95,100 ****
+      }                                                                       \
+    G_STMT_END
+  
+! G_END_DECLS;
+  
+  #endif /* !__LIBXFCE4UTIL_XFCE_GENERICS_H__ */
+--- 95,100 ----
+      }                                                                       \
+    G_STMT_END
+  
+! G_END_DECLS
+  
+  #endif /* !__LIBXFCE4UTIL_XFCE_GENERICS_H__ */
+*** ./libxfce4util/libxfce4util-config.h.osr6 Sun May 15 12:52:41 2005
+--- ./libxfce4util/libxfce4util-config.h Fri May 20 21:30:42 2005
+***************
+*** 34,40 ****
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS;
+  
+  #define LIBXFCE4UTIL_MAJOR_VERSION	4
+  #define LIBXFCE4UTIL_MINOR_VERSION	2
+--- 34,40 ----
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS
+  
+  #define LIBXFCE4UTIL_MAJOR_VERSION	4
+  #define LIBXFCE4UTIL_MINOR_VERSION	2
+***************
+*** 48,53 ****
+         && LIBXFCE4UTIL_MINOR_VERSION == (minor) \
+         && LIBXFCE4UTIL_MICRO_VERSION >= (micro)))
+  
+! G_END_DECLS;
+  
+  #endif	/* !__LIBXFCE4UTIL_LIBXFCE4UTIL_CONFIG_H__ */
+--- 48,53 ----
+         && LIBXFCE4UTIL_MINOR_VERSION == (minor) \
+         && LIBXFCE4UTIL_MICRO_VERSION >= (micro)))
+  
+! G_END_DECLS
+  
+  #endif	/* !__LIBXFCE4UTIL_LIBXFCE4UTIL_CONFIG_H__ */
+*** ./libxfce4util/xfce-kiosk.h.osr6 Sun May 15 00:51:30 2005
+--- ./libxfce4util/xfce-kiosk.h Fri May 20 21:30:42 2005
+***************
+*** 30,36 ****
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS;
+  
+  #define XFCE_KIOSK(obj) ((XfceKiosk *)(obj))
+  
+--- 30,36 ----
+  
+  #include <glib.h>
+  
+! G_BEGIN_DECLS
+  
+  #define XFCE_KIOSK(obj) ((XfceKiosk *)(obj))
+  
+***************
+*** 42,47 ****
+                               const gchar     *capability);
+  void       xfce_kiosk_free  (XfceKiosk       *kiosk);
+  
+! G_END_DECLS;
+  
+  #endif /* !__LIBXFCE4UTIL_XFCE_KIOSK_H__ */
+--- 42,47 ----
+                               const gchar     *capability);
+  void       xfce_kiosk_free  (XfceKiosk       *kiosk);
+  
+! G_END_DECLS
+  
+  #endif /* !__LIBXFCE4UTIL_XFCE_KIOSK_H__ */
+*** ./libxfce4util/i18n.h.osr6 Sun May 15 00:51:30 2005
+--- ./libxfce4util/i18n.h Fri May 20 21:30:43 2005
+***************
+*** 35,41 ****
+  
+  #include <glib.h>
+  
+! #if defined(ENABLE_NLS) && defined(GETTEXT_PACKAGE)
+  
+  #if GLIB_CHECK_VERSION(2,4,0)
+  
+--- 35,41 ----
+  
+  #include <glib.h>
+  
+! #if defined(ENABLE_NLS)
+  
+  #if GLIB_CHECK_VERSION(2,4,0)
+  
+***************
+*** 48,54 ****
+  #ifdef _
+  #undef _
+  #endif
+! #define	_(s)                            (dgettext(GETTEXT_PACKAGE, s))
+  
+  #ifdef gettext_noop
+  #ifdef N_
+--- 48,54 ----
+  #ifdef _
+  #undef _
+  #endif
+! #define _(s)	(s)
+  
+  #ifdef gettext_noop
+  #ifdef N_
+***************
+*** 88,94 ****
+  
+  #endif
+  
+! #else /* !defined(ENABLE_NLS) || !defined(GETTEXT_PACKAGE) */
+  
+  #if defined(ENABLE_NLS)
+  #warning "National language support requested but GETTEXT_PACKAGE undefined"
+--- 88,94 ----
+  
+  #endif
+  
+! #else /* !defined(ENABLE_NLS) */
+  
+  #ifdef _
+  #undef _
+***************
+*** 90,99 ****
+  
+  #else /* !defined(ENABLE_NLS) || !defined(GETTEXT_PACKAGE) */
+  
+- #if defined(ENABLE_NLS)
+- #warning "National language support requested but GETTEXT_PACKAGE undefined"
+- #endif
+- 
+  #ifdef _
+  #undef _
+  #endif
+--- 90,95 ----
+  
+  #else /* !defined(ENABLE_NLS) */
+  
+  #ifdef _
+  #undef _
+  #endif
+***************
+*** 139,145 ****
+  	/* nothing to do here */						\
+  } while(0)
+  
+! #endif /* !defined(ENABLE_NLS) || !defined(GETTEXT_PACKAGE) */
+  
+  G_CONST_RETURN gchar* xfce_strip_context        (const gchar *msgid,
+  						 const gchar *msgval) G_GNUC_PURE;
+--- 135,141 ----
+  	/* nothing to do here */						\
+  } while(0)
+  
+! #endif /* !defined(ENABLE_NLS) */
+  
+  G_CONST_RETURN gchar* xfce_strip_context        (const gchar *msgid,
+  						 const gchar *msgval) G_GNUC_PURE;
+*** ./libxfce4util/i18n.c.osr6 Sun May 15 00:51:30 2005
+--- ./libxfce4util/i18n.c Fri May 20 21:30:43 2005
+***************
+*** 304,310 ****
+  	   - ll_LL
+  	   - ll
+  	 */
+! 	char buffer [size];
+  	char delim[] = { '.', '@', '_' };
+  	int i;
+  
+--- 304,310 ----
+  	   - ll_LL
+  	   - ll
+  	 */
+! 	char *buffer = (char *)malloc(size);
+  	char delim[] = { '.', '@', '_' };
+  	int i;
+  
+***************
+*** 312,317 ****
+  
+  	if (g_file_test(buffer, test)) {
+  	  strncpy (dst, buffer, size);
+  	  return dst;
+  	}
+  
+--- 312,318 ----
+  
+  	if (g_file_test(buffer, test)) {
+  	  strncpy (dst, buffer, size);
++ 	  free (buffer);
+  	  return dst;
+  	}
+  
+***************
+*** 330,335 ****
+  
+  	    if (g_file_test(buffer, test)) {
+  	      strncpy (dst, buffer, size);
+  	      return dst;
+  	    }
+  	  }
+--- 331,337 ----
+  
+  	    if (g_file_test(buffer, test)) {
+  	      strncpy (dst, buffer, size);
++ 	      free (buffer);
+  	      return dst;
+  	    }
+  	  }
+***************
+*** 334,339 ****
+  	    }
+  	  }
+  	}
+        }
+        else if (g_file_test(dst, test)) {
+  	return(dst);
+--- 336,342 ----
+  	    }
+  	  }
+  	}
++       free (buffer);
+        }
+        else if (g_file_test(dst, test)) {
+  	return(dst);

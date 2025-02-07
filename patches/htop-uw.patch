@@ -1,0 +1,11 @@
+--- ./Makefile.in.00	2005-04-08 22:45:12.000000000 +0000
++++ ./Makefile.in	2005-04-09 02:34:37.050000014 +0000
+@@ -169,7 +169,7 @@
+ target_alias = @target_alias@
+ dist_man_MANS = htop.1
+ EXTRA_DIST = $(dist_man_MANS)
+-AM_CFLAGS = -pedantic -Wall -std=c99
++AM_CFLAGS =
+ htop_SOURCES = AvailableMetersListBox.c CategoriesListBox.c ClockMeter.c \
+ CPUMeter.c CRT.c DebugMemory.c DisplayOptionsListBox.c FunctionBar.c \
+ Hashtable.c Header.c htop.c ListBox.c ListItem.c LoadAverageMeter.c \

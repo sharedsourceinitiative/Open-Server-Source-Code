@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<TITLE>lds</TITLE>
+</HEAD>
+<BODY>
+<H1>lds</H1>
+<P>
+Calculate and graphically display Lattice Dynamical Systems
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record
+<DT><B>Restrictions</B>
+<DD>Copyright 1993, 1994 Ronald Joe Record
+
+<DT><B>Description</B>
+<DD>Lds is an X11 client.
+<P>
+The lds program generates and displays a sequence of curves or 
+cellular automata like figures which graphically represent the 
+evolution of a Lattice Dynamical System (LDS). An LDS is an array
+of cells, each of which represents a dynamical system. Each cell
+is coupled to its nearest neighbors. The dynamical systems available
+in this software package are currently the logistic map, circle map
+and tent map. The state of each cell in the LDS is a real number in
+the unit interval. The evolution of the lattice is determined by an
+iteration thru the specified dynamic (e.g. the logistic equation)
+followed by a weighted averaging with its nearest neighbors.
+<P>
+Command line arguments and run-time keyboard input allow lds to simulate
+a wide variety of lattice dynamical systems. The user can specify the
+dynamic to be used, the non-linearity parameter, the strength of coupling,
+the initial conditions, the size of the array, the length of the run,
+whether and how to evolve connection strengths, and more. During the run,
+the display of the evolving LDS can either be CA-like with each generation
+being represented as a horizontal line evolving upward in the window or as
+points or a curve with X axis the lattice and Y-axis the cell states [0,1].
+In addition, graphical display of cell states can be toggled between actual
+state and phase difference with left neighbor. A site histogram curve can 
+also be displayed.
+<P>
+Lattice dynamical systems are also referred to as coupled map lattices.
+
+<DT><B>References</B>
+<DD>
+The literature is sparse but includes the following excellent papers :
+<P>
+"Lyapunov Analysis and Information Flow in Coupled Map Lattices" by
+Kunihiko Kaneko, Physica 23D (1986) 436-447
+<P>
+"Spatiotemporal Chaos in One- and Two- Dimensional Coupled Map Lattices"
+by Kaneko
+<P>
+"Spatiotemporal Chaos and Noise" by Gottfried Mayer-Kress and Kaneko,
+J. Stat. Phys.(1988)
+<P>
+"Pattern Competition Intermittency and Selective Flicker Noise in
+Spatiotemporal Chaos" by Kaneko, Physics Letters A, V125, 1 (1987)
+<P>
+"Pattern Dynamics in Spatiotemporal Chaos" by Kaneko (1987)
+<P>
+"Phenomenology of Spatial-Temporal Chaos" by Jim Crutchfield and Kaneko,
+appearing as a chapter in "Directions in Chaos" edited by Hao Bai-lin,
+World Scientific Publishing (1987)
+<P>
+"Robust Space-Time Intermittency and 1/f Noise" by James Keeler and Doyne
+Farmer, Physica 23D (1986) 413-435
+
+<DT><B>Build</B>
+<DD>
+To build the lds binary, either use the Imakefile or the 
+sample makefile - Makefile.std. To build with the Imakefile, first type
+"xmkmf" or "imake -DUseInstalled -I/usr/lib/X11/config" if your system 
+doesn't have xmkmf. Then just type "make" and the lds binary will be built.
+<P>
+The manual pages can be formatted by typing "nroff -man lds.man > lds.doc" 
+
+<DT><B>Install</B>
+<DD>
+To install lds, copy the lds binary to the desired location (the sample
+makefiles put it in /usr/local/bin)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/local/man/cat1 for imaging software), then add that location
+to your MANPATH.
+
+<DT><B>Productivity</B>
+<DD>This program can be used to explore the largely unmapped terrain
+of the evolution of coupled map lattices. In that sense, it may assist
+in the construction of a phenomenology of such maps.
+
+<DT><B>Safety</B>
+<DD>I have used this for years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual page.
+
+<DT><B>Verification</B>
+<DD>Execute any or all of the shell scripts provided in /usr/local/mathrec/lds.
+
+<DT><B>Feedback</B>
+<DD>
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

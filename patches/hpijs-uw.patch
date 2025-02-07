@@ -1,0 +1,65 @@
+--- ./hpijs.cpp.uw	2004-10-14 23:08:51.000000000 +0000
++++ ./hpijs.cpp	2005-04-15 06:05:17.900000026 +0000
+@@ -35,6 +35,7 @@
+ #include <stdarg.h>
+ #include <syslog.h>
+ #include <string.h>
++#include <strings.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include "header.h"
+--- ./Makefile.in.uw	2004-10-14 23:30:23.000000000 +0000
++++ ./Makefile.in	2005-04-15 06:05:39.050000017 +0000
+@@ -81,7 +81,7 @@
+ 	dj3600_cmap.$(OBJEXT) ljcolor.$(OBJEXT) hpiom.$(OBJEXT) \
+ 	printerproxy.$(OBJEXT) printerfactory.$(OBJEXT)
+ hpijs_OBJECTS = $(am_hpijs_OBJECTS)
+-hpijs_LDADD = $(LDADD)
++hpijs_LDADD = $(LDADD) -lsocket
+ binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
+ SCRIPTS = $(bin_SCRIPTS)
+ DEFAULT_INCLUDES = -I. -I$(srcdir)
+@@ -243,7 +243,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-docdir = $(datadir)/doc/$(distdir)
++docdir = $(datadir)/doc/packages/$(distdir)
+ ppddir = $(datadir)/ppd/HP
+ 
+ #APDKLABEL=SDK_MS13_GOLD_4-1-2004
+@@ -781,7 +781,7 @@
+ install-foomatic:
+ 	mkdir -p $(DESTDIR)$(ppddir)
+ 	rm -f $(DESTDIR)$(ppddir)/HP*hpijs*.ppd*
+-	cp -ax ppd/* $(DESTDIR)$(ppddir)
++	cp -pR ppd/* $(DESTDIR)$(ppddir)
+ 	gzip -f $(DESTDIR)$(ppddir)/*
+ 
+ uninstall-foomatic:
+--- ./registry.cpp.uw	2004-10-14 23:08:50.000000000 +0000
++++ ./registry.cpp	2005-04-15 06:05:17.900000067 +0000
+@@ -236,10 +236,10 @@
+             device = eDJ3320;
+             match = TRUE;
+         }
+-		char	*cmdStr = strstr ((const char *) DevIDBuffer+2, "CMD:");
++		char	*cmdStr = (char *)strstr ((const char *) DevIDBuffer+2, "CMD:");
+ 		if (!cmdStr)
+ 		{
+-			cmdStr = strstr ((const char *) DevIDBuffer+2, "COMMAND SET:");
++			cmdStr = (char *)strstr ((const char *) DevIDBuffer+2, "COMMAND SET:");
+ 		}
+ 		if (!match && cmdStr && (strstr ((const char *) cmdStr+4, "POSTSCRIPT") || 
+ 			                     strstr ((const char *) cmdStr+4, "PostScript") || 
+--- ./dj3320.cpp.uw	2004-10-14 23:08:51.000000000 +0000
++++ ./dj3320.cpp	2005-04-15 06:05:17.910000023 +0000
+@@ -426,7 +426,7 @@
+             pLDLEncap->bNewStatus = FALSE;
+ 
+             // First 10 bytes of m_pbyReadBuff are packet header.  Status query from printer has $S:
+-            if ((pcStr = strstr((const char*)pLDLEncap->byStatusBuff + 10, "$S:")) == NULL)
++            if ((pcStr = (char *)strstr((const char*)pLDLEncap->byStatusBuff + 10, "$S:")) == NULL)
+             {
+                 m_dsCurrentStatus = DISPLAY_COMM_PROBLEM;
+                 return DISPLAY_COMM_PROBLEM;

@@ -1,0 +1,16 @@
+--- ./ltconfig.00	1999-07-15 12:31:35.000000000 -0700
++++ ./ltconfig	2003-09-16 12:37:36.360000133 -0700
+@@ -1461,6 +1461,13 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
++  sysv5*)
++    archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linkopts'
++    runpath_var='LD_RUN_PATH'
++    hardcode_shlibpath_var=no
++    export_dynamic_flag_spec='-Bexport'
++    ;;  
++
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linkopts'
+     hardcode_libdir_flag_spec='-L$libdir'

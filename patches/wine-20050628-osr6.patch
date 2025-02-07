@@ -1,0 +1,284 @@
+*** ./Build-OSR6.00	Tue Dec 27 11:48:39 2005
+--- ./Build-OSR6	Tue Dec 27 12:12:27 2005
+***************
+*** 0 ****
+--- 1,19 ----
++ #!/bin/sh
++ #
++ #HOST=i586-sco-sysv5
++ #CFLAGS="-O2"
++ #NM="/usr/ccs/bin/nm -p"
++ #CC="gcc -D_REENTRANT"
++ #CXX="g++ -D_REENTRANT"
++ #CFLAGS="$CFLAGS -Wall"
++ #export CC CXX CFLAGS NM
++ 
++ #./configure --prefix=/usr \
++ #            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ find . -name Makefile | xargs touch
++ touch Make.rules
++ /usr/gnu/bin/make $* 2>&1 | tee $MOUT
+*** ./configure.00	Tue Jul 12 07:06:04 2005
+--- ./configure	Tue Dec 27 11:49:19 2005
+***************
+*** 3529,3535 ****
+    # (-lICE), since we may need -lsocket or whatever for X linking.
+  
+    if test "$ISC" = yes; then
+!     X_EXTRA_LIBS="$X_EXTRA_LIBS -lnsl_s -linet"
+    else
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+--- 3529,3535 ----
+    # (-lICE), since we may need -lsocket or whatever for X linking.
+  
+    if test "$ISC" = yes; then
+!     X_EXTRA_LIBS="$X_EXTRA_LIBS -lnsl_s -lcurl -linet"
+    else
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+***************
+*** 3823,3835 ****
+  echo "${ECHO_T}$ac_cv_func_gethostbyname" >&6
+  
+      if test $ac_cv_func_gethostbyname = no; then
+!       echo "$as_me:$LINENO: checking for gethostbyname in -lnsl" >&5
+  echo $ECHO_N "checking for gethostbyname in -lnsl... $ECHO_C" >&6
+  if test "${ac_cv_lib_nsl_gethostbyname+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lnsl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 3823,3835 ----
+  echo "${ECHO_T}$ac_cv_func_gethostbyname" >&6
+  
+      if test $ac_cv_func_gethostbyname = no; then
+!       echo "$as_me:$LINENO: checking for  in -lnsl" >&5
+  echo $ECHO_N "checking for gethostbyname in -lnsl... $ECHO_C" >&6
+  if test "${ac_cv_lib_nsl_gethostbyname+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lcurl $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 3887,3893 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_nsl_gethostbyname" >&5
+  echo "${ECHO_T}$ac_cv_lib_nsl_gethostbyname" >&6
+  if test $ac_cv_lib_nsl_gethostbyname = yes; then
+!   X_EXTRA_LIBS="$X_EXTRA_LIBS -lnsl"
+  fi
+  
+        if test $ac_cv_lib_nsl_gethostbyname = no; then
+--- 3887,3893 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_nsl_gethostbyname" >&5
+  echo "${ECHO_T}$ac_cv_lib_nsl_gethostbyname" >&6
+  if test $ac_cv_lib_nsl_gethostbyname = yes; then
+!   X_EXTRA_LIBS="$X_EXTRA_LIBS -lcurl"
+  fi
+  
+        if test $ac_cv_lib_nsl_gethostbyname = no; then
+***************
+*** 6069,6075 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lnsl  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6069,6075 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lcurl $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6130,6137 ****
+    cat >>confdefs.h <<_ACEOF
+  #define HAVE_LIBNSL 1
+  _ACEOF
+! 
+!   LIBS="-lnsl $LIBS"
+  
+  fi
+  
+--- 6130,6136 ----
+    cat >>confdefs.h <<_ACEOF
+  #define HAVE_LIBNSL 1
+  _ACEOF
+!   LIBS="-lcurl $LIBS"
+  
+  fi
+  
+***************
+*** 6568,6574 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpoll  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6567,6573 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lICE  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6629,6636 ****
+    cat >>confdefs.h <<_ACEOF
+  #define HAVE_LIBPOLL 1
+  _ACEOF
+! 
+!   LIBS="-lpoll $LIBS"
+  
+  fi
+  
+--- 6628,6634 ----
+    cat >>confdefs.h <<_ACEOF
+  #define HAVE_LIBPOLL 1
+  _ACEOF
+!   LIBS="-lICE $LIBS"
+  
+  fi
+  
+***************
+*** 6713,6719 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lpthread  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 6711,6717 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lthread  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 6771,6777 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   LIBPTHREAD="-lpthread"
+  
+  fi
+  
+--- 6769,6775 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   LIBPTHREAD="-lthread"
+  
+  fi
+  
+***************
+*** 7128,7147 ****
+  	lcms/lcms.h \
+  	lcms.h \
+  	link.h \
+! 	linux/cdrom.h \
+  	linux/compiler.h \
+  	linux/hdreg.h \
+  	linux/input.h \
+! 	linux/ioctl.h \
+  	linux/joystick.h \
+  	linux/major.h \
+! 	linux/param.h \
+  	linux/serial.h \
+  	linux/ucdrom.h \
+  	mach/machine.h \
+! 	machine/cpu.h \
+! 	machine/limits.h \
+! 	mntent.h \
+  	netdb.h \
+  	netinet/in.h \
+  	netinet/in_systm.h \
+--- 7126,7145 ----
+  	lcms/lcms.h \
+  	lcms.h \
+  	link.h \
+! 	sys/cdrom.h \
+  	linux/compiler.h \
+  	linux/hdreg.h \
+  	linux/input.h \
+! 	sys/ioctl.h \
+  	linux/joystick.h \
+  	linux/major.h \
+! 	sys/param.h \
+  	linux/serial.h \
+  	linux/ucdrom.h \
+  	mach/machine.h \
+! 	vm/cpu.h \
+! 	limits.h \
+! 	sys/mntent.h \
+  	netdb.h \
+  	netinet/in.h \
+  	netinet/in_systm.h \
+***************
+*** 7167,7180 ****
+  	sys/filio.h \
+  	sys/ioctl.h \
+  	sys/ipc.h \
+! 	sys/link.h \
+  	sys/lwp.h \
+  	sys/mman.h \
+  	sys/modem.h \
+  	sys/msg.h \
+  	sys/param.h \
+  	sys/poll.h \
+! 	sys/ptrace.h \
+  	sys/reg.h \
+  	sys/scsiio.h \
+  	sys/shm.h \
+--- 7165,7178 ----
+  	sys/filio.h \
+  	sys/ioctl.h \
+  	sys/ipc.h \
+! 	link.h \
+  	sys/lwp.h \
+  	sys/mman.h \
+  	sys/modem.h \
+  	sys/msg.h \
+  	sys/param.h \
+  	sys/poll.h \
+! 	ptrace.h \
+  	sys/reg.h \
+  	sys/scsiio.h \
+  	sys/shm.h \
+***************
+*** 7193,7199 ****
+  	sys/vfs.h \
+  	sys/vm86.h \
+  	sys/wait.h \
+! 	syscall.h \
+  	termios.h \
+  	unistd.h \
+  	utime.h \
+--- 7191,7197 ----
+  	sys/vfs.h \
+  	sys/vm86.h \
+  	sys/wait.h \
+! 	sys/syscall.h \
+  	termios.h \
+  	unistd.h \
+  	utime.h \

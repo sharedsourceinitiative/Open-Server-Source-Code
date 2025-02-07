@@ -1,0 +1,9 @@
+echo "Making tags files"
+make tags
+echo "Backing up previous shar file, if any"
+[ -f hop.shar ] && mv hop.shar hop.shar-
+echo "Creating new man page if necessary"
+[ -f hop.LOCAL ] || nroff -man hop.man > hop.LOCAL
+echo "Creating new shar file"
+shar README Imakefile Makefile.std Package *.c *.h *.LOCAL *.man tags TAGS > hop.shar
+echo "Done"

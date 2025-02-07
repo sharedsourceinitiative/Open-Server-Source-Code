@@ -1,0 +1,95 @@
+--- ./odbcinst/Makefile.am.uw	2001-11-01 10:55:39.000000000 +0000
++++ ./odbcinst/Makefile.am	2004-12-10 00:43:57.860000016 +0000
+@@ -16,13 +16,10 @@
+ 	../lst/liblstlc.la \
+ 	$(LIBLTDL) $(LIBADD_DL) 
+ 
+-libodbcinst_la_DEPENDENCIES = \
++libodbcinst_la_DEPENDENCIES = $(LIBLTDL) \
++	../lst/liblstlc.la \
+     ../log/libloglc.la \
+-    ../ini/libinilc.la \
+-    ../lst/liblstlc.la \
+-    $(LIBLTDL) 
+-
+-sysconf_DATA=
++    ../ini/libinilc.la
+ 
+ libodbcinst_la_SOURCES = \
+ 	ODBCINSTConstructProperties.c \
+--- ./configure.in.uw	2004-12-10 00:18:52.150000014 +0000
++++ ./configure.in	2004-12-10 00:18:52.340000004 +0000
+@@ -143,7 +143,9 @@
+ 
+ dnl Check for dlopen support
+ AC_LIBTOOL_DLOPEN
++if test "x$ltdllib" = "xfalse"; then
+ AC_CONFIG_SUBDIRS(libltdl)
++fi
+ 
+ dnl Configure libtool
+ AM_PROG_LIBTOOL
+@@ -294,8 +296,6 @@
+     AC_CHECK_LIB_NOC(thread, mutex_lock,
+     [
+       AC_DEFINE(HAVE_LIBTHREAD,1)
+-      dnl Check if the compiler will build with -mt as a option, this is a solaris thing
+-      AC_CHECK_COMP_OPT(mt)
+       AC_DEFINE(_REENTRANT)
+       gotthread="yes";
+       THREADLIB="-lthread"
+@@ -311,9 +311,6 @@
+         if test "x$ac_cv_prog_gcc"="xyes"; then
+           dnl Check if the compiler will build with -pthread as a option
+           AC_CHECK_COMP_OPT(pthread)
+-        else
+-          dnl Check if the compiler will build with -mt as a option
+-          AC_CHECK_COMP_OPT(mt)
+         fi
+       ])
+     fi
+@@ -328,9 +325,6 @@
+         if test "x$ac_cv_prog_gcc"="xyes"; then
+           dnl Check if the compiler will build with -pthread as a option
+           AC_CHECK_COMP_OPT(pthread)
+-        else
+-          dnl Check if the compiler will build with -mt as a option
+-          AC_CHECK_COMP_OPT(mt)
+         fi
+       ])
+     fi
+@@ -381,11 +375,11 @@
+         AC_DEFINE(OSXHEADER)
+     ;;
+ 
+-    sysv5Open*)
+-        if test "x$THREADLIB" = "x"; then
++    sysv5*)
++        if test "x$ac_cv_prog_gcc"="xyes"; then
+           LIBS="$LIBS $THREADLIB"
+         else
+-          LIBS="$LIBS -Kthread"
++          LIBS="-Kthread $LIBS"
+         fi
+         ;;
+ 
+--- ./Makefile.in.uw	2004-06-16 14:46:34.000000000 +0000
++++ ./Makefile.in	2004-12-10 00:18:52.660000014 +0000
+@@ -202,7 +202,6 @@
+     log \
+ 	lst \
+ 	ini \
+-    	libltdl \
+ 	odbcinst \
+ 	DriverManager \
+ 	odbcinstQ \
+--- ./Makefile.am.uw	2004-05-17 08:26:41.000000000 +0000
++++ ./Makefile.am	2004-12-10 00:18:52.700000004 +0000
+@@ -3,7 +3,6 @@
+     log \
+ 	lst \
+ 	ini \
+-    	libltdl \
+ 	odbcinst \
+ 	DriverManager \
+ 	odbcinstQ \

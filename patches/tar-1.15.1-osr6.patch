@@ -1,0 +1,153 @@
+*** ./lib/rtapelib.c.osr6	Sat May  7 07:59:59 2005
+--- ./lib/rtapelib.c	Tue Aug 23 14:09:45 2005
+***************
+*** 51,57 ****
+  # endif
+  #endif
+  
+! #include <signal.h>
+  
+  #if HAVE_NETDB_H
+  # include <netdb.h>
+--- 51,57 ----
+  # endif
+  #endif
+  
+! #include <sys/signal.h>
+  
+  #if HAVE_NETDB_H
+  # include <netdb.h>
+*** ./lib/argp-eexst.c.osr6	Sat May  7 08:00:00 2005
+--- ./lib/argp-eexst.c	Tue Aug 23 14:09:45 2005
+***************
+*** 21,31 ****
+  #include <config.h>
+  #endif
+  
+! #include <sysexits.h>
+  
+  #include "argp.h"
+  
+  /* The exit status that argp will use when exiting due to a parsing error.
+     If not defined or set by the user program, this defaults to EX_USAGE from
+!    <sysexits.h>.  */
+  error_t argp_err_exit_status = EX_USAGE;
+--- 21,31 ----
+  #include <config.h>
+  #endif
+  
+! #include <sasl/exits.h>
+  
+  #include "argp.h"
+  
+  /* The exit status that argp will use when exiting due to a parsing error.
+     If not defined or set by the user program, this defaults to EX_USAGE from
+!    <sasl/exits.h>.  */
+  error_t argp_err_exit_status = EX_USAGE;
+*** ./src/buffer.c.osr6	Sat May  7 08:00:08 2005
+--- ./src/buffer.c	Tue Aug 23 14:09:45 2005
+***************
+*** 21,27 ****
+  
+  #include <system.h>
+  
+! #include <signal.h>
+  
+  #include <fnmatch.h>
+  #include <human.h>
+--- 21,27 ----
+  
+  #include <system.h>
+  
+! #include <sys/signal.h>
+  
+  #include <fnmatch.h>
+  #include <human.h>
+*** ./src/system.c.osr6	Sat May  7 08:00:09 2005
+--- ./src/system.c	Tue Aug 23 14:09:45 2005
+***************
+*** 20,26 ****
+  
+  #include "common.h"
+  #include <rmt.h>
+! #include <signal.h>
+  
+  void
+  sys_stat_nanoseconds (struct tar_stat_info *st)
+--- 20,26 ----
+  
+  #include "common.h"
+  #include <rmt.h>
+! #include <sys/signal.h>
+  
+  void
+  sys_stat_nanoseconds (struct tar_stat_info *st)
+*** ./src/tar.c.osr6	Sat May  7 08:00:09 2005
+--- ./src/tar.c	Tue Aug 23 14:09:45 2005
+***************
+*** 24,30 ****
+  #include <fnmatch.h>
+  #include <argp.h>
+  
+! #include <signal.h>
+  #if ! defined SIGCHLD && defined SIGCLD
+  # define SIGCHLD SIGCLD
+  #endif
+--- 24,30 ----
+  #include <fnmatch.h>
+  #include <argp.h>
+  
+! #include <sys/signal.h>
+  #if ! defined SIGCHLD && defined SIGCLD
+  # define SIGCHLD SIGCLD
+  #endif
+*** ./configure.osr6	Sat May  7 07:59:54 2005
+--- ./configure	Tue Aug 23 14:09:45 2005
+***************
+*** 6858,6864 ****
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
+! #include <signal.h>
+  #ifdef signal
+  # undef signal
+  #endif
+--- 6858,6864 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
+! #include <sys/signal.h>
+  #ifdef signal
+  # undef signal
+  #endif
+*** ./Configure-OSR6.osr6	Tue Aug 23 14:09:46 2005
+--- ./Configure-OSR6	Tue Aug 23 14:09:46 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ HOST=i386-sco-sysv5
++ 
++ rm -f config.status config.log
++ ./configure --host=$HOST \
++             --build=$HOST \
++             --prefix=/usr/local \
++             2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Tue Aug 23 14:13:12 2005
+--- ./Install-OSR6	Tue Aug 23 14:13:23 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gnutar
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+PATH=/usr/gnu/bin:$PATH
+export PATH
+TOP=/usr/src/sco/XEmacs
+VER=21.4.19
+
+cd $TOP
+rm -rf xemacs-$VER
+bzcat -dc $TOP/xemacs-$VER.tar.bz2 | tar xf -
+cd xemacs-$VER
+/usr/gnu/bin/patch -p0 -b -z .00 -i $TOP/xemacs-$VER-osr5.patch
+[ "$1" = "-p" ] && exit 0
+CFLAGS="-O6 -mcpu=i586 -march=i586 -fomit-frame-pointer -fno-exceptions -fno-rtti -pipe -s -mpentium -mcpu=pentium -march=pentium -ffast-math -fexpensive-optimizations"
+export CFLAGS
+CXXFLAGS="-O6 -mcpu=i586 -march=i586 -fomit-frame-pointer -fno-exceptions -fno-rtti -pipe -s -mpentium -mcpu=pentium -march=pentium -ffast-math -fexpensive-optimizations -fno-exceptions -fno-rtti"
+export CXXFLAGS
+FFLAGS="-O6 -mcpu=i586 -march=i586 -fomit-frame-pointer -fno-exceptions -fno-rtti -pipe -s -mpentium -mcpu=pentium -march=pentium -ffast-math -fexpensive-optimizations"
+export FFLAGS
+libtoolize -c -f --copy --force
+./configure --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin \
+            --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include \
+            2>&1 | tee mout-configure
+/usr/gnu/bin/make 2>&1 | tee mout

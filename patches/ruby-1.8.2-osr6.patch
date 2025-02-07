@@ -1,0 +1,97 @@
+*** ./file.c.osr6	Fri Dec 17 18:07:29 2004
+--- ./file.c	Sun Sep  4 15:23:12 2005
+***************
+*** 22,27 ****
+--- 22,31 ----
+  #include "util.h"
+  #include "dln.h"
+  
++ #if defined(__USLC__)
++ # include <fcntl.h>
++ #endif
++ 
+  #ifdef HAVE_UNISTD_H
+  #include <unistd.h>
+  #endif
+*** ./Configure-OSR6.osr6	Sun Sep  4 15:23:13 2005
+--- ./Configure-OSR6	Sun Sep  4 15:24:58 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr --enable-install-doc \
++             --disable-ipv6 --disable-largefile --enable-shared \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Sat Dec 25 02:58:38 2004
+--- ./configure	Sun Sep  4 15:23:13 2005
+***************
+*** 11514,11519 ****
+--- 11514,11520 ----
+  #else
+  # include <assert.h>
+  #endif
++ # include <fcntl.h>
+  
+  #undef $ac_func
+  
+***************
+*** 13961,13966 ****
+--- 13962,13968 ----
+  	hpux*)		CCDLFLAGS="$CCDLFLAGS +Z";;
+  	solaris*|irix*)	CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	sunos*)		CCDLFLAGS="$CCDLFLAGS -PIC" ;;
++ 	sysv5*)		CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	esix*|uxpds*)   CCDLFLAGS="$CCDLFLAGS -KPIC" ;;
+  	*)		: ${CCDLFLAGS=""} ;;
+      esac
+***************
+*** 13985,13991 ****
+  			rb_cv_dlopen=yes;;
+  	irix*)		: ${LDSHARED='ld -shared'}
+  			rb_cv_dlopen=yes;;
+! 	sysv4*) 	: ${LDSHARED='ld -G'}
+  			rb_cv_dlopen=yes;;
+          nto-qnx*)       : ${LDSHARED="qcc -shared"}
+                          rb_cv_dlopen=yes ;;
+--- 13987,13993 ----
+  			rb_cv_dlopen=yes;;
+  	irix*)		: ${LDSHARED='ld -shared'}
+  			rb_cv_dlopen=yes;;
+! 	sysv5*|sysv4*) 	: ${LDSHARED='$(CC) -Wl,-G'}
+  			rb_cv_dlopen=yes;;
+          nto-qnx*)       : ${LDSHARED="qcc -shared"}
+                          rb_cv_dlopen=yes ;;
+***************
+*** 14680,14685 ****
+--- 14682,14690 ----
+    cygwin*|mingw*|beos*|openstep*|nextstep*|rhapsody*|darwin*|os2-emx*)
+      : ${DLDLIBS=""}
+      ;;
++   sysv5*)
++     DLDLIBS="$DLDLIBS"
++     ;;
+    *)
+      DLDLIBS="$DLDLIBS -lc"
+      ;;
+***************
+*** 14710,14715 ****
+--- 14715,14725 ----
+      sunos4*)
+  	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'
+  	;;
++     sysv5*)
++ 	SOLIBS='$(LIBS)'
++ 	LIBRUBY_DLDFLAGS='-Wl,-h,/usr/lib/lib$(RUBY_SO_NAME).so'
++ 	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'
++ 	;;
+      linux* | gnu* | k*bsd*-gnu | atheos*)
+  	LIBRUBY_DLDFLAGS='-Wl,-soname,lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR)'
+  	LIBRUBY_ALIASES='lib$(RUBY_SO_NAME).so.$(MAJOR).$(MINOR) lib$(RUBY_SO_NAME).so'

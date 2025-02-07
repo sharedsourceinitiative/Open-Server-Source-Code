@@ -1,0 +1,21 @@
+
+SVR4 Library Rules and Template
+===============================
+
+I've included the sv4Lib.rules and sv4Lib.tmpl files here
+because i used them to build the shared libXpm for SCO OpenServer
+available at ../../../osr5/lib/xpm-3.4j
+
+To see how these files can be used in an Imakefile, see the Imakefiles
+in ../../x11/xpm-3.4j and ../../x11/xpm-3.4j/lib (after extracting the
+compressed archive of the Xpm 3.4j source).
+
+In order to instruct imake how to find the additional config files,
+use a command like :
+    $ imake -DUseInstalled -I/usr/lib/X11/config -I/.../config
+replacing the "..." with the path to these SVR4 library rules.
+
+If necessary, you can then run "make Makefiles" etc.
+
+Ron Record
+rr@sco.com

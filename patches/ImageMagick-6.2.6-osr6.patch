@@ -1,0 +1,37 @@
+*** ./Install-OSR6.osr6	Fri Nov  9 16:06:50 2007
+--- ./Install-OSR6	Fri Nov  9 16:06:50 2007
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/ImageMagick
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install
+*** ./Configure-OSR6.osr6	Fri Nov  9 16:06:50 2007
+--- ./Configure-OSR6	Fri Nov  9 16:17:01 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ acx_pthread_flags=-Kpthread
++ PTHREAD_LIBS=-lm
++ export CC CXX CFLAGS NM acx_pthread_flags PTHREAD_LIBS
++ rm -f mout-configure
++ ./configure --prefix=/usr --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

@@ -1,0 +1,72 @@
+*** ./src/xcam.c.osr6	Thu Jun  2 09:32:09 2005
+--- ./src/xcam.c	Fri Mar 16 14:41:54 2007
+***************
+*** 36,41 ****
+--- 36,42 ----
+  #include <string.h>
+  #include <unistd.h>
+  #include <time.h>
++ #include <sys/bitypes.h>
+  
+  /* for xcam_add-text routine  */
+  #include "font_6x11.h"
+*** ./src/xscanimage.c.osr6	Sat Apr 16 06:12:07 2005
+--- ./src/xscanimage.c	Fri Mar 16 14:42:36 2007
+***************
+*** 39,44 ****
+--- 39,45 ----
+  #include <string.h>
+  #include <unistd.h>
+  
++ #include <sys/bitypes.h>
+  #include <sys/stat.h>
+  
+  #include <sane/sane.h>
+*** ./Configure-OSR6.osr6	Fri Mar 16 13:47:16 2007
+--- ./Configure-OSR6	Fri Mar 16 13:47:16 2007
+***************
+*** 0 ****
+--- 1,26 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ GIMP_TOOL=/usr/bin/gimptool-2.0
++ GIMP_CONFIG=/usr/bin/gimptool-2.0
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL GIMP_CONFIG GIMP_TOOL
++ ac_cv_type_u_int8_t=yes
++ ac_cv_type_u_int16_t=yes
++ ac_cv_type_u_int32_t=yes
++ export ac_cv_type_u_int8_t ac_cv_type_u_int16_t ac_cv_type_u_int32_t
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --disable-ipv6 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Fri Mar 16 13:47:16 2007
+--- ./Install-OSR6	Fri Mar 16 13:47:16 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/sanefront
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

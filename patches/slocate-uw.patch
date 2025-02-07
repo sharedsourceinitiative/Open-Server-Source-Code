@@ -1,0 +1,58 @@
+--- ./main.c.00	2003-09-07 18:45:11.000000000 +0000
++++ ./main.c	2003-09-07 18:53:22.730000047 +0000
+@@ -137,7 +137,7 @@
+ char *TMPSLOCATEDB = "/var/lib/slocate/slocate.db.tmp";
+ char *SLOCATEDB_DIR = "/var/lib/slocate/";
+ #endif
+-#ifdef _SCO_DS
++#if defined(_SCO_DS) || defined(__USLC__)
+ #undef MTAB_FILE
+ #define MTAB_FILE "/etc/mnttab"
+ #endif
+@@ -161,7 +161,7 @@
+ gid_t GID;
+ int first=1;
+ char slevel='1';
+-#ifdef __SunOS__
++#if defined(__SunOS__) || defined(__USLC__)
+ unsigned short SLOC_GID=60001; /* Seems to be the default nobody gid */
+ #else
+ #ifdef _SCO_DS
+--- ./sl_fts.h.00	2003-09-07 18:45:11.000000000 +0000
++++ ./sl_fts.h	2003-09-07 18:53:36.660000008 +0000
+@@ -38,7 +38,7 @@
+ 
+ #include "config.h"
+ 
+-# if defined(__SunOS__) || defined(_SCO_DS)
++# if defined(__SunOS__) || defined(_SCO_DS) || defined(__USLC__)
+ #include "cdefs.h"
+ # endif 
+ 
+--- ./Makefile.in.00	2001-02-22 10:17:51.000000000 +0000
++++ ./Makefile.in	2003-09-07 18:45:11.470000068 +0000
+@@ -287,22 +287,11 @@
+ 
+ %.o: %.c
+ 	@echo '$(COMPILE) -c $<'; \
+-	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+-	tr ' ' '\012' < .deps/$(*F).pp \
+-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+-	    >> .deps/$(*F).P; \
+-	rm .deps/$(*F).pp
++	$(COMPILE) -c $<
+ 
+ %.lo: %.c
+ 	@echo '$(LTCOMPILE) -c $<'; \
+-	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+-	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+-	  < .deps/$(*F).pp > .deps/$(*F).P; \
+-	tr ' ' '\012' < .deps/$(*F).pp \
+-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+-	    >> .deps/$(*F).P; \
+-	rm -f .deps/$(*F).pp
++	$(LTCOMPILE) -c $<
+ info-am:
+ info: info-am
+ dvi-am:

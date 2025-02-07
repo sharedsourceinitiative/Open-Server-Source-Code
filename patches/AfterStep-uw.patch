@@ -1,0 +1,10 @@
+--- ./autoconf/Makefile.common.lib.in.00	2001-10-03 05:58:40.000000000 +0000
++++ ./autoconf/Makefile.common.lib.in	2003-09-17 00:18:15.430000005 +0000
+@@ -103,6 +103,6 @@
+ 	ln -sf $(DYNPROG).$(LIBVER) $(DYNPROG).$(LIBVERMAJOR)
+ 
+ $(DYNPROG).$(LIBVER): $(OBJSDLL)
+-	$(CC) -shared -Wl,-soname,$(DYNPROG).$(LIBVERMAJOR) -o $(DYNPROG).$(LIBVER) \
++	$(CC) -shared -Wl,-h,$(DYNPROG).$(LIBVERMAJOR) -o $(DYNPROG).$(LIBVER) \
+ 	 $(OBJSDLL)
+ 

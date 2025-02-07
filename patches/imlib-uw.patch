@@ -1,0 +1,127 @@
+--- ./configure.uw	2002-03-25 16:45:33.000000000 +0000
++++ ./configure	2003-11-11 21:46:13.880000047 +0000
+@@ -1768,11 +1768,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -3170,7 +3170,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -3603,18 +3603,6 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
+-  sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-    hardcode_libdir_flag_spec=
+-    hardcode_shlibpath_var=no
+-    runpath_var='LD_RUN_PATH'
+-    ;;
+-
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec='-L$libdir'
+@@ -3646,13 +3634,14 @@
+     runpath_var=LD_RUN_PATH
+     ;;
+ 
+-  sysv5uw7* | unixware7*)
++  sysv5* | unixware7*)
+     no_undefined_flag='${wl}-z ${wl}text'
+     if test "$GCC" = yes; then
+       archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     else
+       archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     fi
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     runpath_var='LD_RUN_PATH'
+     hardcode_shlibpath_var=no
+     ;;
+@@ -7535,7 +7524,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-ljpeg $GX_LIBS $LIBS"
++LIBS="-ljpeg $GX_LIBS $LIBS $X_EXTRA_LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 7541 "configure"
+ #include "confdefs.h"
+@@ -7614,7 +7603,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-ltiff $GX_LIBS $LIBS"
++LIBS="-ltiff $GX_LIBS $LIBS -lm"
+ cat > conftest.$ac_ext <<EOF
+ #line 7620 "configure"
+ #include "confdefs.h"
+@@ -7670,8 +7659,8 @@
+ fi
+ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
+   echo "$ac_t""yes" 1>&6
+-  TIFFLIBS="-ltiff"
+-    SUPPORT_LIBS="$SUPPORT_LIBS -ltiff"; cat >> confdefs.h <<\EOF
++  TIFFLIBS="-ltiff -lm"
++    SUPPORT_LIBS="$SUPPORT_LIBS -ltiff -lm"; cat >> confdefs.h <<\EOF
+ #define HAVE_LIBTIFF 1
+ EOF
+ 
+@@ -7689,7 +7678,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-ltiff -ljpeg -lz $GX_LIBS $LIBS"
++LIBS="-ltiff -ljpeg -lz $GX_LIBS $LIBS $X_EXTRA_LIBS -lm"
+ cat > conftest.$ac_ext <<EOF
+ #line 7695 "configure"
+ #include "confdefs.h"
+@@ -7745,8 +7734,8 @@
+ fi
+ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
+   echo "$ac_t""yes" 1>&6
+-  TIFFLIBS="-ltiff -ljpeg -lz"
+-      SUPPORT_LIBS="$SUPPORT_LIBS -ltiff -ljpeg -lz"; cat >> confdefs.h <<\EOF
++  TIFFLIBS="-ltiff -ljpeg -lz -lm"
++      SUPPORT_LIBS="$SUPPORT_LIBS -ltiff -ljpeg -lz -lm"; cat >> confdefs.h <<\EOF
+ #define HAVE_LIBTIFF 1
+ EOF
+ 
+@@ -7876,7 +7865,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lungif $GX_LIBS $LIBS"
++LIBS="-lungif $GX_LIBS $LIBS $X_EXTRA_LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 7882 "configure"
+ #include "confdefs.h"
+@@ -7973,7 +7962,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lpng -lz -lm $GX_LIBS $LIBS"
++LIBS="-lpng -lz -lm $GX_LIBS $LIBS $X_EXTRA_LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 7979 "configure"
+ #include "confdefs.h"

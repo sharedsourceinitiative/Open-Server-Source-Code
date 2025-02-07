@@ -1,0 +1,31 @@
+#!/bin/sh
+
+PDIR=/u/src/openserver/net/samba/dist
+TDIR=/u/tmp/samba-3.0.14a-root
+
+[ -d $TDIR/usr/bin ] || {
+  echo "$TDIR/usr/bin does not exist. Run Install"
+  exit 1
+}
+
+cd $PDIR
+rm -rf lib
+rm -rf usr-
+mv usr usr-
+cd $TDIR/usr/bin
+[ -f net ] && mv net smbnet
+cd ../..
+mv lib $PDIR/lib
+mv usr $PDIR/usr
+cd $PDIR
+
+mkdif usr*
+vi /tmp/dif
+sh /tmp/dif
+rm -rf usr
+mv usr- usr
+tar xf /u/tmp/dif.tar
+cd ..
+mkhoff
+cd archives/TAPE
+scp * monarch.pdev.sco.com:/u/vols/samba

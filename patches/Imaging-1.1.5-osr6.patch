@@ -1,0 +1,40 @@
+*** ./Build-OSR6.osr6	Sat Sep  3 12:23:39 2005
+--- ./Build-OSR6	Sat Sep  3 12:23:39 2005
+***************
+*** 0 ****
+--- 1,4 ----
++ #!/bin/sh
++ 
++ [ -f mout ] && mv mout mout-prev
++ sh BUILDME 2>&1 | tee mout
+*** ./setup.py.osr6	Wed Mar 23 10:16:40 2005
+--- ./setup.py	Sat Sep  3 12:23:39 2005
+***************
+*** 32,38 ****
+  JPEG_ROOT = None
+  TIFF_ROOT = None
+  ZLIB_ROOT = None
+! TCL_ROOT = None
+  
+  # FIXME: add mechanism to explicitly *disable* the use of a library
+  
+--- 32,38 ----
+  JPEG_ROOT = None
+  TIFF_ROOT = None
+  ZLIB_ROOT = None
+! TCL_ROOT = libinclude("/usr/gnu")
+  
+  # FIXME: add mechanism to explicitly *disable* the use of a library
+  
+*** ./Install-OSR6.osr6	Sat Sep  3 13:02:43 2005
+--- ./Install-OSR6	Sat Sep  3 13:02:43 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ python setup.py install 2>&1 | tee $MOUT
++ 

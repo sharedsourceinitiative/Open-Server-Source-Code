@@ -1,0 +1,13 @@
+--- ./src/vim.h.00	2003-09-17 16:13:54.000000000 +0000
++++ ./src/vim.h	2003-09-17 16:16:17.520000056 +0000
+@@ -177,6 +177,10 @@
+ # define __ARGS(x) x
+ #endif
+ 
++#ifdef __USLC__
++# define __ARGS(x) x
++#endif
++
+ #ifdef __BEOS__
+ # include "os_beos.h"
+ # define __ARGS(x)  x

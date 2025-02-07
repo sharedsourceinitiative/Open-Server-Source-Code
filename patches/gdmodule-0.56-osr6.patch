@@ -1,0 +1,54 @@
+*** ./Build-OSR6.osr6	Tue Dec 11 20:04:58 2007
+--- ./Build-OSR6	Tue Dec 11 20:05:53 2007
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ #
++ rm -f mout
++ CXX="CC -Kpthread -Kalloca" \
++ CC="cc -Kpthread -Kalloca" \
++ python Setup.py build 2>&1 | tee mout
++ 
+*** ./Install-OSR6.osr6	Tue Dec 11 20:04:58 2007
+--- ./Install-OSR6	Tue Dec 11 20:06:02 2007
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/gdmodule
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ rm -f mout-install
++ python Setup.py install --root=$D 2>&1 | tee mout-install
+*** ./_gdmodule.c.osr6	Thu Mar 10 21:06:26 2005
+--- ./_gdmodule.c	Tue Dec 11 20:07:03 2007
+***************
+*** 124,135 ****
+  ******************************************************************/
+  
+  #include <Python.h>
+! #include <gd.h>
+! #include <gdfonts.h>
+! #include <gdfontl.h>
+! #include <gdfontmb.h>
+! #include <gdfontt.h>
+! #include <gdfontg.h>
+  #include <string.h>
+  #include <errno.h>
+  
+--- 124,135 ----
+  ******************************************************************/
+  
+  #include <Python.h>
+! #include <gd2/gd.h>
+! #include <gd2/gdfonts.h>
+! #include <gd2/gdfontl.h>
+! #include <gd2/gdfontmb.h>
+! #include <gd2/gdfontt.h>
+! #include <gd2/gdfontg.h>
+  #include <string.h>
+  #include <errno.h>
+  

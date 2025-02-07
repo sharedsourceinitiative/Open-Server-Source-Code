@@ -1,0 +1,10 @@
+--- ./sanei/sanei_scsi.c.00	2004-11-23 19:28:49.000000000 +0000
++++ ./sanei/sanei_scsi.c	2004-11-23 21:14:59.950000033 +0000
+@@ -127,6 +127,7 @@
+ # ifdef HAVE_SYS_SDI_COMM_H
+ #  ifdef HAVE_SYS_PASSTHRUDEF_H
+ #   define USE SCO_UW71_INTERFACE
++#   include <libsdi.h>
+ #   include <sys/scsi.h>
+ #   include <sys/sdi_edt.h>
+ #   include <sys/sdi.h>

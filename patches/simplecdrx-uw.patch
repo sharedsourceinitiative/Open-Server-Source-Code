@@ -1,0 +1,13 @@
+--- ./configure.00	2004-09-06 07:34:28.000000000 +0000
++++ ./configure	2004-09-06 20:05:37.250000056 +0000
+@@ -12783,8 +12783,8 @@
+   if test "$GTK_CONFIG" = "no" ; then
+     no_gtk=yes
+   else
+-    GTK_CFLAGS=`$GTK_CONFIG $gtk_config_args --cflags`
+-    GTK_LIBS=`$GTK_CONFIG $gtk_config_args --libs`
++    GTK_CFLAGS=`$GTK_CONFIG $gtk_config_args --cflags gtk+-2.0`
++    GTK_LIBS=`$GTK_CONFIG $gtk_config_args --libs gtk+-2.0`
+     gtk_config_major_version=`$GTK_CONFIG $gtk_config_args --version | \
+            sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+     gtk_config_minor_version=`$GTK_CONFIG $gtk_config_args --version | \

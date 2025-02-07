@@ -1,0 +1,62 @@
+*** ./Install-OSR6.osr6	Wed Mar 26 15:19:15 2008
+--- ./Install-OSR6	Wed Mar 26 15:19:15 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/sudo
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Wed Mar 26 15:19:15 2008
+--- ./Configure-OSR6	Wed Mar 26 15:19:15 2008
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ ac_cv_search_getspnam=yes
++ export CC CXX CFLAGS NM M4 INSTALL ac_cv_search_getspnam
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/man \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./config.h.in.osr6	Sat Feb  9 06:44:42 2008
+--- ./config.h.in	Wed Mar 26 15:19:15 2008
+***************
+*** 159,165 ****
+  
+  /* Define to 1 if you have the `getspnam' function (SVR4-style shadow
+     passwords) */
+! #undef HAVE_GETSPNAM
+  
+  /* Define to 1 if you have the `getspwuid' function. (HP-UX <= 9.X shadow
+     passwords) */
+--- 159,165 ----
+  
+  /* Define to 1 if you have the `getspnam' function (SVR4-style shadow
+     passwords) */
+! #define HAVE_GETSPNAM 1
+  
+  /* Define to 1 if you have the `getspwuid' function. (HP-UX <= 9.X shadow
+     passwords) */

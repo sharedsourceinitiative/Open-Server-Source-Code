@@ -1,0 +1,83 @@
+--- ./configure.00	2002-09-23 23:33:29.000000000 +0000
++++ ./configure	2004-03-09 19:23:00.000000000 +0000
+@@ -6551,7 +6551,13 @@
+       ;;
+ 
+     sco3.2v5*)
+-      archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
++      if test "$GCC" = yes; then
++	archive_cmds='$CC -shared ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds='$CC -G ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
+       hardcode_shlibpath_var=no
+       export_dynamic_flag_spec='${wl}-Bexport'
+       runpath_var=LD_RUN_PATH
+@@ -9289,18 +9295,14 @@
+     # FIXME: insert proper C++ library support
+     ld_shlibs_CXX=no
+     ;;
+-  sco*)
+-    archive_cmds_need_lc_CXX=no
+-    case $cc_basename in
+-      CC)
+-	# FIXME: insert proper C++ library support
+-	ld_shlibs_CXX=no
+-	;;
+-      *)
+-	# FIXME: insert proper C++ library support
+-	ld_shlibs_CXX=no
+-	;;
+-    esac
++  sco3.2v5*)
++      if test "$GCC" = yes; then
++	archive_cmds_CXX='$CC -shared ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds_CXX='$CC -G ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
+     ;;
+   sunos4*)
+     case $cc_basename in
+@@ -9718,7 +9720,7 @@
+ 	;;
+       psos*)
+ 	;;
+-      sco*)
++      sco3.2v5*)
+ 	case $cc_basename in
+ 	  CC)
+ 	    lt_prog_compiler_pic_CXX='-fPIC'
+@@ -12543,7 +12545,13 @@
+       ;;
+ 
+     sco3.2v5*)
+-      archive_cmds_F77='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
++      if test "$GCC" = yes; then
++	archive_cmds_F77='$CC -shared ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_F77='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds_F77='$CC -G ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_F77='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
+       hardcode_shlibpath_var_F77=no
+       export_dynamic_flag_spec_F77='${wl}-Bexport'
+       runpath_var=LD_RUN_PATH
+@@ -14666,7 +14674,13 @@
+       ;;
+ 
+     sco3.2v5*)
+-      archive_cmds_GCJ='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
++      if test "$GCC" = yes; then
++	archive_cmds_GCJ='$CC -shared ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_GCJ='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      else
++	archive_cmds_GCJ='$CC -G ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds_GCJ='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,/usr/lib/$soname -o $lib $libobjs $deplibs $compiler_flags'
++      fi
+       hardcode_shlibpath_var_GCJ=no
+       export_dynamic_flag_spec_GCJ='${wl}-Bexport'
+       runpath_var=LD_RUN_PATH

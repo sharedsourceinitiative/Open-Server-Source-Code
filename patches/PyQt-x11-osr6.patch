@@ -1,0 +1,29 @@
+--- ./Configure-OSR6.osr6	2005-06-15 09:05:08.346952011 -0700
++++ ./Configure-OSR6	2005-06-15 10:17:06.335272000 -0700
+@@ -0,0 +1,12 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++NM="/usr/ccs/bin/nm -p"
++CC="cc -Kpthread -Kalloca"
++CXX="CC -Kpthread -Kalloca"
++export CC CXX CFLAGS NM
++rm -f mout-configure
++python configure.py -w <<EOF
++    yes
++    EOF
+--- Install-OSR6.osr6	2005-07-03 13:49:27.960000003 -0700
++++ Install-OSR6	2005-07-03 13:50:08.820000011 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/PyQt
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

@@ -1,0 +1,243 @@
+Changes for  rxvt-2.6.0 on both SCO OpenServer and Unixware7. 
+
+1) Detection of pty 'flavour' is broken for SCO openserver - configure detects 
+    grantpt and sets up PTYS_ARE_PTMX  instead of PTYS_ARE_NUMERIC
+
+    It needs an additional clause in the configure generation of the 
+    pty test program  before the grantpt() check. This clause needs to be 
+    ifdeffed  _SCO_DS (for osr5) and  does a check for existance of 
+    /dev/ttyp<n>. 
+    (The problem is that osr5 has both grantpt() and /dev/ttyp<n> nodes.
+    Numeric lookup is (historically) preferable here for when
+    pty numbers are changed and the grantpt code code fails due bug 2 
+    below anyway.
+
+    Note that the erstwhile checking for /dev/tty100 is incorrect 
+    (typo I presume - intended to be /dev/ttyp100) 
+    Even so it will fail on systems that have not had their number of ptys
+    reconfigured up (past 100) from the default - checking for /dev/ttyp20 is
+    preferable.
+
+    Note that the now dead ifdef _SCO_DS clause  setting 
+    ALL_NUMERIC PTYS in rxvt.h can be removed.
+
+2) command.c - The code flow for pty initialisation is incorrect for 
+    systems that have  grantpt() but are not flagged svr4. 
+    - We need to do the ptem and ldterm push   being done currently 
+    only for __svr4__.  (probably better devolving all this to HAVE_GRANTPT
+    or PTYS_ARE_PTMX ifdef and forgetting the __svr4__ one )
+
+    The grantpt() and unlockpt() calls should have return  values checked.
+
+3) The meaning of -st/+st switch has been reversed so that -st 
+    specifies to display *with* trough in 2.6.0
+    Code changed in main.c from 
+        sb_shadow = (Options & Opt_scrollBar_floating) ? 0 : SHADOW;
+    in 2.6.PRE  to
+        if (Options & Opt_scrollBar_floating)
+            sb_shadow = SHADOW;
+    in 2.6.0 - it needs reverting 
+
+4) in scrollbar.c code in SB_BORDER is incorrect for sb_shadow == 0.
+    Needs decrement in  that case so border displayed where can see it.
+
+
+5) in command.c For PTYS_ARE_NUMERIC
+        setting len to strlen(tty_name) should be done after tty_name is
+        defined and initialised.
+
+diffs for each follow.
+
+1) autoconf/configure.in, src/rxvt.h
+*** configure.in.0      Mon Jul 12 18:14:12 1999
+--- configure.in        Mon Jul 12 18:13:10 1999
+***************
+*** 712,717 ****
+--- 712,723 ----
+        fprintf(f, "HPUX");
+        exit(0);
+      }
++ #ifdef _SCO_DS
++     if (stat("/dev/ttyp20", &statbuf) == 0) {
++       fprintf(f, "SCO");
++       exit(0);
++     }
++ #endif
+  #ifdef HAVE_GRANTPT
+  # ifdef HAVE_GETPT
+      pty = getpt();
+***************
+*** 727,733 ****
+        exit(0);
+      }
+  #endif
+!     if (stat("/dev/tty100", &statbuf) == 0) {
+        fprintf(f, "SCO");
+        exit(0);
+      }
+--- 733,739 ----
+        exit(0);
+      }
+  #endif
+!     if (stat("/dev/ttyp20", &statbuf) == 0) {
+        fprintf(f, "SCO");
+        exit(0);
+      }
+
+
+*** rxvt.h.0    Sun May 16 17:47:11 1999
+--- rxvt.h      Mon Jul 12 17:04:50 1999
+***************
+*** 63,73 ****
+  #include <sys/strredir.h>
+  #endif
+  
+- #ifdef _SCO_DS     /* SCO Osr5 - Hops */
+-     /* Scos pty naming is /dev/[pt]typ0 - /dev/[pt]ty256 */
+- # define ALL_NUMERIC_PTYS
+- #endif 
+- 
+  /*
+   *****************************************************************************
+   * INCLUDES
+--- 63,68 ----
+
+2) and 5) command.c
+
+*** command.c.0	Thu Jun  3 06:17:09 1999
+--- command.c	Mon Jul 12 18:37:57 1999
+***************
+*** 46,51 ****
+--- 46,55 ----
+  #include "command.h"
+  #include "X11/keysymdef.h"
+  
++ #if defined(HAVE_GRANTPT)   /* command.h better ?? */
++ #include <stropts.h>
++ #endif
++ 
+  /*{{{ local variables */
+  static char    *ttydev = NULL;	/* pty/tty name */
+  static int      cmd_fd = -1;	/* file descriptor connected to the command */
+***************
+*** 255,262 ****
+  #  else
+  	if ((fd = open("/dev/ptmx", O_RDWR)) >= 0) {
+  #  endif
+! 	    grantpt(fd);	/* change slave permissions */
+! 	    unlockpt(fd);	/* unlock slave */
+  	    ptydev = ttydev = ptsname(fd);	/* get slave's name */
+  	    goto Found;
+  	}
+--- 259,274 ----
+  #  else
+  	if ((fd = open("/dev/ptmx", O_RDWR)) >= 0) {
+  #  endif
+! 	    if (grantpt(fd) != 0 )	/* change slave permissions */
+! 	    {
+!                 print_error("grantpt fail");
+!                 return -1;
+! 	    }
+! 	    if (unlockpt(fd) != 0 )	/* unlock slave */
+! 	    {
+!                 print_error("unlockpt fail");
+!                 return -1;
+! 	    }
+  	    ptydev = ttydev = ptsname(fd);	/* get slave's name */
+  	    goto Found;
+  	}
+***************
+*** 277,287 ****
+  #endif
+  #ifdef PTYS_ARE_NUMERIC
+      {
+- 	int             len = strlen(tty_name);
+  	int             idx;
+  	char           *c1, *c2;
+  	char            pty_name[] = "/dev/ptyp???";
+  	char            tty_name[] = "/dev/ttyp???";
+  
+  	ptydev = pty_name;
+  	ttydev = tty_name;
+--- 289,299 ----
+  #endif
+  #ifdef PTYS_ARE_NUMERIC
+      {
+  	int             idx;
+  	char           *c1, *c2;
+  	char            pty_name[] = "/dev/ptyp???";
+  	char            tty_name[] = "/dev/ttyp???";
++ 	int             len = strlen(tty_name);
+  
+  	ptydev = pty_name;
+  	ttydev = tty_name;
+***************
+*** 376,382 ****
+  	print_error("can't open slave tty %s", ttydev);
+  	exit(EXIT_FAILURE);
+      }
+! #if defined (__svr4__)
+  /*
+   * Push STREAMS modules:
+   *    ptem: pseudo-terminal hardware emulation module.
+--- 388,395 ----
+  	print_error("can't open slave tty %s", ttydev);
+  	exit(EXIT_FAILURE);
+      }
+! #if defined (__svr4__)  || defined(PTYS_ARE_PTMX)
+! 
+  /*
+   * Push STREAMS modules:
+   *    ptem: pseudo-terminal hardware emulation module.
+
+
+3) main.c
+
+*** main.c.0    Sun May 16 18:22:30 1999
+--- main.c      Mon Jul 12 18:33:52 1999
+***************
+*** 1142,1149 ****
+      extract_resources(Xdisplay, rs[Rs_name]);
+  
+  #if ! defined(XTERM_SCROLLBAR) && ! defined(NEXT_SCROLLBAR)
+!     if (Options & Opt_scrollBar_floating)
+!       sb_shadow = SHADOW;
+  #endif
+      
+  /*
+--- 1142,1148 ----
+      extract_resources(Xdisplay, rs[Rs_name]);
+  
+  #if ! defined(XTERM_SCROLLBAR) && ! defined(NEXT_SCROLLBAR)
+!      sb_shadow = (Options & Opt_scrollBar_floating) ? 0 : SHADOW; 
+  #endif
+      
+  /*
+
+4) scrollbar.c
+
+*** scrollbar.c.0       Mon Mar  8 00:33:59 1999
+--- scrollbar.c Mon Jul 12 16:56:22 1999
+***************
+*** 437,444 ****
+              xsb ? 0 : 14, scrollBar.beg, xsb ? 0 : 14, scrollBar.end);
+  #else
+  #ifdef SB_BORDER
+!     XDrawLine(Xdisplay, scrollBar.win, botShadowGC,
+!             SB_WIDTH, 0, SB_WIDTH, scrollBar.end + SB_WIDTH);
+  #endif
+      XFillRectangle(Xdisplay, scrollBar.win, scrollbarGC,
+                   sb_shadow, scrollBar.top,
+--- 437,447 ----
+              xsb ? 0 : 14, scrollBar.beg, xsb ? 0 : 14, scrollBar.end);
+  #else
+  #ifdef SB_BORDER
+!     {
+!         int xofs = (sb_shadow) ? SB_WIDTH: SB_WIDTH-1;
+!         XDrawLine(Xdisplay, scrollBar.win, botShadowGC,
+!             xofs, 0, xofs, scrollBar.end + SB_WIDTH);
+!     }
+  #endif
+      XFillRectangle(Xdisplay, scrollBar.win, scrollbarGC,
+                   sb_shadow, scrollBar.top,
+

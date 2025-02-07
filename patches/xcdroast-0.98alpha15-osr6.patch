@@ -1,0 +1,147 @@
+*** ./man/xcdroast.1.osr6	Mon Oct 27 13:18:04 2003
+--- ./man/xcdroast.1	Fri Sep 30 16:55:08 2005
+***************
+*** 41,47 ****
+  Note: This option has no effect on GTK2 builds.
+  .TP
+  .B \-n
+! Disables the cdrtools version check and allows X-CD-Roast to start when even
+  wrong versions of cdrecord, mkisofs, readcd or cdda2wav are installed. Use at 
+  own risk! This also overrides the forced exit when you don't meet the 
+  800x600 minimal resolution requirement. 
+--- 41,48 ----
+  Note: This option has no effect on GTK2 builds.
+  .TP
+  .B \-n
+! Enables the cdrtools version check. This check is disabled by default
+! in order to allow X-CD-Roast to start when even
+  wrong versions of cdrecord, mkisofs, readcd or cdda2wav are installed. Use at 
+  own risk! This also overrides the forced exit when you don't meet the 
+  800x600 minimal resolution requirement. 
+*** ./src/init.c.osr6	Thu Oct 30 03:58:26 2003
+--- ./src/init.c	Fri Sep 30 16:55:08 2005
+***************
+*** 803,809 ****
+  	debug = 0;
+  	oldfontcode = 0;
+  	*altdevscan = 1;
+! 	no_versioncheck = 0;
+  	support_ontheflyaudio = 0;
+  	c_locale_is_utf8 = 0;
+  	ignoreProDVD = 0;
+--- 803,809 ----
+  	debug = 0;
+  	oldfontcode = 0;
+  	*altdevscan = 1;
+! 	no_versioncheck = 1;
+  	support_ontheflyaudio = 0;
+  	c_locale_is_utf8 = 0;
+  	ignoreProDVD = 0;
+***************
+*** 863,869 ****
+  		break;
+  
+  	case 'n':
+! 		no_versioncheck = 1;
+  		break;
+  
+  	case 'w':
+--- 863,869 ----
+  		break;
+  
+  	case 'n':
+! 		no_versioncheck = 0;
+  		break;
+  
+  	case 'w':
+*** ./src/main.c.osr6	Thu Oct 30 05:01:01 2003
+--- ./src/main.c	Fri Sep 30 16:59:10 2005
+***************
+*** 586,591 ****
+--- 586,592 ----
+          }
+  
+          /* if we are in DVD mode, check if the security-key is set */
++ #ifndef __USLC__ /* SCO provides an already licensed cdrecord-ProDVD */
+          if (curset.isProDVD == 1) {
+                  keyenv = getenv("CDR_SECURITY");
+                  if (keyenv == NULL) {
+***************
+*** 593,598 ****
+--- 594,600 ----
+                  }
+  
+  	}
++ #endif
+  
+  	dolog(1,"Starting X-CD-Roast\n");
+  
+*** ./Configure-OSR6.osr6	Fri Sep 30 16:55:08 2005
+--- ./Configure-OSR6	Fri Sep 30 16:55:08 2005
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --with-libintl-prefix=/usr/gnu \
++             --enable-gtk2 --enable-largefile \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Sat Oct 25 15:51:45 2003
+--- ./configure	Fri Sep 30 16:55:08 2005
+***************
+*** 2525,2531 ****
+  	fi
+  	;;
+  
+! *-*-solaris*)
+  	# anyone knows how to make a autoconf test for socket() and
+  	# socketpair() that works on solaris?
+  	LIBS="$LIBS -lsocket -lnsl"
+--- 2525,2531 ----
+  	fi
+  	;;
+  
+! *-*-sysv5* | *-*-solaris*)
+  	# anyone knows how to make a autoconf test for socket() and
+  	# socketpair() that works on solaris?
+  	LIBS="$LIBS -lsocket -lnsl"
+*** ./Install-OSR6.osr6	Fri Sep 30 16:55:08 2005
+--- ./Install-OSR6	Fri Sep 30 16:55:08 2005
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/xcdroast
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/usr/share/doc/packages
++ mkdir -p $D/usr/share/applications
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
++ cp -R doc $D/usr/share/doc/packages/xcdroast
++ cp ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS README $D/usr/share/doc/packages/xcdroast
++ chmod -R a+r $D/usr/share/doc/packages/xcdroast
++ cp extra/xcdroast.desktop $D/usr/share/applications/xcdroast.desktop
++ chmod a+r $D/usr/share/applications/xcdroast.desktop

@@ -1,0 +1,5478 @@
+--- ./tests/aclocal.in.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal.in	2009-01-01 11:18:09.760000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # @configure_input@
+ 
+ # Be Bourne compatible
+--- ./tests/automake.in.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/automake.in	2009-01-01 11:18:09.760000038 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # @configure_input@
+ 
+ # Be Bourne compatible
+--- ./tests/aclibobj.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclibobj.test	2009-01-01 11:18:09.760000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal.test	2009-01-01 11:18:09.760000088 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal3.test	2009-01-01 11:18:09.770000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal4.test	2009-01-01 11:18:09.770000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal5.test	2009-01-01 11:18:09.770000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal6.test	2009-01-01 11:18:09.770000084 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal7.test	2009-01-01 11:18:09.780000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal8.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal8.test	2009-01-01 11:18:09.780000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/aclocal9.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/aclocal9.test	2009-01-01 11:18:09.800000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca10.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca10.test	2009-01-01 11:18:09.800000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca11.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca11.test	2009-01-01 11:18:09.810000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca12.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca12.test	2009-01-01 11:18:09.810000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca13.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca13.test	2009-01-01 11:18:09.810000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca14.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca14.test	2009-01-01 11:18:09.820000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca15.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca15.test	2009-01-01 11:18:09.830000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acoutnoq.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acoutnoq.test	2009-01-01 11:18:09.870000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acoutpt.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acoutpt.test	2009-01-01 11:18:09.890000009 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acoutpt2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acoutpt2.test	2009-01-01 11:18:09.900000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acoutqnl.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acoutqnl.test	2009-01-01 11:18:09.910000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acoutbs.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acoutbs.test	2009-01-01 11:18:09.910000034 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acsilent.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acsilent.test	2009-01-01 11:18:09.910000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acsubst.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acsubst.test	2009-01-01 11:18:09.910000084 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acsubst2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acsubst2.test	2009-01-01 11:18:09.920000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/all.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/all.test	2009-01-01 11:18:09.950000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/alloca.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/alloca.test	2009-01-01 11:18:09.980000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/alloca2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/alloca2.test	2009-01-01 11:18:10.010000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/alpha.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/alpha.test	2009-01-01 11:18:10.020000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/alpha2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/alpha2.test	2009-01-01 11:18:10.030000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/amassign.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/amassign.test	2009-01-01 11:18:10.060000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ammissing.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ammissing.test	2009-01-01 11:18:10.060000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi.test	2009-01-01 11:18:10.060000060 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2003
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/ansi2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi2.test	2009-01-01 11:18:10.070000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi3.test	2009-01-01 11:18:10.090000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi3b.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi3b.test	2009-01-01 11:18:10.090000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi4.test	2009-01-01 11:18:10.110000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi5.test	2009-01-01 11:18:10.110000029 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi6.test	2009-01-01 11:18:10.110000055 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi7.test	2009-01-01 11:18:10.110000081 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi8.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi8.test	2009-01-01 11:18:10.120000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi9.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi9.test	2009-01-01 11:18:10.120000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ansi10.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ansi10.test	2009-01-01 11:18:10.120000060 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ar.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ar.test	2009-01-01 11:18:10.150000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/asm.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/asm.test	2009-01-01 11:18:10.190000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/autohdr.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/autohdr.test	2009-01-01 11:18:10.190000031 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/autohdr2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/autohdr2.test	2009-01-01 11:18:10.190000057 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/autohdr3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/autohdr3.test	2009-01-01 11:18:10.200000016 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/autohdr4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/autohdr4.test	2009-01-01 11:18:10.260000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/auxdir.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/auxdir.test	2009-01-01 11:18:10.280000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/auxdir2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/auxdir2.test	2009-01-01 11:18:10.280000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/backsl.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/backsl.test	2009-01-01 11:18:10.280000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/backsl2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/backsl2.test	2009-01-01 11:18:10.300000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/backsl3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/backsl3.test	2009-01-01 11:18:10.330000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/backsl4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/backsl4.test	2009-01-01 11:18:10.330000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/badline.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/badline.test	2009-01-01 11:18:10.330000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/badprog.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/badprog.test	2009-01-01 11:18:10.330000085 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/block.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/block.test	2009-01-01 11:18:10.340000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/bsource.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/bsource.test	2009-01-01 11:18:10.340000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon.test	2009-01-01 11:18:10.340000057 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon2.test	2009-01-01 11:18:10.350000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon3.test	2009-01-01 11:18:10.360000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon4.test	2009-01-01 11:18:10.360000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon5.test	2009-01-01 11:18:10.370000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ccnoco.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ccnoco.test	2009-01-01 11:18:10.400000011 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -59,7 +59,7 @@
+ END
+ 
+ cat > Mycomp << 'END'
+-#!/bin/sh
++#!/bin/bash
+ 
+ case " "$* in
+  *\ -c*\ -o* | *\ -o*\ -c*)
+--- ./tests/check.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check.test	2009-01-01 11:18:10.440000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/check2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check2.test	2009-01-01 11:18:10.480000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -36,7 +36,7 @@
+ TESTS = \
+   subrun.sh
+ subrun.sh:
+-	(echo '#! /bin/sh'; echo 'dir/echo.sh') > $@
++	(echo '#! /bin/bash'; echo 'dir/echo.sh') > $@
+ 	chmod +x $@
+ CLEANFILES = subrun.sh
+ END
+@@ -44,7 +44,7 @@
+ cat > dir/Makefile.am << 'END'
+ check_SCRIPTS = echo.sh
+ echo.sh:
+-	(echo '#! /bin/sh'; echo 'echo Hello') > $@
++	(echo '#! /bin/bash'; echo 'echo Hello') > $@
+ 	chmod +x $@
+ CLEANFILES = echo.sh
+ END
+--- ./tests/check3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check3.test	2009-01-01 11:18:10.490000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -37,7 +37,7 @@
+ SUBDIRS = dir
+ TESTS = subrun.sh
+ subrun.sh:
+-	(echo '#! /bin/sh'; cat command1.inc) > $@
++	(echo '#! /bin/bash'; cat command1.inc) > $@
+ 	chmod +x $@
+ command1.inc:
+ 	echo 'dir/echo.sh' > $@
+@@ -51,7 +51,7 @@
+ ## The next line ensures that command1.inc has been built before
+ ## recurring into the subdir.
+ 	test -f ../command1.inc
+-	(echo '#! /bin/sh'; cat command2.inc) > $@
++	(echo '#! /bin/bash'; cat command2.inc) > $@
+ 	chmod +x $@
+ command2.inc:
+ 	echo 'echo Hello' > $@
+--- ./tests/checkall.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/checkall.test	2009-01-01 11:18:10.490000039 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/clean.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/clean.test	2009-01-01 11:18:10.500000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colneq.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colneq.test	2009-01-01 11:18:10.500000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fo.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fo.test	2009-01-01 11:18:10.520000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colneq2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colneq2.test	2009-01-01 11:18:10.540000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon.test	2009-01-01 11:18:10.550000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon2.test	2009-01-01 11:18:10.550000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon3.test	2009-01-01 11:18:10.550000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003
+ #   Free Software Foundation, Inc.
+ #
+--- ./tests/colon4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon4.test	2009-01-01 11:18:10.550000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon5.test	2009-01-01 11:18:10.560000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon6.test	2009-01-01 11:18:10.560000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/colon7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/colon7.test	2009-01-01 11:18:10.560000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment.test	2009-01-01 11:18:10.560000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment2.test	2009-01-01 11:18:10.580000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment3.test	2009-01-01 11:18:10.630000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment4.test	2009-01-01 11:18:10.660000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment5.test	2009-01-01 11:18:10.660000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment6.test	2009-01-01 11:18:10.700000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment7.test	2009-01-01 11:18:10.700000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/compile_f_c_cxx.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/compile_f_c_cxx.test	2009-01-01 11:18:10.710000016 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond.test	2009-01-01 11:18:10.710000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond2.test	2009-01-01 11:18:10.730000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond3.test	2009-01-01 11:18:10.740000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond4.test	2009-01-01 11:18:10.750000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond5.test	2009-01-01 11:18:10.780000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond6.test	2009-01-01 11:18:10.780000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond7.test	2009-01-01 11:18:10.780000060 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond8.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond8.test	2009-01-01 11:18:10.780000086 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond9.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond9.test	2009-01-01 11:18:10.790000025 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond10.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond10.test	2009-01-01 11:18:10.790000051 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond11.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond11.test	2009-01-01 11:18:10.800000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond13.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond13.test	2009-01-01 11:18:11.560000010 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond14.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond14.test	2009-01-01 11:18:11.560000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -39,7 +39,7 @@
+ bin_SCRIPTS = helldl
+ helldl$(EXEEXT):
+ 	rm -f $@
+-	echo '#! /bin/sh' > $@
++	echo '#! /bin/bash' > $@
+ 	echo '-dlopen is unsupported' >> $@
+ 	chmod +x $@
+ endif
+--- ./tests/cond15.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond15.test	2009-01-01 11:18:11.560000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -35,7 +35,7 @@
+ bin_SCRIPTS = helldl
+ helldl$(EXEEXT):
+ 	rm -f $@
+-	echo '#! /bin/sh' > $@
++	echo '#! /bin/bash' > $@
+ 	echo '-dlopen is unsupported' >> $@
+ 	chmod +x $@
+ endif
+@@ -45,7 +45,7 @@
+ bin_SCRIPTS = helldl
+ helldl$(EXEEXT):
+ 	rm -f $@
+-	echo '#! /bin/sh' > $@
++	echo '#! /bin/bash' > $@
+ 	echo '-dlopen is unsupported' >> $@
+ 	chmod +x $@
+ endif
+--- ./tests/cond16.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond16.test	2009-01-01 11:18:11.560000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond17.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond17.test	2009-01-01 11:18:11.570000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond18.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond18.test	2009-01-01 11:18:11.570000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond19.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond19.test	2009-01-01 11:18:11.590000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond20.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond20.test	2009-01-01 11:18:11.590000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond21.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond21.test	2009-01-01 11:18:11.590000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond22.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond22.test	2009-01-01 11:18:11.600000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond23.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond23.test	2009-01-01 11:18:11.600000039 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond24.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond24.test	2009-01-01 11:18:11.600000065 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond25.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond25.test	2009-01-01 11:18:11.610000008 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond26.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond26.test	2009-01-01 11:18:11.610000034 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond27.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond27.test	2009-01-01 11:18:11.620000023 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond28.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond28.test	2009-01-01 11:18:11.630000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond29.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond29.test	2009-01-01 11:18:11.650000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond30.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond30.test	2009-01-01 11:18:11.670000009 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond31.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond31.test	2009-01-01 11:18:11.710000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond32.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond32.test	2009-01-01 11:18:11.780000008 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond33.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond33.test	2009-01-01 11:18:11.790000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond34.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond34.test	2009-01-01 11:18:11.790000039 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond35.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond35.test	2009-01-01 11:18:11.800000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond36.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond36.test	2009-01-01 11:18:11.800000031 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condd.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condd.test	2009-01-01 11:18:11.800000057 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condinc.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condinc.test	2009-01-01 11:18:11.810000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condinc2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condinc2.test	2009-01-01 11:18:11.810000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condlib.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condlib.test	2009-01-01 11:18:11.810000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condman.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condman.test	2009-01-01 11:18:11.810000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condman2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condman2.test	2009-01-01 11:18:11.820000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conf2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conf2.test	2009-01-01 11:18:11.820000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confdeps.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confdeps.test	2009-01-01 11:18:11.820000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conff.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conff.test	2009-01-01 11:18:11.820000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conff2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conff2.test	2009-01-01 11:18:11.830000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confh.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confh.test	2009-01-01 11:18:11.840000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confh4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confh4.test	2009-01-01 11:18:11.840000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confh5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confh5.test	2009-01-01 11:18:11.840000057 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/config.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/config.test	2009-01-01 11:18:11.840000083 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confincl.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confincl.test	2009-01-01 11:18:11.850000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conflnk.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conflnk.test	2009-01-01 11:18:11.850000029 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003 Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/copy.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/copy.test	2009-01-01 11:18:11.850000055 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conflnk2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conflnk2.test	2009-01-01 11:18:11.850000081 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003 Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/conflnk3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/conflnk3.test	2009-01-01 11:18:11.860000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confsub.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confsub.test	2009-01-01 11:18:11.860000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2003
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/confvar.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confvar.test	2009-01-01 11:18:11.860000060 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/confvar2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/confvar2.test	2009-01-01 11:18:11.860000086 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ctarget1.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ctarget1.test	2009-01-01 11:18:11.870000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxx.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxx.test	2009-01-01 11:18:11.870000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxx2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxx2.test	2009-01-01 11:18:11.870000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxansi.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxansi.test	2009-01-01 11:18:11.870000085 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxcpp.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxcpp.test	2009-01-01 11:18:11.880000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxlibobj.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxlibobj.test	2009-01-01 11:18:11.880000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxlink.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxlink.test	2009-01-01 11:18:11.900000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxnoc.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxnoc.test	2009-01-01 11:18:11.900000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cxxo.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cxxo.test	2009-01-01 11:18:11.900000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cygwin32.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cygwin32.test	2009-01-01 11:18:11.900000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1999, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dash.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dash.test	2009-01-01 11:18:11.910000022 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/defun.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/defun.test	2009-01-01 11:18:11.910000048 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/defun2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/defun2.test	2009-01-01 11:18:11.910000074 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dejagnu.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu.test	2009-01-01 11:18:11.920000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dejagnu2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu2.test	2009-01-01 11:18:11.920000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dejagnu3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu3.test	2009-01-01 11:18:11.920000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -26,7 +26,7 @@
+ set -e
+ 
+ cat > hammer << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo "Everything looks like a nail to me!"
+ END
+ 
+--- ./tests/dejagnu4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu4.test	2009-01-01 11:18:11.920000089 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -27,14 +27,14 @@
+ set -e
+ 
+ cat > hammer << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo "Everything looks like a nail to me!"
+ END
+ 
+ chmod +x hammer
+ 
+ cat > spanner << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo "I'm a right spanner!"
+ END
+ 
+--- ./tests/dejagnu5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu5.test	2009-01-01 11:18:11.930000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -30,7 +30,7 @@
+ package=`$FGREP AC_INIT configure.in | sed -e 's:^[^[]*\[\([^]]*\)\].*$:\1:'`
+ 
+ cat > $package << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo "Ah, we have been expecting you, Mr. Blond."
+ END
+ 
+--- ./tests/dejagnu6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu6.test	2009-01-01 11:18:11.930000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -26,7 +26,7 @@
+ set -e
+ 
+ cat > faildeja << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo whatever
+ END
+ 
+--- ./tests/dejagnu7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dejagnu7.test	2009-01-01 11:18:11.930000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -28,7 +28,7 @@
+ runtest --help | $FGREP -e --status || exit 77
+ 
+ cat > failtcl << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo whatever
+ END
+ 
+--- ./tests/depacl2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depacl2.test	2009-01-01 11:18:11.930000089 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp.test	2009-01-01 11:18:11.940000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp2.test	2009-01-01 11:18:11.950000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp3.test	2009-01-01 11:18:11.950000031 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp4.test	2009-01-01 11:18:11.950000057 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp5.test	2009-01-01 11:18:11.950000083 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depdist.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depdist.test	2009-01-01 11:18:11.960000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depend.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depend.test	2009-01-01 11:18:11.960000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1999, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depend2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depend2.test	2009-01-01 11:18:11.960000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/depend3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depend3.test	2009-01-01 11:18:11.960000088 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depend4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depend4.test	2009-01-01 11:18:11.970000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/destdir.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/destdir.test	2009-01-01 11:18:11.970000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dirforbid.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dirforbid.test	2009-01-01 11:18:11.970000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dirlist.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dirlist.test	2009-01-01 11:18:11.980000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/discover.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/discover.test	2009-01-01 11:18:11.980000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom2.test	2009-01-01 11:18:11.980000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom3.test	2009-01-01 11:18:11.990000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom4.test	2009-01-01 11:18:11.990000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom5.test	2009-01-01 11:18:12.000000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom6.test	2009-01-01 11:18:12.000000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distdir.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distdir.test	2009-01-01 11:18:12.000000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distname.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distname.test	2009-01-01 11:18:12.000000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dollar.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dollar.test	2009-01-01 11:18:12.010000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/double.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/double.test	2009-01-01 11:18:12.010000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/dup2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dup2.test	2009-01-01 11:18:12.010000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/else.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/else.test	2009-01-01 11:18:12.010000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/empty.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/empty.test	2009-01-01 11:18:12.020000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2003
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/empty2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/empty2.test	2009-01-01 11:18:12.020000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/empty3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/empty3.test	2009-01-01 11:18:12.030000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/empty4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/empty4.test	2009-01-01 11:18:12.050000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exdir.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exdir.test	2009-01-01 11:18:12.050000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exdir2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exdir2.test	2009-01-01 11:18:12.050000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exeext.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exeext.test	2009-01-01 11:18:12.070000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exeext2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exeext2.test	2009-01-01 11:18:12.080000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exeext3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exeext3.test	2009-01-01 11:18:12.090000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exeext4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exeext4.test	2009-01-01 11:18:12.110000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exsource.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exsource.test	2009-01-01 11:18:12.110000032 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2004
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/ext.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ext.test	2009-01-01 11:18:12.110000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ext2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ext2.test	2009-01-01 11:18:12.120000015 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra.test	2009-01-01 11:18:12.120000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra3.test	2009-01-01 11:18:12.120000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra4.test	2009-01-01 11:18:12.120000096 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra5.test	2009-01-01 11:18:12.130000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra6.test	2009-01-01 11:18:12.130000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/extra7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/extra7.test	2009-01-01 11:18:12.130000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/flibs.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/flibs.test	2009-01-01 11:18:12.130000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fnoc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fnoc.test	2009-01-01 11:18:12.140000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fonly.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fonly.test	2009-01-01 11:18:12.140000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fortdep.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fortdep.test	2009-01-01 11:18:12.160000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fpinst2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fpinst2.test	2009-01-01 11:18:12.160000032 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fpinstall.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fpinstall.test	2009-01-01 11:18:12.160000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gcj.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gcj.test	2009-01-01 11:18:12.160000086 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gcj2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gcj2.test	2009-01-01 11:18:12.170000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gcj3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gcj3.test	2009-01-01 11:18:12.170000032 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gcj4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gcj4.test	2009-01-01 11:18:12.170000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gcj5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gcj5.test	2009-01-01 11:18:12.170000086 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/getopt.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/getopt.test	2009-01-01 11:18:12.180000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gettext.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gettext.test	2009-01-01 11:18:12.180000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gettext2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gettext2.test	2009-01-01 11:18:12.180000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gnumake.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnumake.test	2009-01-01 11:18:12.180000090 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gnuwarn.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnuwarn.test	2009-01-01 11:18:12.190000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gnuwarn2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnuwarn2.test	2009-01-01 11:18:12.190000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gnits.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnits.test	2009-01-01 11:18:12.190000062 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gnits2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnits2.test	2009-01-01 11:18:12.190000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -67,14 +67,14 @@
+ mkdir sub
+ 
+ cat >sub/scriptok.sh <<EOF
+-#!/bin/sh
++#!/bin/bash
+ echo "Which version? Which usage?"
+ EOF
+ 
+ # Not only does this script not support --help/--version, but
+ # it will also hang when run without input.
+ cat >sub/scriptnok.sh <<EOF
+-#!/bin/sh
++#!/bin/bash
+ cat
+ EOF
+ 
+--- ./tests/gnits3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gnits3.test	2009-01-01 11:18:12.200000011 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -55,7 +55,7 @@
+ mkdir sub
+ 
+ cat >nok.sh <<EOF
+-#!/bin/sh
++#!/bin/bash
+ echo "Which version? Which usage?"
+ exit 1
+ EOF
+--- ./tests/header.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/header.test	2009-01-01 11:18:12.220000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/help.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/help.test	2009-01-01 11:18:12.220000032 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/implicit.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/implicit.test	2009-01-01 11:18:12.220000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/include.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/include.test	2009-01-01 11:18:12.230000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2005, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/include2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/include2.test	2009-01-01 11:18:12.230000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/info.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/info.test	2009-01-01 11:18:12.230000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/insh2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/insh2.test	2009-01-01 11:18:12.230000088 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2003
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/install2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/install2.test	2009-01-01 11:18:12.230000115 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/installdir.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/installdir.test	2009-01-01 11:18:12.240000023 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instsh.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instsh.test	2009-01-01 11:18:12.240000050 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instsh2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instsh2.test	2009-01-01 11:18:12.240000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004, 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instdat.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instdat.test	2009-01-01 11:18:12.250000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instdat2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instdat2.test	2009-01-01 11:18:12.250000032 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instexec.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instexec.test	2009-01-01 11:18:12.260000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/insthook.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/insthook.test	2009-01-01 11:18:12.270000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instman.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instman.test	2009-01-01 11:18:12.270000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2001, 2002, 2003, 2006 Free Software
+ # Foundation, Inc.
+ #
+--- ./tests/instman2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instman2.test	2009-01-01 11:18:12.280000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instspc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instspc.test	2009-01-01 11:18:12.280000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/interp.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/interp.test	2009-01-01 11:18:12.280000064 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/interp2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/interp2.test	2009-01-01 11:18:12.290000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/java.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/java.test	2009-01-01 11:18:12.290000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/java2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/java2.test	2009-01-01 11:18:12.290000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/javaprim.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/javaprim.test	2009-01-01 11:18:12.290000097 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/javasubst.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/javasubst.test	2009-01-01 11:18:12.300000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ldadd.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ldadd.test	2009-01-01 11:18:12.300000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1999, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ldflags.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ldflags.test	2009-01-01 11:18:12.300000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lex.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lex.test	2009-01-01 11:18:12.300000097 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lex2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lex2.test	2009-01-01 11:18:12.310000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lex3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lex3.test	2009-01-01 11:18:12.310000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lex4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lex4.test	2009-01-01 11:18:12.320000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lex5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lex5.test	2009-01-01 11:18:12.320000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj2.test	2009-01-01 11:18:12.320000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/libobj3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj3.test	2009-01-01 11:18:12.320000097 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj4.test	2009-01-01 11:18:12.330000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj5.test	2009-01-01 11:18:12.330000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj7.test	2009-01-01 11:18:12.330000063 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj8.test	2009-01-01 11:18:12.330000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj10.test	2009-01-01 11:18:12.340000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj11.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj11.test	2009-01-01 11:18:12.340000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj12.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj12.test	2009-01-01 11:18:12.340000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj13.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj13.test	2009-01-01 11:18:12.350000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libobj14.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libobj14.test	2009-01-01 11:18:12.350000041 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/library.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/library.test	2009-01-01 11:18:12.350000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/library2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/library2.test	2009-01-01 11:18:12.350000097 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/library3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/library3.test	2009-01-01 11:18:12.360000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool.test	2009-01-01 11:18:12.360000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool2.test	2009-01-01 11:18:12.360000064 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool3.test	2009-01-01 11:18:12.360000092 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool4.test	2009-01-01 11:18:12.370000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool5.test	2009-01-01 11:18:12.370000033 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool6.test	2009-01-01 11:18:12.370000061 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool7.test	2009-01-01 11:18:12.370000089 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/license.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/license.test	2009-01-01 11:18:12.400000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_c_cxx.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_c_cxx.test	2009-01-01 11:18:12.400000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_dist.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_dist.test	2009-01-01 11:18:12.410000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_fc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_fc.test	2009-01-01 11:18:12.410000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_fccxx.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_fccxx.test	2009-01-01 11:18:12.410000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_fcxx.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_fcxx.test	2009-01-01 11:18:12.420000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/link_f_only.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_f_only.test	2009-01-01 11:18:12.440000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp2.test	2009-01-01 11:18:12.440000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp3.test	2009-01-01 11:18:12.440000061 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp4.test	2009-01-01 11:18:12.440000089 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp5.test	2009-01-01 11:18:12.440000117 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/listval.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/listval.test	2009-01-01 11:18:12.450000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/location.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/location.test	2009-01-01 11:18:12.450000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltcond.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltcond.test	2009-01-01 11:18:12.450000063 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltcond2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltcond2.test	2009-01-01 11:18:12.450000091 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltconv.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltconv.test	2009-01-01 11:18:12.460000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltdeps.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltdeps.test	2009-01-01 11:18:12.460000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltlibobjs.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltlibobjs.test	2009-01-01 11:18:12.460000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ltlibsrc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ltlibsrc.test	2009-01-01 11:18:12.470000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/maintclean.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/maintclean.test	2009-01-01 11:18:12.470000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/make.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/make.test	2009-01-01 11:18:12.470000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/makej.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/makej.test	2009-01-01 11:18:12.480000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/makevars.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/makevars.test	2009-01-01 11:18:12.480000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/man.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/man.test	2009-01-01 11:18:12.480000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/man2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/man2.test	2009-01-01 11:18:12.490000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mclean.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mclean.test	2009-01-01 11:18:12.490000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mdate.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mdate.test	2009-01-01 11:18:12.490000064 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mdate2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mdate2.test	2009-01-01 11:18:12.490000092 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mdate3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mdate3.test	2009-01-01 11:18:12.490000120 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mdate4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mdate4.test	2009-01-01 11:18:12.500000017 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/missing.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing.test	2009-01-01 11:18:12.510000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/missing2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing2.test	2009-01-01 11:18:12.510000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mkinst2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mkinst2.test	2009-01-01 11:18:12.520000012 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nobase.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nobase.test	2009-01-01 11:18:12.530000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004, 2005, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/mkinstall.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mkinstall.test	2009-01-01 11:18:12.520000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/multlib.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/multlib.test	2009-01-01 11:18:12.520000070 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -38,7 +38,7 @@
+ END
+ 
+ cat >mycc <<'END'
+-#! /bin/sh
++#! /bin/bash
+ case ${1+"$@"} in
+  *-print-multi-lib*)
+   echo ".;"
+--- ./tests/nodef.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodef.test	2009-01-01 11:18:12.530000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodef2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodef2.test	2009-01-01 11:18:12.530000066 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodep.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodep.test	2009-01-01 11:18:12.540000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodepcomp.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodepcomp.test	2009-01-01 11:18:12.540000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodist.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodist.test	2009-01-01 11:18:12.540000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodist2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodist2.test	2009-01-01 11:18:12.550000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodist3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodist3.test	2009-01-01 11:18:12.550000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nogzip.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nogzip.test	2009-01-01 11:18:12.550000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nogzip2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nogzip2.test	2009-01-01 11:18:12.550000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/noinst.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/noinst.test	2009-01-01 11:18:12.560000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/noinstdir.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/noinstdir.test	2009-01-01 11:18:12.560000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nolink.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nolink.test	2009-01-01 11:18:12.560000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nostdinc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nostdinc.test	2009-01-01 11:18:12.570000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/number.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/number.test	2009-01-01 11:18:12.570000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/obsolete.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/obsolete.test	2009-01-01 11:18:12.570000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/order.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/order.test	2009-01-01 11:18:12.580000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/outdir.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/outdir.test	2009-01-01 11:18:12.580000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output.test	2009-01-01 11:18:12.580000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output2.test	2009-01-01 11:18:12.590000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output3.test	2009-01-01 11:18:12.590000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output4.test	2009-01-01 11:18:12.590000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output5.test	2009-01-01 11:18:12.600000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2000, 2001, 2002, 2003, 2004  Free Software
+ #   Foundation, Inc.
+ #
+--- ./tests/output6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output6.test	2009-01-01 11:18:12.600000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output7.test	2009-01-01 11:18:12.600000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output8.test	2009-01-01 11:18:12.600000094 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output9.test	2009-01-01 11:18:12.610000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output10.test	2009-01-01 11:18:12.620000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/overrid.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/overrid.test	2009-01-01 11:18:12.630000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/parse.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/parse.test	2009-01-01 11:18:12.630000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/percent.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/percent.test	2009-01-01 11:18:12.630000063 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/percent2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/percent2.test	2009-01-01 11:18:12.630000092 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/phony.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/phony.test	2009-01-01 11:18:12.640000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq.test	2009-01-01 11:18:12.640000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq2.test	2009-01-01 11:18:12.640000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq3.test	2009-01-01 11:18:12.650000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq4.test	2009-01-01 11:18:12.650000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq5.test	2009-01-01 11:18:12.660000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq6.test	2009-01-01 11:18:12.670000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq7.test	2009-01-01 11:18:12.670000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq8.test	2009-01-01 11:18:12.680000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq9.test	2009-01-01 11:18:12.680000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pluseq10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pluseq10.test	2009-01-01 11:18:12.690000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/postproc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/postproc.test	2009-01-01 11:18:12.690000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ppf77.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/ppf77.test	2009-01-01 11:18:12.690000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr2.test	2009-01-01 11:18:12.700000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2003, 2006 Free Software
+ # Foundation, Inc.
+ #
+--- ./tests/pr9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr9.test	2009-01-01 11:18:12.710000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr72.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr72.test	2009-01-01 11:18:12.730000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr87.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr87.test	2009-01-01 11:18:12.740000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr204.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr204.test	2009-01-01 11:18:12.740000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr211.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr211.test	2009-01-01 11:18:12.760000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr220.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr220.test	2009-01-01 11:18:12.760000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr224.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr224.test	2009-01-01 11:18:12.760000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr229.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr229.test	2009-01-01 11:18:12.770000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr243.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr243.test	2009-01-01 11:18:12.770000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr266.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr266.test	2009-01-01 11:18:12.770000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr279.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr279.test	2009-01-01 11:18:12.780000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr279-2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr279-2.test	2009-01-01 11:18:12.780000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr287.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr287.test	2009-01-01 11:18:12.780000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -36,7 +36,7 @@
+ END
+ 
+ cat > foo << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo Maude
+ END
+ 
+--- ./tests/pr300-lib.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr300-lib.test	2009-01-01 11:18:12.790000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr300-ltlib.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr300-ltlib.test	2009-01-01 11:18:12.790000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr300-prog.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr300-prog.test	2009-01-01 11:18:12.800000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr307.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr307.test	2009-01-01 11:18:12.800000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/prefix.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/prefix.test	2009-01-01 11:18:12.810000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/primary.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/primary.test	2009-01-01 11:18:12.820000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/primary2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/primary2.test	2009-01-01 11:18:12.820000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/proginst.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/proginst.test	2009-01-01 11:18:12.820000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python.test	2009-01-01 11:18:12.830000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python2.test	2009-01-01 11:18:12.830000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python3.test	2009-01-01 11:18:12.830000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python4.test	2009-01-01 11:18:12.840000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python5.test	2009-01-01 11:18:12.840000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python6.test	2009-01-01 11:18:12.840000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python7.test	2009-01-01 11:18:12.850000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python8.test	2009-01-01 11:18:12.850000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python9.test	2009-01-01 11:18:12.850000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python10.test	2009-01-01 11:18:12.860000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/recurs.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/recurs.test	2009-01-01 11:18:12.860000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/recurs2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/recurs2.test	2009-01-01 11:18:12.870000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake.test	2009-01-01 11:18:12.870000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake2.test	2009-01-01 11:18:12.870000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake3.test	2009-01-01 11:18:12.870000097 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake4.test	2009-01-01 11:18:12.880000023 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake5.test	2009-01-01 11:18:12.880000053 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/regex.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/regex.test	2009-01-01 11:18:12.880000083 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/req.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/req.test	2009-01-01 11:18:12.890000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/reqd.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/reqd.test	2009-01-01 11:18:12.890000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/reqd2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/reqd2.test	2009-01-01 11:18:12.900000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/rulepat.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/rulepat.test	2009-01-01 11:18:12.900000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/scripts.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/scripts.test	2009-01-01 11:18:12.900000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/seenc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/seenc.test	2009-01-01 11:18:12.910000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/sinclude.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/sinclude.test	2009-01-01 11:18:12.910000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/srcsub.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/srcsub.test	2009-01-01 11:18:12.910000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/srcsub2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/srcsub2.test	2009-01-01 11:18:12.920000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/space.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/space.test	2009-01-01 11:18:12.920000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg.test	2009-01-01 11:18:12.920000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg2.test	2009-01-01 11:18:12.930000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg3.test	2009-01-01 11:18:12.930000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg6.test	2009-01-01 11:18:12.930000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg7.test	2009-01-01 11:18:12.940000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg8.test	2009-01-01 11:18:12.940000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/specflg9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/specflg9.test	2009-01-01 11:18:12.940000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/spell.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/spell.test	2009-01-01 11:18:12.950000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/spell2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/spell2.test	2009-01-01 11:18:12.960000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/spell3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/spell3.test	2009-01-01 11:18:12.960000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/spelling.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/spelling.test	2009-01-01 11:18:12.960000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/spy.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/spy.test	2009-01-01 11:18:12.970000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/stamph2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/stamph2.test	2009-01-01 11:18:12.970000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/stdlib.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/stdlib.test	2009-01-01 11:18:12.970000068 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/stdlib2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/stdlib2.test	2009-01-01 11:18:12.980000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/strip.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/strip.test	2009-01-01 11:18:12.990000015 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -36,7 +36,7 @@
+ END
+ 
+ cat > foo << 'END'
+-#! /bin/sh
++#! /bin/bash
+ echo Maude
+ END
+ 
+--- ./tests/subdir.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir.test	2009-01-01 11:18:12.990000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir2.test	2009-01-01 11:18:12.990000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1998, 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir3.test	2009-01-01 11:18:13.000000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir4.test	2009-01-01 11:18:13.000000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir5.test	2009-01-01 11:18:13.010000002 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir6.test	2009-01-01 11:18:13.030000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir7.test	2009-01-01 11:18:13.030000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir8.test	2009-01-01 11:18:13.050000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdirbuiltsources.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdirbuiltsources.test	2009-01-01 11:18:13.050000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subcond.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subcond.test	2009-01-01 11:18:13.050000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subcond2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subcond2.test	2009-01-01 11:18:13.060000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subcond3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subcond3.test	2009-01-01 11:18:13.060000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj.test	2009-01-01 11:18:13.060000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj2.test	2009-01-01 11:18:13.070000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj3.test	2009-01-01 11:18:13.070000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2006  Free Software
+ # Foundation, Inc.
+ #
+--- ./tests/subobj4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj4.test	2009-01-01 11:18:13.070000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj5.test	2009-01-01 11:18:13.080000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj6.test	2009-01-01 11:18:13.080000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj7.test	2009-01-01 11:18:13.080000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj8.test	2009-01-01 11:18:13.090000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj9.test	2009-01-01 11:18:13.100000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2004, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobjname.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobjname.test	2009-01-01 11:18:13.110000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subpkg.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subpkg.test	2009-01-01 11:18:13.110000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subpkg2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subpkg2.test	2009-01-01 11:18:13.110000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subst.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subst.test	2009-01-01 11:18:13.120000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subst2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subst2.test	2009-01-01 11:18:13.120000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/substref.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/substref.test	2009-01-01 11:18:13.120000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/substre2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/substre2.test	2009-01-01 11:18:13.130000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/substtarg.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/substtarg.test	2009-01-01 11:18:13.130000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix.test	2009-01-01 11:18:13.130000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix2.test	2009-01-01 11:18:13.130000099 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix3.test	2009-01-01 11:18:13.140000015 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix4.test	2009-01-01 11:18:13.140000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix5.test	2009-01-01 11:18:13.140000076 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix6.test	2009-01-01 11:18:13.150000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix7.test	2009-01-01 11:18:13.150000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix8.test	2009-01-01 11:18:13.150000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix9.test	2009-01-01 11:18:13.160000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix10.test	2009-01-01 11:18:13.160000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix11.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix11.test	2009-01-01 11:18:13.160000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/symlink.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/symlink.test	2009-01-01 11:18:13.170000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1999, 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/symlink2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/symlink2.test	2009-01-01 11:18:13.170000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/syntax.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/syntax.test	2009-01-01 11:18:13.180000002 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/symlink3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/symlink3.test	2009-01-01 11:18:13.180000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/tags.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/tags.test	2009-01-01 11:18:13.180000064 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/tagsub.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/tagsub.test	2009-01-01 11:18:13.180000095 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003
+ #   Free Software Foundation, Inc.
+ #
+--- ./tests/target-cflags.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/target-cflags.test	2009-01-01 11:18:13.190000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2000, 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/targetclash.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/targetclash.test	2009-01-01 11:18:13.190000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo.test	2009-01-01 11:18:13.190000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2003
+ # Free Software Foundation, Inc.
+ #
+--- ./tests/txinfo2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo2.test	2009-01-01 11:18:13.200000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo3.test	2009-01-01 11:18:13.200000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002, 2003, 2008  Free Software Foundation,
+ # Inc.
+ #
+--- ./tests/txinfo4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo4.test	2009-01-01 11:18:13.210000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo5.test	2009-01-01 11:18:13.220000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo6.test	2009-01-01 11:18:13.220000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo7.test	2009-01-01 11:18:13.230000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo8.test	2009-01-01 11:18:13.230000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004  Free Software
+ # Foundation, Inc.
+ #
+--- ./tests/txinfo9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo9.test	2009-01-01 11:18:13.240000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo10.test	2009-01-01 11:18:13.240000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo13.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo13.test	2009-01-01 11:18:13.240000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo16.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo16.test	2009-01-01 11:18:13.250000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo17.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo17.test	2009-01-01 11:18:13.260000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo18.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo18.test	2009-01-01 11:18:13.280000007 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo19.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo19.test	2009-01-01 11:18:13.290000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo20.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo20.test	2009-01-01 11:18:13.290000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo21.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo21.test	2009-01-01 11:18:13.310000012 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo22.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo22.test	2009-01-01 11:18:13.310000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo23.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo23.test	2009-01-01 11:18:13.310000074 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo24.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo24.test	2009-01-01 11:18:13.320000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo25.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo25.test	2009-01-01 11:18:13.320000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo26.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo26.test	2009-01-01 11:18:13.320000070 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo27.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo27.test	2009-01-01 11:18:13.330000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo28.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo28.test	2009-01-01 11:18:13.330000039 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo29.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo29.test	2009-01-01 11:18:13.330000070 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/transform.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/transform.test	2009-01-01 11:18:13.340000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/unused.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/unused.test	2009-01-01 11:18:13.340000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2002, 2003, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/vars.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vars.test	2009-01-01 11:18:13.340000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/vars3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vars3.test	2009-01-01 11:18:13.340000098 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/vartar.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vartar.test	2009-01-01 11:18:13.350000028 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version.test	2009-01-01 11:18:13.350000059 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version2.test	2009-01-01 11:18:13.350000090 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version3.test	2009-01-01 11:18:13.360000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version4.test	2009-01-01 11:18:13.360000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version6.test	2009-01-01 11:18:13.360000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version7.test	2009-01-01 11:18:13.370000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/vpath.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vpath.test	2009-01-01 11:18:13.370000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/vtexi.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vtexi.test	2009-01-01 11:18:13.370000075 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1996, 1997, 2000, 2001, 2002, 2003
+ #   Free Software Foundation, Inc.
+ #
+--- ./tests/vtexi2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/vtexi2.test	2009-01-01 11:18:13.380000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 1997, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/warnopts.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/warnopts.test	2009-01-01 11:18:13.380000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/werror.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/werror.test	2009-01-01 11:18:13.380000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/whoami.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/whoami.test	2009-01-01 11:18:13.390000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/xsource.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/xsource.test	2009-01-01 11:18:13.390000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+ #   Free Software Foundation, Inc.
+ #
+--- ./tests/yacc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc.test	2009-01-01 11:18:13.390000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1996, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc2.test	2009-01-01 11:18:13.400000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc3.test	2009-01-01 11:18:13.400000034 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc4.test	2009-01-01 11:18:13.400000065 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc5.test	2009-01-01 11:18:13.400000096 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc6.test	2009-01-01 11:18:13.410000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004, 2006, 2007  Free Software
+ # Foundation, Inc.
+ #
+--- ./tests/yacc7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc7.test	2009-01-01 11:18:13.410000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yacc8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yacc8.test	2009-01-01 11:18:13.410000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yaccpp.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yaccpp.test	2009-01-01 11:18:13.420000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1997, 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/yaccvpath.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/yaccvpath.test	2009-01-01 11:18:13.420000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca16.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca16.test	2009-01-01 11:18:13.420000075 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca17.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca17.test	2009-01-01 11:18:13.430000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca18.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca18.test	2009-01-01 11:18:13.430000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca19.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca19.test	2009-01-01 11:18:13.430000076 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca20.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca20.test	2009-01-01 11:18:13.440000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/acloca21.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/acloca21.test	2009-01-01 11:18:13.440000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/amopt.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/amopt.test	2009-01-01 11:18:13.450000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/amsubst.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/amsubst.test	2009-01-01 11:18:13.450000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ar2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ar2.test	2009-01-01 11:18:13.450000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/asm2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/asm2.test	2009-01-01 11:18:13.460000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/asm3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/asm3.test	2009-01-01 11:18:13.460000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2003, 2006, 2007  Free Software Foundation,
+ # Inc.
+ #
+--- ./tests/automake.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/automake.test	2009-01-01 11:18:13.460000073 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/auxdir3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/auxdir3.test	2009-01-01 11:18:13.460000105 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/auxdir4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/auxdir4.test	2009-01-01 11:18:13.470000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/canon-name.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/canon-name.test	2009-01-01 11:18:13.470000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/ccnoco2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/ccnoco2.test	2009-01-01 11:18:13.480000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/check10.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check10.test	2009-01-01 11:18:13.490000010 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+@@ -30,15 +30,15 @@
+ END
+ 
+ cat >>pass <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 0
+ END
+ cat >>fail <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 1
+ END
+ cat >>skip <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 77
+ END
+ chmod a+x pass fail skip
+--- ./tests/check4.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check4.test	2009-01-01 11:18:13.500000010 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -39,12 +39,12 @@
+ echo TESTS = fail.sh >dir/Makefile.am
+ 
+ cat >ok.sh <<'END'
+-#!/bin/sh
++#!/bin/bash
+ :
+ END
+ 
+ cat >dir/fail.sh <<'END'
+-#!/bin/sh
++#!/bin/bash
+ exit 1
+ END
+ 
+--- ./tests/check5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check5.test	2009-01-01 11:18:13.500000042 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2007, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/check6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check6.test	2009-01-01 11:18:13.520000010 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -36,7 +36,7 @@
+ END
+ 
+ cat >>a <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 1
+ END
+ 
+--- ./tests/check7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/check7.test	2009-01-01 11:18:13.520000044 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -40,7 +40,7 @@
+ END
+ 
+ cat >>b <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 1
+ END
+ chmod a+x b
+--- ./tests/check8.test.00	2008-10-06 13:49:08.000000000 -0700
++++ ./tests/check8.test	2009-01-01 11:18:13.520000078 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+@@ -36,11 +36,11 @@
+ mkdir sub
+ 
+ cat >>foo <<'END'
+-#! /bin/sh
++#! /bin/bash
+ test -f "$srcdir/Makefile.am"
+ END
+ cat >>sub/foo <<'END'
+-#! /bin/sh
++#! /bin/bash
+ test -f "$srcdir/Makefile.am"
+ END
+ chmod a+x foo sub/foo
+--- ./tests/check9.test.00	2008-10-06 13:47:27.000000000 -0700
++++ ./tests/check9.test	2009-01-01 11:18:13.530000015 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+@@ -38,11 +38,11 @@
+ END
+ 
+ cat >>pass-script.test <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 0
+ END
+ cat >>xfail-script.test <<'END'
+-#! /bin/sh
++#! /bin/bash
+ exit 1
+ END
+ chmod a+x pass-script.test xfail-script.test
+--- ./tests/clean2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/clean2.test	2009-01-01 11:18:13.530000047 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/commen10.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/commen10.test	2009-01-01 11:18:13.530000079 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment8.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment8.test	2009-01-01 11:18:13.540000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/comment9.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/comment9.test	2009-01-01 11:18:13.540000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/compile.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/compile.test	2009-01-01 11:18:13.540000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/compile_f90_c_cxx.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/compile_f90_c_cxx.test	2009-01-01 11:18:13.550000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond37.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond37.test	2009-01-01 11:18:13.550000040 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/cond38.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/cond38.test	2009-01-01 11:18:13.550000072 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/condhook.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/condhook.test	2009-01-01 11:18:13.550000104 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp6.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp6.test	2009-01-01 11:18:13.560000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depcomp7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depcomp7.test	2009-01-01 11:18:13.560000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/depend5.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/depend5.test	2009-01-01 11:18:13.580000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/dirlist2.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/dirlist2.test	2009-01-01 11:18:13.580000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/distcom7.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/distcom7.test	2009-01-01 11:18:13.590000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/exdir3.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/exdir3.test	2009-01-01 11:18:13.590000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/f90only.test.00	2008-11-23 00:29:00.000000000 -0800
++++ ./tests/f90only.test	2009-01-01 11:18:13.590000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fn99.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fn99.test	2009-01-01 11:18:13.600000009 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fn99subdir.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fn99subdir.test	2009-01-01 11:18:13.600000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/fort1.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/fort1.test	2009-01-01 11:18:13.630000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/gettext3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/gettext3.test	2009-01-01 11:18:13.630000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/hfs.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/hfs.test	2009-01-01 11:18:13.660000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/hosts.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/hosts.test	2009-01-01 11:18:13.660000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/init.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/init.test	2009-01-01 11:18:13.660000069 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/instsh3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/instsh3.test	2009-01-01 11:18:13.670000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/java3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/java3.test	2009-01-01 11:18:13.670000035 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtoo10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtoo10.test	2009-01-01 11:18:13.670000067 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtoo11.test.00	2008-11-11 14:39:10.000000000 -0800
++++ ./tests/libtoo11.test	2009-01-01 11:18:13.670000099 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/libtool8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool8.test	2009-01-01 11:18:13.680000013 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/libtool9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/libtool9.test	2009-01-01 11:18:13.680000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/license2.test.00	2008-11-22 02:49:40.000000000 -0800
++++ ./tests/license2.test	2009-01-01 11:18:13.680000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/link_f90_only.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/link_f90_only.test	2009-01-01 11:18:13.690000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1998, 1999, 2001, 2002  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp6.test	2009-01-01 11:18:13.690000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp7.test	2009-01-01 11:18:13.690000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lisp8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lisp8.test	2009-01-01 11:18:13.700000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/longlin2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/longlin2.test	2009-01-01 11:18:13.700000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/longline.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/longline.test	2009-01-01 11:18:13.700000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/lzma.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/lzma.test	2009-01-01 11:18:13.720000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2003, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/man3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/man3.test	2009-01-01 11:18:13.720000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/mdate5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mdate5.test	2009-01-01 11:18:13.730000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 1999, 2001, 2002, 2004, 2007  Free Software Foundation,
+ # Inc.
+ #
+--- ./tests/missing3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing3.test	2009-01-01 11:18:13.730000040 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/missing4.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing4.test	2009-01-01 11:18:13.730000072 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006, 2007, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/missing5.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing5.test	2009-01-01 11:18:13.730000106 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -40,7 +40,7 @@
+ 
+ for tool in $needed_tools; do
+   cat >$tool.in <<EOF
+-#! /bin/sh
++#! /bin/bash
+ exec @$tool@ "\$@"
+ EOF
+ done
+--- ./tests/missing6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/missing6.test	2009-01-01 11:18:13.740000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/mkinst3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mkinst3.test	2009-01-01 11:18:13.740000047 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -41,7 +41,7 @@
+ 
+ mkdir bin
+ cat >bin/mkdir <<'EOF'
+-#!/bin/sh
++#!/bin/bash
+ for arg
+ do
+   case $arg in
+--- ./tests/mmodely.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/mmodely.test	2009-01-01 11:18:13.740000079 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/nodep2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/nodep2.test	2009-01-01 11:18:13.750000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/objc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/objc.test	2009-01-01 11:18:13.750000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2001, 2002, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/objc2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/objc2.test	2009-01-01 11:18:13.750000077 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output-order.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output-order.test	2009-01-01 11:18:13.760000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/output11.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output11.test	2009-01-01 11:18:13.770000003 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output12.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output12.test	2009-01-01 11:18:13.780000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/output13.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/output13.test	2009-01-01 11:18:13.780000037 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr401.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr401.test	2009-01-01 11:18:13.790000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr401b.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr401b.test	2009-01-01 11:18:13.790000046 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/pr401c.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/pr401c.test	2009-01-01 11:18:13.790000079 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2006, 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/primary3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/primary3.test	2009-01-01 11:18:13.800000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python11.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python11.test	2009-01-01 11:18:13.800000041 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2006, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/python12.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/python12.test	2009-01-01 11:18:13.800000074 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/remake6.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake6.test	2009-01-01 11:18:13.810000000 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/remake7.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/remake7.test	2009-01-01 11:18:13.810000033 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2008  Free Software Foundation, Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+--- ./tests/stdinc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/stdinc.test	2009-01-01 11:18:13.810000066 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2007  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subdir9.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subdir9.test	2009-01-01 11:18:13.820000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subobj10.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subobj10.test	2009-01-01 11:18:13.820000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/subpkg3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/subpkg3.test	2009-01-01 11:18:13.820000071 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/suffix12.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/suffix12.test	2009-01-01 11:18:13.820000104 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2002, 2003, 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/tar.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/tar.test	2009-01-01 11:18:13.820000137 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/tar2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/tar2.test	2009-01-01 11:18:13.830000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/tar3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/tar3.test	2009-01-01 11:18:13.830000046 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/txinfo30.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo30.test	2009-01-01 11:18:13.830000081 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+@@ -35,7 +35,7 @@
+ echo AC_OUTPUT >>configure.in
+ 
+ cat >makeinfo <<\EOF
+-#!/bin/sh
++#!/bin/bash
+ # This script
+ # 1. fails so `missing' can take over
+ # 2. does not understand `--version' so `missing' thinks `makeinfo' isn't
+--- ./tests/txinfo31.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/txinfo31.test	2009-01-01 11:18:13.840000005 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/upc.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/upc.test	2009-01-01 11:18:13.840000038 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/upc2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/upc2.test	2009-01-01 11:18:13.860000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/upc3.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/upc3.test	2009-01-01 11:18:13.880000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2006  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/version8.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/version8.test	2009-01-01 11:18:13.950000008 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2005, 2008  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./tests/werror2.test.00	2008-11-23 00:29:01.000000000 -0800
++++ ./tests/werror2.test	2009-01-01 11:18:13.960000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Copyright (C) 2004  Free Software Foundation, Inc.
+ #
+ # This file is part of GNU Automake.
+--- ./lib/config.guess.00	2008-11-23 00:31:03.000000000 -0800
++++ ./lib/config.guess	2009-01-01 11:18:22.770000011 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Attempt to guess a canonical system name.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+--- ./lib/config.sub.00	2008-11-10 22:11:52.000000000 -0800
++++ ./lib/config.sub	2009-01-01 11:18:22.770000036 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Configuration validation subroutine script.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+--- ./lib/install-sh.00	2008-01-19 01:00:05.000000000 -0800
++++ ./lib/install-sh	2009-01-01 11:18:22.770000057 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # install - install a program, script, or datafile
+ 
+ scriptversion=2006-12-25.00
+--- ./lib/mdate-sh.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/mdate-sh	2009-01-01 11:18:22.780000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Get modification time of a file or directory and pretty-print it.
+ 
+ scriptversion=2007-03-30.02
+--- ./lib/missing.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/missing	2009-01-01 11:18:22.780000027 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Common stub for a few missing GNU programs while installing.
+ 
+ scriptversion=2006-05-10.23
+@@ -201,7 +201,7 @@
+ 	touch $file
+     else
+ 	test -z "$file" || exec >$file
+-	echo "#! /bin/sh"
++	echo "#! /bin/bash"
+ 	echo "# Created by GNU Automake missing as a replacement of"
+ 	echo "#  $ $@"
+ 	echo "exit 0"
+--- ./lib/mkinstalldirs.00	2007-10-29 11:38:25.000000000 -0700
++++ ./lib/mkinstalldirs	2009-01-01 11:18:22.780000045 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # mkinstalldirs --- make directory hierarchy
+ 
+ scriptversion=2006-05-11.19
+--- ./lib/elisp-comp.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/elisp-comp	2009-01-01 11:18:22.780000062 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Copyright (C) 1995, 2000, 2003, 2004, 2005  Free Software Foundation, Inc.
+ 
+ scriptversion=2005-05-14.22
+--- ./lib/ylwrap.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/ylwrap	2009-01-01 11:18:22.790000013 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # ylwrap - wrapper for lex/yacc invocations.
+ 
+ scriptversion=2007-11-22.22
+--- ./lib/acinstall.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/acinstall	2009-01-01 11:18:22.790000030 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ 
+ # Install an aclocal-style M4 file.  A script is needed to do this
+ # because we want to do serial-number checking; newer versions of
+--- ./lib/depcomp.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/depcomp	2009-01-01 11:18:22.790000051 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # depcomp - compile a program generating dependencies as side-effects
+ 
+ scriptversion=2007-03-29.01
+--- ./lib/compile.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/compile	2009-01-01 11:18:22.810000015 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Wrapper for compilers which do not understand `-c -o'.
+ 
+ scriptversion=2005-05-14.22
+--- ./lib/py-compile.00	2008-11-23 00:29:00.000000000 -0800
++++ ./lib/py-compile	2009-01-01 11:18:22.830000007 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # py-compile - Compile a Python program
+ 
+ scriptversion=2005-05-14.22
+--- ./lib/symlink-tree.00	2008-01-19 01:51:47.000000000 -0800
++++ ./lib/symlink-tree	2009-01-01 11:18:22.840000005 -0800
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # Create a symlink tree.
+ #
+ # Copyright (C) 1995, 2000, 2003  Free Software Foundation, Inc.
+--- ./configure.00	2008-11-23 00:37:11.000000000 -0800
++++ ./configure	2009-01-01 11:18:22.840000043 -0800
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#! /bin/bash
+ # Guess values for system-dependent variables and create Makefiles.
+ # Generated by GNU Autoconf 2.63 for GNU Automake 1.10.2.
+ #
+@@ -591,7 +591,7 @@
+ subdirs=
+ MFLAGS=
+ MAKEFLAGS=
+-SHELL=${CONFIG_SHELL-/bin/sh}
++SHELL=${CONFIG_SHELL-/bin/bash}
+ 
+ # Identity of this package.
+ PACKAGE_NAME='GNU Automake'
+@@ -2102,7 +2102,7 @@
+   $as_echo_n "(cached) " >&6
+ else
+   cat >conftest.make <<\_ACEOF
+-SHELL = /bin/sh
++SHELL = /bin/bash
+ all:
+ 	@echo '@@@%%%=$(MAKE)=@@@%%%'
+ _ACEOF
+--- ./Install-OSR6.00	2009-01-01 11:18:22.850000006 -0800
++++ ./Install-OSR6	2009-01-01 11:18:22.850000003 -0800
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/automake
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
+--- ./Configure-OSR6.00	2009-01-01 11:18:22.850000021 -0800
++++ ./Configure-OSR6	2009-01-01 11:18:22.850000018 -0800
+@@ -0,0 +1,21 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/local/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++PATH=/usr/local/bin:/usr/bin:/usr/gnu/bin:$PATH
++export CC CXX CFLAGS NM M4 INSTALL PATH
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

@@ -1,0 +1,90 @@
+--- ./Makefile.uw	2004-12-01 16:46:07.040000081 +0000
++++ ./Makefile	2004-12-01 16:46:07.050000067 +0000
+@@ -12,11 +12,11 @@
+ 
+ #
+ #
+-RPMDIR=/usr/src/RPM
++RPMDIR=/usr/src/sco
+ 
+ # Choose compiler
+-CC=gcc
+-LD=gcc
++CC=cc
++LD=cc
+ BINFORMAT=bin
+ 
+ any:
+@@ -24,6 +24,8 @@
+ 	@echo '   ${MAKE} linux        - for Linux'
+ 	@echo '   ${MAKE} solaris-gcc  - for Solaris with gcc'
+ 	@echo '   ${MAKE} solaris-cc   - for Solaris with cc'
++	@echo '   ${MAKE} unixware-gcc - for UnixWare with gcc'
++	@echo '   ${MAKE} unixware-cc  - for UnixWare with cc'
+ 	@echo '   ${MAKE} du           - for Digital/Compac Unix or OSF1'
+ 	@echo '   ${MAKE} freebsd-aout - for FreeBSD with a.out netscape'
+ 	@echo '   ${MAKE} hp-gcc       - for HP-UX with gcc'
+@@ -48,6 +50,12 @@
+ linux:
+ 	${MAKE} all CC=gcc XCFLAGS=-fPIC LD=gcc XLDFLAGS=-shared
+ 
++unixware-gcc:
++	${MAKE} all CC=gcc XCFLAGS=-fPIC LD=ld XLDFLAGS=-G XLIBS='-lX11 -lsocket -lnsl' X11=/usr/X11R6/
++
++unixware-cc:
++	${MAKE} all CC=cc XCFLAGS=-Kpic LD=cc XLDFLAGS=-G  XLIBS='-L/usr/X11R6/lib -lX11 -lsocket -lnsl' X11=/usr/X11R6
++
+ solaris-gcc:
+ 	${MAKE} all CC=gcc XCFLAGS=-fPIC LD=ld XLDFLAGS=-G XLIBS='-lX11 -lsocket -lnsl' X11=/usr/openwin/
+ 
+@@ -69,6 +77,7 @@
+ auto:
+ 	@case "x`uname`" in \
+ 	  xLinux) ${MAKE} linux ;; \
++	  xUnixWare) ${MAKE} unixware-cc ;; \
+ 	  xSunOS) ${MAKE} solaris ;; \
+ 	  xHP-UX) ${MAKE} hp-gcc ;; \
+ 	  xOSF1) ${MAKE} du ;; \
+@@ -92,9 +101,9 @@
+ 	     mozplugger-common.c mozplugger.h README.in
+ BIN_FILES=mozplugger.so mozplugger-helper
+ 
+-DEFINES=$(STREAM) -DVERSION=\"$(VERSION)\" -Wall #-DDEBUG #-D__amd64__
++DEFINES=$(STREAM) -DVERSION=\"$(VERSION)\" #-Wall #-DDEBUG #-D__amd64__
+ RPM_OPT_FLAGS=-O2
+-COMMON_CFLAGS=$(RPM_OPT_FLAGS) -Inpapi/include -I$(X11)/include -DXP_UNIX $(DEFINES)
++COMMON_CFLAGS=$(RPM_OPT_FLAGS) -I/usr/ucbinclude -Inpapi/include -I$(X11)/include -DXP_UNIX $(DEFINES)
+ COMMON_LDFLAGS=
+ NORM_CFLAGS=
+ NORM_LDFLAGS=
+--- ./mozplugger.c.uw	2004-08-17 09:59:12.000000000 +0000
++++ ./mozplugger.c	2004-12-01 17:08:52.230000027 +0000
+@@ -331,7 +331,7 @@
+ /*****************************************************************************
+  * Match a word to a single-word flag.
+  *****************************************************************************/
+-__inline
++inline
+ static int match(char *line, char *kw)
+ {
+      return !strncasecmp(line,kw,strlen(kw)) && !isalnum(line[strlen(kw)]);
+--- ./mozplugger-helper.c.uw	2004-08-18 11:55:40.000000000 +0000
++++ ./mozplugger-helper.c	2004-12-01 17:09:43.430000013 +0000
+@@ -70,7 +70,7 @@
+      return (ox != xaspect || oy != yaspect);
+ }
+ 
+-__inline
++inline
+ static void max_aspect_window(Display *display, Window window, int w, int h)
+ {
+      int tmpw, tmph;
+@@ -100,7 +100,7 @@
+      XSync(display, False);
+ }
+ 
+-__inline
++inline
+ static void fill_window(Display *display, Window window, int w, int h)
+ {
+      D("New size: %dx%d+%d+%d (of %dx%d)\n", w, h, 0, 0, w, h);

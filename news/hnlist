@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# hnlist - maintain a hypertext list of my HyperNews forums
+#
+# written 04-Nov-97 by Ronald Joe Record (rr@sco.com)
+#
+
+# The full pathname to the HyperNews forums root
+D=/usr/local/lib/apache/htdocs/hn/forums
+
+[ -f $D/index.html ] && cp $D/index.html $D/index.html_old
+
+echo "<HTML>
+<HEAD>
+<TITLE>HyperNews Forums</TITLE>
+<LINK rel=\"owner\" href=\"mailto:\">
+<SCRIPT LANGUAGE=\"JavaScript\">
+<!-- hide this
+
+function help(message) {
+  self.status = message;
+  return true;
+}
+// stop hiding -->
+</SCRIPT>
+</HEAD>
+<BODY BGCOLOR=#C0D9D9>
+<CENTER>
+<H1>HyperNews Forums</H1>
+<P>
+<TABLE WIDTH=50%>
+<TR><TD WIDTH=25% ALIGN=CENTER>
+<A HREF=\"/HyperNews/edit-member.pl\" 
+ onMouseOver=\"return window.help('Become a member of this HyperNews site, or change member info');\">
+ <IMG SRC=\"/hn/Icons/members.gif\" BORDER=0  
+ WIDTH=60 HEIGHT=17
+ ALT=\"Membership\"></A>
+</TD>
+<TD WIDTH=25% ALIGN=CENTER>
+<A HREF=\"/HyperNews/SECURED/edit-article.pl\"
+ onMouseOver=\"return window.help('Create a new HyperNews forum base article');\">
+ <IMG SRC=\"/hn/Icons/newbase.gif\" BORDER=0  
+ WIDTH=60 HEIGHT=17
+ ALT=\"Create New Base Article\"></A>
+</TD>
+<TD WIDTH=25% ALIGN=CENTER>
+<A HREF=\"/search_hn.html\"
+ onMouseOver=\"return window.help('Search for messages');\">
+ <IMG SRC=\"/hn/Icons/search.gif\" BORDER=0  
+ WIDTH=60 HEIGHT=17
+ ALT=\"Search\"></A>
+</TD>
+<TD WIDTH=25% ALIGN=CENTER>
+<A HREF=\"/hn/instructions.html\" 
+ onMouseOver=\"return window.help('Help for HyperNews 1.9.5');\">
+ <IMG SRC=\"/hn/Icons/help.gif\" BORDER=0  
+ WIDTH=60 HEIGHT=17
+ ALT=\"Help for HyperNews 1.9.5\"></A>
+</TD></TR></TABLE>
+<P>
+<TABLE WIDTH=100% BORDER=6 CELLPADDING=3 CELLSPACING=3>
+<TR>" > $D/index.html
+
+TNUM=0
+for i in $D/*,urc
+do
+    b=`basename $i`
+    f=`echo $b | sed -e "s/,urc//"`
+    g=`grep Title: $i | sed -e "s/Title: //"`
+    h=`grep ListAddress: $i | sed -e "s/ListAddress: //"`
+    echo "
+        <TD WIDTH=25% ALIGN=CENTER>
+        <TABLE WIDTH=100%>
+        <TR><TD ALIGN=CENTER>
+        <A HREF=/HyperNews/get/forums/$f><FONT SIZE=3>$g</FONT></A>
+        </TD></TR>
+        <TR><TD ALIGN=CENTER>
+        <FORM ACTION=\"/HyperNews/edit-response.pl/forums/$f\"
+          METHOD=\"POST\" >
+        <INPUT TYPE=\"hidden\" NAME=\"bug\" VALUE=\"workaround\">
+        <INPUT TYPE=\"image\" NAME=\"add\" 
+         SRC=\"/hn/Icons/add.gif\" 
+         BORDER=0 ALT=\"Add Message\" WIDTH=80 HEIGHT=24>
+        </FORM>
+        </TD></TR>
+        <TR><TD ALIGN=CENTER>
+        <A HREF=\"/HyperNews/edit-subscribe.pl/forums/$f\" 
+         onMouseOver=\"return window.help('Subscribe to be notified by email, or Unsubscribe');\">
+        <IMG SRC=\"/hn/Icons/subscrib.gif\" 
+         BORDER=0  WIDTH=60 HEIGHT=17 ALT=\"Subscribe\"></A>
+        </TD></TR>
+        <TR><TD ALIGN=CENTER>
+        <A HREF=\"mailto:$h\"
+         onMouseOver=\"return window.help('E-mail address gateway to this forum');\">
+        <FONT SIZE=1>$h</FONT></A>
+        </TD></TR></TABLE>
+        </TD>" >> $D/index.html
+    TNUM=`expr $TNUM + 1`
+    [ "$TNUM" = "4" ] && {
+        echo "</TR><TR>" >> $D/index.html
+        TNUM=0
+    }
+done
+
+echo "</TR></TABLE>
+<P>
+<A HREF="http://www.hypernews.org/HyperNews/get/hypernews.html">
+HyperNews Home Page</A>
+<P>
+<A HREF="http://rr.pdev.sco.com/HyperNews/Admin/setup-form.pl">
+HyperNews Setup Form</A>
+or
+<A HREF="http://rr.pdev.sco.com/HyperNews/Admin/setup-short-form.pl">
+HyperNews Setup Short Form</A>
+<BR>(HyperNews Administrator only)
+<P>
+<A HREF="http://rr.pdev.sco.com/hypermail/">
+My Hypermail Folders</A>
+</CENTER>
+</BODY>
+</HTML>" >> $D/index.html

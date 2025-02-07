@@ -1,0 +1,283 @@
+*** ./src/main/dummy/SDL_dummy_main.c.osr6	Sun Feb 22 13:31:36 2004
+--- ./src/main/dummy/SDL_dummy_main.c	Sat Jul  2 10:21:28 2005
+***************
+*** 8,13 ****
+  {
+  	return(SDL_main(argc, argv));
+  }
+- #else
+- /* Nothing to do on this platform */;
+  #endif
+--- 8,11 ----
+*** ./src/video/x11/SDL_x11yuv.c.osr6	Sun Dec 12 23:54:37 2004
+--- ./src/video/x11/SDL_x11yuv.c	Sat Jul  2 10:25:25 2005
+***************
+*** 113,122 ****
+  
+  	/* Look for the XVideo extension with a valid port for this format */
+  	xv_port = -1;
+! 	if ( (Success == SDL_NAME(XvQueryExtension)(GFX_Display, &j, &j, &j, &j, &j)) &&
+  	     (Success == SDL_NAME(XvQueryAdaptors)(GFX_Display,
+  	                                 RootWindow(GFX_Display, SDL_Screen),
+! 	                                 &adaptors, &ainfo)) ) {
+  #ifdef USE_LAST_ADAPTOR
+  		for ( i=0; i < adaptors; ++i )
+  #else
+--- 113,122 ----
+  
+  	/* Look for the XVideo extension with a valid port for this format */
+  	xv_port = -1;
+! 	if ( (Success == SDL_NAME(XvQueryExtension)(GFX_Display, (unsigned int *)&j, (unsigned int *)&j, (unsigned int *)&j, (unsigned int *)&j, (unsigned int *)&j)) &&
+  	     (Success == SDL_NAME(XvQueryAdaptors)(GFX_Display,
+  	                                 RootWindow(GFX_Display, SDL_Screen),
+! 	                                 (unsigned int *)&adaptors, &ainfo)) ) {
+  #ifdef USE_LAST_ADAPTOR
+  		for ( i=0; i < adaptors; ++i )
+  #else
+*** ./src/video/x11/SDL_x11gl.c.osr6	Sun Dec 12 23:54:37 2004
+--- ./src/video/x11/SDL_x11gl.c	Sat Jul  2 10:21:28 2005
+***************
+*** 503,509 ****
+  	
+  	handle = this->gl_config.dll_handle;
+  	if ( this->gl_data->glXGetProcAddress ) {
+! 		return this->gl_data->glXGetProcAddress(proc);
+  	}
+  #if defined(__OpenBSD__) && !defined(__ELF__)
+  #undef dlsym(x,y);
+--- 503,509 ----
+  	
+  	handle = this->gl_config.dll_handle;
+  	if ( this->gl_data->glXGetProcAddress ) {
+! 		return this->gl_data->glXGetProcAddress((const GLubyte *)proc);
+  	}
+  #if defined(__OpenBSD__) && !defined(__ELF__)
+  #undef dlsym(x,y);
+*** ./src/video/x11/SDL_x11modes.c.osr6	Sun Dec 12 23:54:37 2004
+--- ./src/video/x11/SDL_x11modes.c	Sat Jul  2 10:21:28 2005
+***************
+*** 49,55 ****
+  Bool SDL_NAME(XF86VidModeGetModeInfo)(Display *dpy, int scr, SDL_NAME(XF86VidModeModeInfo) *info)
+  {
+      SDL_NAME(XF86VidModeModeLine) *l = (SDL_NAME(XF86VidModeModeLine)*)((char*)info + sizeof info->dotclock);
+!     return SDL_NAME(XF86VidModeGetModeLine)(dpy, scr, &info->dotclock, l);
+  }
+  #endif /* XFREE86_VM */
+  
+--- 49,55 ----
+  Bool SDL_NAME(XF86VidModeGetModeInfo)(Display *dpy, int scr, SDL_NAME(XF86VidModeModeInfo) *info)
+  {
+      SDL_NAME(XF86VidModeModeLine) *l = (SDL_NAME(XF86VidModeModeLine)*)((char*)info + sizeof info->dotclock);
+!     return SDL_NAME(XF86VidModeGetModeLine)(dpy, scr, (int *)&info->dotclock, l);
+  }
+  #endif /* XFREE86_VM */
+  
+*** ./Configure-OSR6.osr6	Sat Jul  2 10:21:28 2005
+--- ./Configure-OSR6	Sat Jul  2 10:21:28 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX
++ rm -f mout-configure
++ ./configure $* --prefix=/usr -program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sat Jul  2 10:21:28 2005
+--- ./Install-OSR6	Sat Jul  2 10:21:28 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/SDL
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
+*** ./configure.osr6	Mon Dec 13 01:04:51 2004
+--- ./configure	Sat Jul  2 10:21:28 2005
+***************
+*** 3688,3694 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3688,3694 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5* | sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3696,3702 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3696,3702 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 7132,7138 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 7132,7138 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7824,7832 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7824,7831 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 10997,11003 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+--- 10996,11002 ----
+  	;;
+      esac
+      ;;
+!   sysv5* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+***************
+*** 14044,14050 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 14043,14049 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 14716,14724 ****
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+--- 14715,14722 ----
+        no_undefined_flag_F77=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_F77='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_F77='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec_F77=
+        hardcode_shlibpath_var_F77=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 16396,16402 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+--- 16394,16400 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+***************
+*** 17088,17096 ****
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+--- 17086,17093 ----
+        no_undefined_flag_GCJ=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds_GCJ='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_GCJ='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec_GCJ=
+        hardcode_shlibpath_var_GCJ=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 26819,26825 ****
+              pthread_lib="-lpthread -lposix4"
+              ;;
+          *-*-sysv5*)
+!             pthread_cflags="-D_REENTRANT -Kthread"
+              pthread_lib=""
+              ;;
+          *-*-irix*)
+--- 26816,26822 ----
+              pthread_lib="-lpthread -lposix4"
+              ;;
+          *-*-sysv5*)
+!             pthread_cflags=""
+              pthread_lib=""
+              ;;
+          *-*-irix*)

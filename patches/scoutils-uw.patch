@@ -1,0 +1,11 @@
+--- ./Makefile.00	2003-09-06 16:14:52.310000009 +0000
++++ ./Makefile	2003-09-06 16:15:19.220000004 +0000
+@@ -3,7 +3,7 @@
+ srcdir = .
+ 
+ CC = gcc
+-INSTALL = /usr/gnu/bin/install -c
++INSTALL = /usr/ucb/install -c
+ INSTALL_PROGRAM = ${INSTALL}
+ INSTALL_DATA = ${INSTALL} -m 644
+ 

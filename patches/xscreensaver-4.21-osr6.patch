@@ -1,0 +1,195 @@
+*** ./driver/Makefile.in.osr6	Sat May  7 07:54:37 2005
+--- ./driver/Makefile.in	Sat Jul  2 12:28:56 2005
+***************
+*** 253,259 ****
+  tests: $(TEST_EXES)
+  
+  install:   install-program   install-ad    install-scripts \
+! 	   install-gnome     install-man   install-xml install-pam
+  uninstall: uninstall-program uninstall-ad  \
+  	   uninstall-gnome   uninstall-man uninstall-xml  
+  
+--- 253,259 ----
+  tests: $(TEST_EXES)
+  
+  install:   install-program   install-ad    install-scripts \
+! 	   install-gnome     install-man   install-xml
+  uninstall: uninstall-program uninstall-ad  \
+  	   uninstall-gnome   uninstall-man uninstall-xml  
+  
+***************
+*** 778,784 ****
+  	$(XDPMS_LIBS) $(XINERAMA_LIBS) -lXext $(X_EXTRA_LIBS)
+  
+  xscreensaver-demo-Gtk: $(DEMO_OBJS) $(GTK_OBJS)
+! 	$(CC) $(LDFLAGS) -o $@ $(DEMO_OBJS) $(GTK_OBJS) $(LIBS) $(X_LIBS) \
+  	$(GTK_LIBS) $(XPM_LIBS) $(XML_LIBS) $(INTL_LIBS) $(X_PRE_LIBS) \
+  	-lXt -lX11 $(XDPMS_LIBS) $(XINERAMA_LIBS) -lXext $(X_EXTRA_LIBS)
+  
+--- 778,784 ----
+  	$(XDPMS_LIBS) $(XINERAMA_LIBS) -lXext $(X_EXTRA_LIBS)
+  
+  xscreensaver-demo-Gtk: $(DEMO_OBJS) $(GTK_OBJS)
+! 	$(CC) -Wl,-Bexport $(LDFLAGS) -o $@ $(DEMO_OBJS) $(GTK_OBJS) $(LIBS) $(X_LIBS) \
+  	$(GTK_LIBS) $(XPM_LIBS) $(XML_LIBS) $(INTL_LIBS) $(X_PRE_LIBS) \
+  	-lXt -lX11 $(XDPMS_LIBS) $(XINERAMA_LIBS) -lXext $(X_EXTRA_LIBS)
+  
+*** ./hacks/jigsaw.c.osr6	Sat May  7 07:54:43 2005
+--- ./hacks/jigsaw.c	Sat Jul  2 12:09:07 2005
+***************
+*** 229,236 ****
+      if (!fg_ok || bg_ok)
+        {
+  	int i;
+! 	unsigned long fgd = ~0;
+! 	unsigned long bgd = ~0;
+  	int max = visual_cells (xgwa.screen, xgwa.visual);
+  	XColor *all = (XColor *) calloc(sizeof (*all), max);
+  	for (i = 0; i < max; i++)
+--- 229,236 ----
+      if (!fg_ok || bg_ok)
+        {
+  	int i;
+! 	unsigned long fgd = ~(unsigned long)0;
+! 	unsigned long bgd = ~(unsigned long)0;
+  	int max = visual_cells (xgwa.screen, xgwa.visual);
+  	XColor *all = (XColor *) calloc(sizeof (*all), max);
+  	for (i = 0; i < max; i++)
+*** ./hacks/pyro.c.osr6	Sat May  7 07:54:42 2005
+--- ./hacks/pyro.c	Sat Jul  2 12:09:07 2005
+***************
+*** 251,257 ****
+  	{
+            if (size > 0)
+              {
+!               static unsigned long last_pixel = ~0;
+                unsigned long pixel;
+  
+                if (mono_p || p->primary)
+--- 251,257 ----
+  	{
+            if (size > 0)
+              {
+!               static unsigned long last_pixel = ~(unsigned long)0;
+                unsigned long pixel;
+  
+                if (mono_p || p->primary)
+*** ./hacks/slidescreen.c.osr6	Sat May  7 07:54:42 2005
+--- ./hacks/slidescreen.c	Sat Jul  2 12:09:07 2005
+***************
+*** 84,91 ****
+  
+      if (!fg_ok || bg_ok)
+        {
+! 	unsigned long fgd = ~0;
+! 	unsigned long bgd = ~0;
+  	int max = visual_cells (xgwa.screen, visual);
+  	XColor *all = (XColor *) calloc(sizeof (*all), max);
+  	for (i = 0; i < max; i++)
+--- 84,91 ----
+  
+      if (!fg_ok || bg_ok)
+        {
+! 	unsigned long fgd = ~(unsigned long)0;
+! 	unsigned long bgd = ~(unsigned long)0;
+  	int max = visual_cells (xgwa.screen, visual);
+  	XColor *all = (XColor *) calloc(sizeof (*all), max);
+  	for (i = 0; i < max; i++)
+*** ./utils/colorbars.c.osr6	Sat May  7 07:54:36 2005
+--- ./utils/colorbars.c	Sat Jul  2 12:09:07 2005
+***************
+*** 110,116 ****
+    {
+      unsigned long *pixels; /* ignored - unfreed */
+      int npixels;
+!     unsigned long bg = ~0;
+      Pixmap logo_mask = 0;
+      Pixmap logo_map = xscreensaver_logo (screen, visual, drawable, cmap, bg,
+                                           &pixels, &npixels, &logo_mask,
+--- 110,116 ----
+    {
+      unsigned long *pixels; /* ignored - unfreed */
+      int npixels;
+!     unsigned long bg = ~(unsigned long)0;
+      Pixmap logo_mask = 0;
+      Pixmap logo_map = xscreensaver_logo (screen, visual, drawable, cmap, bg,
+                                           &pixels, &npixels, &logo_mask,
+*** ./Build-OSR6.osr6	Sat Jul  2 12:09:07 2005
+--- ./Build-OSR6	Sat Jul  2 12:09:07 2005
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ 
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ export CC CXX CFLAGS NM
++ MOUT=mout
++ rm -f $MOUT-configure
++ ./configure --prefix=/usr \
++             --with-shadow \
++             --enable-locking \
++             --without-pam --without-gl --with-gtk \
++             --without-gnome \
++             --without-dpms-ext \
++             --without-xdbe-ext \
++             --x-includes=/usr/X11R6/include \
++             --x-libraries=/usr/X11R6/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee $MOUT-configure
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Makefile.in.osr6	Sat May  7 07:54:35 2005
+--- ./Makefile.in	Sat Jul  2 12:09:07 2005
+***************
+*** 6,12 ****
+  VPATH		= @srcdir@
+  
+  SHELL		= /bin/sh
+! SUBDIRS		= utils driver hacks hacks/glx po
+  TARFILES	= README README.VMS README.debugging INSTALL \
+  		  configure configure.in Makefile.in config.h.in \
+  		  config.h-vms install-sh setup.com config.guess aclocal.m4 \
+--- 6,12 ----
+  VPATH		= @srcdir@
+  
+  SHELL		= /bin/sh
+! SUBDIRS		= utils driver hacks po
+  TARFILES	= README README.VMS README.debugging INSTALL \
+  		  configure configure.in Makefile.in config.h.in \
+  		  config.h-vms install-sh setup.com config.guess aclocal.m4 \
+***************
+*** 328,335 ****
+  count::
+  	@ \
+    echo -n "Current hack count: " ; \
+!   ( ( cd hacks;     make -s INSTALL=true install-program install-scripts ) ; \
+!     ( cd hacks/glx; make -s INSTALL=true install-program ) ) | \
+      grep true | \
+      grep -v helper | \
+      grep -v ljlatest | \
+--- 328,334 ----
+  count::
+  	@ \
+    echo -n "Current hack count: " ; \
+!   ( ( cd hacks;     make -s INSTALL=true install-program install-scripts ) ) | \
+      grep true | \
+      grep -v helper | \
+      grep -v ljlatest | \
+*** ./Install-OSR6.osr6	Sat Jul  2 12:09:07 2005
+--- ./Install-OSR6	Sat Jul  2 12:09:07 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/xscreensaver
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install_prefix=$D install 2>&1 | tee $MOUT

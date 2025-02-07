@@ -1,0 +1,73 @@
+*** ./src/pager.c.osr6	Thu May 17 02:49:39 2007
+--- ./src/pager.c	Sun Aug 12 12:19:57 2007
+***************
+*** 41,51 ****
+--- 41,59 ----
+  #include "xwin.h"
+  
+  #define DEBUG_PAGER 1
++ #ifdef __USLC__
++ #if DEBUG_PAGER
++ #define Dprintf(...) if(EDebug(EDBUG_TYPE_PAGER))Eprintf(__VA_ARGS__)
++ #else
++ #define Dprintf(...)
++ #endif
++ #else
+  #if DEBUG_PAGER
+  #define Dprintf(fmt...) if(EDebug(EDBUG_TYPE_PAGER))Eprintf(fmt)
+  #else
+  #define Dprintf(fmt...)
+  #endif
++ #endif
+  
+  #define USE_PAGER_BACKGROUND_CACHE 1
+  #define IMG_SCALE 2
+*** ./src/ecompmgr.c.osr6	Thu May 17 02:49:39 2007
+--- ./src/ecompmgr.c	Sun Aug 12 12:19:57 2007
+***************
+*** 66,71 ****
+--- 66,82 ----
+  #endif
+  
+  #define ENABLE_DEBUG   1
++ #ifdef __USLC__
++ #if ENABLE_DEBUG
++ #define D1printf(...) if(EDebug(EDBUG_TYPE_COMPMGR))Eprintf(__VA_ARGS__)
++ #define D2printf(...) if(EDebug(EDBUG_TYPE_COMPMGR2))Eprintf(__VA_ARGS__)
++ #define D3printf(...) if(EDebug(EDBUG_TYPE_COMPMGR3))Eprintf(__VA_ARGS__)
++ #else
++ #define D1printf(...)
++ #define D2printf(...)
++ #define D3printf(...)
++ #endif
++ #else
+  #if ENABLE_DEBUG
+  #define D1printf(fmt...) if(EDebug(EDBUG_TYPE_COMPMGR))Eprintf(fmt)
+  #define D2printf(fmt...) if(EDebug(EDBUG_TYPE_COMPMGR2))Eprintf(fmt)
+***************
+*** 75,80 ****
+--- 86,92 ----
+  #define D2printf(fmt...)
+  #define D3printf(fmt...)
+  #endif /* ENABLE_DEBUG */
++ #endif /* USLC */
+  
+  #define DEBUG_OPACITY 0
+  
+*** ./Install-OSR6.osr6	Sun Aug 12 12:37:54 2007
+--- ./Install-OSR6	Sun Aug 12 12:38:15 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/enlightenment
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

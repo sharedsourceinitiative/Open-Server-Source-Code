@@ -1,0 +1,97 @@
+*** ./Makefile.00	Fri Aug 20 14:14:07 1999
+--- ./Makefile	Sat Sep 10 19:12:39 2005
+***************
+*** 14,22 ****
+  #   along with this program; if not, write to the Free Software
+  #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111, USA.
+  
+! CFLAGS = -I. -Wall -O2 -g
+  LDFLAGS = -L.
+  LIBS = -lcgi
+  
+  OBJS = cgi.o cookies.o
+  
+--- 14,23 ----
+  #   along with this program; if not, write to the Free Software
+  #   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111, USA.
+  
+! CFLAGS = -I. -O2
+  LDFLAGS = -L.
+  LIBS = -lcgi
++ DESTDIR=
+  
+  OBJS = cgi.o cookies.o
+  
+***************
+*** 32,38 ****
+  all: libcgi.a cgitest jumpto
+  
+  install: cgitest
+! 	install -m 755 cgitest /usr/lib/cgi-bin
+  
+  clean:
+  	rm -f cgitest cgitest.o jumpto jumpto.o libcgi.a $(OBJS) *.[35].html
+--- 33,48 ----
+  all: libcgi.a cgitest jumpto
+  
+  install: cgitest
+! 	[ -d $(DESTDIR)/usr/lib/apache/cgi-bin ] || mkdir -p $(DESTDIR)/usr/lib/apache/cgi-bin
+! 	/usr/gnu/bin/install -m 755 cgitest $(DESTDIR)/usr/lib/apache/cgi-bin
+! 	[ -d $(DESTDIR)/usr/include ] || mkdir -p $(DESTDIR)/usr/include
+! 	/usr/gnu/bin/install -m 644 cgi.h $(DESTDIR)/usr/include
+! 	[ -d $(DESTDIR)/usr/lib ] || mkdir -p $(DESTDIR)/usr/lib
+! 	/usr/gnu/bin/install -m 644 libcgi.a $(DESTDIR)/usr/lib
+! 	[ -d $(DESTDIR)/usr/man/man3 ] || mkdir -p $(DESTDIR)/usr/man/man3
+! 	/usr/gnu/bin/install -m 644 *.3 $(DESTDIR)/usr/man/man3
+! 	[ -d $(DESTDIR)/usr/man/man5 ] || mkdir -p $(DESTDIR)/usr/man/man5
+! 	/usr/gnu/bin/install -m 644 *.5 $(DESTDIR)/usr/man/man5
+  
+  clean:
+  	rm -f cgitest cgitest.o jumpto jumpto.o libcgi.a $(OBJS) *.[35].html
+*** ./Build-OSR6.00	Sat Sep 10 19:13:13 2005
+--- ./Build-OSR6	Sat Sep 10 19:12:59 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.00	Sat Sep 10 19:13:22 2005
+--- ./Install-OSR6	Sat Sep 10 19:13:35 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/cgilib
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./cgitest.c.00	Sat Sep 10 19:15:59 2005
+--- ./cgitest.c	Sat Sep 10 19:15:34 2005
+***************
+*** 113,119 ****
+              cgiHeader();
+  	    printf ("<html>\n<head><title>cgilib</title></title>\n\n<body bgcolor=\"#ffffff\">\n");
+  	    printf ("<h1><a href=\"%s\">cgilib</a></h1>\n", URL);
+! 	    printf ("<h3>Cookie "Library" set</h3>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest\">Test</a><p>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest/redirect\">Redirect</a><p>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest/listall\">List Everything</a><p>\n");
+--- 113,119 ----
+              cgiHeader();
+  	    printf ("<html>\n<head><title>cgilib</title></title>\n\n<body bgcolor=\"#ffffff\">\n");
+  	    printf ("<h1><a href=\"%s\">cgilib</a></h1>\n", URL);
+! 	    printf ("<h3>Cookie \"Library\" set</h3>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest\">Test</a><p>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest/redirect\">Redirect</a><p>\n");
+  	    printf ("<p><br><p><br><a href=\"/cgi-bin/cgitest/listall\">List Everything</a><p>\n");

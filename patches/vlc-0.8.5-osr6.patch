@@ -1,0 +1,387 @@
+*** ./modules/misc/network/Makefile.in.osr6	Sat May  6 08:54:55 2006
+--- ./modules/misc/network/Makefile.in	Wed Oct 25 17:53:33 2006
+***************
+*** 404,410 ****
+  target_os = @target_os@
+  target_vendor = @target_vendor@
+  basedir = misc
+! mods = ipv4 ipv6
+  NULL = 
+  libvlc_LTLIBRARIES = 
+  noinst_LTLIBRARIES = 
+--- 404,410 ----
+  target_os = @target_os@
+  target_vendor = @target_vendor@
+  basedir = misc
+! mods = ipv4
+  NULL = 
+  libvlc_LTLIBRARIES = 
+  noinst_LTLIBRARIES = 
+*** ./modules/gui/skins2/x11/x11_timer.cpp.osr6	Sat May  6 08:52:17 2006
+--- ./modules/gui/skins2/x11/x11_timer.cpp	Wed Oct 25 17:27:14 2006
+***************
+*** 26,31 ****
+--- 26,35 ----
+  
+  #include <unistd.h>
+  #include <fcntl.h>
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #include <utmpx.h>
+  
+  #include "x11_timer.hpp"
+  #include "x11_factory.hpp"
+*** ./modules/gui/skins2/src/skin_main.cpp.osr6	Sat May  6 08:52:17 2006
+--- ./modules/gui/skins2/src/skin_main.cpp	Wed Oct 25 17:08:40 2006
+***************
+*** 23,28 ****
+--- 23,30 ----
+   *****************************************************************************/
+  
+  #include <stdlib.h>
++ #include <string.h>
++ #include <strings.h>
+  #include <vlc/input.h>
+  #include "dialogs.hpp"
+  #include "os_factory.hpp"
+*** ./modules/audio_output/oss.c.osr6	Sat May  6 08:52:16 2006
+--- ./modules/audio_output/oss.c	Wed Oct 25 16:28:27 2006
+***************
+*** 28,33 ****
+--- 28,34 ----
+   *****************************************************************************/
+  #include <errno.h>                                                 /* ENOMEM */
+  #include <fcntl.h>                                       /* open(), O_WRONLY */
++ #include <sys/file.h>                                    /* FNDELAY */
+  #include <sys/ioctl.h>                                            /* ioctl() */
+  #include <string.h>                                            /* strerror() */
+  #include <unistd.h>                                      /* write(), close() */
+*** ./include/network.h.osr6	Sat May  6 08:52:25 2006
+--- ./include/network.h	Wed Oct 25 16:10:43 2006
+***************
+*** 227,232 ****
+--- 227,235 ----
+  #  define AI_CANONNAME   2
+  #  define AI_NUMERICHOST 4
+  # endif /* if !HAVE_STRUCT_ADDRINFO */
++ #ifndef AI_NUMERICHOST
++ #  define AI_NUMERICHOST 0
++ #endif
+  
+  VLC_EXPORT( const char *, vlc_gai_strerror, ( int ) );
+  VLC_EXPORT( int, vlc_getnameinfo, ( const struct sockaddr *, int, char *, int, int *, int ) );
+*** ./include/vlc_common.h.osr6	Sat May  6 08:52:25 2006
+--- ./include/vlc_common.h	Wed Oct 25 16:10:43 2006
+***************
+*** 441,451 ****
+--- 441,455 ----
+   * Plug-in stuff
+   *****************************************************************************/
+  #if !defined (__PLUGIN__) || defined (HAVE_SHARED_LIBVLC)
++ # if defined (__IN_LIBC_C)
++ #   define VLC_EXPORT( type, name, args )
++ # else
+  #   ifdef __cplusplus
+  #      define VLC_EXPORT( type, name, args ) extern "C" type name args
+  #   else
+  #      define VLC_EXPORT( type, name, args ) type name args
+  #   endif
++ # endif
+  #else
+  #   define VLC_EXPORT( type, name, args ) struct _u_n_u_s_e_d_
+      extern module_symbols_t* p_symbols;
+*** ./src/network/httpd.c.osr6	Sat May  6 08:52:13 2006
+--- ./src/network/httpd.c	Wed Oct 25 16:10:43 2006
+***************
+*** 35,41 ****
+--- 35,46 ----
+  #include "vlc_acl.h"
+  
+  #include <string.h>
++ #include <strings.h>
+  #include <errno.h>
++ #ifdef _XOPEN_SOURCE
++ #undef _XOPEN_SOURCE
++ #endif
++ #include <utmpx.h>
+  
+  #ifdef HAVE_UNISTD_H
+  #   include <unistd.h>
+*** ./src/network/rootwrap.c.osr6	Sat May  6 08:52:13 2006
+--- ./src/network/rootwrap.c	Wed Oct 25 16:10:43 2006
+***************
+*** 52,57 ****
+--- 52,89 ----
+  #include <netinet/in.h>
+  #include <pthread.h>
+  
++ /*
++  *	Ancilliary data object information MACROS
++  *	Table 5-14 of POSIX 1003.1g
++  */
++ 
++ #ifndef __CMSG_NXTHDR
++ #define __CMSG_NXTHDR(ctl, len, cmsg) __cmsg_nxthdr((ctl),(len),(cmsg))
++ #endif
++ #ifndef CMSG_NXTHDR
++ #define CMSG_NXTHDR(mhdr, cmsg) cmsg_nxthdr((mhdr), (cmsg))
++ #endif
++ #ifndef CMSG_ALIGN
++ #define CMSG_ALIGN(len) ( ((len)+sizeof(long)-1) & ~(sizeof(long)-1) )
++ #endif
++ #ifndef CMSG_DATA
++ #define CMSG_DATA(cmsg)	((void *)((char *)(cmsg) + CMSG_ALIGN(sizeof(struct cmsghdr))))
++ #endif
++ #ifndef CMSG_SPACE
++ #define CMSG_SPACE(len) (CMSG_ALIGN(sizeof(struct cmsghdr)) + CMSG_ALIGN(len))
++ #endif
++ #ifndef CMSG_LEN
++ #define CMSG_LEN(len) (CMSG_ALIGN(sizeof(struct cmsghdr)) + (len))
++ #endif
++ #ifndef __CMSG_FIRSTHDR
++ #define __CMSG_FIRSTHDR(ctl,len) ((len) >= sizeof(struct cmsghdr) ? \
++ 				  (struct cmsghdr *)(ctl) : \
++ 				  (struct cmsghdr *)NULL)
++ #endif
++ #ifndef CMSG_FIRSTHDR
++ #define CMSG_FIRSTHDR(msg)	__CMSG_FIRSTHDR((msg)->msg_control, (msg)->msg_controllen)
++ #endif
++ 
+  /*#ifndef HAVE_CLEARENV
+  extern char **environ;
+  
+***************
+*** 195,203 ****
+--- 227,237 ----
+  
+              setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, &val, sizeof (val));
+  #ifdef AF_INET6
++ #ifndef SYS_SYSV5
+              if (ss.ss_family == AF_INET6)
+                  setsockopt (sock, IPPROTO_IPV6, IPV6_V6ONLY, &val, sizeof (val));
+  #endif
++ #endif
+              if (bind (sock, (struct sockaddr *)&ss, len) == 0)
+              {
+                  send_fd (fd, sock);
+*** ./src/extras/libc.c.osr6	Sat May  6 08:52:13 2006
+--- ./src/extras/libc.c	Wed Oct 25 16:10:43 2006
+***************
+*** 24,29 ****
+--- 24,32 ----
+   * along with this program; if not, write to the Free Software
+   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+   *****************************************************************************/
++ #ifndef __IN_LIBC_C
++ #define __IN_LIBC_C
++ #endif
+  #include <string.h>                                              /* strdup() */
+  #include <stdlib.h>
+  #include <ctype.h>
+*** ./Configure-OSR6.osr6	Wed Oct 25 16:10:43 2006
+--- ./Configure-OSR6	Wed Oct 25 16:10:43 2006
+***************
+*** 0 ****
+--- 1,40 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-u" ]
++ then
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++   ac_cv_c_pipe=no
++   export ac_cv_c_pipe
++ else
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ FFMPEG_CFLAGS=-I/usr/include/ffmpeg
++ FFMPEG_LIBS=-lavcodec
++ POSTPROC_CFLAGS=-I/usr/include/postproc
++ POSTPROC_LIBS=-lavcodec
++ export FFMPEG_CFLAGS FFMPEG_LIBS POSTPROC_CFLAGS POSTPROC_LIBS
++ 
++ #KDEDIR=/opt/kde
++ #QTDIR=/usr/lib/qt3
++ #export KDEDIR QTDIR
++ #KDE_ENABLE="--enable-qt --enable-kde"
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc $KDE_ENABLE \
++             --disable-mad \
++             --enable-shared \
++             --enable-oss \
++             --enable-x11 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ #cp vlc-config-osr6 vlc-config
++ #chmod 755 vlc-config
+*** ./configure.osr6	Sat May  6 08:54:17 2006
+--- ./configure	Wed Oct 25 16:10:44 2006
+***************
+*** 5624,5630 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 5624,5630 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5* | sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 5632,5638 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 5632,5638 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 8101,8107 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 8101,8107 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 8776,8804 ****
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+        no_undefined_flag='${wl}-z ${wl}text'
+        if test "$GCC" = yes; then
+  	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+  	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
+        runpath_var='LD_RUN_PATH'
+        hardcode_shlibpath_var=no
+        ;;
+  
+-     sysv5*)
+-       no_undefined_flag=' -z text'
+-       # $CC -shared without GNU ld will not create a library from C++
+-       # object files and a static libstdc++, better avoid it by now
+-       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-       hardcode_libdir_flag_spec=
+-       hardcode_shlibpath_var=no
+-       runpath_var='LD_RUN_PATH'
+-       ;;
+- 
+      uts4*)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec='-L$libdir'
+--- 8776,8793 ----
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5* | unixware7*)
+        no_undefined_flag='${wl}-z ${wl}text'
+        if test "$GCC" = yes; then
+  	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        else
+  	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+        fi
++       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        runpath_var='LD_RUN_PATH'
+        hardcode_shlibpath_var=no
+        ;;
+  
+      uts4*)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec='-L$libdir'
+***************
+*** 11957,11964 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+!     archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+      case $cc_basename in
+--- 11946,11958 ----
+  	;;
+      esac
+      ;;
+!   sysv5* | unixware7*)
+!       if test "$GCC" = yes; then
+! 	archive_cmds_CXX='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       else
+! 	archive_cmds_CXX='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       fi
+!       archive_expsym_cmds_CXX='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+      ;;
+    tandem*)
+      case $cc_basename in
+***************
+*** 14978,14984 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 14972,14978 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 17316,17322 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+--- 17310,17316 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2

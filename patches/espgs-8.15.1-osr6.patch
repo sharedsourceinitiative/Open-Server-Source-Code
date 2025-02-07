@@ -1,0 +1,607 @@
+*** ./ijs/aclocal.m4.00	Tue Jan 18 20:08:41 2005
+--- ./ijs/aclocal.m4	Tue Oct 25 10:17:10 2005
+***************
+*** 2222,2228 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 2222,2228 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 2230,2236 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib) M[[0-9]][[0-9]]* Version [[0-9]]'
+--- 2230,2236 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib) M[[0-9]][[0-9]]* Version [[0-9]]'
+***************
+*** 5127,5133 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	_LT_AC_TAGVAR(ld_shlibs, $1)=no
+  	cat <<EOF 1>&2
+--- 5127,5133 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	_LT_AC_TAGVAR(ld_shlibs, $1)=no
+  	cat <<EOF 1>&2
+***************
+*** 5717,5725 ****
+        _LT_AC_TAGVAR(no_undefined_flag, $1)=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       _LT_AC_TAGVAR(archive_cmds, $1)='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)=
+        _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
+        runpath_var='LD_RUN_PATH'
+--- 5717,5724 ----
+        _LT_AC_TAGVAR(no_undefined_flag, $1)=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       _LT_AC_TAGVAR(archive_cmds, $1)='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)=
+        _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
+        runpath_var='LD_RUN_PATH'
+*** ./ijs/unix.mak.00	Tue Jan 18 20:08:41 2005
+--- ./ijs/unix.mak	Mon Oct 24 18:47:17 2005
+***************
+*** 1,6 ****
+! # Linux
+! CC=gcc
+! CFLAGS=-g -Wall -ansi -pedantic -Wmissing-prototypes
+  LDLIBS=
+  OBJ=.o
+  EXE=
+--- 1,6 ----
+! # Unix
+! CC=cc
+! CFLAGS=
+  LDLIBS=
+  OBJ=.o
+  EXE=
+***************
+*** 14,17 ****
+  	$(RM) *~ gmon.out core ijs_spec.log ijs_spec.tex ijs_spec.aux
+  
+  ijs_spec.pdf:	ijs_spec.sgml
+! 	db2pdf ijs_spec.sgml
+\ No newline at end of file
+--- 14,17 ----
+  	$(RM) *~ gmon.out core ijs_spec.log ijs_spec.tex ijs_spec.aux
+  
+  ijs_spec.pdf:	ijs_spec.sgml
+! 	db2pdf ijs_spec.sgml
+*** ./ijs/configure.00	Tue Jan 18 20:08:41 2005
+--- ./ijs/configure	Mon Oct 24 21:20:57 2005
+***************
+*** 3590,3596 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 3590,3596 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 3598,3604 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 3598,3604 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 6751,6757 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 6751,6757 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 7441,7449 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7441,7448 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 13628,13634 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 13627,13633 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+*** ./src/configure.ac.00	Thu Sep 22 10:14:28 2005
+--- ./src/configure.ac	Mon Oct 24 21:23:45 2005
+***************
+*** 734,739 ****
+--- 734,747 ----
+  
+  AC_ARG_ENABLE(dynamic, [  --enable-dynamic        enable dynamically loaded drivers (default=no)],
+  [	case `uname` in
++ 		SCO_SV*)
++ 		DYNAMIC_CFLAGS="-KPIC"
++ 		DYNAMIC_DEVS="\$(GLOBJDIR)/X11.so"
++ 		DYNAMIC_FLAGS="-DGS_DEVS_SHARED -DGS_DEVS_SHARED_DIR=\\\"\$(gssharedir)\\\""
++ 		DYNAMIC_LDFLAGS="-KPIC -G"
++ 		DYNAMIC_LIBS=""
++ 		X_DEVS=""
++ 		;;
+  		Linux*)
+  		DYNAMIC_CFLAGS="-fPIC"
+  		DYNAMIC_DEVS="\$(GLOBJDIR)/X11.so"
+***************
+*** 760,766 ****
+  
+  AC_ARG_ENABLE(threads, [  --enable-threads        enable threaded output (default=no)],
+  [	case `uname` in
+! 		Linux* | IRIX* | SunOS*)
+  		THREADSYNC="posync"
+  		THREADLIBS="-lpthread"
+  		;;
+--- 768,774 ----
+  
+  AC_ARG_ENABLE(threads, [  --enable-threads        enable threaded output (default=no)],
+  [	case `uname` in
+! 		SCO_SV* | Linux* | IRIX* | SunOS*)
+  		THREADSYNC="posync"
+  		THREADLIBS="-lpthread"
+  		;;
+*** ./src/unixansi.mak.00	Tue Jan 18 20:08:41 2005
+--- ./src/unixansi.mak	Mon Oct 24 21:38:55 2005
+***************
+*** 213,219 ****
+  #	-DSVR4 -DSVR4_0 (not -DSYSV) for System V release 4.0.
+  #	-DSVR4 (not -DSYSV) for System V release 4.2 (or later) and Solaris 2.
+  # XCFLAGS can be set from the command line.
+! XCFLAGS=
+  
+  CFLAGS=$(CFLAGS_STANDARD) $(XCFLAGS)
+  
+--- 213,219 ----
+  #	-DSVR4 -DSVR4_0 (not -DSYSV) for System V release 4.0.
+  #	-DSVR4 (not -DSYSV) for System V release 4.2 (or later) and Solaris 2.
+  # XCFLAGS can be set from the command line.
+! XCFLAGS=-DGS_DEVS_SHARED -DGS_DEVS_SHARED_DIR=\"$(gssharedir)\"
+  
+  CFLAGS=$(CFLAGS_STANDARD) $(XCFLAGS)
+  
+***************
+*** 357,362 ****
+--- 357,365 ----
+  DEVICE_DEVS19=
+  DEVICE_DEVS20=
+  
++ # Shared library target to build.
++ GS_SHARED_OBJS=$(GLOBJDIR)/X11.so
++ 
+  # ---------------------------- End of options --------------------------- #
+  
+  # Define the name of the partial makefile that specifies options --
+***************
+*** 384,389 ****
+--- 387,393 ----
+  CC_LEAF=$(CC_)
+  CC_LEAF_PG=$(CC_)
+  CC_NO_WARN=$(CC_)
++ CC_SHARED=$(CC_) -KPIC -G
+  
+  # ---------------- End of platform-specific section ---------------- #
+  
+***************
+*** 403,408 ****
+--- 407,413 ----
+  include $(GLSRCDIR)/contrib.mak
+  include $(GLSRCDIR)/unix-aux.mak
+  include $(GLSRCDIR)/unixlink.mak
++ include $(GLSRCDIR)/unix-dll.mak
+  include $(GLSRCDIR)/unix-end.mak
+  include $(GLSRCDIR)/unixinst.mak
+  
+*** ./src/unix-dll.mak.00	Tue Jan 18 20:08:41 2005
+--- ./src/unix-dll.mak	Tue Oct 25 10:23:21 2005
+***************
+*** 70,80 ****
+  	$(GLCC) -g `gtk-config --cflags` -o $(GSSOX_XE) $(GLSRC)dxmain.c -L$(BINDIR) -l$(GS) `gtk-config --libs`
+  
+  $(GSSOC_XE): $(GS_SO) $(GLSRC)dxmainc.c
+! 	$(GLCC) -g -o $(GSSOC_XE) $(GLSRC)dxmainc.c -L$(BINDIR) -l$(GS)
+  
+  # ------------------------- Recursive make targets ------------------------- #
+  
+! SODEFS=LDFLAGS='$(LDFLAGS) $(CFLAGS_SO) -shared -Wl,-soname=$(GS_SONAME_MAJOR)'\
+   GS_XE=$(BINDIR)/$(SOBINRELDIR)/$(GS_SONAME_MAJOR_MINOR)\
+   STDIO_IMPLEMENTATION=c\
+   DISPLAY_DEV=$(DD)$(SOOBJRELDIR)/display.dev\
+--- 70,80 ----
+  	$(GLCC) -g `gtk-config --cflags` -o $(GSSOX_XE) $(GLSRC)dxmain.c -L$(BINDIR) -l$(GS) `gtk-config --libs`
+  
+  $(GSSOC_XE): $(GS_SO) $(GLSRC)dxmainc.c
+! 	$(GLCC) -o $(GSSOC_XE) $(GLSRC)dxmainc.c -L$(BINDIR) -l$(GS)
+  
+  # ------------------------- Recursive make targets ------------------------- #
+  
+! SODEFS=LDFLAGS='$(LDFLAGS) $(CFLAGS_SO) -G -Wl,-h,$(BINDIR)/$(SOBINRELDIR)/$(GS_SONAME_MAJOR)'\
+   GS_XE=$(BINDIR)/$(SOBINRELDIR)/$(GS_SONAME_MAJOR_MINOR)\
+   STDIO_IMPLEMENTATION=c\
+   DISPLAY_DEV=$(DD)$(SOOBJRELDIR)/display.dev\
+*** ./src/devs.mak.00	Thu Sep 22 10:10:54 2005
+--- ./src/devs.mak	Tue Oct 25 10:53:13 2005
+***************
+*** 419,429 ****
+  ### NON PORTABLE, ONLY UNIX WITH GCC SUPPORT
+  
+  $(GLOBJ)lvga256.so: $(lvga256_)
+! 	$(CCLD) -shared -Wl,'-solvga256.so' $(lvga256_) -lvga -lvgagl
+  	mv lvga256.so $(GLOBJ)lvga256.so
+  
+  $(GLOBJ)vgalib.so: $(vgalib_)
+! 	$(CCLD) -shared -Wl,'-sovgalib.so' $(vgalib_) -lvga -lvgagl
+  	mv vgalib.so $(GLOBJ)vgalib.so
+  
+  ### -------------------------- The X11 device -------------------------- ###
+--- 419,429 ----
+  ### NON PORTABLE, ONLY UNIX WITH GCC SUPPORT
+  
+  $(GLOBJ)lvga256.so: $(lvga256_)
+! 	$(CCLD) -shared -Wl,-so,lvga256.so $(lvga256_) -lvga -lvgagl
+  	mv lvga256.so $(GLOBJ)lvga256.so
+  
+  $(GLOBJ)vgalib.so: $(vgalib_)
+! 	$(CCLD) -shared -Wl,-so,vgalib.so $(vgalib_) -lvga -lvgagl
+  	mv vgalib.so $(GLOBJ)vgalib.so
+  
+  ### -------------------------- The X11 device -------------------------- ###
+***************
+*** 527,533 ****
+  ### NON PORTABLE, ONLY UNIX WITH GCC SUPPORT
+  
+  $(GLOBJ)X11.so: $(x11alt_) $(x11_)
+! 	$(CC_SHARED) -Wl,'-soX11.so' $(x11alt_) $(x11_) -L/usr/X11R6/lib -lXt -lSM -lICE -lXext -lX11 $(XLIBDIRS)
+  	mv X11.so $(GLOBJ)X11.so
+  
+  ###### --------------- Memory-buffered printer devices --------------- ######
+--- 527,533 ----
+  ### NON PORTABLE, ONLY UNIX WITH GCC SUPPORT
+  
+  $(GLOBJ)X11.so: $(x11alt_) $(x11_)
+! 	$(CC_SHARED) -Wl,-so,X11.so -Wl,-h,/usr/lib/ghostscript/8.15/X11.so $(x11alt_) $(x11_) -L/usr/X11R6/lib -lXt -lSM -lICE -lXext -lX11 $(XLIBDIRS)
+  	mv X11.so $(GLOBJ)X11.so
+  
+  ###### --------------- Memory-buffered printer devices --------------- ######
+*** ./addons/eplaser/gdevescv.c.00	Thu Mar 31 02:56:55 2005
+--- ./addons/eplaser/gdevescv.c	Mon Oct 24 21:23:58 2005
+***************
+*** 928,934 ****
+        }
+      }
+  
+!     lputs(s, "@EJL JI OS=\"Linux\"\012");
+  
+      {
+        int i;
+--- 928,934 ----
+        }
+      }
+  
+!     lputs(s, "@EJL JI OS=\"Unux\"\012");
+  
+      {
+        int i;
+*** ./configure.00	Thu Sep 22 10:30:56 2005
+--- ./configure	Mon Oct 24 21:24:49 2005
+***************
+*** 1,4 ****
+! #! /bin/sh
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.57.
+  #
+--- 1,4 ----
+! #! /bin/bash
+  # Guess values for system-dependent variables and create Makefiles.
+  # Generated by GNU Autoconf 2.57.
+  #
+***************
+*** 1929,1935 ****
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS="-g"
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+--- 1929,1935 ----
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS=""
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+***************
+*** 1978,1986 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 1978,1986 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 2545,2551 ****
+  
+  fi;
+  if test x$enable_debug = xyes; then
+!     optflags_to_try="-g"
+      CFLAGS="-DDEBUG $CFLAGS"
+  fi
+  
+--- 2545,2551 ----
+  
+  fi;
+  if test x$enable_debug = xyes; then
+!     optflags_to_try="-O2"
+      CFLAGS="-DDEBUG $CFLAGS"
+  fi
+  
+***************
+*** 7573,7579 ****
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-lXt $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 7573,7579 ----
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-lXt  -lXext -lX11 -lsocket $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 7777,7783 ****
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+      # the Alpha needs dnet_stub (dnet does not exist).
+!     ac_xsave_LIBS="$LIBS"; LIBS="$LIBS $X_LIBS -lX11"
+      cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 7777,7783 ----
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+      # the Alpha needs dnet_stub (dnet does not exist).
+!     ac_xsave_LIBS="$LIBS"; LIBS="$LIBS $X_LIBS -lX11 -lsocket"
+      cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 8661,8667 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lX11  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 8661,8667 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lX11 -lsocket $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 8714,8720 ****
+  #define HAVE_LIBX11 1
+  _ACEOF
+  
+!   LIBS="-lX11 $LIBS"
+  
+  fi
+  
+--- 8714,8720 ----
+  #define HAVE_LIBX11 1
+  _ACEOF
+  
+!   LIBS="-lX11 -lsocket $LIBS"
+  
+  fi
+  
+***************
+*** 8725,8731 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXext  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 8725,8731 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXext -lX11 -lsocket  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 8778,8784 ****
+  #define HAVE_LIBXEXT 1
+  _ACEOF
+  
+!   LIBS="-lXext $LIBS"
+  
+  fi
+  
+--- 8778,8784 ----
+  #define HAVE_LIBXEXT 1
+  _ACEOF
+  
+!   LIBS="-lXext -lX11 -lsocket $LIBS"
+  
+  fi
+  
+***************
+*** 8789,8795 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXt  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+--- 8789,8795 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXt  -lXext -lX11 -lsocket $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  /* confdefs.h.  */
+***************
+*** 8842,8848 ****
+  #define HAVE_LIBXT 1
+  _ACEOF
+  
+!   LIBS="-lXt $LIBS"
+  
+  fi
+  
+--- 8842,8848 ----
+  #define HAVE_LIBXT 1
+  _ACEOF
+  
+!   LIBS="-lXt -lXext -lX11 -lsocket $LIBS"
+  
+  fi
+  
+***************
+*** 9066,9071 ****
+--- 9066,9079 ----
+  if test "${enable_dynamic+set}" = set; then
+    enableval="$enable_dynamic"
+    	case `uname` in
++ 		SCO_SV*)
++ 		DYNAMIC_CFLAGS="-KPIC"
++ 		DYNAMIC_DEVS="\$(GLOBJDIR)/X11.so"
++ 		DYNAMIC_FLAGS="-DGS_DEVS_SHARED -DGS_DEVS_SHARED_DIR=\\\"\$(gssharedir)\\\""
++ 		DYNAMIC_LDFLAGS="-KPIC -G"
++ 		DYNAMIC_LIBS=""
++ 		X_DEVS=""
++ 		;;
+  		Linux*)
+  		DYNAMIC_CFLAGS="-fPIC"
+  		DYNAMIC_DEVS="\$(GLOBJDIR)/X11.so"
+***************
+*** 9096,9102 ****
+  if test "${enable_threads+set}" = set; then
+    enableval="$enable_threads"
+    	case `uname` in
+! 		Linux* | IRIX* | SunOS*)
+  		THREADSYNC="posync"
+  		THREADLIBS="-lpthread"
+  		;;
+--- 9104,9110 ----
+  if test "${enable_threads+set}" = set; then
+    enableval="$enable_threads"
+    	case `uname` in
+! 		SCO_SV* | Linux* | IRIX* | SunOS*)
+  		THREADSYNC="posync"
+  		THREADLIBS="-lpthread"
+  		;;

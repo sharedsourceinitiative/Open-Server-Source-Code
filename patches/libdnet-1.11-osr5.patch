@@ -1,0 +1,124 @@
+--- ./config/ltmain.sh.00	2009-04-05 20:48:17.000000000 -0700
++++ ./config/ltmain.sh	2009-04-05 20:52:21.000000000 -0700
+@@ -2824,7 +2824,7 @@
+       case $outputname in
+       lib*)
+ 	name=`$echo "X$outputname" | $Xsed -e 's/\.la$//' -e 's/^lib//'`
+-	eval shared_ext=\"$shrext_cmds\"
++	eval shared_ext=\".so\"
+ 	eval libname=\"$libname_spec\"
+ 	;;
+       *)
+@@ -2836,7 +2836,7 @@
+ 	if test "$need_lib_prefix" != no; then
+ 	  # Add the "lib" prefix for modules if required
+ 	  name=`$echo "X$outputname" | $Xsed -e 's/\.la$//'`
+-	  eval shared_ext=\"$shrext_cmds\"
++	  eval shared_ext=\".so\"
+ 	  eval libname=\"$libname_spec\"
+ 	else
+ 	  libname=`$echo "X$outputname" | $Xsed -e 's/\.la$//'`
+@@ -3598,7 +3598,7 @@
+ 	fi
+ 
+ 	# Get the real and link names of the library.
+-	eval shared_ext=\"$shrext_cmds\"
++	eval shared_ext=\".so\"
+ 	eval library_names=\"$library_names_spec\"
+ 	set dummy $library_names
+ 	realname="$2"
+--- ./src/arp-bsd.c.00	2005-01-22 23:36:54.000000000 -0800
++++ ./src/arp-bsd.c	2009-04-05 20:47:50.000000000 -0700
+@@ -21,7 +21,9 @@
+ 
+ #include <net/if.h>
+ #include <net/if_dl.h>
++#define route_t oroute_t
+ #include <net/route.h>
++#undef route_t
+ #include <netinet/in.h>
+ #include <netinet/if_ether.h>
+ 
+--- ./src/eth-bsd.c.00	2005-01-25 13:30:39.000000000 -0800
++++ ./src/eth-bsd.c	2009-04-05 20:47:50.000000000 -0700
+@@ -15,7 +15,9 @@
+ #include <sys/time.h>
+ #if defined(HAVE_SYS_SYSCTL_H) && defined(HAVE_ROUTE_RT_MSGHDR)
+ #include <sys/sysctl.h>
++#define route_t oroute_t
+ #include <net/route.h>
++#undef route_t
+ #include <net/if_dl.h>
+ #endif
+ #include <net/bpf.h>
+--- ./Configure-OSR5.00	2009-04-05 20:47:50.000000000 -0700
++++ ./Configure-OSR5	2009-04-05 20:47:50.000000000 -0700
+@@ -0,0 +1,20 @@
++#!/bin/sh
++#
++HOST=i386-sco-sco3.2v5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=/usr/gnu/bin/nm
++M4=/usr/gnu/bin/m4
++CC="/usr/gnu/bin/gcc"
++CXX="/usr/gnu/bin/g++"
++PATH=/usr/gnu/bin:$PATH
++export CC CXX CFLAGS NM M4 INSTALL PATH
++
++ac_cv_header_sys_dlpi_h=no
++ac_cv_dnet_streams_route=yes
++export ac_cv_header_sys_dlpi_h ac_cv_dnet_streams_route
++
++rm -f mout-configure
++./configure --prefix=/usr --sysconfdir=/etc \
++            --mandir=/usr/man --infodir=/usr/gnu/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./configure.00	2006-01-19 08:40:16.000000000 -0800
++++ ./configure	2009-04-05 20:47:50.000000000 -0700
+@@ -8011,6 +8011,8 @@
+   ;;
+ 
+ sco3.2v5*)
++  shrext=".so"
++  shared_ext=".so"
+   version_type=osf
+   soname_spec='${libname}${release}${shared_ext}$major'
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+@@ -11688,6 +11690,8 @@
+   ;;
+ 
+ sco3.2v5*)
++  shrext=".so"
++  shared_ext=".so"
+   version_type=osf
+   soname_spec='${libname}${release}${shared_ext}$major'
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+@@ -14790,6 +14794,8 @@
+   ;;
+ 
+ sco3.2v5*)
++  shrext=".so"
++  shared_ext=".so"
+   version_type=osf
+   soname_spec='${libname}${release}${shared_ext}$major'
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+@@ -17088,6 +17094,8 @@
+   ;;
+ 
+ sco3.2v5*)
++  shrext=".so"
++  shared_ext=".so"
+   version_type=osf
+   soname_spec='${libname}${release}${shared_ext}$major'
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+--- ./dnet-config.in.00	2001-10-18 18:29:00.000000000 -0700
++++ ./dnet-config.in	2009-04-05 20:47:50.000000000 -0700
+@@ -49,6 +49,6 @@
+ fi
+ 
+ if test "$echo_libs" = "yes"; then
+-      echo -L@libdir@ -ldnet @LIBS@
++      echo -ldnet @LIBS@
+ fi      
+ 

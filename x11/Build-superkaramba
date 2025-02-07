@@ -1,0 +1,12 @@
+#!/bin/sh
+
+INSTALL=/usr/local/bin/install
+MAKE=/usr/local/bin/make
+export MAKE INSTALL
+
+cd superkaramba-0.35
+rm -f mout-configure
+./configure --build=i386-pc-sysv5 --with-qt-dir=/opt/kde 2>&1 | tee mout-configure
+
+rm -f mout
+$MAKE 2>&1 | tee mout

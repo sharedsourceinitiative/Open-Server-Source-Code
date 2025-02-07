@@ -1,0 +1,11 @@
+--- ./configure.00	2003-05-20 12:56:58.000000000 +0000
++++ ./configure	2003-09-09 01:53:16.960000722 +0000
+@@ -2428,7 +2428,7 @@
+      # before they were in the ANSI C 99 spec...  (gcc 2.96 permits //
+      # with -std=gnu89 but not with -std=c89.)
+      #
+-     CC="$CC -std=c89 -U__STRICT_ANSI__"
++     CC="$CC -U__STRICT_ANSI__"
+    else
+      # The old way:
+      CC="$CC -Wp,-lang-c89"

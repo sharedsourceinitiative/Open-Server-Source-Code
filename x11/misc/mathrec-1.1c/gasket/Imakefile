@@ -1,0 +1,30 @@
+
+CC = cc 
+#BINDIR = /usr/local/bin
+#MANDIR = /usr/local/man/man1
+MANSUFFIX = 1
+##
+## Compiler Defines
+## 
+DEFINES = -DSYSV -DSOCKETCONN -DTCPCONN -DTLICONN -DLAI_TCP \
+	   -DSTREAMWRITEMAX=4096 -DXSIGHT -DMOTIF
+
+##
+## Libraries
+## X11 	X11 graphics library
+##
+##
+LOCAL_LIBRARIES =	$(XLIB) -lm
+
+DESTLIB = $(DESTDIR)/usr/local/mathrec/gasket
+
+SRCS = gasket.c
+OBJS = gasket.o
+
+ComplexProgramTarget(gasket)
+
+install:: install.man
+	@if [ ! -d $(DESTLIB) ]; then mkdir -p $(DESTLIB); fi
+	@cd ./params; set -x; for file in *.dat; do \
+		$(INSTALL) -c $(INSTBINFLAGS) $$file $(DESTLIB); \
+	done

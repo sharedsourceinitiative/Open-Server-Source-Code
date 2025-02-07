@@ -1,0 +1,31 @@
+--- ./mclasserase.c.osr6	2004-02-28 10:42:27.000000000 -0800
++++ ./mclasserase.c	2005-06-04 22:25:49.982875005 -0700
+@@ -86,7 +86,7 @@
+   int iTotalErase = 0;
+ 
+   const int cycles = 3;		/* How many times we'll overwrite the media */
+-  char odat[cycles];		/* Data for each overwrite procedure */
++  char odat[3];		/* Data for each overwrite procedure */
+ 
+   /* Creating values for overwrite  */
+   odat[0]=0xff;
+--- ./Makefile.in.osr6	2004-02-28 11:06:35.000000000 -0800
++++ ./Makefile.in	2005-06-04 23:49:59.187853003 -0700
+@@ -126,7 +126,7 @@
+ X_LIBS = @X_LIBS@
+ X_EXTRA_LIBS = @X_EXTRA_LIBS@
+ X_PRE_LIBS = @X_PRE_LIBS@
+-CFLAGS = $(CPPFLAGS) $(DEFS) $(MYCFLAGS) -fno-strict-aliasing -I. @extraincludedir@ -I@srcdir@ $(USERCFLAGS) 
++CFLAGS = $(CPPFLAGS) $(DEFS) $(MYCFLAGS) -I. @extraincludedir@ -I@srcdir@ $(USERCFLAGS) 
+ CXXFLAGS  = $(CPPFLAGS) $(DEFS) $(MYCXXFLAGS) -I. @extraincludedir@ -I@srcdir@ $(USERCFLAGS) 
+ LINK      = $(CC) $(LDFLAGS) $(USERLDFLAGS) @extralibdir@
+ ALLLIBS   = $(USERLDLIBS) $(MACHDEPLIBS) $(SHLIB) $(LIBS)
+@@ -151,7 +151,7 @@
+ 	$(CC) $(X_CCFLAGS) -c $?
+ 
+ floppyd: floppyd.o
+-	$(LINK) $? -o $@ $(X_LDFLAGS)
++	$(LINK) $? -o $@ $(X_LDFLAGS) /usr/lib/libsmbclient.a
+ floppyd_installtest: $(OBJS4)
+ 	$(LINK) $(OBJS4) -o $@ $(ALLLIBS)
+ 

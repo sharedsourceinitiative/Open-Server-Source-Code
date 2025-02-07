@@ -1,0 +1,17 @@
+#!/bin/sh
+
+[ -f config.h ] && {
+   [ -f config.h-uw7 ] && mv config.h-uw7 config.h-uw7-$$
+   cp config.h config.h-uw7
+}
+
+[ -f Makefile ] && {
+   make clean
+   make distclean
+}
+
+[ -f mout ] && rm -f mout*
+[ -f mout-config ] && rm -f mout*
+
+./configure --with-shadow --enable-shared --enable-static i486-pc-sysv5 2>&1 | \
+  tee mout-config

@@ -1,0 +1,12 @@
+
+ *	- created 30 Nov 1990 by Ron Record (rr@sco.com)
+ *	  based upon an algorithm published in the Sep 86 Scientific American
+ *  - added arguments to select between sqrt(), sin(), log(), and linear
+ *    functions (original was sqrt()).
+ *
+ *  - Rewritten using X11 19 Apr 1993 by Ron Record (rr@sco.com)
+
+Hop uses a system of parametric equations to iterate a point in the plane.
+The color of the point is incremented every "period" points displayed or,
+if you have selected the histogram option, the color is computed from the
+number of times that pixel has been "hit".

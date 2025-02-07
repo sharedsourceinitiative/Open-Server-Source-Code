@@ -1,0 +1,166 @@
+*** ./Configure-OSR6.osr6	Tue Feb 14 11:30:25 2006
+--- ./Configure-OSR6	Tue Feb 14 11:30:25 2006
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --enable-bindir=/usr/bin \
++             --enable-mandir=/usr/man/man1 \
++             --enable-sysconfdir=/etc/sarg \
++             --enable-htmldir=/usr/lib/apache/htdocs \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./exclude.c.osr6	Tue Nov 29 08:39:45 2005
+--- ./exclude.c	Tue Feb 14 11:30:25 2006
+***************
+*** 31,45 ****
+     char whost[1024];
+     char wip1[1024], wip2[1024];
+     char sn1[4], sn2[4], sn3[4];
+!    char str[strlen(excludefile)];
+  
+     whost[0]='\0';
+     strcpy(str,excludefile);
+     getword(whost,str,' ');
+     
+     while(strcmp(whost,"*FIM*") != 0) {
+!       if(strcmp(ip,whost) ==0)
+           return(0);
+  
+        strcpy(wip1,ip);
+        getword(sn1,wip1,'.');
+--- 31,52 ----
+     char whost[1024];
+     char wip1[1024], wip2[1024];
+     char sn1[4], sn2[4], sn3[4];
+!    char *str;
+  
+     whost[0]='\0';
++    if((str=(char *)malloc(strlen(excludefile)+1))==NULL) {
++        fprintf(stderr, "SARG: %s (%d):\n",text[59], strlen(excludefile));
++        exit(1);
++    }
+     strcpy(str,excludefile);
+     getword(whost,str,' ');
+     
+     while(strcmp(whost,"*FIM*") != 0) {
+!       if(strcmp(ip,whost) ==0) {
+!          if(str)
+!              free(str);
+           return(0);
++       }
+  
+        strcpy(wip1,ip);
+        getword(sn1,wip1,'.');
+***************
+*** 49,63 ****
+        sprintf(wip1,"%s.%s.%s.0",sn1,sn2,sn3);
+        sprintf(wip2,"%s.%s.0.0",sn1,sn2);
+  
+!       if(strstr(whost,wip1) !=0)
+           return(0);
+! 
+!       if(strstr(whost,wip2) !=0)
+           return(0);
+  
+        getword(whost,str,' ');
+     }
+  
+     return(1);
+  }
+  
+--- 56,77 ----
+        sprintf(wip1,"%s.%s.%s.0",sn1,sn2,sn3);
+        sprintf(wip2,"%s.%s.0.0",sn1,sn2);
+  
+!       if(strstr(whost,wip1) !=0) {
+!          if(str)
+!              free(str);
+           return(0);
+!       }
+!       if(strstr(whost,wip2) !=0) {
+!          if(str)
+!              free(str);
+           return(0);
++       }
+  
+        getword(whost,str,' ');
+     }
+  
++    if(str)
++        free(str);
+     return(1);
+  }
+  
+*** ./datafile.c.osr6	Tue Nov 29 08:39:45 2005
+--- ./datafile.c	Tue Feb 14 11:30:25 2006
+***************
+*** 26,33 ****
+--- 26,36 ----
+  #include "include/conf.h"
+  
+  void saverecs(char *dirname, char *user, long long int nacc, char *url, long long int nbytes, char *ip, char *hora, char *dia, long long int nelap, long long int incache, long long int oucache);
++ 
+  void grava_SmartFilter(char *dirname, char *user, char *ip, char *data, char *hora, char *url, char *smart);
+  
++ void saverecs2(char *dirname, char *user, long long int nacc, char *url, long long int nbytes, char *ip, char *hora, char *dia, long long int nelap, long long int incache, long long int oucache);
++ 
+  void data_file(char *tmp)
+  {
+  
+*** ./realtime.c.osr6	Tue Nov 29 08:39:45 2005
+--- ./realtime.c	Tue Feb 14 11:30:25 2006
+***************
+*** 27,32 ****
+--- 27,34 ----
+  
+  void getdata(char *, FILE *);
+  void datashow(char *);
++ void getlog();
++ void header();
+  
+  char dat[128];
+  char tim[128];
+*** ./Install-OSR6.osr6	Tue Feb 14 11:31:13 2006
+--- ./Install-OSR6	Tue Feb 14 11:35:04 2006
+***************
+*** 0 ****
+--- 1,23 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ DEST=/u/tmp/sarg
++ BINDIR=$DEST/usr/bin
++ MANDIR=$DEST/usr/man/man1
++ SYSCONFDIR=$DEST/etc/sarg
++ HTMLDIR=$DEST/usr/lib/apache/htdocs
++ 
++ [ -d $DEST ] && rm -rf $DEST
++ mkdir -p $BINDIR
++ mkdir -p $MANDIR
++ mkdir -p $SYSCONFDIR
++ mkdir -p $HTMLDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT.prev
++ make install \
++      prefix=$DEST/usr \
++      BINDIR=$BINDIR \
++      MANDIR=$MANDIR \
++      SYSCONFDIR=$SYSCONFDIR \
++      HTMLDIR=$HTMLDIR \
++      2>&1 | tee $MOUT

@@ -1,0 +1,89 @@
+--- ./rpcgen/rpc_main.c.00	2008-12-17 09:48:52.000000000 -0800
++++ ./rpcgen/rpc_main.c	2008-12-17 09:50:15.000000000 -0800
+@@ -53,6 +53,10 @@
+ 
+ #include "../version.h"
+ 
++#ifndef MAXPATHLEN
++#define MAXPATHLEN 1024
++#endif
++
+ #define EXTEND	1		/* alias for TRUE */
+ #define DONT_EXTEND	0		/* alias for FALSE */
+ 
+--- ./rpcinfo/rpcinfo.c.00	2008-12-17 10:03:16.000000000 -0800
++++ ./rpcinfo/rpcinfo.c	2008-12-17 12:05:19.000000000 -0800
+@@ -47,6 +47,7 @@
+ #include <netdb.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
++#include <netinet/in_systm.h>
+ #include <arpa/inet.h>
+ #include <netinet/ip.h>
+ #include <rpc/rpc.h>
+@@ -56,6 +57,10 @@
+ #include <ctype.h>
+ #include <getopt.h>
+ #include <unistd.h>
++#if defined(_SCO_DS)
++#include <stdlib.h>
++typedef bool_t          (*resultproc_t)();
++#endif
+ #include <string.h>
+ 
+ #include "../version.h"
+--- ./Configure-OSR5.00	2008-12-17 09:46:46.000000000 -0800
++++ ./Configure-OSR5	2008-12-17 09:47:07.000000000 -0800
+@@ -0,0 +1,14 @@
++#!/bin/sh
++#
++HOST=i386-sco-sco3.2v5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=/usr/gnu/bin/nm
++M4=/usr/gnu/bin/m4
++CC="/usr/gnu/bin/gcc"
++CXX="/usr/gnu/bin/g++"
++PATH=/usr/gnu/bin:$PATH
++export CC CXX CFLAGS NM M4 INSTALL PATH
++rm -f mout-configure
++./configure --prefix=/usr/local --with-c-compiler=gcc \
++            --installroot=/u/tmp/netkitrpc 2>&1 | tee mout-configure
+--- ./configure.00	2008-12-17 09:47:36.000000000 -0800
++++ ./configure	2008-12-17 09:48:13.000000000 -0800
+@@ -139,7 +139,7 @@
+ fi
+ 
+ LDFLAGS=
+-LIBS=
++LIBS="-lsocket -lnsl"
+ 
+ rm -f __conftest*
+ 
+@@ -176,9 +176,9 @@
+         CFLAGS="$CFLAGS -D__USE_BSD_SIGNAL"
+     else
+         echo 'no'
+-        echo 'This package needs BSD signal semantics to run.'
+-        rm -f __conftest*
+-        exit
++#       echo 'This package needs BSD signal semantics to run.'
++#       rm -f __conftest*
++#       exit
+     fi
+ fi
+ rm -f __conftest*
+--- ./Install-OSR5.00	2008-12-17 12:07:08.000000000 -0800
++++ ./Install-OSR5	2008-12-17 12:07:05.000000000 -0800
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++D=/u/tmp/netkitrpc
++MOUT=mout-install
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D/usr/local/bin
++mkdir -p $D/usr/local/man/man1
++mkdir -p $D/usr/local/man/man8
++make install 2>&1 | tee $MOUT

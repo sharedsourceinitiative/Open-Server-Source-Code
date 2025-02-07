@@ -1,0 +1,8 @@
+--- Configure-OSR5.00	2008-12-13 23:28:28.000000000 -0800
++++ Configure-OSR5	2008-12-13 23:30:20.000000000 -0800
+@@ -0,0 +1,5 @@
++#!/bin/sh
++
++MOUT=mout-configure
++rm -f $MOUT
++./configure --enable-pthread --prefix=/usr --mandir=/usr/man 2>&1 | tee $MOUT

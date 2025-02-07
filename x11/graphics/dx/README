@@ -1,0 +1,6 @@
+
+27-Sep-2000 rr@sco.com
+
+This is my first pass at porting the Open Visualization Data Explorer
+to UnixWare 7. These modifications produce a binary distribution for
+UnixWare 7 which will run but which still needs debugging.

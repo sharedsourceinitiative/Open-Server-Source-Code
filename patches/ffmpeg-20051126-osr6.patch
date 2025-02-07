@@ -1,0 +1,108 @@
+*** ./libavcodec/Makefile.osr6	Mon Nov 21 12:03:35 2005
+--- ./libavcodec/Makefile	Tue Oct 24 17:35:27 2006
+***************
+*** 501,506 ****
+--- 501,509 ----
+  
+  installlib: all install-headers
+  	install -m 644 $(LIB) "$(libdir)"
++ ifeq ($(CONFIG_PP),yes)
++ 	$(MAKE) -C libpostproc install
++ endif
+  
+  install-headers:
+  	mkdir -p "$(prefix)/include/ffmpeg"
+*** ./libavformat/Makefile.osr6	Sun Nov  6 17:32:29 2005
+--- ./libavformat/Makefile	Tue Oct 24 17:23:32 2006
+***************
+*** 56,62 ****
+  OBJS+= audio.o 
+  endif
+  
+! EXTRALIBS += -L../libavutil -lavutil$(BUILDSUF)
+  
+  ifeq ($(CONFIG_AUDIO_BEOS),yes)
+  PPOBJS+= beosaudio.o
+--- 56,62 ----
+  OBJS+= audio.o 
+  endif
+  
+! EXTRALIBS += -L../libavutil -lavutil$(BUILDSUF) -lsocket -lnsl
+  
+  ifeq ($(CONFIG_AUDIO_BEOS),yes)
+  PPOBJS+= beosaudio.o
+*** ./Configure-OSR6.osr6	Tue Oct 24 17:23:32 2006
+--- ./Configure-OSR6	Tue Oct 24 17:23:32 2006
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --disable-v4l --disable-bktr --disable-dv1394 \
++             --enable-gpl --enable-pp 2>&1 | tee mout-configure
+*** ./Makefile.osr6	Tue Oct 18 13:11:41 2005
+--- ./Makefile	Tue Oct 24 17:23:32 2006
+***************
+*** 34,39 ****
+--- 34,41 ----
+  EXTRALIBS+=-lmedia -lbe
+  endif
+  
++ EXTRALIBS+=-lsocket -lnsl
++ 
+  ifeq ($(BUILD_SHARED),yes)
+  DEP_LIBS=libavcodec/$(SLIBPREF)avcodec$(SLIBSUF) libavformat/$(SLIBPREF)avformat$(SLIBSUF)
+  else
+***************
+*** 149,155 ****
+  
+  .libs: lib
+  	@test -f .libs || touch .libs
+! 	@for i in $(DEP_LIBS) ; do if $(TEST) $$i -nt .libs ; then touch .libs; fi ; done
+  
+  clean: $(CLEANVHOOK)
+  	$(MAKE) -C libavutil clean
+--- 151,157 ----
+  
+  .libs: lib
+  	@test -f .libs || touch .libs
+! 	@touch .libs
+  
+  clean: $(CLEANVHOOK)
+  	$(MAKE) -C libavutil clean
+*** ./Install-OSR6.osr6	Tue Oct 24 17:23:32 2006
+--- ./Install-OSR6	Tue Oct 24 17:23:32 2006
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ MOUTLIB=mout-installlib
++ D=/u/tmp/ffmpeg
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -f $MOUTLIB ] && mv $MOUTLIB $MOUTLIB-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ make installlib DESTDIR=$D 2>&1 | tee $MOUTLIB
++ 

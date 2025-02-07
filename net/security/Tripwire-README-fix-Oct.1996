@@ -1,0 +1,160 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+
+Greetings.
+
+Most of the recent mail about Tripwire problems has resolved around
+3 kinds of problems:
+
+1) Tripwire 1.2 doesn't compile on your OS, and there is no config file
+   in the distribution for your OS.  Unfortunately, we have not had
+   the resources to update Tripwire in the last few years.  Our best
+   advice is to find a config file for a system that is "close" to
+   yours, and modify it as needed.  That, or donate a complete,
+   working version of your system (including hardware) to the COAST
+   Lab for us to use in developing a port for you!
+   
+   If the system you are having problems with is some variant of Linux,
+   then we can be a little more helpful.  We will be releasing a patch
+   set in early summer 1997 that should fix most Linux installation
+   problems.
+
+2) The twdb_check.pl program now gives error messages when run.  
+   This is usually because you are running Perl 5 on your system, and
+   twdb_check was written for Perl 4.   The patch included below will
+   update the file to Perl 5.
+
+3) You can successfully build Tripwire, but the self-tests fail sometimes.
+   This is caused by an interesting timing phenomenon: when we
+   originally released Tripwire 1.2, the sequences to touch a file and
+   then reread it always took more than the resolution of the file
+   modification clock.  Now, almost 3 years later, systems and disks
+   are faster, and the clock times may not change as a result of a
+   modification that happens quickly and sufficiently "close to" the
+   check.
+
+   The solution is to introduce an artificial delay.  The enclosed set
+   of patches changes the test scripts to include a forced "sleep".
+   The tests take longer to complete, but they are less likely to
+   falsly report a failure!  (And remember that any file that you
+   change to customize your version of Tripwire, including the 4 files
+   affected by this patch, will show as changed when you run the
+   self-test.)
+
+To apply this patch, remove the PGP signature, then pipe this through
+the "patch" program with the options "-cp".  Alternatively, you can
+apply these by hand.
+
+- --spaf, 10/96, 4/97
+
+
+
+*** tests/test.update.sh.old	Wed Oct  2 17:55:55 1996
+- --- tests/test.update.sh	Wed Oct  2 17:56:52 1996
+***************
+*** 43,49 ****
+  
+  # build run()
+  cat << 'EOF' > $MYRUN
+!     #sleep 1		# agh!  Bug in SunOS tmpfs!!!
+      echo running Tripwire
+      echo $*
+      $*
+- --- 43,49 ----
+  
+  # build run()
+  cat << 'EOF' > $MYRUN
+!     sleep 2
+      echo running Tripwire
+      echo $*
+      $*
+*** tests/test.inter.sh.old	Wed Oct  2 17:55:55 1996
+- --- tests/test.inter.sh	Wed Oct  2 17:59:45 1996
+***************
+*** 44,50 ****
+  
+  # build run()
+  cat << 'EOF' > $MYRUN
+!     #sleep 1		# agh!  Bug in SunOS tmpfs!!!
+      echo running Tripwire
+      echo $*
+      $*
+- --- 44,50 ----
+  
+  # build run()
+  cat << 'EOF' > $MYRUN
+!     sleep 2
+      echo running Tripwire
+      echo $*
+      $*
+*** tests/test.escape.sh.old	Wed Oct  2 17:55:54 1996
+- --- tests/test.escape.sh	Wed Oct  2 17:56:16 1996
+***************
+*** 43,48 ****
+- --- 43,49 ----
+  
+  # build run()
+  cat << 'EOF' > $MYRUN
++     sleep 2
+      echo running Tripwire
+      echo $*
+      $*
+*** src/twdb_check.pl.old	Tue Oct  1 12:12:34 1996
+- --- src/twdb_check.pl	Tue Oct  1 12:15:13 1996
+***************
+*** 74,86 ****
+  
+  open(DBASE, $ARGV[0]);
+  while (<DBASE>) {
+!     m/^@@dbaseversion\s+(\d+)/ && do {
+  	next if $1 == 4;
+  	unlink($Temp, $Back);
+  	die "$Database is version $1, and I only know how to update version 4!";
+      };
+!     next if (/^(#|@@)/);
+!     next if (/^@@/);
+  
+      @line = split(' ', $_, 6);
+  
+- --- 74,86 ----
+  
+  open(DBASE, $ARGV[0]);
+  while (<DBASE>) {
+!     m/^\@\@dbaseversion\s+(\d+)/ && do {
+  	next if $1 == 4;
+  	unlink($Temp, $Back);
+  	die "$Database is version $1, and I only know how to update version 4!";
+      };
+!     next if (/^(#|\@\@)/);
+!     next if (/^\@\@/);
+  
+      @line = split(' ', $_, 6);
+  
+***************
+*** 106,112 ****
+  
+      if ($realentrynum != $line[1]) {
+          #print "^^^^ Wow, it was wrong!!\n";
+!         $_ = join(' ', (@line[0], $realentrynum, @line[2..5]));
+      }
+      else {
+          $_ = join(' ', (@line[0..5]));
+- --- 106,112 ----
+  
+      if ($realentrynum != $line[1]) {
+          #print "^^^^ Wow, it was wrong!!\n";
+!         $_ = join(' ', ($line[0], $realentrynum, @line[2..5]));
+      }
+      else {
+          $_ = join(' ', (@line[0..5]));
+
+
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6.2
+Comment: Key @ ftp://ftp.cs.purdue.edu/pub/spaf/pers/pgpkey.asc
+
+iQCVAwUBM0fmtspvK4P8DALVAQFMvgP+OL/q20fyhG1zMMhuXcn0GMDNWurIMNPJ
+74IFWi75xNWRu7/zzHKctLP596shoVxzIjjRcbmpW0Z+uxWUUUb3qtlTjFtp0L0c
+7KhMtzZERXUoAywz0wfiR6YZ/tkHv5TcDmnW4RQyOJLIFjnQeBB/XDG4Fr+SN7+Z
+oMTOnl5T0SA=
+=Oc/p
+-----END PGP SIGNATURE-----

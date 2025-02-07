@@ -1,0 +1,58 @@
+*** ./htmldoc/http.h.osr6	Sat Apr 22 14:04:24 2006
+--- ./htmldoc/http.h	Thu Nov  8 10:12:33 2007
+***************
+*** 100,105 ****
+--- 100,107 ----
+  #if defined(AF_INET6) && !defined(s6_addr32)
+  #  if defined(__sun)
+  #    define s6_addr32	_S6_un._S6_u32
++ #  elif defined(__USLC__)
++ #    define s6_addr32	S6_un.S6_l
+  #  elif defined(__FreeBSD__) || defined(__APPLE__)
+  #    define s6_addr32	__u6_addr.__u6_addr32
+  #  elif defined(__osf__)
+*** ./Install-OSR6.osr6	Thu Nov  8 10:12:33 2007
+--- ./Install-OSR6	Thu Nov  8 10:13:58 2007
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/htmldoc
++ prefix=$D/usr/local
++ exec_prefix=$D/usr/local
++ export prefix exec_prefix
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install prefix=$D/usr/local exec_prefix=$D/usr/local \
++              sysconfdir=$D/etc 2>&1 | tee $MOUT
++ 
+*** ./Configure-OSR6.osr6	Thu Nov  8 10:12:33 2007
+--- ./Configure-OSR6	Thu Nov  8 10:13:25 2007
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --exec_prefix='${prefix}' \
++             --sysconfdir=/usr/local/etc \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

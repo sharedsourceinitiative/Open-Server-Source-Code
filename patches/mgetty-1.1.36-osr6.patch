@@ -1,0 +1,2462 @@
+*** ./contrib/faxmail-smail.osr6	Sun Jul 25 02:37:31 1993
+--- ./contrib/faxmail-smail	Fri Nov 23 13:44:12 2007
+***************
+*** 30,36 ****
+  
+  fax: max_addrs=5, max_chars=200, +from, return_path, unix_from_hack,
+       driver=pipe;
+!      cmd="/bin/sh -c /usr/bin/faxq $((${strip:addr})$)",
+  		 parent_env
+  
+  Dann muss allerdings auch "uux" mit eingetragem sein, wenn noch nicht
+--- 30,36 ----
+  
+  fax: max_addrs=5, max_chars=200, +from, return_path, unix_from_hack,
+       driver=pipe;
+!      cmd="/bin/sh -c /usr/bin/mgetty-faxq $((${strip:addr})$)",
+  		 parent_env
+  
+  Dann muss allerdings auch "uux" mit eingetragem sein, wenn noch nicht
+***************
+*** 38,49 ****
+  
+  Das Gute an "smail" ist, daﬂ es so viele Environment-
+  Variablen setzt (SENDER, BASENAME, ADDR ...) !
+! "faxq" konvertiert die Mails, die an <nummer>@fax gehen, per "psf" und
+  "ghostscript" nach G3. Das File wird dann in SPOOLDIR abgelegt.
+  Ein Fax-Daemon holt die Dateien dort ab und
+  verschickt sie per "mgetty/sendfax".
+  
+! Jetzt fehlt eigentlich nur noch "/usr/bin/faxq":
+  #
+  if [ "$SENDER" = "" ] ; then SENDER="$LOGNAME" ; fi
+  if [ "$BASENAME" = "" ] ; then BASENAME="f.$SENDER.$$"; fi
+--- 38,49 ----
+  
+  Das Gute an "smail" ist, daﬂ es so viele Environment-
+  Variablen setzt (SENDER, BASENAME, ADDR ...) !
+! "mgetty-faxq" konvertiert die Mails, die an <nummer>@fax gehen, per "psf" und
+  "ghostscript" nach G3. Das File wird dann in SPOOLDIR abgelegt.
+  Ein Fax-Daemon holt die Dateien dort ab und
+  verschickt sie per "mgetty/sendfax".
+  
+! Jetzt fehlt eigentlich nur noch "/usr/bin/mgetty-faxq":
+  #
+  if [ "$SENDER" = "" ] ; then SENDER="$LOGNAME" ; fi
+  if [ "$BASENAME" = "" ] ; then BASENAME="f.$SENDER.$$"; fi
+*** ./contrib/lp-fax.osr6	Thu Mar  3 03:18:44 1994
+--- ./contrib/lp-fax	Fri Nov 23 13:44:16 2007
+***************
+*** 75,81 ****
+  	exit 1
+  fi
+  
+! # for the sake of faxq
+  umask 022
+  
+  # send the file(s) to the standard out $copies times
+--- 75,81 ----
+  	exit 1
+  fi
+  
+! # for the sake of mgetty-faxq
+  umask 022
+  
+  # send the file(s) to the standard out $copies times
+*** ./doc/Makefile.osr6	Wed Feb 22 09:35:02 2006
+--- ./doc/Makefile	Fri Nov 23 13:44:28 2007
+***************
+*** 7,13 ****
+  #
+  #
+  MAN1PAGES=g32pbm.1 g3cat.1 pbm2g3.1 sff2g3.1 fax.1 \
+! 	  faxspool.1 faxrunq.1 faxq.1 faxrm.1 coverpg.1
+  MAN4PAGES=mgettydefs.4
+  MAN5PAGES=faxqueue.5
+  MAN8PAGES=sendfax.8 mgetty.8 callback.8 faxrunqd.8 faxq-helper.8
+--- 7,13 ----
+  #
+  #
+  MAN1PAGES=g32pbm.1 g3cat.1 pbm2g3.1 sff2g3.1 fax.1 \
+! 	  faxspool.1 faxrunq.1 mgetty-faxq.1 mgetty-faxrm.1 coverpg.1
+  MAN4PAGES=mgettydefs.4
+  MAN5PAGES=faxqueue.5
+  MAN8PAGES=sendfax.8 mgetty.8 callback.8 faxrunqd.8 faxq-helper.8
+***************
+*** 97,105 ****
+  # explicit man page dependencies
+  
+  fax.1: fax.1in ../sedscript
+! faxq.1: faxq.1in ../sedscript
+  faxqueue.5: faxqueue.5in ../sedscript
+! faxrm.1: faxrm.1in ../sedscript
+  faxrunq.1: faxrunq.1in ../sedscript
+  faxspool.1: faxspool.1in ../sedscript
+  coverpg.1: coverpg.1in ../sedscript
+--- 97,105 ----
+  # explicit man page dependencies
+  
+  fax.1: fax.1in ../sedscript
+! mgetty-faxq.1: mgetty-faxq.1in ../sedscript
+  faxqueue.5: faxqueue.5in ../sedscript
+! mgetty-faxrm.1: mgetty-faxrm.1in ../sedscript
+  faxrunq.1: faxrunq.1in ../sedscript
+  faxspool.1: faxspool.1in ../sedscript
+  coverpg.1: coverpg.1in ../sedscript
+*** ./doc/fax.1in.osr6	Sat Nov 26 13:20:06 2005
+--- ./doc/fax.1in	Fri Nov 23 13:44:51 2007
+***************
+*** 9,18 ****
+  .RI file
+  ...
+  
+! .B faxrm
+  .RI job-id
+  
+! .B faxq
+  .RB [options]
+  
+  .B faxrunq
+--- 9,18 ----
+  .RI file
+  ...
+  
+! .B mgetty-faxrm
+  .RI job-id
+  
+! .B mgetty-faxq
+  .RB [options]
+  
+  .B faxrunq
+***************
+*** 55,66 ****
+  .I sendfax
+  and places the jobs into the outgoing spool directory.
+  
+! .I faxq
+  displays the current FAX work queue.
+  
+! .I faxrm
+  removes one or more jobs from the current fax work queue. You have to
+! specify the job id (returned by faxq) on the command line.
+  
+  .I faxrunq
+  processes all the faxes in the fax work queue, and sends them one-by-one.
+--- 55,66 ----
+  .I sendfax
+  and places the jobs into the outgoing spool directory.
+  
+! .I mgetty-faxq
+  displays the current FAX work queue.
+  
+! .I mgetty-faxrm
+  removes one or more jobs from the current fax work queue. You have to
+! specify the job id (returned by mgetty-faxq) on the command line.
+  
+  .I faxrunq
+  processes all the faxes in the fax work queue, and sends them one-by-one.
+***************
+*** 84,92 ****
+  .I faxq-helper
+  is a helper program that is used by
+  .I faxspool,
+! .I faxq
+  and
+! .I faxrm
+  to access the fax spool directory (which is not world-writeable since
+  mgetty version 1.1.29).
+  
+--- 84,92 ----
+  .I faxq-helper
+  is a helper program that is used by
+  .I faxspool,
+! .I mgetty-faxq
+  and
+! .I mgetty-faxrm
+  to access the fax spool directory (which is not world-writeable since
+  mgetty version 1.1.29).
+  
+***************
+*** 173,179 ****
+  Look into the responding man pages.
+  
+  .SH "SEE ALSO"
+! faxspool(1), faxq(1), faxrunq(1), faxrunqd(8), sendfax(8), faxrm(1), mgetty(8),
+  pbm2g3(1), g32pbm(1), g3cat(1), faxqueue(5), mgettydefs(4), coverpg(1)
+  
+  mgetty.info
+--- 173,179 ----
+  Look into the responding man pages.
+  
+  .SH "SEE ALSO"
+! faxspool(1), mgetty-faxq(1), faxrunq(1), faxrunqd(8), sendfax(8), mgetty-faxrm(1), mgetty(8),
+  pbm2g3(1), g32pbm(1), g3cat(1), faxqueue(5), mgettydefs(4), coverpg(1)
+  
+  mgetty.info
+*** ./doc/mgetty.texi-in.osr6	Fri Dec 30 13:43:49 2005
+--- ./doc/mgetty.texi-in	Fri Nov 23 13:44:36 2007
+***************
+*** 1684,1701 ****
+  
+  
+  @item
+! @code{faxq} will display all entries in the fax queue. If called with
+  the @samp{-o} parameter, it will also display completed, but not yet
+  deleted jobs (JOB.done files). If called with the @samp{-v} parameter, the
+  output will be more verbose.
+  
+! Jobs that are just being sent are not shown (@code{faxq} doesn't see locked
+  jobs)
+  
+  @item
+! @code{faxrm} can be used to remove fax jobs from the queue. It is called
+  with the job ids of the to-be-removed faxes as command line argument. The
+! job ids are those that @code{faxq} returns.
+  
+  @end itemize
+  
+--- 1684,1701 ----
+  
+  
+  @item
+! @code{mgetty-faxq} will display all entries in the fax queue. If called with
+  the @samp{-o} parameter, it will also display completed, but not yet
+  deleted jobs (JOB.done files). If called with the @samp{-v} parameter, the
+  output will be more verbose.
+  
+! Jobs that are just being sent are not shown (@code{mgetty-faxq} doesn't see locked
+  jobs)
+  
+  @item
+! @code{mgetty-faxrm} can be used to remove fax jobs from the queue. It is called
+  with the job ids of the to-be-removed faxes as command line argument. The
+! job ids are those that @code{mgetty-faxq} returns.
+  
+  @end itemize
+  
+*** ./doc/faxq.1in.osr6	Sat Apr 16 02:56:23 2005
+--- ./doc/faxq.1in	Fri Nov 23 13:45:22 2007
+***************
+*** 1,9 ****
+! .TH faxq 1 "27 Oct 93" "greenie" "mgetty+sendfax manual"
+! .IX faxq
+  .SH NAME
+! faxq - display fax jobs queued by faxspool(1)
+  .SH SYNOPSIS
+! .B faxq
+  .RB [ <command> ]
+  .RB [ -osa ]
+  .RB [ -v ]
+--- 1,9 ----
+! .TH mgetty-faxq 1 "27 Oct 93" "greenie" "mgetty+sendfax manual"
+! .IX mgetty-faxq
+  .SH NAME
+! mgetty-faxq - display fax jobs queued by faxspool(1)
+  .SH SYNOPSIS
+! .B mgetty-faxq
+  .RB [ <command> ]
+  .RB [ -osa ]
+  .RB [ -v ]
+***************
+*** 12,43 ****
+  .SH DESCRIPTION
+  Display the fax queue set up by faxspool(1).
+  
+! .I faxq 
+  looks for all the jobs queued by faxspool(1) to
+  @FAX_SPOOL_OUT@/*. For each job in the queue,
+! .I faxq
+  displays some status informations about it. If no options are specified,
+  one line per queued fax job is printed, displaying the job number, sender,
+  number of pages and target fax number.
+  
+  .SH COMMANDS
+! .B faxq stop
+  stops the fax queue processing by creating the file @FAX_SPOOL_OUT@/stop.
+  This command works only if you have write access to the spool directory.
+  Depending on local setup, this means ``root only'' or ``fax administrator
+  group''.  If you don't have write access, an error message is printed.
+  
+! .B faxq start
+  re-starts a previously stopped fax queue, by removing the ``stop'' file.
+  As for 
+! .I faxq stop
+  this only works if you have write access.
+  
+  .SH OPTIONS
+  .TP
+  .B -v
+  Tells
+! .I faxq
+  to print a more verbose report for each job (multiple lines).
+  .TP
+  .B -o
+--- 12,43 ----
+  .SH DESCRIPTION
+  Display the fax queue set up by faxspool(1).
+  
+! .I mgetty-faxq 
+  looks for all the jobs queued by faxspool(1) to
+  @FAX_SPOOL_OUT@/*. For each job in the queue,
+! .I mgetty-faxq
+  displays some status informations about it. If no options are specified,
+  one line per queued fax job is printed, displaying the job number, sender,
+  number of pages and target fax number.
+  
+  .SH COMMANDS
+! .B mgetty-faxq stop
+  stops the fax queue processing by creating the file @FAX_SPOOL_OUT@/stop.
+  This command works only if you have write access to the spool directory.
+  Depending on local setup, this means ``root only'' or ``fax administrator
+  group''.  If you don't have write access, an error message is printed.
+  
+! .B mgetty-faxq start
+  re-starts a previously stopped fax queue, by removing the ``stop'' file.
+  As for 
+! .I mgetty-faxq stop
+  this only works if you have write access.
+  
+  .SH OPTIONS
+  .TP
+  .B -v
+  Tells
+! .I mgetty-faxq
+  to print a more verbose report for each job (multiple lines).
+  .TP
+  .B -o
+***************
+*** 45,51 ****
+  .TP
+  .B -s
+  Show suspended jobs (stopped because of too many fatal errors during sending). You can restart those jobs with
+! .I faxq -r
+  .TP
+  .B -a
+  Show all jobs (active, old, suspended).
+--- 45,51 ----
+  .TP
+  .B -s
+  Show suspended jobs (stopped because of too many fatal errors during sending). You can restart those jobs with
+! .I mgetty-faxq -r
+  .TP
+  .B -a
+  Show all jobs (active, old, suspended).
+***************
+*** 53,73 ****
+  .B -r
+  Restart suspended jobs. Every suspended job in the queue (that you have
+  write permissions for) will be requeued.  Use
+! .I faxrm
+  to delete jobs that you do not want to be sent!
+  .TP
+  .B -P <job> <prio>
+! Change the priority of fax job <job> to <prio>. Example: "faxq -P F000247 3".
+  
+  .SH BUGS
+! .I faxq
+  doesn't handle time scheduling yet.
+  
+! .I faxq -P
+  is currently broken (needs re-implementing with faxq-helper).
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), faxrm(1), faxqueue(5)
+  .SH AUTHOR
+! .I faxq
+  is Copyright (C) 1993 by Gert Doering, <gert@greenie.muc.de>.
+--- 53,73 ----
+  .B -r
+  Restart suspended jobs. Every suspended job in the queue (that you have
+  write permissions for) will be requeued.  Use
+! .I mgetty-faxrm
+  to delete jobs that you do not want to be sent!
+  .TP
+  .B -P <job> <prio>
+! Change the priority of fax job <job> to <prio>. Example: "mgetty-faxq -P F000247 3".
+  
+  .SH BUGS
+! .I mgetty-faxq
+  doesn't handle time scheduling yet.
+  
+! .I mgetty-faxq -P
+  is currently broken (needs re-implementing with faxq-helper).
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), mgetty-faxrm(1), faxqueue(5)
+  .SH AUTHOR
+! .I mgetty-faxq
+  is Copyright (C) 1993 by Gert Doering, <gert@greenie.muc.de>.
+*** ./doc/faxrm.1in.osr6	Sat Nov 23 13:17:45 2002
+--- ./doc/faxrm.1in	Fri Nov 23 13:45:30 2007
+***************
+*** 1,18 ****
+! .TH faxrm 1 "23 Nov 02" "greenie" "mgetty+sendfax manual"
+! .IX faxrm
+  .SH NAME
+! faxrm - remove fax jobs queued by faxspool(1)
+  .SH SYNOPSIS
+! .B faxrm
+  .RB [ -i ]
+  .RI [job-ids ...]
+  .SH DESCRIPTION
+  Remove job(s) from the fax queue set up by faxspool(1).
+  
+! .I faxrm 
+  removes queued fax jobs.  Call with a list of job-IDs to remove specific
+  jobs.  Call with no job IDs to be asked interactively about all jobs you own
+! (if run by root, all jobs).  For job-id, use the strings returned by faxq(1)
+  (e.g. F000015), without the ``/JOB'' extention.
+  
+  If you are not the owner of the fax job (as per the 'user xyz' statement
+--- 1,18 ----
+! .TH mgetty-faxrm 1 "23 Nov 02" "greenie" "mgetty+sendfax manual"
+! .IX mgetty-faxrm
+  .SH NAME
+! mgetty-faxrm - remove fax jobs queued by faxspool(1)
+  .SH SYNOPSIS
+! .B mgetty-faxrm
+  .RB [ -i ]
+  .RI [job-ids ...]
+  .SH DESCRIPTION
+  Remove job(s) from the fax queue set up by faxspool(1).
+  
+! .I mgetty-faxrm 
+  removes queued fax jobs.  Call with a list of job-IDs to remove specific
+  jobs.  Call with no job IDs to be asked interactively about all jobs you own
+! (if run by root, all jobs).  For job-id, use the strings returned by mgetty-faxq(1)
+  (e.g. F000015), without the ``/JOB'' extention.
+  
+  If you are not the owner of the fax job (as per the 'user xyz' statement
+***************
+*** 21,47 ****
+  
+  If the job is locked (most likely because sendfax(8) is active sending
+  it),
+! .I faxrm
+  doesn't attempt to remove it.  Instead, it prints a warning message on
+  stderr and goes on to the next job.
+  
+  .SH EXAMPLES
+  
+! faxrm F000005 F000033
+  
+  .SH OPTIONS
+  .TP
+  .B -i
+  (interactive mode) Tells
+! .I faxrm
+  to ask for confirmation before removing the job (UNIMPLEMENTED).
+  
+  .SH BUGS
+! .I faxrm
+  doesn't return diagnostic exit codes yet.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxrunq(8), faxspool(1), faxq(1), faxqueue(5)
+  .SH AUTHOR
+! .I faxrm
+  is Copyright (C) 1993-2002 by Gert Doering, <gert@greenie.muc.de>.
+--- 21,47 ----
+  
+  If the job is locked (most likely because sendfax(8) is active sending
+  it),
+! .I mgetty-faxrm
+  doesn't attempt to remove it.  Instead, it prints a warning message on
+  stderr and goes on to the next job.
+  
+  .SH EXAMPLES
+  
+! mgetty-faxrm F000005 F000033
+  
+  .SH OPTIONS
+  .TP
+  .B -i
+  (interactive mode) Tells
+! .I mgetty-faxrm
+  to ask for confirmation before removing the job (UNIMPLEMENTED).
+  
+  .SH BUGS
+! .I mgetty-faxrm
+  doesn't return diagnostic exit codes yet.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxrunq(8), faxspool(1), mgetty-faxq(1), faxqueue(5)
+  .SH AUTHOR
+! .I mgetty-faxrm
+  is Copyright (C) 1993-2002 by Gert Doering, <gert@greenie.muc.de>.
+*** ./doc/faxqueue.5in.osr6	Sat Nov 23 13:15:01 2002
+--- ./doc/faxqueue.5in	Fri Nov 23 13:46:10 2007
+***************
+*** 10,16 ****
+  files in the subdirectories of the outgoing fax spool directory, 
+  .I @FAX_SPOOL_OUT@
+  build up a queue of faxes to be sent by faxrunq(1). They are created by
+! faxspool(1), can be viewed with faxq(1), and be deleted by faxrm(1).
+  
+  .SH FORMAT
+  The format of the JOB file is as follows:
+--- 10,16 ----
+  files in the subdirectories of the outgoing fax spool directory, 
+  .I @FAX_SPOOL_OUT@
+  build up a queue of faxes to be sent by faxrunq(1). They are created by
+! faxspool(1), can be viewed with mgetty-faxq(1), and be deleted by mgetty-faxrm(1).
+  
+  .SH FORMAT
+  The format of the JOB file is as follows:
+***************
+*** 32,38 ****
+  Optional.
+  .TP
+  .B input <file(s)>
+! The file names passed to faxspool(1). Optional, used only by faxq(1).
+  .TP
+  .B pages <file(s)>
+  The file names, relative to the directory where the JOB file is found,
+--- 32,38 ----
+  Optional.
+  .TP
+  .B input <file(s)>
+! The file names passed to faxspool(1). Optional, used only by mgetty-faxq(1).
+  .TP
+  .B pages <file(s)>
+  The file names, relative to the directory where the JOB file is found,
+***************
+*** 107,120 ****
+  While a given JOB file is processed by faxrunq(1), it's locked against
+  sending it multiple times by temporarily renaming it to
+  .I JOB.locked,
+! thus it may happen that a faxq(1) command doesn't show this job. (
+  .I faxrunqd(8)
+  is a bit smarter and does the locking by creating a hard link).
+  
+  When a job is successfully sent, it's not deleted but the JOB file is
+  renamed to
+  .I JOB.done.
+! Because of this, you can still see old jobs with "faxq -o". You should
+  regularly clean up the outgoing fax directory, removing old faxes. If you
+  don't want this behaviour, edit the faxrunq(1) config file and enable
+  the option
+--- 107,120 ----
+  While a given JOB file is processed by faxrunq(1), it's locked against
+  sending it multiple times by temporarily renaming it to
+  .I JOB.locked,
+! thus it may happen that a mgetty-faxq(1) command doesn't show this job. (
+  .I faxrunqd(8)
+  is a bit smarter and does the locking by creating a hard link).
+  
+  When a job is successfully sent, it's not deleted but the JOB file is
+  renamed to
+  .I JOB.done.
+! Because of this, you can still see old jobs with "mgetty-faxq -o". You should
+  regularly clean up the outgoing fax directory, removing old faxes. If you
+  don't want this behaviour, edit the faxrunq(1) config file and enable
+  the option
+***************
+*** 125,132 ****
+  use), the JOB file is renamed to
+  .I JOB.suspended.
+  To re-queue this job, call
+! .I faxq -r
+  -- this renames the JOB file back.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), faxrm(1), faxq(1), faxrunqd(8)
+--- 125,132 ----
+  use), the JOB file is renamed to
+  .I JOB.suspended.
+  To re-queue this job, call
+! .I mgetty-faxq -r
+  -- this renames the JOB file back.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), mgetty-faxrm(1), mgetty-faxq(1), faxrunqd(8)
+*** ./doc/faxq-helper.8in.osr6	Fri Feb 17 06:38:25 2006
+--- ./doc/faxq-helper.8in	Fri Nov 23 13:46:37 2007
+***************
+*** 26,34 ****
+  
+  and possibly:
+  
+!  - remove a fax job from the queue (to be used by faxrm and in case of errors)
+  
+!  - re-queue a job that has been suspended due to repeated failures (faxq -r)
+  
+  To achieve this,
+  .I faxq-helper
+--- 26,34 ----
+  
+  and possibly:
+  
+!  - remove a fax job from the queue (to be used by mgetty-faxrm and in case of errors)
+  
+!  - re-queue a job that has been suspended due to repeated failures (mgetty-faxq -r)
+  
+  To achieve this,
+  .I faxq-helper
+***************
+*** 63,69 ****
+  error message)
+  
+  .SH "SEE ALSO"
+! faxspool(1), faxq(1), faxrm(1), faxqueue(5)
+  .SH AUTHOR
+  .I faxq-helper
+  is Copyright (C) 2004-2006 by Gert Doering, <gert@greenie.muc.de>. 
+--- 63,69 ----
+  error message)
+  
+  .SH "SEE ALSO"
+! faxspool(1), mgetty-faxq(1), mgetty-faxrm(1), faxqueue(5)
+  .SH AUTHOR
+  .I faxq-helper
+  is Copyright (C) 2004-2006 by Gert Doering, <gert@greenie.muc.de>. 
+*** ./doc/mgetty-faxrm.1in.osr6	Fri Nov 23 13:36:47 2007
+--- ./doc/mgetty-faxrm.1in	Fri Nov 23 13:46:48 2007
+***************
+*** 0 ****
+--- 1,47 ----
++ .TH mgetty-faxrm 1 "23 Nov 02" "greenie" "mgetty+sendfax manual"
++ .IX mgetty-faxrm
++ .SH NAME
++ mgetty-faxrm - remove fax jobs queued by faxspool(1)
++ .SH SYNOPSIS
++ .B mgetty-faxrm
++ .RB [ -i ]
++ .RI [job-ids ...]
++ .SH DESCRIPTION
++ Remove job(s) from the fax queue set up by faxspool(1).
++ 
++ .I mgetty-faxrm 
++ removes queued fax jobs.  Call with a list of job-IDs to remove specific
++ jobs.  Call with no job IDs to be asked interactively about all jobs you own
++ (if run by root, all jobs).  For job-id, use the strings returned by mgetty-faxq(1)
++ (e.g. F000015), without the ``/JOB'' extention.
++ 
++ If you are not the owner of the fax job (as per the 'user xyz' statement
++ inside the JOB file), you are not allowed to remove the fax job.  Only 
++ root is permitted to remove another user's faxes.
++ 
++ If the job is locked (most likely because sendfax(8) is active sending
++ it),
++ .I mgetty-faxrm
++ doesn't attempt to remove it.  Instead, it prints a warning message on
++ stderr and goes on to the next job.
++ 
++ .SH EXAMPLES
++ 
++ mgetty-faxrm F000005 F000033
++ 
++ .SH OPTIONS
++ .TP
++ .B -i
++ (interactive mode) Tells
++ .I mgetty-faxrm
++ to ask for confirmation before removing the job (UNIMPLEMENTED).
++ 
++ .SH BUGS
++ .I mgetty-faxrm
++ doesn't return diagnostic exit codes yet.
++ 
++ .SH "SEE ALSO"
++ faxrunq(1), faxrunq(8), faxspool(1), mgetty-faxq(1), faxqueue(5)
++ .SH AUTHOR
++ .I mgetty-faxrm
++ is Copyright (C) 1993-2002 by Gert Doering, <gert@greenie.muc.de>.
+*** ./doc/faxrunq.1in.osr6	Thu Nov 24 09:36:41 2005
+--- ./doc/faxrunq.1in	Fri Nov 23 13:45:43 2007
+***************
+*** 82,88 ****
+  .B success-call-program <name>
+  Here, you can specify a program that will be run when the fax has been
+  successfully sent. It will be passed two command line parameters. The
+! first is the full path to the fax JOB file (see faxq(5)), the second
+  is the last exit code from
+  .I sendfax
+  (for success-call-program, this is always "0").
+--- 82,88 ----
+  .B success-call-program <name>
+  Here, you can specify a program that will be run when the fax has been
+  successfully sent. It will be passed two command line parameters. The
+! first is the full path to the fax JOB file (see mgetty-faxq(5)), the second
+  is the last exit code from
+  .I sendfax
+  (for success-call-program, this is always "0").
+***************
+*** 113,119 ****
+  .I faxrunq
+  should delete jobs after sending, or leave them in the fax queue (while
+  moving the "JOB" file to "JOB.done") so that they can be seen at by
+! "faxq -o". The default value is "do not delete sent faxes".
+  
+  .TP
+  .B acct-log <path>
+--- 113,119 ----
+  .I faxrunq
+  should delete jobs after sending, or leave them in the fax queue (while
+  moving the "JOB" file to "JOB.done") so that they can be seen at by
+! "mgetty-faxq -o". The default value is "do not delete sent faxes".
+  
+  .TP
+  .B acct-log <path>
+***************
+*** 145,151 ****
+  and faxrunq(1) is also run as user '@FAX_OUT_USER@').
+  
+  .SH "SEE ALSO"
+! faxspool(1), sendfax(8), faxq(1), faxqueue(5), faxrunqd(8)
+  .SH AUTHOR
+  .I faxrunq
+  is Copyright (C) 1993-2002 by Gert Doering, <gert@greenie.muc.de>.
+--- 145,151 ----
+  and faxrunq(1) is also run as user '@FAX_OUT_USER@').
+  
+  .SH "SEE ALSO"
+! faxspool(1), sendfax(8), mgetty-faxq(1), faxqueue(5), faxrunqd(8)
+  .SH AUTHOR
+  .I faxrunq
+  is Copyright (C) 1993-2002 by Gert Doering, <gert@greenie.muc.de>.
+*** ./doc/faxspool.1in.osr6	Thu Jan 18 23:49:18 2007
+--- ./doc/faxspool.1in	Fri Nov 23 13:45:52 2007
+***************
+*** 107,113 ****
+  .TP
+  .B -D <destination>
+  Verbose form of the fax's destination. Used only for informational
+! purposes, that is, faxq(1) will show it, faxrunq(1) will put it
+  into the return mail ("Subject: your fax to ..."), and a @D@ in the
+  page header will be replaced by it.
+  .TP
+--- 107,113 ----
+  .TP
+  .B -D <destination>
+  Verbose form of the fax's destination. Used only for informational
+! purposes, that is, mgetty-faxq(1) will show it, faxrunq(1) will put it
+  into the return mail ("Subject: your fax to ..."), and a @D@ in the
+  page header will be replaced by it.
+  .TP
+***************
+*** 224,230 ****
+  Multicasting with the -m and -M options is not implemented yet.
+  
+  .SH "SEE ALSO"
+! g3cat(1), pbm2g3(1), sendfax(8), faxrunq(1), faxrunqd(8), faxq(1), faxqueue(5),
+  coverpg(1)
+  .SH AUTHOR
+  .I faxspool
+--- 224,230 ----
+  Multicasting with the -m and -M options is not implemented yet.
+  
+  .SH "SEE ALSO"
+! g3cat(1), pbm2g3(1), sendfax(8), faxrunq(1), faxrunqd(8), mgetty-faxq(1), faxqueue(5),
+  coverpg(1)
+  .SH AUTHOR
+  .I faxspool
+*** ./doc/faxrunqd.8in.osr6	Thu Jan 18 23:46:41 2007
+--- ./doc/faxrunqd.8in	Fri Nov 23 13:46:20 2007
+***************
+*** 115,121 ****
+  .B success-call-program <name>
+  Here, you can specify a program that will be run when the fax has been
+  successfully sent. It will be passed two command line parameters. The
+! first is the full path to the fax JOB file (see faxq(5)), the second
+  is the last exit code from
+  .I sendfax
+  (for success-call-program, this is always "0").
+--- 115,121 ----
+  .B success-call-program <name>
+  Here, you can specify a program that will be run when the fax has been
+  successfully sent. It will be passed two command line parameters. The
+! first is the full path to the fax JOB file (see mgetty-faxq(5)), the second
+  is the last exit code from
+  .I sendfax
+  (for success-call-program, this is always "0").
+***************
+*** 154,160 ****
+  .I faxrunqd
+  should delete jobs after sending, or leave them in the fax queue (while
+  moving the "JOB" file to "JOB.done") so that they can be seen at by
+! "faxq -o". The default value is "do not delete sent faxes".
+  
+  .TP
+  .B acct-log <path>
+--- 154,160 ----
+  .I faxrunqd
+  should delete jobs after sending, or leave them in the fax queue (while
+  moving the "JOB" file to "JOB.done") so that they can be seen at by
+! "mgetty-faxq -o". The default value is "do not delete sent faxes".
+  
+  .TP
+  .B acct-log <path>
+***************
+*** 350,356 ****
+  (which is good for reliable faxing, but bad for error recovery).
+  
+  .SH "SEE ALSO"
+! faxspool(1), sendfax(8), faxq(1), faxrunq(1), faxqueue(5)
+  .SH AUTHOR
+  .I faxrunqd
+  is Copyright (C) 1997-2004 by Gert Doering, <gert@greenie.muc.de>.  It was
+--- 350,356 ----
+  (which is good for reliable faxing, but bad for error recovery).
+  
+  .SH "SEE ALSO"
+! faxspool(1), sendfax(8), mgetty-faxq(1), faxrunq(1), faxqueue(5)
+  .SH AUTHOR
+  .I faxrunqd
+  is Copyright (C) 1997-2004 by Gert Doering, <gert@greenie.muc.de>.  It was
+*** ./doc/mgetty-faxq.1in.osr6	Fri Nov 23 13:50:00 2007
+--- ./doc/mgetty-faxq.1in	Fri Nov 23 13:50:00 2007
+***************
+*** 0 ****
+--- 1,73 ----
++ .TH mgetty-faxq 1 "27 Oct 93" "greenie" "mgetty+sendfax manual"
++ .IX mgetty-faxq
++ .SH NAME
++ mgetty-faxq - display fax jobs queued by faxspool(1)
++ .SH SYNOPSIS
++ .B mgetty-faxq
++ .RB [ <command> ]
++ .RB [ -osa ]
++ .RB [ -v ]
++ .RB [ -r ]
++ .RB [ -P <job> <prio> ]
++ .SH DESCRIPTION
++ Display the fax queue set up by faxspool(1).
++ 
++ .I mgetty-faxq 
++ looks for all the jobs queued by faxspool(1) to
++ @FAX_SPOOL_OUT@/*. For each job in the queue,
++ .I mgetty-faxq
++ displays some status informations about it. If no options are specified,
++ one line per queued fax job is printed, displaying the job number, sender,
++ number of pages and target fax number.
++ 
++ .SH COMMANDS
++ .B mgetty-faxq stop
++ stops the fax queue processing by creating the file @FAX_SPOOL_OUT@/stop.
++ This command works only if you have write access to the spool directory.
++ Depending on local setup, this means ``root only'' or ``fax administrator
++ group''.  If you don't have write access, an error message is printed.
++ 
++ .B mgetty-faxq start
++ re-starts a previously stopped fax queue, by removing the ``stop'' file.
++ As for 
++ .I mgetty-faxq stop
++ this only works if you have write access.
++ 
++ .SH OPTIONS
++ .TP
++ .B -v
++ Tells
++ .I mgetty-faxq
++ to print a more verbose report for each job (multiple lines).
++ .TP
++ .B -o
++ Show old jobs, already sent but still in the queue directory, too.
++ .TP
++ .B -s
++ Show suspended jobs (stopped because of too many fatal errors during sending). You can restart those jobs with
++ .I mgetty-faxq -r
++ .TP
++ .B -a
++ Show all jobs (active, old, suspended).
++ .TP
++ .B -r
++ Restart suspended jobs. Every suspended job in the queue (that you have
++ write permissions for) will be requeued.  Use
++ .I mgetty-faxrm
++ to delete jobs that you do not want to be sent!
++ .TP
++ .B -P <job> <prio>
++ Change the priority of fax job <job> to <prio>. Example: "mgetty-faxq -P F000247 3".
++ 
++ .SH BUGS
++ .I mgetty-faxq
++ doesn't handle time scheduling yet.
++ 
++ .I mgetty-faxq -P
++ is currently broken (needs re-implementing with faxq-helper).
++ 
++ .SH "SEE ALSO"
++ faxrunq(1), faxspool(1), mgetty-faxrm(1), faxqueue(5)
++ .SH AUTHOR
++ .I mgetty-faxq
++ is Copyright (C) 1993 by Gert Doering, <gert@greenie.muc.de>.
+*** ./fax/Makefile.osr6	Wed Feb 22 09:25:30 2006
+--- ./fax/Makefile	Fri Nov 23 13:47:12 2007
+***************
+*** 4,13 ****
+  # SCCS: $Id: Makefile,v 4.9 2006/02/22 17:25:30 gert Exp $ Copyright (c) Gert Doering
+  #
+  
+! CC=gcc
+! CFLAGS=-O2 -I.. -Wall
+  
+! FAX_SCRIPTS=faxspool faxrunq faxq faxrm 
+  
+  zigzag: 
+  	cd .. ; $(MAKE) subdirs
+--- 4,13 ----
+  # SCCS: $Id: Makefile,v 4.9 2006/02/22 17:25:30 gert Exp $ Copyright (c) Gert Doering
+  #
+  
+! CC=cc
+! CFLAGS=-O2 -I..
+  
+! FAX_SCRIPTS=faxspool faxrunq mgetty-faxq mgetty-faxrm 
+  
+  zigzag: 
+  	cd .. ; $(MAKE) subdirs
+***************
+*** 23,33 ****
+  faxrunqd: faxrunqd.in ../sedscript
+  	../sedscript <faxrunqd.in >faxrunqd
+  
+! faxq: faxq.in ../sedscript
+! 	../sedscript <faxq.in >faxq
+  
+! faxrm: faxrm.in ../sedscript
+! 	../sedscript <faxrm.in >faxrm
+  
+  faxheader: faxheader.in ../sedscript
+  	../sedscript <faxheader.in >faxheader
+--- 23,33 ----
+  faxrunqd: faxrunqd.in ../sedscript
+  	../sedscript <faxrunqd.in >faxrunqd
+  
+! mgetty-faxq: mgetty-faxq.in ../sedscript
+! 	../sedscript <mgetty-faxq.in >mgetty-faxq
+  
+! mgetty-faxrm: mgetty-faxrm.in ../sedscript
+! 	../sedscript <mgetty-faxrm.in >mgetty-faxrm
+  
+  faxheader: faxheader.in ../sedscript
+  	../sedscript <faxheader.in >faxheader
+*** ./fax/faxrm.in.osr6	Tue Feb  4 08:46:36 2003
+--- ./fax/faxrm.in	Fri Nov 23 13:36:47 2007
+***************
+*** 1,13 ****
+  #!@SHELL@
+  #
+! # faxrm <job ids>
+  #
+  # remove faxes with job_id passed on the command line (if writable)
+  #
+  # There are still a lot rough edges - but it works, and should give you an
+  # idea how to improve it
+  #
+! # SCCS: $Id: faxrm.in,v 4.6 2003/02/04 16:46:36 gert Exp $ Copyright (C) 1994 Gert Doering
+  
+  FAX_SPOOL=@FAX_SPOOL@
+  FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
+--- 1,13 ----
+  #!@SHELL@
+  #
+! # mgetty-faxrm <job ids>
+  #
+  # remove faxes with job_id passed on the command line (if writable)
+  #
+  # There are still a lot rough edges - but it works, and should give you an
+  # idea how to improve it
+  #
+! # SCCS: $Id: mgetty-faxrm.in,v 4.6 2003/02/04 16:46:36 gert Exp $ Copyright (C) 1994 Gert Doering
+  
+  FAX_SPOOL=@FAX_SPOOL@
+  FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
+***************
+*** 36,42 ****
+  
+  if [ $# -eq 0 ]
+  then
+!     echo "usage: faxrm [-i] job-id ..."
+      exit 1
+  fi
+      
+--- 36,42 ----
+  
+  if [ $# -eq 0 ]
+  then
+!     echo "usage: mgetty-faxrm [-i] job-id ..."
+      exit 1
+  fi
+      
+*** ./fax/faxrunqd.in.osr6	Sat May  5 05:03:01 2007
+--- ./fax/faxrunqd.in	Fri Nov 23 13:47:58 2007
+***************
+*** 54,60 ****
+  #
+  # Revision 1.68  2004/11/24 15:01:29  gert
+  # Implement 'sendfax-tty-map' (run tty-specific sendfax binary)
+! # add job ID to log file entry for "faxrm removed job"
+  #
+  # Revision 1.67  2004/11/24 13:32:06  gert
+  # implement update-call-program (status update callback)
+--- 54,60 ----
+  #
+  # Revision 1.68  2004/11/24 15:01:29  gert
+  # Implement 'sendfax-tty-map' (run tty-specific sendfax binary)
+! # add job ID to log file entry for "mgetty-faxrm removed job"
+  #
+  # Revision 1.67  2004/11/24 13:32:06  gert
+  # implement update-call-program (status update callback)
+***************
+*** 540,546 ****
+      {
+  	print LOG "\tQ: $tty: " . scalar( @{$modem_queue{$tty}} ) . " jobs, queue length ${mq_length{$tty}} (+${mq_badness{$tty}}), in_use: ${tty_in_use{$tty}}\n"  if $opt_d;
+  
+! 	# use "while", not "if", in case one of the jobs was faxrm'd...
+  	while( ! $tty_in_use{$tty} &&
+  	        scalar( @{$modem_queue{$tty}}) > 0 )
+  	{
+--- 540,546 ----
+      {
+  	print LOG "\tQ: $tty: " . scalar( @{$modem_queue{$tty}} ) . " jobs, queue length ${mq_length{$tty}} (+${mq_badness{$tty}}), in_use: ${tty_in_use{$tty}}\n"  if $opt_d;
+  
+! 	# use "while", not "if", in case one of the jobs was mgetty-faxrm'd...
+  	while( ! $tty_in_use{$tty} &&
+  	        scalar( @{$modem_queue{$tty}}) > 0 )
+  	{
+***************
+*** 617,623 ****
+      # once per hour, completely flush internal queue, make sure nothing
+      # is left over in there, that removed jobs are thrown out, rejuvenated
+      # jobs requeued, etc.
+!     # This is also done if the on-disk queue has changed (faxq -r, etc.)
+      if ( ( time() - $queue_last_flushed ) > $queue_flush_interval 
+  	 || ( -f '.queue-changed' ) )
+      {
+--- 617,623 ----
+      # once per hour, completely flush internal queue, make sure nothing
+      # is left over in there, that removed jobs are thrown out, rejuvenated
+      # jobs requeued, etc.
+!     # This is also done if the on-disk queue has changed (mgetty-faxq -r, etc.)
+      if ( ( time() - $queue_last_flushed ) > $queue_flush_interval 
+  	 || ( -f '.queue-changed' ) )
+      {
+***************
+*** 1155,1161 ****
+  
+      print LOG "$job: Sending $job/JOB on $tty...\n" if $opt_v;
+  
+!     # check whether job has been removed (faxrm) in the meantime...
+      unless( -d "$job" && -f "$job/JOB" )
+      {
+  	print LOG "WARNING: job $job has disappeared from disk queue!\n";
+--- 1155,1161 ----
+  
+      print LOG "$job: Sending $job/JOB on $tty...\n" if $opt_v;
+  
+!     # check whether job has been removed (mgetty-faxrm) in the meantime...
+      unless( -d "$job" && -f "$job/JOB" )
+      {
+  	print LOG "WARNING: job $job has disappeared from disk queue!\n";
+***************
+*** 1781,1787 ****
+  
+  or (easier) with:
+  
+!     faxq -r
+  
+  
+  The log file of your job follows:
+--- 1781,1787 ----
+  
+  or (easier) with:
+  
+!     mgetty-faxq -r
+  
+  
+  The log file of your job follows:
+*** ./fax/faxq-helper.c.osr6	Sun Apr 10 13:47:43 2005
+--- ./fax/faxq-helper.c	Fri Nov 23 13:48:11 2007
+***************
+*** 3,9 ****
+  /* faxq-helper.c
+   *
+   * this is a suid helper process that is used for the unprivileged
+!  * fax queue client programs (faxspool, faxq, faxrm) to access the
+   * /var/spool/fax/outgoing/... fax queue ($OUT).
+   *
+   * it is NOT suid "root" but suid "FAX_OUT_USER" (usually "fax") as
+--- 3,9 ----
+  /* faxq-helper.c
+   *
+   * this is a suid helper process that is used for the unprivileged
+!  * fax queue client programs (faxspool, mgetty-faxq, mgetty-faxrm) to access the
+   * /var/spool/fax/outgoing/... fax queue ($OUT).
+   *
+   * it is NOT suid "root" but suid "FAX_OUT_USER" (usually "fax") as
+*** ./fax/mgetty-faxrm.in.osr6	Fri Nov 23 13:36:47 2007
+--- ./fax/mgetty-faxrm.in	Fri Nov 23 13:36:47 2007
+***************
+*** 0 ****
+--- 1,64 ----
++ #!@SHELL@
++ #
++ # mgetty-faxrm <job ids>
++ #
++ # remove faxes with job_id passed on the command line (if writable)
++ #
++ # There are still a lot rough edges - but it works, and should give you an
++ # idea how to improve it
++ #
++ # SCCS: $Id: mgetty-faxrm.in,v 4.6 2003/02/04 16:46:36 gert Exp $ Copyright (C) 1994 Gert Doering
++ 
++ FAX_SPOOL=@FAX_SPOOL@
++ FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
++ #
++ # echo program that will accept escapes (bash: "echo -e", sun: /usr/5bin/echo)
++ echo="@ECHO@"
++ #
++ # helper program for privileged queue access
++ FAXQ_HELPER=@LIBDIR@/faxq-helper
++ #
++ 
++ if [ ! -d $FAX_SPOOL_OUT ]
++ then
++     echo "$FAX_SPOOL_OUT does not exist" >&2
++     exit 1
++ fi
++ 
++ cd $FAX_SPOOL_OUT
++ 
++ interactive=""
++ if [ "X$1" = "X-i" ]
++ then
++     interactive="i"
++     shift
++ fi
++ 
++ if [ $# -eq 0 ]
++ then
++     echo "usage: mgetty-faxrm [-i] job-id ..."
++     exit 1
++ fi
++     
++ for jobid
++ do
++     if [ ! -d "$jobid" ]
++     then
++         echo "$jobid: no such job found." >&2
++         continue
++     fi
++ #
++ # check lock (there's a small race here, but this is only informational
++ # anyway - the real locking is inside the helper)
++     if [ -f "$jobid"/JOB.locked ]
++     then
++         echo "$jobid: JOB is locked, try again later." >&2
++         continue
++     fi
++ #
++ # throw away - faxq-helper will do all the checks & all the work
++ #
++     $FAXQ_HELPER remove $jobid
++ #
++ # end for (all jobs)
++ done
+*** ./fax/faxq.in.osr6	Sat Apr 16 08:17:34 2005
+--- ./fax/faxq.in	Fri Nov 23 13:47:30 2007
+***************
+*** 1,10 ****
+  #!@SHELL@
+  #
+! # faxq program 
+  #
+  # like "lpq" or "mailq", show jobs waiting in the output queue
+  #
+! # SCCS: $Id: faxq.in,v 4.11 2005/04/16 11:29:09 gert Exp $ Copyright (C) 1994 Gert Doering
+  #
+  FAX_SPOOL=@FAX_SPOOL@
+  FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
+--- 1,10 ----
+  #!@SHELL@
+  #
+! # mgetty-faxq program 
+  #
+  # like "lpq" or "mailq", show jobs waiting in the output queue
+  #
+! # SCCS: $Id: mgetty-faxq.in,v 4.11 2005/04/16 11:29:09 gert Exp $ Copyright (C) 1994 Gert Doering
+  #
+  FAX_SPOOL=@FAX_SPOOL@
+  FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
+***************
+*** 54,60 ****
+      exit 1
+  fi
+  
+! # special commands: faxq stop / start
+  case $1 in
+      stop) do_faxq_stop ; exit 0;;
+      start) do_faxq_start ; exit 0;;
+--- 54,60 ----
+      exit 1
+  fi
+  
+! # special commands: mgetty-faxq stop / start
+  case $1 in
+      stop) do_faxq_stop ; exit 0;;
+      start) do_faxq_start ; exit 0;;
+*** ./fax/mgetty-faxq.in.osr6	Fri Nov 23 13:50:00 2007
+--- ./fax/mgetty-faxq.in	Fri Nov 23 13:50:00 2007
+***************
+*** 0 ****
+--- 1,199 ----
++ #!@SHELL@
++ #
++ # mgetty-faxq program 
++ #
++ # like "lpq" or "mailq", show jobs waiting in the output queue
++ #
++ # SCCS: $Id: mgetty-faxq.in,v 4.11 2005/04/16 11:29:09 gert Exp $ Copyright (C) 1994 Gert Doering
++ #
++ FAX_SPOOL=@FAX_SPOOL@
++ FAX_SPOOL_OUT=@FAX_SPOOL_OUT@
++ 
++ #
++ # echo program that will accept escapes (bash: "echo -e", sun: /usr/5bin/echo)
++ #
++ echo="@ECHO@"
++ 
++ #
++ # an awk that is not stone-old-brain-dead (that is, not oawk...)
++ #
++ AWK=@AWK@
++ 
++ #
++ # helper program for privileged queue access
++ FAXQ_HELPER=@LIBDIR@/faxq-helper
++ 
++ # ------------- subroutines -----------
++ do_faxq_stop()
++ {
++     if [ ! -w . ]
++     then
++ 	$echo "$0: not administrator, can't stop queue" >&1 ; exit 0
++     fi
++     id >stop
++ }
++ 
++ do_faxq_start()
++ {
++     if [ ! -w . ]
++     then
++ 	$echo "$0: not administrator, can't start queue" >&1 ; exit 0
++     fi
++     if [ ! -f stop  ]
++     then
++ 	$echo "$0: queue not stopped, can't restart" >&1 ; exit 0;
++     fi
++     rm -f stop
++ }
++ # -------------------------------------
++ 
++ if cd $FAX_SPOOL_OUT 
++ then :
++ else
++     $echo "cannot chdir to $FAX_SPOOL_OUT..." >&2
++     exit 1
++ fi
++ 
++ # special commands: mgetty-faxq stop / start
++ case $1 in
++     stop) do_faxq_stop ; exit 0;;
++     start) do_faxq_start ; exit 0;;
++     '') ;;
++     -*) ;;
++     *) cat <<EOF_MSG >&2
++ $0: invalid command: $1
++ valid commands:
++   stop   stop fax queue handling (admin only)
++   start  restart stopped fax queue (admin only)
++ EOF_MSG
++        exit 1 ;;
++ esac
++ 
++ jobs="*/JOB"
++ requeue=""
++ changepri=""
++ 
++ while [ -n "$1" ]
++ do
++     case $1 in
++ 	-v) verbose="true" ;;
++ 	-o) jobs="*/JOB.done" ;;
++ 	-s) jobs="*/JOB.s*" ;;
++ 	-a) jobs="*/JOB*" ;;
++ 	-r) jobs="*/JOB.s*"; requeue="true" ;;
++ 	-P) if [ -z "$2" -o -z "$3" ] ; then
++ 		echo "$0: -P needs arguments!" >&2 ; exit 1 ;
++ 	    fi
++ 	    jobs="$2/JOB"; changepri="$3" ; shift ; shift
++ 	    ;;
++ 	*) cat <<EOF_MSG >&2
++ $0: invalid option: $flag
++ valid options:
++   -o: show old jobs
++   -s: show suspended jobs
++   -a: show all jobs
++   -v: verbose output
++   -r: restart suspended jobs
++   -P <job> <pri>: change priority of job <job> to <pri>
++ EOF_MSG
++ 	   exit 1 ;;
++     esac
++     shift
++ done
++ 
++ jobs=`ls $jobs 2>/dev/null`
++ [ -z "$jobs" ] && $echo "no jobs."
++ for i in $jobs
++ do
++     USER=""; PHONE=""; PAGES=""; MAILTO=""; VERBTO=""; 
++     ACCT=""; INPUT=""; TIME=""; PRI=""; RE=""
++ 
++     # read jobs using 'tr', remove all quote characters, dollar, and backslash
++     if [ -z "$verbose" ]
++     then
++ 	eval `tr -d '\042\047\140\134\044\073' <$i | \
++ 	     $AWK '$1=="user" { printf "USER=%s;", $2 }
++ 		   $1=="phone" { printf "PHONE=%s;", $2 }
++ 		   $1=="pages" { printf "PAGES=%d;", NF-1 }
++ 		   $1=="priority" { printf "PRI=\" pri=%s.\";", $2}' -`
++ 	$echo "$i: queued by $USER. $PAGES page(s) to $PHONE.$PRI"
++     else
++ 	eval `tr -d '\042\047\140\134\044\073' <$i | \
++ 	     $AWK '$1=="user" { printf "USER=%s;", $2 }
++ 		   $1=="mail"  { printf "MAILTO=\"%s\";", substr( $0, 6 ) }
++ 		   $1=="phone" { printf "PHONE=%s;", $2 }
++ 		   $1=="verbose_to" \
++ 			       { printf "VERBTO=\"%s\";", substr( $0, 12 ) }
++ 		   $1=="acct_handle" \
++ 			       { printf "ACCT=\"%s\";", substr( $0, 13 ) }
++ 		   $1=="input" { printf "INPUT=\"%s\";", substr( $0, 7 ) }
++ 		   $1=="time"  { printf "TIME=\"%s:%s\";",
++ 				 substr( $0, 6, 2 ), substr( $0, 8,2 ) }
++ 		   $1=="subject"{ printf "RE=\"%s\";", substr( $0, 9 ) }
++ 		   $1=="priority"{ printf "PRI=\"%s\";", $2 }
++ 		   $1=="pages" { if ( NF==2 ) printf "PAGES=\"%s\";", $2
++ 				 else if ( NF==3 )
++                                      printf "PAGES=\"%s %s\";", $2, $3
++ 				 else
++                                      printf "PAGES=\"%s ... %s\";", $2, $NF
++ 			       }' -`
++ 	$echo "$i:"
++ 	$echo "\tQueued by: $USER"
++        if [ -z "$VERBTO" ]
++        then
++ 	$echo "\t       to: $PHONE"
++        else
++ 	$echo "\t       to: $VERBTO ($PHONE)"
++        fi
++        test ! -z "$RE" && \
++ 	$echo "\t       Re: $RE"
++        test ! -z "$MAILTO" && \
++ 	$echo "\t   E-Mail: $MAILTO"
++        test ! -z "$INPUT" && \
++ 	$echo "\t    Input: $INPUT"
++ 	$echo "\t    Pages: $PAGES"
++        test ! -z "$TIME" && \
++ 	$echo "\tSend time: $TIME"
++        test ! -z "$ACCT" && \
++ 	$echo "\tAcct info: $ACCT"
++        test ! -z "$PRI" && \
++ 	$echo "\t Priority: $PRI"
++ 
++ 	sed -e '/Status/!d' -e 's/Status/           Status:/' $i
++        if [ -f "$i.locked" ] ; then
++         $echo "\t   Status: LOCKED (being sent right now)"
++        else
++ 	expr $i : ".*done$" >/dev/null ||
++ 	$echo "\t   Status: not sent yet"
++        fi
++     fi
++ 
++ # if "changepri", change priority of job
++ # TODO - this is currently broken, needs changing over to $FAXQ_HELPER
++     if [ -n "$changepri" ] && expr "$i" : ".*JOB$" >/dev/null
++     then
++ 	d=`dirname $i`
++ 	if [ ! -w $d ] ; then
++ 	    $echo "$i: not owner, can't change priority"
++ 	else
++ 	    echo "priority $changepri" >>$i
++ 	    $echo "Priority changed to $changepri"
++ 	    touch .queue-changed 2>/dev/null
++ 	fi
++     fi
++ 
++ # if "requeue", requeue *.suspended-Jobs
++     if [ -n "$requeue" ] && expr "$i" : ".*JOB.s" >/dev/null
++     then
++ 	d=`dirname $i`
++ 	$FAXQ_HELPER requeue $d
++     fi
++ done
++ 
++ test -n "$verbose" -a -n "$jobs" -a -r faxqueue_done &&
++     $echo "\nLast \`\`faxrunq'' run at: `cat faxqueue_done`"
++ 
++ # queue stopped?  (print only if not "no jobs.")
++ test -n "$jobs" -a -f stop &&
++     $echo "\nWarning: fax queue handling stopped (stop file exists).\n"
++ 
+*** ./frontends/dialog/xfaxq.1in.osr6	Sun Feb  4 06:33:51 1996
+--- ./frontends/dialog/xfaxq.1in	Fri Nov 23 13:36:47 2007
+***************
+*** 35,38 ****
+  doesn't update it's display of the contents of the spool directory.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), faxrm(1), faxqueue(5)
+--- 35,38 ----
+  doesn't update it's display of the contents of the spool directory.
+  
+  .SH "SEE ALSO"
+! faxrunq(1), faxspool(1), mgetty-faxrm(1), faxqueue(5)
+*** ./g3/Makefile.osr6	Wed Feb 22 09:25:34 2006
+--- ./g3/Makefile	Fri Nov 23 13:36:47 2007
+***************
+*** 4,11 ****
+  # SCCS: $Id: Makefile,v 4.7 2006/02/22 17:25:34 gert Exp $ Copyright (c) Gert Doering
+  #
+  
+! CC=gcc
+! CFLAGS=-O2 -I.. -g 
+  
+  G3_PROGRAMS=pbm2g3 g3cat g32pbm sff2g3
+  
+--- 4,11 ----
+  # SCCS: $Id: Makefile,v 4.7 2006/02/22 17:25:34 gert Exp $ Copyright (c) Gert Doering
+  #
+  
+! CC=cc
+! CFLAGS=-O2 -I..
+  
+  G3_PROGRAMS=pbm2g3 g3cat g32pbm sff2g3
+  
+*** ./voice/include/voice.h.osr6	Sun Mar 13 09:27:42 2005
+--- ./voice/include/voice.h	Fri Nov 23 13:36:47 2007
+***************
+*** 62,68 ****
+  
+  extern char POS[80];
+  #define LPRINTF sprintf(POS, "%s%s%03d%s%s%s", \
+!  __FILE__, " [", __LINE__, "] ", __FUNCTION__, ":"); lprintf
+  
+  /*
+   * Buffer length for commands, voice modem answers and so on
+--- 62,68 ----
+  
+  extern char POS[80];
+  #define LPRINTF sprintf(POS, "%s%s%03d%s%s%s", \
+!  __FILE__, " [", __LINE__, "] ", __func__, ":"); lprintf
+  
+  /*
+   * Buffer length for commands, voice modem answers and so on
+*** ./voice/libvoice/Multitech_5600ZDXv.c.osr6	Thu Sep 28 14:15:48 2006
+--- ./voice/libvoice/Multitech_5600ZDXv.c	Fri Nov 23 13:36:47 2007
+***************
+*** 104,110 ****
+        return(FAIL);
+    }
+    if (sprintf(buf, "AT#VSR=%d", (int)*speed) == -1) {
+!     lprintf(L_ERROR, "%s: Command too long", __FUNCTION__);
+    }
+    if (voice_command(buf, "OK") != VMA_USER_1) {
+      return(FAIL);
+--- 104,110 ----
+        return(FAIL);
+    }
+    if (sprintf(buf, "AT#VSR=%d", (int)*speed) == -1) {
+!     lprintf(L_ERROR, "%s: Command too long", __func__);
+    }
+    if (voice_command(buf, "OK") != VMA_USER_1) {
+      return(FAIL);
+***************
+*** 129,135 ****
+        return(FAIL);
+    }
+    if (sprintf(buf, "AT#VBS=%d", *bits) == -1) {
+!     lprintf(L_ERROR, "%s: Command too long", __FUNCTION__);
+    }
+    if (voice_command(buf, "OK") != VMA_USER_1) {
+      return(FAIL);
+--- 129,135 ----
+        return(FAIL);
+    }
+    if (sprintf(buf, "AT#VBS=%d", *bits) == -1) {
+!     lprintf(L_ERROR, "%s: Command too long", __func__);
+    }
+    if (voice_command(buf, "OK") != VMA_USER_1) {
+      return(FAIL);
+*** ./voice/Makefile.osr6	Tue Sep 26 08:38:17 2006
+--- ./voice/Makefile	Fri Nov 23 13:36:47 2007
+***************
+*** 9,15 ****
+  AR=ar
+  ARFLAGS=rc
+  RANLIB=ranlib
+! CC=gcc
+  LN=ln
+  MV=mv
+  RM=rm
+--- 9,15 ----
+  AR=ar
+  ARFLAGS=rc
+  RANLIB=ranlib
+! CC=cc
+  LN=ln
+  MV=mv
+  RM=rm
+*** ./policy.h.osr6	Fri Nov 23 13:36:47 2007
+--- ./policy.h	Fri Nov 23 13:36:47 2007
+***************
+*** 0 ****
+--- 1,603 ----
++ #ident "$Id: policy.h,v 4.24 2006/03/22 14:05:32 gert Exp $ Copyright (c) Gert Doering"
++ 
++ /* this is the file where all configuration defaults for mgetty / sendfax
++  * are specified.
++  *
++  * defaults are used if no values are given in the config file(s).
++  * config file values can be overridden by command line options.
++  *
++  * see mgetty.texi/mgetty.info for a description of the configuration files.
++  */
++ 
++ /* main mgetty configuration file
++  */
++ #define MGETTY_CONFIG "mgetty.config"
++ 
++ /* sendfax configuration file
++  *
++  * if path doesn't start with "/", it's relative to CONFDIR (Makefile)
++  * if not defined, no configuration file is read (saves a few kbytes)
++  */
++ #define SENDFAX_CONFIG "sendfax.config"
++ 
++ 
++ /* login dispatcher config file (for mgetty)
++  *
++  * In this file, you can configure which "login" program (default /bin/login)
++  * to call for what user name.
++  *
++  * You could use it to call "uucico" for all users starting with "U*"
++  * (works only with Taylor UUCP 1.04 with my patch), for AutoPPP calls 
++  * being properly dispatched to pppd, or to call a fido mailer for fido 
++  * calls (only if AutoPPP and/or FIDO support are compiled in, see below)...
++  *
++  * If you want to call /bin/login for all data calls, do not define this
++  *
++  * See the samples in the example login.config file (built from login.cfg.in).
++  *
++  * WARNING: make sure that this file isn't world-accessable (SECURITY!)
++  *
++  * If this doesn't start with "/", it's relative to CONFDIR.
++  */
++ #define LOGIN_CFG_FILE "login.config"
++ 
++ /* default login program
++  *
++  * If LOGIN_CFG_FILE is not defined, or does not exist, or doesn't
++  * have a default entry, this program is called for user logins.
++  * Normally, this is "/bin/login", just a few systems put "login"
++  * elsewhere (e.g. Free/NetBSD in "/usr/bin/login").
++  */
++ #define DEFAULT_LOGIN_PROGRAM "/bin/login"
++ 
++ /* FidoNet mailer support
++  * 
++  * If you want to support incoming FidoNet calls, define FIDO.
++  *
++  * (If you don't know what this is, you don't want it)
++  */
++ /* #define FIDO */
++ 
++ /* AutoPPP-Support
++  *
++  * If you want to auto-detect incoming PPP calls (with authorization done
++  * by the pppd, i.e. via CHAP or PAP), define AUTO_PPP.
++  * Not needed if PPP callers want to get a real "login:"
++  * prompt first. Don't forget to activate the /AutoPPP/ line in login.config!
++  */
++ /* #define AUTO_PPP */
++ 
++ /* callback config file
++  *
++  * this file controls the operation of the optional "callback" program.
++  * how callback works, is explained in detail in mgetty.texi. You need
++  * to set LOGIN_CFG_FILE (see above) to use callback from mgetty. 
++  *
++  * If this path does not start with "/", it's relative to CONFDIR.
++  */
++ #define CALLBACK_CONFIG "callback.config"
++ 
++ 
++ /* if this file exists, it can be used to control what callers
++  * are allowed in.  If undefined, the functionality is omitted.
++  * It will work only if your modem supports it. Check the modem manual.
++  * For Rockwell-Based modems, add #CID=1 to MODEM_INIT_STRING, for
++  * ZyXELs use S40.2=1.
++  * If the path doesn't start with "/", it's relative to CONFDIR.
++  */
++ /* #define CNDFILE "dialin.config" */
++ 
++ 
++ /* If you want to use /etc/gettydefs to set tty flags, define this
++  * I recommend against it, I suspect some bugs lingering in that code
++  * (and one doesn't really need it in a normal setup anyway).
++  */
++ /* #define USE_GETTYDEFS */
++ 
++ /* Name of the "gettydefs" file (used only if USE_GETTYDEFS is set)
++  */
++ #define GETTYDEFS "/etc/gettydefs"
++ 
++ /* If no gettydefs "tag" is specified on the command line, use
++  * this setting (from GETTYDEFS) as default (only if compiled with
++  * USE_GETTYDEFS set)
++  */
++ #define GETTYDEFS_DEFAULT_TAG "n"
++ 
++ 
++ /* access modes */
++ 
++ /* user id of the "uucp" user. The tty device will be owned by this user,
++  * so parallel dial-out of uucico will be possible
++  */
++ #define DEVICE_OWNER	"uucp"
++ /* group id that the device is chown()ed to. If not defined, the
++  * primary group of "DEVICE_OWNER" is used.
++  */
++ #define DEVICE_GROUP	"uucp"
++ 
++ /* access mode for the line while getty has it - it should be accessible
++  * by uucp / uucp, but not by others (imagine someone dialing into your
++  * system and using another modem to dial to another country...)
++  */
++ #define FILE_MODE 0660
++ 
++ /* security: optionally, mgetty can system() this, to kill any dangling
++  * processes on the current tty. A %s is replaced with the tty device.
++  * 
++  * Under most circumstances, this is not needed.  You might want
++  * to use it if you offer dial-in services with shell accounts to people
++  * that you don't trust (they might try to abuse your modems, and this
++  * will stop a number of attacks).
++  */
++ /* #define EXEC_FUSER "exec fuser -k -f %s >/dev/null 2>&1" */
++ 
++ 
++ /* logging */
++ 
++ /* system console - if a severe error happens at startup, mgetty writes
++  * a message to this file and aborts
++  * On SCO, this may be /dev/syscon!
++  */
++ #define CONSOLE "/dev/console"
++ 
++ /* Name of the mgetty log file
++  * e.g. "/usr/spool/log/mgetty.log.%s" or "/tmp/log_mg.%s"
++  * a "%s" will be replaced by the device name, e.g. "tty2a"
++  *
++  * if the directory does not exist, the log file goes to CONSOLE (!)
++  */
++ #define LOG_PATH "/var/log/mgetty.%s"
++ 
++ /* Default log error level threshold. Possible error levels are
++  * L_FATAL, L_ERROR, L_AUDIT, L_WARN, L_MESG, L_NOISE, L_JUNK (see mgetty.h)
++  */
++ #define LOG_LEVEL L_MESG
++ 
++ /* Whether "\n"s in the modem response should start a new line
++  * in the logfile
++  */
++ /* #define LOG_CR_NEWLINE */
++ 
++ /* System administrator - if a severe error happens (lprintf called
++  * with log_level L_FATAL) and writing to CONSOLE is not possible,
++  * the logfile will be mailed to him
++  */
++ #define ADMIN	"root"
++ 
++ /* Syslog
++  *
++  * If you want logging messages of type L_AUDIT, L_ERROR and L_FATAL
++  * to go to the "syslog", define this.
++  * mgetty will use the facility "LOG_AUTH", and the priorities
++  * LOG_NOTICE, LOG_ERR and LOG_ALERT, respectively.
++  */
++ /* #define SYSLOG */
++ 
++ /* Syslog facility
++  *
++  * This is the facility mgetty uses for logging. Ususally, this will be
++  * LOG_AUTH, but on some systems, this may not exist, try LOG_DAEMON
++  * instead (or look into the syslog manpage for available options)
++  */
++ #define SYSLOG_FC LOG_AUTH
++ 
++ /* login stuff */
++ 
++ /* System name - printed at login prompt
++  * If you do not define this, the uname() call will be used
++  */
++ /* #define SYSTEM	"greenie" */
++ 
++ /* Login prompt
++  * The "@", "\\D" and "\\T" escapes will be replaced by SYSTEM, the
++  * current date and time, respectively.
++  * override with "-p <prompt>" switch
++  */
++ #define LOGIN_PROMPT	"@!login: "
++ 
++ /* The old '#define ENV_TTYPROMPT' option has been superseded by setting 
++  * "login-env-ttyprompt-hack yes" in mgetty.config.  See mgetty.texi for
++  * details.
++  */
++ 
++ /* Some very old terminals can only generate UPPERCASE letters.
++  * Traditional getty variants detect this, and then set the
++  * corresponding termio(s) flags to convert upper/lower case letters
++  * "on the fly".  Mgetty can do it, but since this is hardly
++  * needed nowadays, the default is off.
++  */
++ /* #define DO_LCUC_MAP */
++ 
++ /* Maximum time before login name has to be entered (in seconds)
++  * (after that time a warning will be issued, after that, the call is
++  * dropped). To disable that feature, do not define it.
++  */
++ #define MAX_LOGIN_TIME	240
++ 
++ /* nologin file
++  *
++  * If that file exists, a ringing phone won't be answered (see manual).
++  * "%s" will be replaced by the device name.
++  */
++ #define NOLOGIN_FILE "/etc/nologin.%s"
++ 
++ 
++ /* misc */
++ 
++ 
++ /* Path for the lock files. A %s will be replaced with the device name,
++  * e.g. tty2a -> /usr/spool/uucp/LCK..tty2a
++  * Make sure that this is the same file that your uucico uses for
++  * locking!
++  */
++ 
++ /* for a few systems, you can just take those defaults and be happy */
++ #if defined (SVR4) || defined(sunos4)
++ # define LOCK_PATH "/var/spool/locks"
++ # define LOCK      "/var/spool/locks/LCK..%s"
++ #else
++ # ifdef sgi
++ #  define LOCK	"/usr/spool/locks/LCK..%s"
++ # endif
++ # ifdef _AIX
++ #  define LOCK	"/etc/locks/LCK..%s"
++ # endif
++ # ifdef NeXT
++ #  define LOCK "/usr/spool/uucp/LCK/LCK..%s"
++ # endif
++ # ifdef linux
++ #  define LOCK	"/var/lock/LCK..%s"
++ # endif
++ # if defined(__FreeBSD__) || defined(__NetBSD__)
++ #  define LOCK "/var/spool/lock/LCK..%s"
++ # endif 
++ #endif
++ 
++ /* if your system isn't listed above, change that line here */
++ #ifndef LOCK
++ #define LOCK "/usr/spool/uucp/LCK..%s"
++ #endif
++   
++ /* Set this to "1" if your system uses binary lock files (i.e., the pid
++  * as four byte integer in host byte order written to the lock file)
++  * If it is "0", HDB locking will be used - the PID will be written as
++  * 10 byte ascii, with a trailing newline
++  * (Just check "LOCK" while uucico or pcomm or ... are running to find
++  * out what lock files are used on your system)
++  * On NeXT systems, you must set this to "1".
++  */
++ #define LOCKS_BINARY 0
++ 
++ /* Lower case locks - change the last character of the device name
++  *                    to lowercase for locking purposes.
++  *
++  * If you're using a SCO Unix system with those "tty1a/tty1A" device
++  * pairs, you'll have to define this.
++  */
++ /* #define LOCKS_LOWERCASE */
++ 
++ /* Change _all_ characters to lowercase (currently no system uses this) */
++ /* #define LOCKS_ALL_LOWERCASE */
++ 
++ 
++ /* the default speed used by mgetty - override it with "-s <speed>"
++  *
++  * WARNING: this is a bit tricky, since some modems insist on going to
++  * 19200 bps when in fax mode. So, if fax receiving with a port speed of
++  * something else doesn't work, try experimenting with FAX_RECV_SWITCHBD,
++  * and if that doesn't help, try DEFAULT_PORTSPEED 19200
++  *
++  * WARNING2: Speeds higher than 38400 aren't supported on all platforms,
++  * and sometimes you have to use "50" to get 57600 or so!
++  */
++ #define DEFAULT_PORTSPEED	38400
++ 
++ /* the modem initialization string
++  *
++  * the default string should set up most hayes compatible modems into a
++  * fairly sane state (echo on, verbose reports on, quiet off, reset on
++  * DTR toggle on), but it doesn't set any flow control options (because
++  * that's done differently on each modem, look into your manual for commands
++  * like &H3, &K4, \Q6 or similar things) or protocols.
++  *
++  * You can change the initialization sequence with the "init-chat" keyword
++  * in "mgetty.config".
++  *
++  * If you need delays, specify them as "\\d", if you want to send a
++  * backslash ('\'), give it as "\\\\".
++  *
++  * Very IMPORTANT: make sure that the modem assigns the DCD line properly,
++  * usually this is done with the AT&C1 command!
++  *
++  * The modem must answer with "OK" (!!!) - otherwise, use "init-chat".
++  */
++ #define MODEM_INIT_STRING	"ATS0=0Q0&D3&C1"
++ 
++ /* command termination string
++  *
++  * for most modems, terminating the AT... command with "\r" is
++  * sufficient and "\r\n" also works without doing harm.
++  * Unfortunately, for the Courier HST, you've to use *only* \r,
++  * otherwise ATA won't work (immediate NO CARRIER), and for some
++  * (old) ZyXELs, you have to use \r\n (no OK otherwise).
++  * So, try one, and if it doesn't work, try the other.
++  */
++ #define MODEM_CMD_SUFFIX "\r"
++ 
++ /* "keep alive"
++  *
++  * mgetty can periodically check whether the modem is still alive
++  * by issueing an "AT\r" command and checking for the "OK"
++  * Define here, in seconds, how often mgetty should check. For normal
++  * reliable modems, once an hour should be sufficient...
++  * If you use "-1", or don't define this at all, mgetty won't check.
++  */
++ #define MODEM_CHECK_TIME 3600
++ 
++ 
++ /* modem mode
++  *
++  * DEFAULT_MODEMTYPE specifies the default way mgetty+sendfax handle a
++  * faxmodem. You have four choices:
++  *   "data" - data only, no faxing available (for sendfax, equal to "auto")
++  *   "cls2" - use AT+FCLASS=2
++  *   "c2.0" - use AT+FCLASS=2.0
++  *   "auto" - try "2.0", then "2", then fall to "data".
++  *
++  * Normally, you can leave this to "auto", but if you have a modem that
++  * can do class 2.0 and class 2, and 2.0 doesn't work, then you could try
++  * setting it to "cls2".
++  * You can override this define with the "-C <mode>" switch.
++  */
++ #define DEFAULT_MODEMTYPE "auto"
++ 
++ 
++ /* some modems are a little bit slow - after sending a response (OK)
++  * to the host, it will take some time before they can accept the next
++  * command - specify the amount needed in data mode here (in
++  * milliseconds). Normally, 50 ms should be sufficient. (On a slow
++  * machine it may even work without any delay at all)
++  *
++  * Be warned: if your machine isn't able to sleep for less than one
++  * second, this may cause problems.
++  */
++ #define DO_CHAT_SEND_DELAY 50
++  /* and this is the delay before sending each command while in fax mode
++   */
++ #define FAX_COMMAND_DELAY 50
++ 
++ /* incoming faxes will be chown()ed to this uid and gid.
++  * if FAX_IN_GROUP is undefined, the group of ...OWNER is used.
++  */
++ #define FAX_IN_OWNER	"uucp"
++ #define FAX_IN_GROUP	"uucp"
++ 
++ /* incoming faxes will be chmod()ed to this mode
++  * (if you do not define this, the file mode will be controlled by
++  * mgetty's umask)
++  */
++ #define FAX_FILE_MODE 0660
++ 
++ /* FLOW CONTROL
++  *
++  * There are basically two types of flow control:
++  * - hardware flow control: pull the RTS/CTS lines low to stop the other
++  *   side from spilling out data too fast
++  * - sofware flow control: send an Xoff-Character to tell the other
++  *   side to stop sending, send an Xon to restart
++  * obviously, use of Xon/Xoff has the disadvantage that you cannot send
++  * those characters in your data anymore, but additionally, hardware flow
++  * control is normally faster and more reliable
++  *
++  * mgetty can use multiple flow control variants:
++  * FLOW_NONE  - no flow control at all (absolutely not recommended)
++  * FLOW_HARD  - use RTS/CTS flow control (if available on your machine)
++  * FLOW_SOFT  - use Xon/Xoff flow control, leave HW lines alone
++  * FLOW_BOTH  - use both types simultaneously, if possible
++  *
++  * Note that few operating systems allow both types to be used together.
++  *
++  * mgetty won't (cannot!) notice if your settings don't work, but you'll
++  * see it yourself: you'll experience character losses, garbled faxes,
++  * low data throughput,..., if the flow control settings are wrong
++  *
++  * If in doubt what to use, try both and compare results.
++  * (if you use FAS or SAS with the recommended settings, FLOW_HARD is a
++  * "don't care" since the driver will use RTS/CTS anyway)
++  *
++  * If you use an atypical system, check whether tio_set_flow_control in
++  * tio.c does the right thing for your system.
++  */
++ 
++ /* This is the flow control used for normal data (login) connections
++  * Set it to FLOW_HARD except in very special cases.
++  */
++ #define DATA_FLOW	FLOW_HARD
++ 
++ /* This is the flow control used for incoming fax connections
++  * Wrong settings will result in missing lines or erroneous lines
++  * in most of the received faxes.
++  * Most faxmodems expect Xon/Xoff, few honour the RTS line.
++  */
++ #define FAXREC_FLOW	FLOW_HARD | FLOW_SOFT
++ 
++ /* And this is for sending faxes
++  *
++  * Wrong settings here will typically result in that the first few
++  * centimeters of a transmitted fax look perfect, and then (the buffer
++  * has filled up), the rest is more or less illegible junk.
++  * For most faxes, this has to be FLOW_SOFT, though the Supra and ZyXEL
++  * modems will (sometimes) do hardware flow control, too. Try it.
++  *
++  * If you see a large number of [11] and [13] characters in the sendfax
++  * log file, your modem is propably doing software flow control - and
++  * you've definitely set FAXSEND_FLOW to FLOW_HARD...
++  *
++  * Some versions of SCO Unix have a "weird" serial driver that will only
++  * do half duplex hardware flow control. You will then run into the problem
++  * that fax sending will time out after the first page sent (no ACK received)
++  * and fail if FLOW_HARD is used. Use FLOW_SOFT instead.
++  */
++ #define FAXSEND_FLOW	FLOW_HARD | FLOW_SOFT
++  
++ /* if your faxmodem switches port bit rate just after sending the "+FCON"
++  * message to the host, define this to contain the baudrate used. (Not
++  * important if you have the portspeed set to this value anyway).
++  *
++  * Most Rockwell-based modems need FAX_RECV_SWITCHBD 19200.
++  * ZyXELs do *not* need this, except if explicitely told to do so.
++  *
++  * You can see if this is set wrong if mgetty gets the "+FCON" response,
++  * starts the fax receiver, and times out waiting for OK, receiving
++  * nothing or just junk.
++  */
++ /* #define FAX_RECV_SWITCHBD 19200 */
++ 
++ /* name of the logfile for outgoing faxes (e.g. /var/log/sendfax.log)
++  *
++  * watch out: if you run 'sendfax' as non-privileged user (user 'fax' etc.)
++  * you might need to create this file manually and chown it to 'fax'
++  */
++ #define FAX_LOG		"/var/log/sendfax.log"
++ 
++ /* local station ID (your fax number)
++  * 20 character string, most faxmodem allow all ascii characters 32..127,
++  * but some do only allow digits and blank
++  * AT+FLID=? should tell you what's allowed and what not.
++  */
++ #define FAX_STATION_ID	"49 115 xxxxxxxx"
++ 
++ /* ------ sendfax-specific stuff follows here -------- */
++ 
++ /* the baudrate used for *sending* faxes. ZyXELs can handle 38400,
++  * SUPRAs (and many other rockwell-based faxmodems) can not.
++  * I recommend 38400, since 19200 may be to slow for 14400 bps faxmodems!
++  */
++ #define FAX_SEND_BAUD 38400
++ 
++ /* switch baud rate after +FCLASS=2
++  *
++  * some weird modems require that you initialize the modem with one
++  * baud rate (e.g. 2400 or 9600 for cheap 2400+fax modems, or `smart'
++  * modems that insist on staying locked to 38400 (ELSA!)), but switch
++  * to another baud rate, typically 19200, immediately after receiving
++  * the "AT+FCLASS=2" command.
++  *
++  * If the following is defined, sendfax will switch to the speed given
++  * here after sending AT+FCLASS=2.
++  *
++  * Only try fiddling with this if sendfax times out during modem
++  * initialization, receiving junk instead of "OK" or "ERROR" (logfile!)
++  */
++ /* #define FAX_SEND_SWITCHBD 19200 */
++ 
++ /* this is the command to set the modem to use the desired flow control.
++  * For hardware handshake, this could be AT&H3 for the ZyXEL, &K3 for
++  * Rockwell-Based modems or AT\\Q3&S0 for Exar-Based Modems (i.e. some GVC's)
++  * If you don't want extra initalization, do not define it.
++  * Don't forget the "AT"!
++  */
++ /* #define FAX_MODEM_HANDSHAKE "AT&H3" */
++ 
++ /* This is the modem command used for dialing. The phone number will
++  * get appended right after the string. Normally, "ATD" or "ATDP" should
++  * suffice, but in some situations (company telephone systems) you might
++  * need something like "ATx0DT0wP" (switch of dial-tone recognition, tone-
++  * dial a "0", wait for dial-tone, pulse dial the rest)
++  */
++ #define FAX_DIAL_PREFIX "ATD"
++ 
++ /* When sending a fax, if the other side says "page bad, retrain
++  * requested", sendfax will retry the page. Specifiy here the maximum
++  * number of retries (I recommend 3) before hanging up.
++  *
++  * If you set it to "0", sendfax will *never* retransmit a page (only
++  * do this if you know that your modem returns +FPTS:2 even if the
++  * page arrived properly, but be warned - you wont' be able to react
++  * properly to transmission errors!)
++  *
++  * See also the description of the "max-tries" and "max-tries-continue"
++  * settings in the sendfax config file.
++  */
++ #define FAX_SEND_MAX_TRIES 3
++ 
++ /* the device(s) used for faxing
++  * multiple devices can be separated by ":", e.g. "tty1a:tty2a"
++  * (with or without leading /dev/)
++  * If you don't adapt this for your needs, sendfax won't run (you can
++  * set it from the sendfax.config file, though)!
++  */
++ #define FAX_MODEM_TTYS	"tty4c:tty4d"
++ 
++ /* Xon or not?
++  *
++  * the first issues of the class 2 drafts required that the program waits
++  * for an Xon character before sending the page data. Later versions
++  * removed that. Sendfax can do both, default is to wait for it.
++  *
++  * If you get an error message "... waiting for XON" when trying to
++  * send a fax, try this one. Some ELSA modems are know to need it.
++  *
++  * ** THIS OPTION IS OBSOLETE **  
++  * ** use "modem-quirks 0x08" in sendfax.config instead **
++  */
++ 
++ 
++ /* define mailer that accepts destination on command line and mail text
++  * on stdin. For mailers with user friendly interfaces, (such as mail,
++  * mailx, elm), include an appropriate subject line in the command
++  * definition. If using a mail agent (such as sendmail), that reads
++  * mail headers, define NEED_MAIL_HEADERS.
++  */
++ #ifdef SVR4
++ # define MAILER		"/usr/bin/mailx -s 'Incoming facsimile message'"
++ #else
++ # ifdef _AIX
++ #  define MAILER	"/usr/sbin/sendmail"
++ #  define NEED_MAIL_HEADERS
++ # endif
++ # ifdef M_UNIX		/* SCO */
++ #  define MAILER	"/usr/lib/mail/execmail"
++ #  define NEED_MAIL_HEADERS
++ # endif
++ #endif
++ 
++ #ifndef MAILER
++ # define MAILER		"/usr/lib/sendmail"
++ # define NEED_MAIL_HEADERS
++ #endif
++ 
++ /* where to send notify mail about incoming faxes to
++  * (remember to create an mail alias if no such user exists!)
++  */
++ #define MAIL_TO		"faxadmin"
++ 
++ /* after a fax has arrived, mgetty can call a program for further
++  * processing of this fax.
++  *
++  * (e.g.: printing of the fax, sending as MIME mail, displaying in an X
++  * window (the latter one could be tricky) ...)
++  *
++  * It will be called as:
++  * <program> <result code> "<sender_id>" <#pgs> <pg1> <pg2>...
++  * 
++  * Define the name of this program here
++  * If you don't want this type of service, do not define it at all
++  * Absolute path name has to be used here!
++  */
++ #define FAX_NOTIFY_PROGRAM "/usr/lib/mgetty+sendfax/new_fax"
++ 
++ /* default minimum space required on spooling partition for receiving a FAX
++  * (in KILObytes)
++  */
++ #define	MINFREESPACE 1024
++ 
++ /* fax machines exchange so-called "non-standard-frames" that can be 
++  * used to identify what vendor and model is on the other end.
++  * mgetty parses and prints this by default, because it can help 
++  * troubleshooting - but the tables use up memory.  
++  * If you're very tight on RAM, disable this (saves about 10 Kbyte).
++  */
++ #define FAX_NSF_PARSER
++ 
+*** ./Makefile.osr6	Fri Jun 15 04:15:56 2007
+--- ./Makefile	Fri Nov 23 13:36:47 2007
+***************
+*** 4,11 ****
+  #
+  # this is the C compiler to use (on SunOS, the standard "cc" does not
+  # grok my code, so please use gcc there. On ISC 4.0, use "icc".).
+! CC=gcc
+! #CC=cc
+  #
+  #### C Compiler Flags ####
+  #
+--- 4,11 ----
+  #
+  # this is the C compiler to use (on SunOS, the standard "cc" does not
+  # grok my code, so please use gcc there. On ISC 4.0, use "icc".).
+! #CC=gcc
+! CC=cc
+  #
+  #### C Compiler Flags ####
+  #
+***************
+*** 102,110 ****
+  #	    USTAT	  - ustat(), no statfs etc.
+  #
+  #CFLAGS=-Wall -O2 -pipe -DSECUREWARE -DUSE_POLL
+! CFLAGS=-O2 -Wall -pipe
+  #CFLAGS=-O -DSVR4
+! #CFLAGS=-O -DSVR4 -DSVR42
+  #CFLAGS=-O -DUSE_POLL
+  #CFLAGS=-Wall -g -O2 -pipe
+  # 3B1: You can remove _NOSTDLIB_H and USE_READ if you have the
+--- 102,110 ----
+  #	    USTAT	  - ustat(), no statfs etc.
+  #
+  #CFLAGS=-Wall -O2 -pipe -DSECUREWARE -DUSE_POLL
+! #CFLAGS=-O2 -Wall -pipe
+  #CFLAGS=-O -DSVR4
+! CFLAGS=-O2 -DSVR4 -DSVR42 -DSECUREWARE
+  #CFLAGS=-O -DUSE_POLL
+  #CFLAGS=-Wall -g -O2 -pipe
+  # 3B1: You can remove _NOSTDLIB_H and USE_READ if you have the
+***************
+*** 144,151 ****
+  # For Linux, add "-lutil" if the linker complains about "updwtmp".
+  #
+  LDFLAGS=
+! LIBS=
+! #LIBS=-lprot -lsocket				# SCO Unix
+  #LIBS=-lsocket
+  #LIBS=-lbsd					# OSF/1
+  #LIBS=-lutil					# FreeBSD or Linux/GNU libc2
+--- 144,151 ----
+  # For Linux, add "-lutil" if the linker complains about "updwtmp".
+  #
+  LDFLAGS=
+! #LIBS=
+! LIBS=-lprot -lsocket -lnsl			# SCO Unix
+  #LIBS=-lsocket
+  #LIBS=-lbsd					# OSF/1
+  #LIBS=-lutil					# FreeBSD or Linux/GNU libc2
+***************
+*** 164,178 ****
+  #
+  # if your systems doesn't have one, use the shell script that I provide
+  # in "inst.sh" (taken from X11R5). Needed on IRIX5.2
+! INSTALL=install -c -o bin -g bin
+  #INSTALL=install -c -o root -g wheel		# NeXT/BSD
+  #INSTALL=/usr/ucb/install -c -o bin -g bin	# AIX, Solaris 2.x
+  #INSTALL=installbsd -c -o bin -g bin		# OSF/1, AIX 4.1, 4.2
+  #INSTALL=/usr/bin/X11/bsdinst -c -o bin 	# IRIX
+  #
+  # prefix, where most (all?) of the stuff lives, usually /usr/local or /usr
+  #
+! prefix=/usr/local
+  #
+  # prefix for all the spool directories (usually /usr/spool or /var/spool)
+  #
+--- 164,180 ----
+  #
+  # if your systems doesn't have one, use the shell script that I provide
+  # in "inst.sh" (taken from X11R5). Needed on IRIX5.2
+! INSTALL=/usr/gnu/bin/install -c -o bin -g bin
+  #INSTALL=install -c -o root -g wheel		# NeXT/BSD
+  #INSTALL=/usr/ucb/install -c -o bin -g bin	# AIX, Solaris 2.x
+  #INSTALL=installbsd -c -o bin -g bin		# OSF/1, AIX 4.1, 4.2
+  #INSTALL=/usr/bin/X11/bsdinst -c -o bin 	# IRIX
+  #
++ DESTDIR=
++ #
+  # prefix, where most (all?) of the stuff lives, usually /usr/local or /usr
+  #
+! prefix=/usr
+  #
+  # prefix for all the spool directories (usually /usr/spool or /var/spool)
+  #
+***************
+*** 192,199 ****
+  #
+  # where the configuration files (*.config, aliases, fax.allow/deny) go to
+  #
+! CONFDIR=$(prefix)/etc/mgetty+sendfax
+! #CONFDIR=/etc/default/
+  #
+  #
+  # where mgetty PID files (mgetty.pid) go to
+--- 194,201 ----
+  #
+  # where the configuration files (*.config, aliases, fax.allow/deny) go to
+  #
+! #CONFDIR=$(prefix)/etc/mgetty+sendfax
+! CONFDIR=/etc/default/
+  #
+  #
+  # where mgetty PID files (mgetty.pid) go to
+***************
+*** 216,222 ****
+  # (it's possible to run faxrunq(d) as root, but the FAX_OUT_USER 
+  #  MUST NOT BE root or any other privileged account).
+  #
+! FAX_OUT_USER=fax
+  #
+  #
+  # Where section 1 manual pages should be placed
+--- 218,224 ----
+  # (it's possible to run faxrunq(d) as root, but the FAX_OUT_USER 
+  #  MUST NOT BE root or any other privileged account).
+  #
+! FAX_OUT_USER=uucp
+  #
+  #
+  # Where section 1 manual pages should be placed
+***************
+*** 240,246 ****
+  #  Usually this will be /bin/sh or /usr/bin/sh, but bash or ksh are fine.
+  #  (on some ultrix systems, you may need /bin/sh5 here)
+  #
+! SHELL=/bin/sh
+  #
+  # If your shell requires pre-posix syntax to disable traps ('trap 0' 
+  #  instead of 'trap - 0'), set this to "0" (very rarely needed)
+--- 242,248 ----
+  #  Usually this will be /bin/sh or /usr/bin/sh, but bash or ksh are fine.
+  #  (on some ultrix systems, you may need /bin/sh5 here)
+  #
+! SHELL=/bin/bash
+  #
+  # If your shell requires pre-posix syntax to disable traps ('trap 0' 
+  #  instead of 'trap - 0'), set this to "0" (very rarely needed)
+***************
+*** 263,269 ****
+  # If you have Perl with TK extentions, define it here. This may be the
+  # same as PERL=... above, or different, if you have TkPerl statically
+  # linked.
+! TKPERL=/usr/bin/tkperl
+  #
+  #
+  # An echo program that understands escapes like "\n" for newline or
+--- 265,272 ----
+  # If you have Perl with TK extentions, define it here. This may be the
+  # same as PERL=... above, or different, if you have TkPerl statically
+  # linked.
+! #TKPERL=/usr/bin/tkperl
+! TKPERL="/usr/bin/perl -w"
+  #
+  #
+  # An echo program that understands escapes like "\n" for newline or
+***************
+*** 317,323 ****
+  
+  all:	bin-all doc-all
+  
+! bin-all: mgetty sendfax newslock sedscript subdirs call-back 
+  
+  # a few C files need extra compiler arguments
+  
+--- 320,326 ----
+  
+  all:	bin-all doc-all
+  
+! bin-all: mgetty sendfax newslock sedscript subdirs call-back vgetty
+  
+  # a few C files need extra compiler arguments
+  
+***************
+*** 573,579 ****
+  	cd bindist; gtar cvvfz mgetty$(MR).$(SR)-bin.tgz *
+  
+  
+! install: install.bin install.doc
+  
+  install.bin: mgetty sendfax newslock \
+  		login.config mgetty.config sendfax.config 
+--- 576,582 ----
+  	cd bindist; gtar cvvfz mgetty$(MR).$(SR)-bin.tgz *
+  
+  
+! install: install.bin install.doc vgetty-install
+  
+  install.bin: mgetty sendfax newslock \
+  		login.config mgetty.config sendfax.config 
+***************
+*** 593,610 ****
+  #
+  	test -d $(LIBDIR)  || \
+  		( ./mkidirs $(LIBDIR) &&  chmod 755 $(LIBDIR) )
+! 	test -d $(CONFDIR) || \
+! 		( ./mkidirs $(CONFDIR) && chmod 755 $(CONFDIR))
+! 	test -f $(CONFDIR)/login.config || \
+! 		$(INSTALL) -o root -m 600 login.config $(CONFDIR)/
+! 	test -f $(CONFDIR)/mgetty.config || \
+! 		$(INSTALL) -o root -m 600 mgetty.config $(CONFDIR)/
+! 	test -f $(CONFDIR)/sendfax.config || \
+! 		$(INSTALL) -o root -m 644 sendfax.config $(CONFDIR)/
+! 	test -f $(CONFDIR)/dialin.config || \
+! 		$(INSTALL) -o root -m 600 dialin.config $(CONFDIR)/
+! 	test -f $(CONFDIR)/faxrunq.config || \
+! 		$(INSTALL) -o root -m 644 faxrunq.config $(CONFDIR)/
+  #
+  # test for outdated stuff
+  #
+--- 596,613 ----
+  #
+  	test -d $(LIBDIR)  || \
+  		( ./mkidirs $(LIBDIR) &&  chmod 755 $(LIBDIR) )
+! 	test -d $(DESTDIR)/$(CONFDIR) || \
+! 		( ./mkidirs $(DESTDIR)/$(CONFDIR) && chmod 755 $(DESTDIR)/$(CONFDIR))
+! 	test -f $(DESTDIR)/$(CONFDIR)/login.config || \
+! 		$(INSTALL) -o root -m 600 login.config $(DESTDIR)/$(CONFDIR)/
+! 	test -f $(DESTDIR)/$(CONFDIR)/mgetty.config || \
+! 		$(INSTALL) -o root -m 600 mgetty.config $(DESTDIR)/$(CONFDIR)/
+! 	test -f $(DESTDIR)/$(CONFDIR)/sendfax.config || \
+! 		$(INSTALL) -o root -m 644 sendfax.config $(DESTDIR)/$(CONFDIR)/
+! 	test -f $(DESTDIR)/$(CONFDIR)/dialin.config || \
+! 		$(INSTALL) -o root -m 600 dialin.config $(DESTDIR)/$(CONFDIR)/
+! 	test -f $(DESTDIR)/$(CONFDIR)/faxrunq.config || \
+! 		$(INSTALL) -o root -m 644 faxrunq.config $(DESTDIR)/$(CONFDIR)/
+  #
+  # test for outdated stuff
+  #
+***************
+*** 618,635 ****
+  #
+  # fax spool directories
+  #
+! 	test -d $(spool) || \
+! 		( mkdir $(spool) && chmod 755 $(spool) )
+! 	test -d $(FAX_SPOOL) || \
+! 		( mkdir $(FAX_SPOOL) && \
+! 		  chown $(FAX_OUT_USER) $(FAX_SPOOL) && \
+! 		  chmod 755 $(FAX_SPOOL) )
+! 	test -d $(FAX_SPOOL_IN) || \
+! 		( mkdir $(FAX_SPOOL_IN) && chmod 755 $(FAX_SPOOL_IN) )
+! 	test -d $(FAX_SPOOL_OUT) || \
+! 		  mkdir $(FAX_SPOOL_OUT)
+! 	chown $(FAX_OUT_USER) $(FAX_SPOOL_OUT)
+! 	chmod 755 $(FAX_SPOOL_OUT)
+  #
+  # g3 tool programs
+  #
+--- 621,638 ----
+  #
+  # fax spool directories
+  #
+! 	test -d $(DESTDIR)/$(spool) || \
+! 		( mkdir -p $(DESTDIR)/$(spool) && chmod 755 $(DESTDIR)/$(spool) )
+! 	test -d $(DESTDIR)/$(FAX_SPOOL) || \
+! 		( mkdir -p $(DESTDIR)/$(FAX_SPOOL) && \
+! 		  chown $(FAX_OUT_USER) $(DESTDIR)/$(FAX_SPOOL) && \
+! 		  chmod 755 $(DESTDIR)/$(FAX_SPOOL) )
+! 	test -d $(DESTDIR)/$(FAX_SPOOL_IN) || \
+! 		( mkdir -p $(DESTDIR)/$(FAX_SPOOL_IN) && chmod 755 $(DESTDIR)/$(FAX_SPOOL_IN) )
+! 	test -d $(DESTDIR)/$(FAX_SPOOL_OUT) || \
+! 		  mkdir -p $(DESTDIR)/$(FAX_SPOOL_OUT)
+! 	chown $(FAX_OUT_USER) $(DESTDIR)/$(FAX_SPOOL_OUT)
+! 	chmod 755 $(DESTDIR)/$(FAX_SPOOL_OUT)
+  #
+  # g3 tool programs
+  #
+*** ./Build-OSR6.osr6	Fri Nov 23 13:36:47 2007
+--- ./Build-OSR6	Fri Nov 23 13:36:47 2007
+***************
+*** 0 ****
+--- 1,22 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Fri Nov 23 13:36:47 2007
+--- ./Install-OSR6	Fri Nov 23 13:36:47 2007
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/mgetty
++ prefix=$D/usr
++ DESTDIR=$D
++ export prefix DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install prefix=$prefix DESTDIR=$DESTDIR 2>&1 | tee $MOUT
++ 
+*** ./faxrunq.config.osr6	Thu Jan 18 23:41:49 2007
+--- ./faxrunq.config	Fri Nov 23 13:44:02 2007
+***************
+*** 38,44 ****
+  #  if you want faxrunq to delete sent faxes completely, set this to "y".
+  #  If it is set to "n", faxes will be removed from the queue, but the
+  #  files won't be deleted, that is, you can see those faxes with 
+! #  "faxq -o"  (default: "n")
+  #delete-sent-jobs y
+  
+  #  accounting log file (default: see beginning of faxrunq/faxrunqd script)
+--- 38,44 ----
+  #  if you want faxrunq to delete sent faxes completely, set this to "y".
+  #  If it is set to "n", faxes will be removed from the queue, but the
+  #  files won't be deleted, that is, you can see those faxes with 
+! #  "mgetty-faxq -o"  (default: "n")
+  #delete-sent-jobs y
+  
+  #  accounting log file (default: see beginning of faxrunq/faxrunqd script)

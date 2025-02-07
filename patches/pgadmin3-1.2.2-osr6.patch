@@ -1,0 +1,300 @@
+*** ./src/ui/frmOptions.cpp.osr6	Thu May 26 05:54:51 2005
+--- ./src/ui/frmOptions.cpp	Sat Sep 10 13:32:20 2005
+***************
+*** 218,224 ****
+              locale = new wxLocale();
+              if (locale->Init(langId))
+              {
+! #ifdef __LINUX__
+                  {
+                      wxLogNull noLog;
+                      locale->AddCatalog(wxT("fileutils"));
+--- 218,224 ----
+              locale = new wxLocale();
+              if (locale->Init(langId))
+              {
+! #if defined(__LINUX__) || defined(__USLC__)
+                  {
+                      wxLogNull noLog;
+                      locale->AddCatalog(wxT("fileutils"));
+*** ./src/utils/misc.cpp.osr6	Thu May 26 05:54:45 2005
+--- ./src/utils/misc.cpp	Sat Sep 10 13:32:20 2005
+***************
+*** 150,156 ****
+  double StrToDouble(const wxString& value)
+  {
+      wxCharBuffer buf = value.ToAscii();
+!     char *p=strchr(buf, '.');
+      if (p)
+          *p = localeconv()->decimal_point[0];
+  
+--- 150,156 ----
+  double StrToDouble(const wxString& value)
+  {
+      wxCharBuffer buf = value.ToAscii();
+!     char *p=(char *)strchr(buf, '.');
+      if (p)
+          *p = localeconv()->decimal_point[0];
+  
+*** ./src/Makefile.in.osr6	Thu May 26 05:58:08 2005
+--- ./src/Makefile.in	Sat Sep 10 13:32:20 2005
+***************
+*** 425,436 ****
+  ui/zh_TW/wxstd.mo
+  
+  @APPBUNDLE_FALSE@nobase_dist_pkgdata_DATA = $(TMP_ui)
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -Wall -g -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+  @APPBUNDLE_TRUE@nobase_dist_data_DATA = $(TMP_ui)
+  all: all-am
+  
+--- 425,436 ----
+  ui/zh_TW/wxstd.mo
+  
+  @APPBUNDLE_FALSE@nobase_dist_pkgdata_DATA = $(TMP_ui)
+! @APPBUNDLE_FALSE@AM_CXXFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CXXFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_FALSE@AM_CPPFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CPPFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_FALSE@AM_CFLAGS = -DDATA_DIR=\"$(pkgdatadir)/\" -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+! @APPBUNDLE_TRUE@AM_CFLAGS = -I$(top_srcdir)/src/include -I$(top_srcdir)/src/agent/include
+  @APPBUNDLE_TRUE@nobase_dist_data_DATA = $(TMP_ui)
+  all: all-am
+  
+*** ./src/pgAdmin3.cpp.osr6	Thu May 26 05:54:51 2005
+--- ./src/pgAdmin3.cpp	Sat Sep 10 13:42:35 2005
+***************
+*** 28,35 ****
+    #include <winsock.h>
+  #endif
+  
+! // Linux headers
+! #ifdef __LINUX__
+  #include <signal.h>
+  #endif
+  
+--- 28,35 ----
+    #include <winsock.h>
+  #endif
+  
+! // UNIX/Linux headers
+! #if defined(__LINUX__) || defined(__USLC__)
+  #include <signal.h>
+  #endif
+  
+***************
+*** 75,80 ****
+--- 75,82 ----
+  
+  #define DOC_DIR     wxT("/docs")
+  #define UI_DIR      wxT("/ui")
++ // #define DOC_DIR     "docs"
++ // #define UI_DIR      "ui"
+  #define COMMON_DIR  wxT("/common")
+  #define SCRIPT_DIR  wxT("/scripts")
+  #define HELPER_DIR  wxT("/helper")
+***************
+*** 183,197 ****
+      backupExecutable  = path.FindValidPath(wxT("pg_dump"));
+      restoreExecutable = path.FindValidPath(wxT("pg_restore"));
+  
+!     if (wxDir::Exists(DATA_DIR UI_DIR))
+!         uiPath = DATA_DIR UI_DIR;
+!     else
+!         uiPath = loadPath + UI_DIR;
+! 
+!     if (wxDir::Exists(DATA_DIR DOC_DIR))
+!         docPath = DATA_DIR DOC_DIR;
+!     else
+!         docPath = loadPath + wxT("/..") DOC_DIR;
+  
+  #endif
+  
+--- 185,192 ----
+      backupExecutable  = path.FindValidPath(wxT("pg_dump"));
+      restoreExecutable = path.FindValidPath(wxT("pg_restore"));
+  
+!     uiPath = (wxString)_T("/usr/share/pgadmin3/ui");
+!     docPath = (wxString)_T("/usr/share/pgadmin3/docs");
+  
+  #endif
+  
+***************
+*** 232,238 ****
+  #endif
+  #endif
+  
+! #ifdef __LINUX__
+  	signal(SIGPIPE, SIG_IGN);
+  #endif
+  
+--- 227,233 ----
+  #endif
+  #endif
+  
+! #if defined(__LINUX__) || defined(__USLC__)
+  	signal(SIGPIPE, SIG_IGN);
+  #endif
+  
+***************
+*** 242,248 ****
+      wxLanguage langId = (wxLanguage)settings->Read(wxT("LanguageId"), wxLANGUAGE_DEFAULT);
+      if (locale->Init(langId))
+      {
+! #ifdef __LINUX__
+          {
+              wxLogNull noLog;
+              locale->AddCatalog(wxT("fileutils"));
+--- 237,243 ----
+      wxLanguage langId = (wxLanguage)settings->Read(wxT("LanguageId"), wxLANGUAGE_DEFAULT);
+      if (locale->Init(langId))
+      {
+! #if defined(__LINUX__) || defined(__USLC__)
+          {
+              wxLogNull noLog;
+              locale->AddCatalog(wxT("fileutils"));
+*** ./configure.osr6	Thu May 26 05:58:09 2005
+--- ./configure	Sat Sep 10 13:32:20 2005
+***************
+*** 2435,2441 ****
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS="-g"
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+--- 2435,2441 ----
+  GCC=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CFLAGS=${CFLAGS+set}
+  ac_save_CFLAGS=$CFLAGS
+! CFLAGS=""
+  echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+  echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cc_g+set}" = set; then
+***************
+*** 2493,2501 ****
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 2493,2501 ----
+    CFLAGS=$ac_save_CFLAGS
+  elif test $ac_cv_prog_cc_g = yes; then
+    if test "$GCC" = yes; then
+!     CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 3116,3122 ****
+  GXX=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CXXFLAGS=${CXXFLAGS+set}
+  ac_save_CXXFLAGS=$CXXFLAGS
+! CXXFLAGS="-g"
+  echo "$as_me:$LINENO: checking whether $CXX accepts -g" >&5
+  echo $ECHO_N "checking whether $CXX accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cxx_g+set}" = set; then
+--- 3116,3122 ----
+  GXX=`test $ac_compiler_gnu = yes && echo yes`
+  ac_test_CXXFLAGS=${CXXFLAGS+set}
+  ac_save_CXXFLAGS=$CXXFLAGS
+! CXXFLAGS=""
+  echo "$as_me:$LINENO: checking whether $CXX accepts -g" >&5
+  echo $ECHO_N "checking whether $CXX accepts -g... $ECHO_C" >&6
+  if test "${ac_cv_prog_cxx_g+set}" = set; then
+***************
+*** 3174,3182 ****
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-g -O2"
+    else
+!     CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+--- 3174,3182 ----
+    CXXFLAGS=$ac_save_CXXFLAGS
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+!     CXXFLAGS="-O2"
+    else
+!     CXXFLAGS="-O2"
+    fi
+  else
+    if test "$GXX" = yes; then
+***************
+*** 4874,4882 ****
+    enableval="$enable_debug"
+    pg_debug_build=yes
+  CLFAGS=`${WX_CONFIG} --cflags --debug`
+! CFLAGS="$CFLAGS -Wall -g -O0"
+  CPPFLAGS=`${WX_CONFIG} --cppflags --debug`
+! CPPFLAGS="$CPPFLAGS -Wall -g -O0"
+  else
+    pg_debug_build=no
+  fi;
+--- 4874,4882 ----
+    enableval="$enable_debug"
+    pg_debug_build=yes
+  CLFAGS=`${WX_CONFIG} --cflags --debug`
+! CFLAGS="$CFLAGS -O0"
+  CPPFLAGS=`${WX_CONFIG} --cppflags --debug`
+! CPPFLAGS="$CPPFLAGS -O0"
+  else
+    pg_debug_build=no
+  fi;
+*** ./Configure-OSR6.osr6	Sat Sep 10 13:32:20 2005
+--- ./Configure-OSR6	Sat Sep 10 13:32:20 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca -D__GNUC__=4"
++   CXX="CC -Kpthread -Kalloca -D__GNUC__=4"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sat Sep 10 13:32:20 2005
+--- ./Install-OSR6	Sat Sep 10 13:32:20 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgadmin3
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

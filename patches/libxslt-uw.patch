@@ -1,0 +1,90 @@
+--- ./configure.uw	2003-11-04 13:38:51.000000000 +0000
++++ ./configure	2003-12-18 20:09:46.540000059 +0000
+@@ -4657,11 +4657,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -6319,7 +6319,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -6765,18 +6765,6 @@
+     export_dynamic_flag_spec='-Bexport'
+     ;;
+ 
+-  sysv5*)
+-    no_undefined_flag=' -z text'
+-    # $CC -shared without GNU ld will not create a library from C++
+-    # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+-    hardcode_libdir_flag_spec=
+-    hardcode_shlibpath_var=no
+-    runpath_var='LD_RUN_PATH'
+-    ;;
+-
+   uts4*)
+     archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec='-L$libdir'
+@@ -6808,13 +6796,14 @@
+     runpath_var=LD_RUN_PATH
+     ;;
+ 
+-  sysv5uw7* | unixware7*)
++  sysv5* | unixware7*)
+     no_undefined_flag='${wl}-z ${wl}text'
+     if test "$GCC" = yes; then
+       archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     else
+       archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+     fi
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linker_flags'
+     runpath_var='LD_RUN_PATH'
+     hardcode_shlibpath_var=no
+     ;;
+@@ -10479,7 +10468,7 @@
+ 
+ 
+ if test "${LOGNAME}" = "veillard" -a "`pwd`" = "/u/veillard/XSLT" ; then
+-    LIBXML_LIBS="../../XML/.libs/libxml2.a -lpthread -lz"
++    LIBXML_LIBS="../../XML/.libs/libxml2.a -lz"
+     DV_LINK="1"
+     XSLTPROCDV="xsltproc.dv"
+     INSTALLED_XSLT_LIB=""
+--- ./ltconfig.uw	2001-10-06 07:48:23.000000000 +0000
++++ ./ltconfig	2003-12-18 20:08:09.940000007 +0000
+@@ -1202,7 +1202,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -1501,8 +1501,7 @@
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linkopts'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linkopts~$rm $lib.exp'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $soname -o $lib $libobjs $deplibs $linkopts'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'

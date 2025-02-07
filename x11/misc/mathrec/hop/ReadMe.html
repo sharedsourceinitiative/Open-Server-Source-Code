@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>hop</TITLE>
+</HEAD>
+<BODY>
+<H1>hop</H1>
+<P>
+Calculate and display an aggregating particle
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record
+<DT><B>Restrictions</B>
+<DD>Copyright 1993, 1994 Ronald Joe Record
+
+<DT><B>Availability</B>
+<DD>
+The mathrec source code is freely redistributable. The author maintains
+binary distributions for SCO OpenServer and UnixWare 7. These distributions
+and the source code are available via:
+<BR>
+<A HREF="http://www.sco.com/skunkware/x11/apps/index.html#mathrec">
+http://www.sco.com/skunkware/x11/apps/index.html#mathrec</A>.
+<DT><B>History</B>
+<DD>
+- created 30 Nov 1990 by Ron Record (rr@sco.com)
+<BR>
+  based upon an algorithm published in the Sep 86 Scientific American
+<BR>
+- added arguments to select between sqrt(), sin(), log(), and linear
+<BR>
+  functions (original was sqrt()).
+<BR>
+- Rewritten using X11 19 Apr 1993 by Ron Record (rr@sco.com)
+<DT><B>Description</B>
+<DD>
+Hop uses a system of parametric equations to iterate a point in the plane.
+The color of the point is incremented every "period" points displayed or,
+if you have selected the histogram option, the color is computed from the
+number of times that pixel has been "hit".
+<DT><B>Build</B>
+<DD>
+To build the hop binary, either use the Imakefile or the sample makefile,
+Makefile.std.
+<P>
+After modifying the Imakefile appropriately, either use "xmkmf" or "imake"
+to create a Makefile. Then just type "make" to compile hop.
+<P>
+The manual page can be formatted by typing "nroff -man hop.man > hop.6X".
+<DT><B>Install</B>
+<DD>
+To install hop, copy the hop binary to the desired location (the sample
+makefile puts it in /usr/games/X11)
+Copy the formatted man page to wherever you keep your local doc (i use
+/usr/games/X11/doc for games and imaging software), then add that location
+to your MANPATH.
+<DT><B>Productivity</B>
+<DD>None
+<DT><B>Safety</B>
+<DD>I have used this for years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual page.
+
+<DT><B>Verification</B>
+<DD>Try running hop with no arguments. It should display a doily kind of
+pattern on the screen.
+
+<DT><B>Feedback</B>
+<DD>
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

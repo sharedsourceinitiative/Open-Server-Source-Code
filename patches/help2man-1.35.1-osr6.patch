@@ -1,0 +1,81 @@
+*** ./debian/changelog.osr6 Thu Nov 25 02:19:54 2004
+--- ./debian/changelog Sun May 22 21:56:19 2005
+***************
+*** 33,39 ****
+  
+  help2man (1.32.2) unstable; urgency=low
+  
+!   * Build preload with -fPIC.  Closes: #200632.
+  
+   -- Brendan O'Dea <bod@debian.org>  Thu, 10 Jul 2003 07:57:56 +1000
+  
+--- 33,39 ----
+  
+  help2man (1.32.2) unstable; urgency=low
+  
+!   * Build preload with -KPIC.  Closes: #200632.
+  
+   -- Brendan O'Dea <bod@debian.org>  Thu, 10 Jul 2003 07:57:56 +1000
+  
+*** ./Makefile.in.osr6 Thu Jul 17 08:32:17 2003
+--- ./Makefile.in Sun May 22 21:57:11 2005
+***************
+*** 102,108 ****
+  
+  preload: $(preload).so
+  $(preload).so: $(srcdir)/$(preload).c
+! 	$(CC) $(CFLAGS) -o $@ -fPIC -shared $? $(LIBS)
+  
+  man: $(target).1
+  man_l10n:
+--- 102,108 ----
+  
+  preload: $(preload).so
+  $(preload).so: $(srcdir)/$(preload).c
+! 	$(CC) -G $(CFLAGS) -o $@ -KPIC $? $(LIBS)
+  
+  man: $(target).1
+  man_l10n:
+*** ./hacklocaledir.c.osr6 Tue Jul  8 07:23:53 2003
+--- ./hacklocaledir.c Sun May 22 21:56:19 2005
+***************
+*** 109,113 ****
+      return r;
+  }
+  
+  int open(char const *path, int flags, mode_t mode)
+      __attribute__((weak, alias("__open")));
+--- 109,117 ----
+      return r;
+  }
+  
++ #ifdef __USLC__
++ int open(char const *path, int flags, mode_t mode);
++ #else
+  int open(char const *path, int flags, mode_t mode)
+      __attribute__((weak, alias("__open")));
+  #endif
+***************
+*** 111,113 ****
+  
+  int open(char const *path, int flags, mode_t mode)
+      __attribute__((weak, alias("__open")));
+--- 114,117 ----
+  #else
+  int open(char const *path, int flags, mode_t mode)
+      __attribute__((weak, alias("__open")));
++ #endif
+--- Install-OSR6.osr6	2005-07-03 19:25:37.910000027 -0700
++++ Install-OSR6	2005-07-03 19:25:51.110000011 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/help2man
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

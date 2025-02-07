@@ -1,0 +1,586 @@
+*** ./asmcomp/i386/emit.mlp.00 Mon May  3 05:46:50 2004
+--- ./asmcomp/i386/emit.mlp Thu May  5 18:34:14 2005
+***************
+*** 51,56 ****
+      "linux_elf" -> ""
+    | "bsd_elf" -> ""
+    | "solaris" -> ""
+    | "beos" -> ""
+    | _ -> "_"
+  
+--- 51,57 ----
+      "linux_elf" -> ""
+    | "bsd_elf" -> ""
+    | "solaris" -> ""
++   | "sysv5" -> ""
+    | "beos" -> ""
+    | _ -> "_"
+  
+***************
+*** 64,69 ****
+      "linux_elf" -> ".L"
+    | "bsd_elf" -> ".L"
+    | "solaris" -> ".L"
+    | "beos" -> ".L"
+    | _ -> "L"
+  
+--- 65,71 ----
+      "linux_elf" -> ".L"
+    | "bsd_elf" -> ".L"
+    | "solaris" -> ".L"
++   | "sysv5" -> ".L"
+    | "beos" -> ".L"
+    | _ -> "L"
+  
+***************
+*** 76,81 ****
+  let word_dir =
+    match Config.system with
+      "solaris" -> ".value"
+    | _ -> ".word"
+  let skip_dir =
+    match Config.system with
+--- 78,84 ----
+  let word_dir =
+    match Config.system with
+      "solaris" -> ".value"
++   | "sysv5" -> ".value"
+    | _ -> ".word"
+  let skip_dir =
+    match Config.system with
+***************
+*** 80,85 ****
+  let skip_dir =
+    match Config.system with
+      "solaris" -> ".zero"
+    | _ -> ".space"
+  let use_ascii_dir =
+    match Config.system with
+--- 83,89 ----
+  let skip_dir =
+    match Config.system with
+      "solaris" -> ".zero"
++   | "sysv5" -> ".zero"
+    | _ -> ".space"
+  let use_ascii_dir =
+    match Config.system with
+***************
+*** 84,89 ****
+  let use_ascii_dir =
+    match Config.system with
+      "solaris" -> false
+    | _ -> true
+  
+  (* Output a .align directive.
+--- 88,94 ----
+  let use_ascii_dir =
+    match Config.system with
+      "solaris" -> false
++   | "sysv5" -> false
+    | _ -> true
+  
+  (* Output a .align directive.
+***************
+*** 92,98 ****
+  
+  let emit_align =
+    match Config.system with
+!     "linux_elf" | "bsd_elf" | "solaris" | "beos" | "cygwin" | "mingw" ->
+        (fun n -> `	.align	{emit_int n}\n`)
+    | _ ->
+        (fun n -> `	.align	{emit_int(Misc.log2 n)}\n`)
+--- 97,103 ----
+  
+  let emit_align =
+    match Config.system with
+!     "linux_elf" | "bsd_elf" | "solaris" | "sysv5" | "beos" | "cygwin" | "mingw" ->
+        (fun n -> `	.align	{emit_int n}\n`)
+    | _ ->
+        (fun n -> `	.align	{emit_int(Misc.log2 n)}\n`)
+*** ./asmrun/signals.c.00 Sat Jun 19 09:13:32 2004
+--- ./asmrun/signals.c Thu May  5 15:13:13 2005
+***************
+*** 403,409 ****
+  #ifdef POSIX_SIGNALS
+    sigact.sa_handler = act;
+    sigemptyset(&sigact.sa_mask);
+! #if defined(SYS_solaris) || defined(SYS_rhapsody)
+    sigact.sa_flags = SA_SIGINFO;
+  #else
+    sigact.sa_flags = 0;
+--- 403,409 ----
+  #ifdef POSIX_SIGNALS
+    sigact.sa_handler = act;
+    sigemptyset(&sigact.sa_mask);
+! #if defined(SYS_solaris) || defined(SYS_rhapsody) || defined(SYS_sysv5)
+    sigact.sa_flags = SA_SIGINFO;
+  #else
+    sigact.sa_flags = 0;
+*** ./asmrun/i386.S.00 Sat Jan  3 04:51:19 2004
+--- ./asmrun/i386.S Thu May  5 14:30:40 2005
+***************
+*** 26,32 ****
+  #endif
+  
+  #if defined(SYS_linux_elf) || defined(SYS_bsd_elf) \
+!  || defined(SYS_solaris) || defined(SYS_beos)
+  #define G(x) x
+  #define LBL(x) CONCAT(.L,x)
+  #else
+--- 26,32 ----
+  #endif
+  
+  #if defined(SYS_linux_elf) || defined(SYS_bsd_elf) \
+!  || defined(SYS_solaris) || defined(SYS_beos) || defined(SYS_sysv5)
+  #define G(x) x
+  #define LBL(x) CONCAT(.L,x)
+  #else
+***************
+*** 36,42 ****
+  
+  #if defined(SYS_linux_elf) || defined(SYS_bsd_elf) \
+   || defined(SYS_solaris) || defined(SYS_beos) || defined(SYS_cygwin) \
+!  || defined(SYS_mingw)
+  #define FUNCTION_ALIGN 4
+  #else
+  #define FUNCTION_ALIGN 2
+--- 36,42 ----
+  
+  #if defined(SYS_linux_elf) || defined(SYS_bsd_elf) \
+   || defined(SYS_solaris) || defined(SYS_beos) || defined(SYS_cygwin) \
+!  || defined(SYS_mingw) || defined(SYS_sysv5)
+  #define FUNCTION_ALIGN 4
+  #else
+  #define FUNCTION_ALIGN 2
+***************
+*** 317,323 ****
+  G(caml_system__frametable):
+          .long   1               /* one descriptor */
+          .long   LBL(107)        /* return address into callback */
+! #ifndef SYS_solaris
+          .word   -1              /* negative frame size => use callback link */
+          .word   0               /* no roots here */
+  #else
+--- 317,323 ----
+  G(caml_system__frametable):
+          .long   1               /* one descriptor */
+          .long   LBL(107)        /* return address into callback */
+! #if !defined(SYS_solaris) && !defined(SYS_sysv5)
+          .word   -1              /* negative frame size => use callback link */
+          .word   0               /* no roots here */
+  #else
+*** ./asmrun/Makefile.00 Sun May  9 08:19:16 2004
+--- ./asmrun/Makefile Thu May  5 14:34:04 2005
+***************
+*** 153,159 ****
+  .SUFFIXES: .S .d.o .p.o
+  
+  .S.o:
+! 	$(ASPP) $(ASPPFLAGS) -o $*.o $*.S || \
+  	{ echo "If your assembler produced syntax errors, it is probably unhappy with the"; echo "preprocessor. Check your assembler, or try producing $*.o by hand."; exit 2; }
+  
+  .S.p.o:
+--- 153,159 ----
+  .SUFFIXES: .S .d.o .p.o
+  
+  .S.o:
+! 	$(CC) -c $(ASPPFLAGS) -o $*.o $*.S || \
+  	{ echo "If your assembler produced syntax errors, it is probably unhappy with the"; echo "preprocessor. Check your assembler, or try producing $*.o by hand."; exit 2; }
+  
+  .S.p.o:
+***************
+*** 157,163 ****
+  	{ echo "If your assembler produced syntax errors, it is probably unhappy with the"; echo "preprocessor. Check your assembler, or try producing $*.o by hand."; exit 2; }
+  
+  .S.p.o:
+! 	$(ASPP) $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.S
+  
+  .c.d.o:
+  	@ if test -f $*.o; then mv $*.o $*.f.o; else :; fi
+--- 157,163 ----
+  	{ echo "If your assembler produced syntax errors, it is probably unhappy with the"; echo "preprocessor. Check your assembler, or try producing $*.o by hand."; exit 2; }
+  
+  .S.p.o:
+! 	$(CC) -c $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.S
+  
+  .c.d.o:
+  	@ if test -f $*.o; then mv $*.o $*.f.o; else :; fi
+***************
+*** 172,178 ****
+  	@ if test -f $*.f.o; then mv $*.f.o $*.o; else :; fi
+  
+  .s.o:
+! 	$(ASPP) $(ASPPFLAGS) -o $*.o $*.s
+  
+  .s.p.o:
+  	$(ASPP) $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.s
+--- 172,178 ----
+  	@ if test -f $*.f.o; then mv $*.f.o $*.o; else :; fi
+  
+  .s.o:
+! 	$(CC) -c $(ASPPFLAGS) -o $*.o $*.s
+  
+  .s.p.o:
+  	$(CC) -c $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.s
+***************
+*** 175,181 ****
+  	$(ASPP) $(ASPPFLAGS) -o $*.o $*.s
+  
+  .s.p.o:
+! 	$(ASPP) $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.s
+  
+  clean::
+  	rm -f *.o *.a *~
+--- 175,181 ----
+  	$(CC) -c $(ASPPFLAGS) -o $*.o $*.s
+  
+  .s.p.o:
+! 	$(CC) -c $(ASPPFLAGS) $(ASPPPROFFLAGS) -o $*.p.o $*.s
+  
+  clean::
+  	rm -f *.o *.a *~
+*** ./config/auto-aux/sysv5-ld.00 Fri May  6 15:44:20 2005
+--- ./config/auto-aux/sysv5-ld Thu May  5 18:30:48 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ # Determine if gcc calls the SVR5 ld or the GNU ld
++ # Exit code is 0 for SVR5 ld, 1 for GNU ld
++ 
++ echo "int main() { return 0; }" > hasgot.c
++ $cc -V -o tst hasgot.c 2>&1 | grep -s '^ld:' > /dev/null
++ exit $?
+*** ./config/Makefile-templ.00 Sat Jun 19 09:17:31 2004
+--- ./config/Makefile-templ Thu May  5 10:03:48 2005
+***************
+*** 83,89 ****
+  #RANLIB=ranlib
+  #RANLIBCMD=ranlib
+  # If ranlib is not needed:
+! #RANLIB=ar rs
+  #RANLIBCMD=
+  
+  ### Shared library support
+--- 83,89 ----
+  #RANLIB=ranlib
+  #RANLIBCMD=ranlib
+  # If ranlib is not needed:
+! #RANLIB=true
+  #RANLIBCMD=
+  
+  ### Shared library support
+*** ./otherlibs/systhreads/posix.c.00 Thu Jul  1 02:32:38 2004
+--- ./otherlibs/systhreads/posix.c Thu May  5 14:38:12 2005
+***************
+*** 20,26 ****
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <pthread.h>
+! #ifdef __sun
+  #define _POSIX_PTHREAD_SEMANTICS
+  #endif
+  #include <signal.h>
+--- 20,26 ----
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <pthread.h>
+! #if defined(__sun) || defined(__USLC__)
+  #define _POSIX_PTHREAD_SEMANTICS
+  #endif
+  #include <signal.h>
+***************
+*** 817,822 ****
+      sigs = Field(sigs, 1);
+    }
+    enter_blocking_section();
+    retcode = sigwait(&set, &signo);
+    leave_blocking_section();
+    caml_pthread_check(retcode, "Thread.wait_signal");
+--- 817,825 ----
+      sigs = Field(sigs, 1);
+    }
+    enter_blocking_section();
++ #ifdef __USLC__
++   retcode = sigwait(&set);
++ #else
+    retcode = sigwait(&set, &signo);
+  #endif
+    leave_blocking_section();
+***************
+*** 818,823 ****
+    }
+    enter_blocking_section();
+    retcode = sigwait(&set, &signo);
+    leave_blocking_section();
+    caml_pthread_check(retcode, "Thread.wait_signal");
+    return Val_int(signo);
+--- 821,827 ----
+    retcode = sigwait(&set);
+  #else
+    retcode = sigwait(&set, &signo);
++ #endif
+    leave_blocking_section();
+    caml_pthread_check(retcode, "Thread.wait_signal");
+    return Val_int(signo);
+*** ./otherlibs/unix/getaddrinfo.c.00 Wed Jan 12 07:08:56 2005
+--- ./otherlibs/unix/getaddrinfo.c Thu May  5 12:43:18 2005
+***************
+*** 30,35 ****
+  #include <netdb.h>
+  #endif
+  
+  extern int socket_domain_table[]; /* from socket.c */
+  extern int socket_type_table[];   /* from socket.c */
+  
+--- 30,38 ----
+  #include <netdb.h>
+  #endif
+  
++ #ifndef AI_NUMERICHOST
++ #define AI_NUMERICHOST 0x00000004
++ #endif
+  extern int socket_domain_table[]; /* from socket.c */
+  extern int socket_type_table[];   /* from socket.c */
+  
+*** ./otherlibs/unix/Makefile.00 Fri Apr  9 06:25:20 2004
+--- ./otherlibs/unix/Makefile Thu May  5 20:15:20 2005
+***************
+*** 24,29 ****
+  CAMLOPT=../../ocamlcompopt.sh
+  MKLIB=../../boot/ocamlrun ../../tools/ocamlmklib
+  COMPFLAGS=-warn-error A
+  
+  OBJS=accept.o access.o addrofstr.o alarm.o bind.o chdir.o chmod.o \
+    chown.o chroot.o close.o closedir.o connect.o cst2constr.o cstringv.o \
+--- 24,31 ----
+  CAMLOPT=../../ocamlcompopt.sh
+  MKLIB=../../boot/ocamlrun ../../tools/ocamlmklib
+  COMPFLAGS=-warn-error A
++ #LDADD=-L../../byterun -lcamlrun -L/usr/ccs/lib -lcrt
++ LDADD=
+  
+  OBJS=accept.o access.o addrofstr.o alarm.o bind.o chdir.o chmod.o \
+    chown.o chroot.o close.o closedir.o connect.o cst2constr.o cstringv.o \
+***************
+*** 49,55 ****
+  allopt: libunix.a unix.cmxa
+  
+  libunix.a: $(OBJS)
+! 	$(MKLIB) -o unix $(OBJS)
+  
+  unix.cma: $(MLOBJS)
+  	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS)
+--- 51,57 ----
+  allopt: libunix.a unix.cmxa
+  
+  libunix.a: $(OBJS)
+! 	$(MKLIB) -o unix $(OBJS) $(LDADD)
+  
+  unix.cma: $(MLOBJS)
+  	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS) $(LDADD)
+***************
+*** 52,58 ****
+  	$(MKLIB) -o unix $(OBJS)
+  
+  unix.cma: $(MLOBJS)
+! 	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS)
+  
+  unix.cmxa: $(MLOBJS:.cmo=.cmx)
+  	$(MKLIB) -o unix -ocamlopt '$(CAMLOPT)' -linkall $(MLOBJS:.cmo=.cmx)
+--- 54,60 ----
+  	$(MKLIB) -o unix $(OBJS) $(LDADD)
+  
+  unix.cma: $(MLOBJS)
+! 	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS) $(LDADD)
+  
+  unix.cmxa: $(MLOBJS:.cmo=.cmx)
+  	$(MKLIB) -o unix -ocamlopt '$(CAMLOPT)' -linkall $(MLOBJS:.cmo=.cmx) $(LDADD)
+***************
+*** 55,61 ****
+  	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS)
+  
+  unix.cmxa: $(MLOBJS:.cmo=.cmx)
+! 	$(MKLIB) -o unix -ocamlopt '$(CAMLOPT)' -linkall $(MLOBJS:.cmo=.cmx)
+  
+  unix.cmx: ../../ocamlopt
+  
+--- 57,63 ----
+  	$(MKLIB) -o unix -ocamlc '$(CAMLC)' -linkall $(MLOBJS) $(LDADD)
+  
+  unix.cmxa: $(MLOBJS:.cmo=.cmx)
+! 	$(MKLIB) -o unix -ocamlopt '$(CAMLOPT)' -linkall $(MLOBJS:.cmo=.cmx) $(LDADD)
+  
+  unix.cmx: ../../ocamlopt
+  
+*** ./Build-OSR6.00 Fri May  6 15:44:01 2005
+--- ./Build-OSR6 Fri May  6 16:03:04 2005
+***************
+*** 0 ****
+--- 1,68 ----
++ #!/bin/sh
++ #
++ # Ron Record <rr@sco.com> 05-May-2005
++ #
++ 
++ Usage() {
++   echo "Usage: ./Build-OSR6 [-p] [-c] [-w] [-b] [-o] [-u]"
++   echo "\twhere:"
++   echo "\t\t-p indicates to "prep" the source by removing"
++   echo "\t\t\tthe vestiges of a previous build"
++   echo "\t\t-c indicates to configure only"
++   echo "\t\t-w indicates to configure and make world only"
++   echo "\t\t-b indicates to configure; make world; make bootstrap only"
++   echo "\t\t-o indicates to configure; make world; make bootstrap;"
++   echo "\t\t\tmake opt only"
++   echo "\t\t-u displays this message"
++ }
++ 
++ [ "$1" = "-u" ] && {
++   Usage
++   exit 1
++ }
++ 
++ # Cleanup previous build
++ [ -f Makefile ] && {
++   [ -f config/Makefile ] && {
++     make clean cleanboot
++   }
++ }
++ 
++ [ "$1" = "-p" ] && {
++     rm -f prev-mout*
++     mv mout* /tmp
++     exit 0
++ }
++ 
++ # Backup previous build's log files
++ for i in configure world opt bootstrap opt.opt
++ do
++     [ -f mout-$i ] && mv mout-$i prev-mout-$i
++ done
++ 
++ # Configure for OpenServer 6
++ ./Configure-OSR6
++ 
++ # Configure only
++ [ "$1" = "-c" ] && exit 0
++ 
++ # Build the Objective Caml bytecode compiler for the first time
++ make world 2>&1 | tee mout-world
++ 
++ # Make world only
++ [ "$1" = "-w" ] && exit 0
++ 
++ # Recompile all Objective Caml sources with the newly created compiler
++ make bootstrap 2>&1 | tee mout-bootstrap
++ 
++ # Make world; Make bootstrap only
++ [ "$1" = "-b" ] && exit 0
++ 
++ # Build the native-code compiler
++ make opt 2>&1 | tee mout-opt
++ 
++ # Make world; make bootstrap; make opt only
++ [ "$1" = "-o" ] && exit 0
++ 
++ # Compile the Objective Caml compilers with the native-code compiler
++ make opt.opt 2>&1 | tee mout-opt.opt
+*** ./configure.00 Mon Jan 24 07:22:46 2005
+--- ./configure Thu May  5 18:29:29 2005
+***************
+*** 525,530 ****
+            mksharedlib="/usr/ccs/bin/ld -G -o"
+            shared_libraries_supported=true;;
+        esac;;
+      mips*-*-irix[56]*)
+        case "$bytecc" in
+          cc*) sharedcccompopts="";;
+--- 525,552 ----
+            mksharedlib="/usr/ccs/bin/ld -G -o"
+            shared_libraries_supported=true;;
+        esac;;
++     *-*-sysv5*)
++       case "$bytecc" in
++         gcc*)
++           sharedcccompopts="-fPIC"
++           if sh ./sysv5-ld; then
++             mksharedlib="$bytecc -shared -o"
++             byteccrpath="-R"
++             mksharedlibrpath="-R"
++           else
++             mksharedlib="$bytecc -shared -o"
++             bytecclinkopts="$bytecclinkopts -Wl,-E"
++             byteccrpath="-Wl,-rpath,"
++             mksharedlibrpath="-Wl,-rpath,"
++           fi
++           shared_libraries_supported=true;;
++         *)
++           sharedcccompopts="-KPIC"
++           byteccrpath="-R"
++           mksharedlibrpath="-R"
++           mksharedlib="/usr/ccs/bin/ld -G -o"
++           shared_libraries_supported=true;;
++       esac;;
+      mips*-*-irix[56]*)
+        case "$bytecc" in
+          cc*) sharedcccompopts="";;
+***************
+*** 571,576 ****
+    i[3456]86-*-*bsd*)            arch=i386; system=bsd_`sh ./runtest elf.c`;;
+    i[3456]86-*-nextstep*)        arch=i386; system=nextstep;;
+    i[3456]86-*-solaris*)         arch=i386; system=solaris;;
+    i[3456]86-*-beos*)            arch=i386; system=beos;;
+    i[3456]86-*-cygwin*)          arch=i386; system=cygwin;;
+    mips-*-irix6*)                arch=mips; system=irix;;
+--- 593,599 ----
+    i[3456]86-*-*bsd*)            arch=i386; system=bsd_`sh ./runtest elf.c`;;
+    i[3456]86-*-nextstep*)        arch=i386; system=nextstep;;
+    i[3456]86-*-solaris*)         arch=i386; system=solaris;;
++   i[3456]86-*-sysv5*)           arch=i386; system=sysv5;;
+    i[3456]86-*-beos*)            arch=i386; system=beos;;
+    i[3456]86-*-cygwin*)          arch=i386; system=cygwin;;
+    mips-*-irix6*)                arch=mips; system=irix;;
+***************
+*** 637,642 ****
+                           *) asppflags='-P -DSYS_$(SYSTEM)';;
+                      esac;;
+    i386,*,solaris)   aspp='/usr/ccs/bin/as'; asppflags='-P -DSYS_$(SYSTEM)';;
+    i386,*,*)         aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+    hppa,*,*)         aspp="$cc"; asppflags='-traditional -c -DSYS_$(SYSTEM)';;
+    power,*,elf)      aspp='gcc'; asppflags='-c';;
+--- 660,666 ----
+                           *) asppflags='-P -DSYS_$(SYSTEM)';;
+                      esac;;
+    i386,*,solaris)   aspp='/usr/ccs/bin/as'; asppflags='-P -DSYS_$(SYSTEM)';;
++   i386,*,sysv5)     aspp='/usr/ccs/bin/as'; asppflags='-P -DSYS_$(SYSTEM)';;
+    i386,*,*)         aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+    hppa,*,*)         aspp="$cc"; asppflags='-traditional -c -DSYS_$(SYSTEM)';;
+    power,*,elf)      aspp='gcc'; asppflags='-c';;
+***************
+*** 707,713 ****
+    echo "RANLIBCMD=ranlib" >> Makefile
+  else
+    echo "ranlib not used"
+!   echo "RANLIB=ar rs" >> Makefile
+    echo "RANLIBCMD=" >> Makefile
+  fi
+  
+--- 731,737 ----
+    echo "RANLIBCMD=ranlib" >> Makefile
+  else
+    echo "ranlib not used"
+!   echo "RANLIB=true" >> Makefile
+    echo "RANLIBCMD=" >> Makefile
+  fi
+  
+*** ./Configure-OSR6.00 Fri May  6 15:44:01 2005
+--- ./Configure-OSR6 Thu May  5 20:16:55 2005
+***************
+*** 0 ****
+--- 1,5 ----
++ HOST=i386-sco-sysv5
++ CC="cc -Kpthread -Kalloca -Wl,-Bexport"
++ export CC
++ rm -f mout-configure
++ ./configure -host $HOST -cc "$CC" 2>&1 | tee mout-configure

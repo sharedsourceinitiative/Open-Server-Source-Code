@@ -1,0 +1,137 @@
+*** ./src/Makefile.shlib.osr6	Fri Oct 28 10:32:22 2005
+--- ./src/Makefile.shlib	Wed Nov 30 15:38:03 2005
+***************
+*** 230,236 ****
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+--- 230,236 ----
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,/usr/lib/pgsql/$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+***************
+*** 278,284 ****
+  ifdef MK_NO_LORDER
+  	$(LINK.static) $@ $^
+  else
+! 	$(LINK.static) $@ `$(LORDER) $^ | tsort`
+  endif
+  	$(RANLIB) $@
+  endif #haslibarule
+--- 278,284 ----
+  ifdef MK_NO_LORDER
+  	$(LINK.static) $@ $^
+  else
+! 	$(LINK.static) $@ `$(LORDER) $^ | /usr/ccs/bin/tsort`
+  endif
+  	$(RANLIB) $@
+  endif #haslibarule
+*** ./Install-OSR6.osr6	Wed Nov 30 15:38:03 2005
+--- ./Install-OSR6	Wed Nov 30 15:38:03 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgsql
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./Build-OSR6.osr6	Wed Nov 30 15:38:03 2005
+--- ./Build-OSR6	Wed Nov 30 15:38:03 2005
+***************
+*** 0 ****
+--- 1,59 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --disable-rpath \
++             --with-CXX --with-perl --enable-multibyte \
++             --with-tcl --with-tk --with-tcl-config=/usr/gnu/lib \
++             --enable-locale --with-python --with-readline \
++             --with-openssl --sysconfdir=/etc/sysconfig/pgsql \
++             --datadir=/usr/share/postgresql \
++             --with-docdir=/usr/share/doc/packages --enable-syslog --with-x \
++             --without-gnu-ld --without-pam --without-krb5 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ make all
++ make -C contrib all
++ make -C contrib/xml2 all
++ 
++ # Have to hack makefile to put correct path into tutorial scripts
++ sed "s|C=\`pwd\`;|C=/usr/lib/pgsql/tutorial;|" < src/tutorial/Makefile > src/tutorial/GNUmakefile
++ make -C src/tutorial NO_PGXS=1 all
++ rm -f src/tutorial/GNUmakefile
++ 
++ #  PYTHON=/usr/bin/python
++ #  python_version=`${PYTHON} -c "import sys; print sys.version[:3]"`
++ #  python_prefix=`${PYTHON} -c "import sys; print sys.prefix"`
++ #  python_includespec="-I${python_prefix}/include/python${python_version}"
++ 
++ #  pushd PyGreSQL
++ 
++ #  cc $CFLAGS -Kpic -G -o _pgmodule.so ${python_includespec} -I../src/interfaces/libpq -I../src/include -L../src/interfaces/libpq -lpq pgmodule.c
++ 
++ #  popd
++ 
++ #  pushd Pgtcl
++    # pgtcl's configure only handles one include directory :-(
++ #  ./configure --prefix=/usr \
++ #    --libdir=%{_libdir} \
++ #    --with-tcl=%{_libdir} \
++ #    --with-postgres-include="../src/interfaces/libpq -I../src/include" \
++ #    --with-postgres-lib=../src/interfaces/libpq
++    # note: as of pgtcl 1.5.2, its makefile is not parallel-safe
++ #  make all
++ #  popd
+*** ./configure.osr6	Fri Nov  4 20:01:38 2005
+--- ./configure	Wed Nov 30 15:38:56 2005
+***************
+*** 13770,13784 ****
+  fi
+  echo "$as_me:$LINENO: result: $ac_cv_type_struct_sockaddr_in6" >&5
+  echo "${ECHO_T}$ac_cv_type_struct_sockaddr_in6" >&6
+- if test $ac_cv_type_struct_sockaddr_in6 = yes; then
+- 
+- cat >>confdefs.h <<\_ACEOF
+- #define HAVE_IPV6 1
+- _ACEOF
+- 
+-          HAVE_IPV6=yes
+- fi
+- 
+  
+  
+  echo "$as_me:$LINENO: checking for PS_STRINGS" >&5
+--- 13770,13775 ----

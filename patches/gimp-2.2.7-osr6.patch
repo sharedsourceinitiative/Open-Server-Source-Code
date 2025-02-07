@@ -1,0 +1,35 @@
+*** ./Configure-OSR6.osr6	Tue Jul  5 14:02:34 2005
+--- ./Configure-OSR6	Tue Jul  5 14:15:26 2005
+***************
+*** 0 ****
+--- 1,16 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ CC="cc -Kpthread -Kalloca"
++ CXX="CC -Kpthread -Kalloca"
++ LIBAA="-laa -lm -lsocket -L/usr/X11R6/lib -lX11 -lslang"
++ export CC CXX CFLAGS LIBAA
++ 
++ libtoolize -c -f
++ aclocal -I m4macros
++ automake -a -c -f
++ autoconf -f
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- Install-OSR6.osr6	2005-07-05 14:33:17.820000003 -0700
++++ Install-OSR6	2005-07-05 14:33:36.600000003 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gimp
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

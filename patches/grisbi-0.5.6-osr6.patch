@@ -1,0 +1,38 @@
+*** ./src/Makefile.in.osr6 Sat May 14 12:12:18 2005
+--- ./src/Makefile.in Sun May 22 21:13:45 2005
+***************
+*** 151,157 ****
+  target_alias = @target_alias@
+  
+  localedir = $(datadir)/locale
+! INCLUDES = -I$(top_srcdir) -I$(includedir) -I../intl -DLOCALEDIR=\"$(localedir)\" -DPIXMAPS_DIR="\"$(datadir)/pixmaps/grisbi\"" -DLOGO_PATH="\"$(datadir)/pixmaps/grisbi/grisbi-logo.png\"" -DANIM_PATH="\"$(datadir)/pixmaps/grisbi/euro.gif\"" -DHELP_PATH="\"$(datadir)/doc/grisbi/help\"" -Wall 
+  bin_PROGRAMS = grisbi
+  
+  sources = \
+--- 151,157 ----
+  target_alias = @target_alias@
+  
+  localedir = $(datadir)/locale
+! INCLUDES = -I$(top_srcdir) -I$(includedir) -I../intl -DLOCALEDIR=\"$(localedir)\" -DPIXMAPS_DIR="\"$(datadir)/pixmaps/grisbi\"" -DLOGO_PATH="\"$(datadir)/pixmaps/grisbi/grisbi-logo.png\"" -DANIM_PATH="\"$(datadir)/pixmaps/grisbi/euro.gif\"" -DHELP_PATH="\"$(datadir)/doc/grisbi/help\""
+  bin_PROGRAMS = grisbi
+  
+  sources = \
+*** ./src/comptes_traitements.c.osr6 Sat Feb  5 14:23:42 2005
+--- ./src/comptes_traitements.c Sun May 22 21:15:24 2005
+***************
+*** 246,252 ****
+      do
+      {
+  	if ( GPOINTER_TO_INT ( pointeur_liste -> data ) > compte_modifie )
+! 	    pointeur_liste -> data--;
+      }
+      while ( ( pointeur_liste = pointeur_liste -> next ) );
+  
+--- 246,252 ----
+      do
+      {
+  	if ( GPOINTER_TO_INT ( pointeur_liste -> data ) > compte_modifie )
+! 	    (int)(pointeur_liste -> data)--;
+      }
+      while ( ( pointeur_liste = pointeur_liste -> next ) );
+  

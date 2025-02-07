@@ -1,0 +1,7 @@
+echo "Making tags files"
+make tags
+echo "Backing up previous shar file, if any"
+[ -f coral.shar ] && mv coral.shar coral.shar-
+echo "Creating new shar file"
+shar README Imakefile Makefile.std Package *.c *.h *.LOCAL *.man tags TAGS > coral.shar
+echo "Done"

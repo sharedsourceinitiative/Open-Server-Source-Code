@@ -1,0 +1,89 @@
+--- ./PORT/linux/include/compat.h.uw	2003-09-11 13:22:26.310000022 -0700
++++ ./PORT/linux/include/compat.h	2003-09-11 13:22:26.380000023 -0700
+@@ -37,6 +37,7 @@
+ #endif
+ 
+ #include <sys/param.h>
++#include <sys/byteorder.h>
+ 
+ #ifndef	MAX				/* Usually found in <sys/param.h>. */
+ #define	MAX(_a,_b)	((_a)<(_b)?(_b):(_a))
+--- ./PORT/linux/include/mpool.h.uw	2003-09-11 13:22:26.320000039 -0700
++++ ./PORT/linux/include/mpool.h	2003-09-11 13:22:26.380000047 -0700
+@@ -36,7 +36,7 @@
+ #ifndef _MPOOL_H
+ #define _MPOOL_H 1
+ 
+-#include <sys/queue.h>
++#include "queue.h"
+ 
+ /*
+  * The memory pool scheme is a simple one.  Each in-memory page is referenced
+--- ./PORT/linux/Makefile.uw	2003-09-11 13:22:26.310000041 -0700
++++ ./PORT/linux/Makefile	2003-09-11 13:22:26.390000026 -0700
+@@ -30,7 +30,7 @@
+ 	ranlib $@
+ 
+ $(LIBDBSO): $(SHOBJS)
+-	$(CC) -Wl,-O1 -Wl,--version-script=libdb.map -Wl,-soname=$(LIBDBSO) -shared -o $@ $^
++	$(CC) -O1 -Wl,-h -Wl,$(LIBDBSO) -G -o $@ $^
+ 	ln -sf $@ libdb.so
+ 
+ $(PROG): db_dump185.o $(LIBDBSO)
+--- ./PORT/linux/db_dump185.c.uw	2003-09-11 13:22:26.320000018 -0700
++++ ./PORT/linux/db_dump185.c	2003-09-11 13:22:26.390000057 -0700
+@@ -195,7 +195,7 @@
+ 		switch (ch) {
+ 		case 'f':
+ 			if (freopen(optarg, "w", stdout) == NULL)
+-				err(1, "%s", optarg);
++				strerror(errno);
+ 			break;
+ 		case 'p':
+ 			pflag = 1;
+@@ -212,7 +212,7 @@
+ 
+ 	if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_BTREE, NULL)) == NULL) {
+ 		if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_HASH, NULL)) == NULL)
+-			err(1, "%s", argv[0]);
++			strerror(errno);
+ 		db_hash(dbp, pflag);
+ 	} else
+ 		db_btree(dbp, pflag);
+@@ -234,7 +234,7 @@
+ 		}
+ 
+ 	if (rval == -1)
+-		err(1, "seq");
++		strerror(errno);
+ 	return (0);
+ }
+ 
+--- ./include/db.h.uw	2003-09-11 13:22:26.320000075 -0700
++++ ./include/db.h	2003-09-11 13:22:26.400000007 -0700
+@@ -37,6 +37,10 @@
+ #define	_DB_H 1
+ 
+ #include <sys/types.h>
++#include <sys/bitypes.h>
++#ifndef	__BIT_TYPES_DEFINED__
++#define	__BIT_TYPES_DEFINED__
++#endif
+ #include <sys/cdefs.h>
+ 
+ #include <limits.h>
+@@ -114,6 +118,14 @@
+ #define	DB_TXN		    0x8000	/* Do transactions. */
+ #endif
+ 
++#ifndef __PMT
++# ifdef __STDC__
++#  define __PMT(p) p
++# else
++#  define __PMT(p) ()
++# endif
++#endif /*!__P*/
++
+ /* Access method description structure. */
+ typedef struct __db {
+ 	DBTYPE type;			/* Underlying db type. */

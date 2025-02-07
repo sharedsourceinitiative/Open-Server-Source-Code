@@ -1,0 +1,197 @@
+<HTML>
+<!-- $ Last Modified: $Date: $: -->
+
+<HEAD>
+<TITLE>
+Tk8.0 (Skunkware98)</TITLE>
+<LINK REV="made" HREF="mailto:hops@sco.com">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFF0" TEXT="#000000">
+<CENTER>
+<H1>
+Tk8.0 (Skunkware98)
+</H1>
+</CENTER>
+
+These packages are binary runtimes (for SCO OpenServer) and
+the sources and documentation for <STRONG>Tk</STRONG>
+, an X11 toolkit implemented with 
+the 
+<A HREF="./tcl8.0.html">Tcl</A>
+scripting language.  
+The information here corresponds to Tk 8.0p2, the second (and probably last)
+patch release of Tk 8.0 released June 30 1997.
+This release is designed to work with Tcl 8.0p2
+and may not work with any other version of Tcl.
+
+<P>  Tk 8.0 is a major release with significant new features such as native
+look and feel on Macintoshes and PCs, a new font mechanism, application
+embedding, and proper support for Safe-Tcl.
+There should be no backward incompatibilities in Tk 8.0 that affect
+scripts.
+</P>
+
+<P>  Note: with this release the Tk version number skips from 4.2 to 8.0.
+The jump was made in order to synchronize the Tcl and Tk version
+numbers.
+</P>
+
+<H2>INSTALL WARNING</H2>
+
+<P>      If the binary packages for this are installed <STRONG>after</STRONG>
+     any packages for   Tk4.2, This installation will overwrite 
+    <UL>
+    <LI>   The man pages
+    <LI>   The Header files
+    </UL>
+    for Tk4.2. This shouldn't be a great problem for documentation 
+    (8.00 is upwards compatible)  but may be a 
+    an issue if you need the 4.2 header files for building extensions.
+</P>
+
+<P>      To avoid these problems if you have tk4.2 installed,
+    you should copy the tcl header files and man pages 
+    for Tk4.2 to somehere other than the default 
+    /usr/local{include, man} locations  before installing Tk8.0
+</P>
+
+<H2>Summary of changes from tk4.2 </H2>
+
+<P>  Here is a list of the most important new features in Tk 8.0.  The
+release also includes several smaller feature changes and bug fixes. 
+See the "changes" file for a complete list of all changes.
+</P>
+<OL>
+    <LI>  Native look and feel.  The widgets have been rewritten to provide
+    (nearly?) native look and feel on the Macintosh and PC.  Many
+    widgets, including scrollbars, menus, and the button family, are
+    implemented with native platform widgets.  Others, such as entries
+    and texts, have been modified to emulate native look and feel. 
+    These changes are backwards compatible except that (a) some
+    configuration options are now ignored on some platforms and (b) you
+    must use the new menu mechanism described below to native look and
+    feel for menus.
+
+    <LI>  There is a new interface for creating menus, where a menubar is
+    implemented as a menu widget instead of a frame containing menubuttons.
+    The -menu option for a toplevel is used to specify the name of the
+    menubar; the menu will be displayed *outside* the toplevel using
+    different mechanisms on each platform (e.g. on the Macintosh the menu
+    will appear at the top of the screen).  See the menu demos in the
+    widget demo for examples.  The old style of menu still works, but
+    does not provide native look and feel.  Menus have several new
+    features:
+    <UL>
+
+        <LI> New "-columnbreak" and "-hideMargin" options make it possible
+	  to create multi-column menus.
+	<LI>  It is now possible to manipulate the Apple and Help menus on
+	  the Macintosh, and the system menu on Windows.  It is also
+	  possible to have a right justified Help menu on Unix.
+	<LI>  Menus now issue the virtual event <<MenuSelect>> whenever the
+	  current item changes.  Applications can use this to generate
+	  help messages.
+        <LI> There is a new "-direction" option for menubuttons, which
+	  controls where the menu pops up revenues to the button.
+    </UL>
+
+    <LI> The font mechanism in Tk has been completely reworked:
+        <UL>
+	<LI> Font names need not be nasty X LFDs: more intuitive names
+	  like {Times 12 Bold} can also be used.  See the manual entry
+	  font.n for details.
+	<LI>  Font requests always succeed now.  If the requested font is
+	  not available, Tk finds the closest available font and uses
+	  that one.
+	<LI>  Tk now supports named fonts whose precise attributes can be
+	  changed dynamically.  If a named font is changed, any widget
+	  using that font updates itself to reflect the change.
+	<LI> There is a new command "font" for creating named fonts and
+	  querying various information about fonts.
+	<LI>  There are now officially supported C APIs for measuring and
+	  displaying text.  If you use these APIs now, your code will
+	  automatically handle international text when internationalization
+	  is added to Tk in a future release.  See the manual entries
+	  MeasureChar.3, TextLayout.3, and FontId.3.
+	<LI> The old C procedures Tk_GetFontStruct, Tk_NameOfFontStruct,
+	  and Tk_FreeFontStruct have been replaced with more portable
+	  procedures Tk_GetFont, Tk_NameOfFont, and Tk_FreeFont.
+    </UL>
+    
+    <LI> Application embedding.  It is now possible to embedded one Tcl/Tk
+    application inside another, using the -container option on frame
+    widgets and the -use option for toplevel widgets or on the command
+    line for wish.  Embedding should be fully functional under Unix,
+    but the implementation is incomplete on the Macintosh and PC.
+
+    <LI> Tk now works correctly with Safe-Tcl: it can be loaded into
+    safe interpreters.
+
+    <LI> Text widgets now allow images to be embedded directly in the
+    text without using embedded windows.  This is more efficient and
+    provides smoother scrolling.
+
+    <LI> Buttons have a new -default option for drawing default rings in
+    a platform-specific manner.
+
+    <LI> There is a new "gray75" bitmap, and the "gray25" bitmap is now
+    really 25% on (due to an ancient mistake, it had been only 12% on).
+    The Macintosh now supports native bitmaps, including new builtin
+    bitmaps "stop", "caution", and "note", plus the ability to use
+    bitmaps in the application's resource fork.
+
+    <LI> The "destroy" command now ignores windows that don't exist
+    instead of generating an error.
+</OL>
+
+Tk 8.0 introduces the following incompatibilities that may affect Tcl/Tk
+scripts that worked under Tk 4.2 and earlier releases:
+
+<OL>
+    <LI> Font specifications such as "Times 12" now interpret the size
+    as points, whereas it used to be pixels (this was actually a bug,
+    since the behavior was documented as points).  To get pixels now,
+    use a negative size such as "Times -12".
+
+    <LI> The -transient option for menus is no longer supported.  You can
+    achieve the same effect with the -type field.
+
+    <LI> In the canvas "coords" command, polygons now return only the
+    points that were explicitly specified when the polygon was created
+    (they used to return an extra point if the polygon wasn't originally
+    closed).  Internally, polygons are still closed automatically for
+    purposes of display and hit detection; the extra point just isn't
+    returned by the "coords" command.
+
+    <LI> The photo image mechanism now uses Tcl_Channels instead of FILEs,
+   in order to make it portable.  FILEs are no longer used anywhere
+   in Tk.
+
+    <LI> The procedures Tk_GetFontStruct, Tk_NameOfFontStruct,
+    and Tk_FreeFontStruct have been removed.
+</OL>
+
+<P>  Note: the new compiler in Tcl 8.0 may also affect Tcl/Tk scripts; check
+the Tcl documentation for information on incompatibilities introduced by
+Tcl 8.0.
+</P>
+
+<H2>Info resources </H2>
+<UL>
+
+    <LI> <A HREF="http://sunscript.sun.com/TclTkCore/8.0.html">
+            Sunscript Information
+
+    <LI> <A HREF="http://www.cs.uoregon.edu/research/tcl/patch/">
+            Tcl/Tk Unofficial Patch Archive   </A>
+
+    <LI> <A HREF="./tcl7.6.html#tclInfo">
+    Other Information resources </A>  are as for Tcl.
+</UL>
+                                                             
+<!---------------------------------------------------------------->
+<HR>
+Skunkware 98
+</BODY>
+</HTML>

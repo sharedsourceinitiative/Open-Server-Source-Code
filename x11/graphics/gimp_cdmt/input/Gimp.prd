@@ -1,0 +1,6 @@
+PROD:SKUNK97:Gimp:
+description = "General Image Manipulation Program"
+version     = 0.99.10
+packages    = SKUNK97:Gimp
+required    = SKUNK97:Gimp
+cmpntFiles  = Gimp.cmpnt

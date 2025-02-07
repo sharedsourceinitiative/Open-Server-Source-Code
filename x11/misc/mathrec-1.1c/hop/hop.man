@@ -1,0 +1,106 @@
+.TH HOP 6X
+.SH NAME
+hop \- calculate and display a doily pattern
+.SH SYNOPSIS
+.in +8n
+.ti -8n
+\fIhop\fR
+[-AFHLRSZmu][-w width][-h height][-o filename][-C colorwheel][-D numdemos][-E exponent][-abcde value][-l limit][-p period][-s scale]
+.in -8n
+.SH DESCRIPTION
+\fIhop\fR
+generates and graphically displays a doily-like pattern by iterating one of
+several parametric maps of the plane. Maps include use of the square root,
+sine, logarithmic, and linear functions.
+.SH OPTIONS
+.TP 8
+-R
+Indicates the display will be in the root window. In this mode, the  default
+color map will be used and no spinning of the color wheel is possible.
+.TP
+-C \fIn\fP
+Selects one of many different color wheels to use. The default color
+wheel is a rainbow palette.
+.TP
+-D \fIn\fP
+Indicates demo mode. In this mode, the doily will be calculated, displayed,
+and spun. The numeric argument indicates the number of successive runs (each
+using different parameters and maps). The program exits after the last run.
+.TP
+-w \fIn\fP
+Specifies the width of the window. Default is full screen.
+.TP
+-h \fIn\fP
+Specifies the height of the window. Default is full screen.
+.TP
+-o \fIfilename\fP
+Specifies the output filename to be used. If the -o option is given, this
+file will automatically be written out at the completion of the drawing.
+If it is not specified, a default filename of hop.ppm is used and only
+written if the 'f' or 'F' keys are pressed during a run. The format of the
+output file is PPM. The parameters used to calculate the picture are included 
+as comments at the beginning of the output file.
+.TP
+-u
+Produces a usage message.
+.TP
+.sp 2
+.SH NOTES
+.sp
+During display, use of the keys 
+\fI+-aAbBCfFnNrswWX?hqQ\fP
+indicates:
+.sp
+.ti 10
+(+) Increment minimum color index.
+.ti 10
+(+) Decrement minimum color index.
+.ti 10
+(a or A) Use the log function with new parameters
+.ti 10
+(b or B) Toggle use of a maximum number of points limit
+.ti 10
+(c or C) Clear the window and re-initialize the points
+.ti 10
+(d or D) Decrease or increase the delay in color wheel spinning
+.ti 10
+(f or F) Save the window contents to a PPM format file
+.ti 10
+(H) Toggle histogram computation and display
+.ti 10
+(j or J) Randomly select which function to use (with new parameters)
+.ti 10
+(k or K) Use the square root function with new parameters
+.ti 10
+(l or L) Use the linear function with new parameters
+.ti 10
+(m or M) Use the sine function with new parameters
+.ti 10
+(n or N) Skip to the next doily (same function or different function).
+.ti 10
+(r or R) Decrement or increment the histogram algorithm index
+.ti 10
+(s) Spin the color wheel (toggling direction)
+.ti 10
+(S) Stop spinning the color wheel
+.ti 10
+(W or w) Increment or decrement the color map index.
+.ti 10
+(X) Erase the existing pattern and restart the computation and display
+.ti 10
+(Q or q) quit
+.sp 2
+.SH AUTHOR
+.nf
+        Ronald Joe Record
+     The Santa Cruz Operation 
+          P.O. Box 1900
+       Santa Cruz, CA 95061
+            rr@sco.com
+.fi
+.sp 2
+.SH ACKNOWLEDGEMENTS
+.PP
+The original algorithm (square root only) was published in the September 
+1986 Scientific American. Assistance with colormaps and spinning color 
+wheels and X was gleaned from Hiram Clawson and Stacey Campbell.

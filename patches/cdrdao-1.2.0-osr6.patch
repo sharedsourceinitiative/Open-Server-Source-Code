@@ -1,0 +1,155 @@
+*** ./configure.osr6	Thu May 12 11:30:44 2005
+--- ./configure	Fri Sep 30 11:54:39 2005
+***************
+*** 278,283 ****
+--- 278,284 ----
+  #include <stdio.h>
+  #if HAVE_SYS_TYPES_H
+  # include <sys/types.h>
++ # include <sys/bitypes.h>
+  #endif
+  #if HAVE_SYS_STAT_H
+  # include <sys/stat.h>
+***************
+*** 2601,2606 ****
+--- 2602,2608 ----
+  #include <stdarg.h>
+  #include <stdio.h>
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <sys/stat.h>
+  /* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
+  struct buf { int x; };
+***************
+*** 4140,4145 ****
+--- 4142,4148 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <sys/wait.h>
+  #ifndef WEXITSTATUS
+  # define WEXITSTATUS(stat_val) ((unsigned)(stat_val) >> 8)
+***************
+*** 4547,4552 ****
+--- 4550,4556 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <sys/param.h>
+  
+  int
+***************
+*** 4590,4595 ****
+--- 4594,4600 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <sys/param.h>
+  
+  int
+***************
+*** 4776,4781 ****
+--- 4781,4787 ----
+  cat >>conftest.$ac_ext <<_ACEOF
+  /* end confdefs.h.  */
+  #include <sys/types.h>
++ #include <sys/bitypes.h>
+  #include <signal.h>
+  #ifdef signal
+  # undef signal
+***************
+*** 10679,10708 ****
+          echo "$as_me:$LINENO: checking for mad >= 0.10" >&5
+  echo $ECHO_N "checking for mad >= 0.10... $ECHO_C" >&6
+  
+!         if $PKG_CONFIG --exists "mad >= 0.10" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MAD_CFLAGS" >&5
+  echo $ECHO_N "checking MAD_CFLAGS... $ECHO_C" >&6
+!             MAD_CFLAGS=`$PKG_CONFIG --cflags "mad >= 0.10"`
+              echo "$as_me:$LINENO: result: $MAD_CFLAGS" >&5
+  echo "${ECHO_T}$MAD_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MAD_LIBS" >&5
+  echo $ECHO_N "checking MAD_LIBS... $ECHO_C" >&6
+!             MAD_LIBS=`$PKG_CONFIG --libs "mad >= 0.10"`
+              echo "$as_me:$LINENO: result: $MAD_LIBS" >&5
+  echo "${ECHO_T}$MAD_LIBS" >&6
+!         else
+!             MAD_CFLAGS=""
+!             MAD_LIBS=""
+!             ## If we have a custom action on failure, don't print errors, but
+!             ## do set a variable so people can do so.
+!             MAD_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mad >= 0.10"`
+! 
+!         fi
+  
+  
+  
+--- 10685,10715 ----
+          echo "$as_me:$LINENO: checking for mad >= 0.10" >&5
+  echo $ECHO_N "checking for mad >= 0.10... $ECHO_C" >&6
+  
+! #       if $PKG_CONFIG --exists "mad >= 0.10" ; then
+              echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+              succeeded=yes
+  
+              echo "$as_me:$LINENO: checking MAD_CFLAGS" >&5
+  echo $ECHO_N "checking MAD_CFLAGS... $ECHO_C" >&6
+! #           MAD_CFLAGS=`$PKG_CONFIG --cflags "mad >= 0.10"`
+!             MAD_CFLAGS=""
+!             MAD_LIBS="-lmad"
+              echo "$as_me:$LINENO: result: $MAD_CFLAGS" >&5
+  echo "${ECHO_T}$MAD_CFLAGS" >&6
+  
+              echo "$as_me:$LINENO: checking MAD_LIBS" >&5
+  echo $ECHO_N "checking MAD_LIBS... $ECHO_C" >&6
+! #           MAD_LIBS=`$PKG_CONFIG --libs "mad >= 0.10"`
+              echo "$as_me:$LINENO: result: $MAD_LIBS" >&5
+  echo "${ECHO_T}$MAD_LIBS" >&6
+! #       else
+! #           MAD_CFLAGS=""
+! #           MAD_LIBS=""
+! #           ## If we have a custom action on failure, don't print errors, but
+! #           ## do set a variable so people can do so.
+! #           MAD_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mad >= 0.10"`
+! #       fi
+  
+  
+  
+*** ./Configure-OSR6.osr6	Fri Sep 30 11:53:22 2005
+--- ./Configure-OSR6	Fri Sep 30 11:53:22 2005
+***************
+*** 0 ****
+--- 1,24 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc \
++             --with-scglib --with-scglib-inc=/usr/include/schily \
++             --with-scglib-lib=/usr/lib \
++             --with-lame --with-lame-include=/usr/include/lame \
++             --with-lame-lib=/usr/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure

@@ -1,0 +1,17 @@
+ Written 4/22 1988 by Ron Record (sco!rr)
+ Based in part on the Computer Recreations article in the 5/88
+ Scientific American.
+
+ Please do not judge me on the quality of _this_ C/X11 source.
+ It was written long ago and i'm only including it cause i
+ think it's cute.
+
+ The heart drawing mode was added right after the Loma Prieta
+ earthquake. The idea was to convey the sense of a seismograph
+ gone berserk but forming the shape of a heart.
+
+ Some sample shell scripts are provided in /usr/local/lib/madness
+ (or /usr/skunk/lib/madness if you're using the SkunkWare CD-ROM
+ mounted on /usr/skunk).
+
+ It's amazing what you can do with sines and cosines.

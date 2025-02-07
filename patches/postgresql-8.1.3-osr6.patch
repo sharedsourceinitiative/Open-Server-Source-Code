@@ -1,0 +1,154 @@
+*** ./src/port/exec.c.osr6	Tue Nov 22 10:23:31 2005
+--- ./src/port/exec.c	Tue Feb 14 11:57:12 2006
+***************
+*** 284,289 ****
+--- 284,292 ----
+  static int
+  resolve_symlinks(char *path)
+  {
++ #ifdef _NO_FOLLOW_SYMLINKS
++ return 0;
++ #endif
+  #ifdef HAVE_READLINK
+  	struct stat buf;
+  	char		orig_wd[MAXPGPATH],
+*** ./src/Makefile.shlib.osr6	Sat Dec  3 12:16:39 2005
+--- ./src/Makefile.shlib	Tue Feb 14 11:57:12 2006
+***************
+*** 233,239 ****
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+--- 233,239 ----
+    else
+      LINK.shared		= $(CC) -G
+    endif
+!   LINK.shared		+= -Wl,-z,text -Wl,-h,/usr/lib/postgresql/$(soname) 
+  endif
+  
+  ifeq ($(PORTNAME), cygwin)
+***************
+*** 281,287 ****
+  ifdef MK_NO_LORDER
+  	$(LINK.static) $@ $^
+  else
+! 	$(LINK.static) $@ `$(LORDER) $^ | tsort`
+  endif
+  	$(RANLIB) $@
+  endif #haslibarule
+--- 281,287 ----
+  ifdef MK_NO_LORDER
+  	$(LINK.static) $@ $^
+  else
+! 	$(LINK.static) $@ `$(LORDER) $^ | /usr/ccs/bin/tsort`
+  endif
+  	$(RANLIB) $@
+  endif #haslibarule
+*** ./Install-OSR6.osr6	Tue Feb 14 11:57:12 2006
+--- ./Install-OSR6	Tue Feb 14 11:57:12 2006
+***************
+*** 0 ****
+--- 1,15 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgsql
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ make -C src/pl install DESTDIR=$D 2>&1 | tee $MOUT-pl
++ make -C contrib install DESTDIR=$D 2>&1 | tee $MOUT-contrib
++ make -C contrib/xml2 install DESTDIR=$D 2>&1 | tee $MOUT-contrib.xml2
++ make -C src/tutorial NO_PGXS=1 install DESTDIR=$D 2>&1 | tee $MOUT-tutorial
+*** ./Build-OSR6.osr6	Tue Feb 14 11:57:12 2006
+--- ./Build-OSR6	Tue Feb 14 11:57:12 2006
+***************
+*** 0 ****
+--- 1,59 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -D_NO_FOLLOW_SYMLINKS"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --disable-rpath \
++             --with-CXX --with-perl --enable-multibyte \
++             --with-tcl --with-tk --with-tcl-config=/usr/gnu/lib \
++             --enable-locale --with-python --with-readline \
++             --with-openssl --sysconfdir=/etc/sysconfig/pgsql \
++             --datadir=/usr/share/postgresql \
++             --with-docdir=/usr/share/doc/packages --enable-syslog --with-x \
++             --without-gnu-ld --without-pam --without-krb5 \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ make all 2>&1 | tee mout
++ make -C contrib all 2>&1 | tee mout-contrib
++ make -C contrib/xml2 all 2>&1 | tee mout-contrib.xml2
++ 
++ # Have to hack makefile to put correct path into tutorial scripts
++ sed "s|C=\`pwd\`;|C=/usr/lib/postgresql/tutorial;|" < src/tutorial/Makefile > src/tutorial/GNUmakefile
++ make -C src/tutorial NO_PGXS=1 all 2>&1 | tee mout-tutorial
++ rm -f src/tutorial/GNUmakefile
++ 
++ #  PYTHON=/usr/bin/python
++ #  python_version=`${PYTHON} -c "import sys; print sys.version[:3]"`
++ #  python_prefix=`${PYTHON} -c "import sys; print sys.prefix"`
++ #  python_includespec="-I${python_prefix}/include/python${python_version}"
++ 
++ #  pushd PyGreSQL
++ 
++ #  cc $CFLAGS -Kpic -G -o _pgmodule.so ${python_includespec} -I../src/interfaces/libpq -I../src/include -L../src/interfaces/libpq -lpq pgmodule.c
++ 
++ #  popd
++ 
++ #  pushd Pgtcl
++    # pgtcl's configure only handles one include directory :-(
++ #  ./configure --prefix=/usr \
++ #    --libdir=%{_libdir} \
++ #    --with-tcl=%{_libdir} \
++ #    --with-postgres-include="../src/interfaces/libpq -I../src/include" \
++ #    --with-postgres-lib=../src/interfaces/libpq
++    # note: as of pgtcl 1.5.2, its makefile is not parallel-safe
++ #  make all
++ #  popd
+*** ./configure.osr6	Sun Feb 12 14:37:44 2006
+--- ./configure	Tue Feb 14 11:57:12 2006
+***************
+*** 13845,13859 ****
+  fi
+  echo "$as_me:$LINENO: result: $ac_cv_type_struct_sockaddr_in6" >&5
+  echo "${ECHO_T}$ac_cv_type_struct_sockaddr_in6" >&6
+- if test $ac_cv_type_struct_sockaddr_in6 = yes; then
+- 
+- cat >>confdefs.h <<\_ACEOF
+- #define HAVE_IPV6 1
+- _ACEOF
+- 
+-          HAVE_IPV6=yes
+- fi
+- 
+  
+  
+  echo "$as_me:$LINENO: checking for PS_STRINGS" >&5
+--- 13845,13850 ----

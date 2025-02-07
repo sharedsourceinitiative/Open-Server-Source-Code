@@ -1,0 +1,179 @@
+#!/usr/local/bin/yabasic
+dim blitdeck$(52), deck$(52),baraja(52)
+dim offsetx(52),offsety(52),status(52),redraw(52)
+ncards=21 : Dim Stacks(3,9) :delta=16
+  gosub Initialize
+  gosub InitCards
+open window 530, 440
+print "Guess Card 21 ver0.5, by Hermang Mansilla Mattos\nWait please, "
+print "Shuffling and picking ",ncards," cards at random ... "
+print "Next, You will be asked to pick a card  \n"
+  gosub LoadDeckImages
+  gosub Shuffle
+  gosub ShowDeck
+print "\nChoose a card, but keep it secret on your mind" 
+input "first memorize the card, then press Enter \n" dummy$
+clear screen
+text 105,20, "Group 1"
+text 205,20, "Group 2"
+text 305,20, "Group 3"
+  print "Now I will Spread the cards in 3 groups "
+  gosub SpreadCards
+  gosub AskGroup
+clear rect 100,30 to 400,325
+print "Lets join the 3 groups of cards ..."
+  gosub JoinGroups
+rem changed
+delta=3
+  gosub ShowDeck
+print "\nAgain I will spread the cards, look in which group your card is."
+  gosub SpreadCards
+  gosub AskGroup
+clear rect 100,30 to 400,325
+print "Lets join the 3 groups of cards once more ..."
+  gosub JoinGroups
+  gosub ShowDeck
+print "\nFinally, this is the last spreading of the cards ..."
+  gosub SpreadCards
+  gosub AskGroup
+print "Your card is the Card Shown, isn't it?"
+clear window
+card=9+grupo
+gosub ShowCard
+print "Press any key to Quit"
+k$=inkey$
+end
+
+Label Initialize
+facedown=0
+faceup=1
+frameonly=2
+hidden=3
+hide=4
+for card=1 to 52
+redraw(card)=1
+status(card)=faceup
+rem offsetx(card)=mod(card-1,3)*100+100
+rem offsety(card)=int((card-1)/3)*33+10
+next card
+return
+
+Label InitCards
+Cards$="AKQJD98765432"
+Suits$="CSHD"
+for n=1 to 52
+card=1+int((n-1)/4)
+suit=mod(n-1,4)+1
+deck$(n)=mid$(Cards$,card,1) +mid$(Suits$,suit,1)
+baraja(n)=n
+next n
+Return
+
+Label LoadDeckImages
+open 1, "deck.blt","r"
+for i=0 to 52
+line input #1 tmp$
+line input #1 temp$
+blitdeck$(i)=tmp$+temp$
+next i
+close 1
+return
+
+
+Label ShowCards
+for card=1 to ncards
+if redraw(card)=1 then  gosub ShowCard 
+redraw(card)=0
+fi
+next card
+return
+
+Label SpreadCards
+for card=1 to ncards
+ k$=inkey$(0.1)
+if k$="q" then end fi
+if card<ncards then
+ savecard=card
+  card=card+1
+rem changed
+rem status(card)=facedown
+  gosub ShowCard
+rem status(card)=faceup
+  offsety=offsety(card)
+  offsetx=offsetx(card)
+  clear rect offsetx+72+1,offsety+1 to offsetx+72+delta,offsety+96
+ card=savecard
+else
+ status(card)=hide
+ gosub ShowCard
+fi 
+stack=mod(card-1,3)+1
+ offsetx(card)=100*(stack-1)+100
+order=int((card-1)/3)+1
+ offsety(card)=30*(order-1)+30
+ status(card)=faceup
+ Stacks(stack,order)=baraja(card)
+ gosub ShowCard
+next card
+return : REM SpreadCards
+
+Label ShowCard
+  offsety=offsety(card)
+  offsetx=offsetx(card)
+  opt=status(card)
+  if opt=faceup then
+    bitblit blitdeck$(baraja(card)) to offsetx+1,offsety+1
+  fi
+  if opt=facedown then
+    bitblit blitdeck$(0) to offsetx+1,offsety+1
+  fi
+  if opt=frameonly then
+    box offsetx+1,offsety+1 to offsetx+72,offsety+96
+  fi
+  if opt=hide then
+    clear rect offsetx+1,offsety+1 to offsetx+72,offsety+96
+  fi
+return : REM ShowCard
+
+Label ShowDeck
+for card=1 to ncards
+ offsetx(card)=delta*(ncards-card)+5
+ offsety(card)=325
+rem  status(card)=faceup
+ redraw(card)=1
+next card
+for card=ncards to 1 step -1
+  gosub ShowCard
+next card
+return
+
+Label Shuffle
+rem Oakford method
+for j=52 to 2 step -1
+z=int(ran(j))+1
+h=baraja(z)
+baraja(z)=baraja(j)
+baraja(j)=h
+next j
+return
+
+Label JoinGroups
+if grupo=1 then orden$="213" fi
+if grupo=2 then orden$="123" fi
+if grupo=3 then orden$="132" fi
+for card=1 to ncards
+t$=mid$(orden$,int((card-1)/7)+1,1)
+stack=val(t$)
+order=mod(card-1,7)+1
+baraja(card)=Stacks(stack,order)
+rem changed
+status(card)=frameonly
+next card
+Return
+
+label AskGroup
+  print "Please indicate In which group your Card is (1-3) "
+  k$=inkey$ : grupo=val(k$)
+  if grupo<1 or grupo>3 then goto AskGroup fi
+return
+

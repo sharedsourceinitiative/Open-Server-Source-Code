@@ -1,0 +1,170 @@
+*** ./data/bluefish.desktop.in.osr6	Wed Nov 24 13:39:17 2004
+--- ./data/bluefish.desktop.in	Mon Sep  5 16:44:22 2005
+***************
+*** 6,11 ****
+  Terminal=false
+  Type=Application
+  Categories=Application;Development;
+! Encoding=UTF-8
+  StartupNotify=true
+  MimeType=text/html;text/css;text/x-javascript;text/x-python;text/x-perl;application/x-php;text/x-java;application/bluefish-project;text/javascript;text/x-php;application/x-cgi;application/x-javascript;application/x-perl;application/x-python;application/xhtml+xml;text/mathml;text/x-csrc;text/x-chdr;text/x-dtd;text/x-sql;text/xml;
+--- 6,11 ----
+  Terminal=false
+  Type=Application
+  Categories=Application;Development;
+! Encoding=ISO-8859-1
+  StartupNotify=true
+  MimeType=text/html;text/css;text/x-javascript;text/x-python;text/x-perl;application/x-php;text/x-java;application/bluefish-project;text/javascript;text/x-php;application/x-cgi;application/x-javascript;application/x-perl;application/x-python;application/xhtml+xml;text/mathml;text/x-csrc;text/x-chdr;text/x-dtd;text/x-sql;text/xml;
+*** ./src/bluefish.c.osr6	Sun Dec 26 11:39:37 2004
+--- ./src/bluefish.c	Mon Sep  5 16:44:22 2005
+***************
+*** 21,27 ****
+  /* #define DEBUG */
+  
+  #include <gtk/gtk.h>
+! #include <unistd.h> /* getopt() */
+  #include <stdlib.h> /* getopt() exit() and abort() on Solaris */
+  #include <time.h> /* nanosleep */
+  
+--- 21,27 ----
+  /* #define DEBUG */
+  
+  #include <gtk/gtk.h>
+! #include <unistd.h> /* getopt() usleep() */
+  #include <stdlib.h> /* getopt() exit() and abort() on Solaris */
+  #include <time.h> /* nanosleep */
+  
+***************
+*** 245,251 ****
+--- 245,255 ----
+  	flush_queue();
+  	{
+  		static struct timespec const req = { 0, 10000000};
++ #ifdef __USLC__
++ 		usleep(10000);
++ #else
+  		nanosleep(&req, NULL);
++ #endif
+  	}
+  	gtk_widget_destroy(splash_window);
+  #endif /* #ifndef NOSPLASH */
+*** ./src/gui.c.osr6	Sun Nov 14 10:47:22 2004
+--- ./src/gui.c	Mon Sep  5 16:44:22 2005
+***************
+*** 1606,1612 ****
+--- 1606,1616 ----
+  #endif
+  	gtk_label_set(GTK_LABEL(splashscreen.label),label);
+  	flush_queue();
++ #ifdef __USLC__
++         usleep(10000);
++ #else
+  	nanosleep(&req, NULL);
++ #endif
+  }
+  
+  GtkWidget *start_splash_screen() {
+***************
+*** 1648,1654 ****
+--- 1652,1662 ----
+  	gtk_widget_show(splashscreen.window);
+  	flush_queue();
+  	DEBUG_MSG("start_splash_screen, should be visible\n");
++ #ifdef __USLC__
++         usleep(100000);
++ #else
+  	nanosleep(&req, NULL);
++ #endif
+  	return splashscreen.window;
+  }
+  #endif /* #ifndef NOSPLASH */
+*** ./src/highlight.c.osr6	Sun Oct 31 15:11:19 2004
+--- ./src/highlight.c	Mon Sep  5 16:44:22 2005
+***************
+*** 154,160 ****
+  /*********************************/
+  /* debugging                     */
+  /*********************************/
+! #ifdef DEBUG
+  
+  static void print_meta_for_pattern(Tpattern *pat) {
+  	GList *tmplist = g_list_first(highlight.all_highlight_patterns);
+--- 154,160 ----
+  /*********************************/
+  /* debugging                     */
+  /*********************************/
+! #if defined(DEBUG) || defined(__USLC__)
+  
+  static void print_meta_for_pattern(Tpattern *pat) {
+  	GList *tmplist = g_list_first(highlight.all_highlight_patterns);
+*** ./src/msg_queue.c.osr6	Sun Mar 21 03:31:49 2004
+--- ./src/msg_queue.c	Mon Sep  5 16:44:22 2005
+***************
+*** 110,116 ****
+--- 110,120 ----
+  	if (wait_first) {
+  		static struct timespec const req = { 0, MSQ_QUEUE_CHECK_TIME * 1000000};
+  		static struct timespec rem;
++ #ifdef __USLC__
++                 usleep(MSQ_QUEUE_CHECK_TIME * 1000);
++ #else
+  		nanosleep(&req, &rem);
++ #endif
+  	}
+  
+  	while (msgrcv
+***************
+*** 321,327 ****
+--- 325,335 ----
+  				if (errno == EAGAIN) { /* EAGAIN = 11 */
+  					static struct timespec const req = { 0, MSG_QUEUE_PER_DOCUMENT_TIMEOUT};
+  					static struct timespec rem;
++ #ifdef __USLC__
++                                   usleep(MSG_QUEUE_PER_DOCUMENT_TIMEOUT / 1000);
++ #else
+  					nanosleep(&req, &rem);
++ #endif
+  					send_failure_cnt++;
+  				} else {
+  					DEBUG_MSG("msg_queue_send_files, failing to send, errno=%d, aborting\n", errno);
+*** ./Configure-OSR6.osr6	Mon Sep  5 16:44:22 2005
+--- ./Configure-OSR6	Mon Sep  5 16:44:39 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr --disable-update-databases \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Mon Sep  5 16:44:22 2005
+--- ./Install-OSR6	Mon Sep  5 16:44:22 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/bluefish
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

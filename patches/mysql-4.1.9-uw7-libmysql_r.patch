@@ -1,0 +1,36 @@
+*** Makefile.00	Thu Feb 24 00:44:36 2005
+--- Makefile	Thu Feb 24 01:00:19 2005
+***************
+*** 159,165 ****
+  LIBDL = -ldl 
+  LIBEDIT_LOBJECTS =  unvis.o vis.o fgetln.o
+  LIBOBJS = 
+! LIBS = -Kthread -lsocket -lnsl  -lcrypt -lm   -Kthread -lsocket -lnsl  -L/usr/lib -lssl -lcrypto
+  LIBTOOL = $(SHELL) $(top_builddir)/libtool --preserve-dup-deps
+  LIB_EXTRA_CCFLAGS = 
+  LM_CFLAGS = 
+--- 159,165 ----
+  LIBDL = -ldl 
+  LIBEDIT_LOBJECTS =  unvis.o vis.o fgetln.o
+  LIBOBJS = 
+! LIBS = -lsocket -lnsl  -lcrypt -lm   -lsocket -lnsl  -L/usr/lib -lssl -lcrypto
+  LIBTOOL = $(SHELL) $(top_builddir)/libtool --preserve-dup-deps
+  LIB_EXTRA_CCFLAGS = 
+  LM_CFLAGS = 
+***************
+*** 453,459 ****
+  LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+  	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+  CCLD = $(CC)
+! LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+  	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+  DIST_SOURCES = $(libmysqlclient_r_la_SOURCES) $(conf_to_src_SOURCES)
+  DIST_COMMON = $(top_srcdir)/libmysql/Makefile.shared Makefile.am \
+--- 453,459 ----
+  LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+  	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+  CCLD = $(CC)
+! LINK = $(LIBTOOL) --mode=link /usr/ccs/bin/cc \
+  	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+  DIST_SOURCES = $(libmysqlclient_r_la_SOURCES) $(conf_to_src_SOURCES)
+  DIST_COMMON = $(top_srcdir)/libmysql/Makefile.shared Makefile.am \

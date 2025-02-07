@@ -1,0 +1,131 @@
+CDRECORD 1.6 Port for SCO OpenServer 5
+--------------------------------------
+
+In order to port cdrecord version 1.6 to SCO OpenServer 5 the following
+files were either added or changed.
+
+
+New files:
+
+  * DEFAULTS/Defaults.sco
+  * RULES/i386-sco-gcc.rul
+  * RULES/os-sco.def
+  * RULES/os-sco_sv.id
+  * cdrecord/scsi-sco.c
+  
+  
+Changed files:
+
+  * include/mconfig.h
+  * lib/fconv.c
+  * cdrecord/scsihack.c
+  
+
+All changes made were only to add the SCO OpenServer 5 port to the existing
+source distribution. There were *NO* changes made to either specific code for
+other platforms or to the standard source of cdrecord.
+
+NOTE: This port of cdrecord does make use of the cdrecord FIFO as the current
+      usage of shared memory is not working without further modification!
+
+      As far as the tests showed, this does have no significant impact on 
+      the load dependency of cdrecord.
+
+
+Build notes for compiling cdrecord 1.6 on SCO OpenServer 5.0.4
+--------------------------------------------------------------
+
+Used build/test environment:
+
+- ALR Dual6 DT (2xP6/200, 128 MB, Adaptec 2940UW, IBM DCAS 4,3 GB, TEAC CDR50S)
+
+- SCO OpenServer 5.0.4 
+  
+  (SMP and OSS469B is not mandatory)
+  
+  * SMP
+  * Release Supplement RS504C 
+  * SMP and Networking Patch OSS469B
+  
+  * Skunkware 98 partially installed:
+  
+  (following tools are mandatory)
+  
+    + gcc version 2.7.2.3
+    + gnu make 3.76.1
+    + gnu patch program
+    + gnu zip utilties
+    
+    Make sure you don't have the MakeCD 1.0 package from Skunkware98 installed,
+    as it also does have a mkisofs binary, which is *not* identical with the
+    one which comes with cdrecord.
+
+
+Steps to compile:
+
+1) extract cdrecord-1.6.tar.gz to any directory 
+
+   #cd <installation_dir>
+   #gzcat <path-to-src>/cdrecord-1.6.tar.gz | tar xvf -
+
+2) cd to $INSTALL_DIR/cdrecord-1.6
+
+   #cd cdrecord-1.6
+
+3) extract cdrecord-1.6.sco.tar (relative tar archive)
+
+   #tar xvf <path-to-src>/cdrecord-1.6.sco.tar
+
+4) patch ./include/mconfig.h, lib/fconv.c and cdrecord/scsihack.c
+
+   #patch -c < sco_port.patch"
+
+4) start the compilation
+
+   #./Gmake
+
+on successful compilation 
+
+5) as root run the install script
+
+   #./sco_inst.sh
+
+6) if not already set add /usr/local/man to your manpath in /etc/default/man
+
+
+
+Running cdrecord 1.6 on SCO OpenServer 5
+----------------------------------------
+
+To tell cdrecord which device your cdrecorder is you can either
+set the environment variable CDR_DEVICE to "X,Y,Z" with 
+
+   X = the /dev/rcd[X] device which is your cdrecorder
+
+   Y = the scsi target id of your cdrecorder
+
+   Z = the lun of your cdrecorder
+
+or alternally you can use the "dev" option to specify the device. 
+
+For example:
+
+#cdrecord -v dev=0,5,0 -inq
+
+does the same as
+
+#cdrecord -v -inq  (while having CDR_DEVICE set to "0,5,0")
+
+
+Basically you would not need the target and lun, as the used Srom peripherial
+driver for CD-ROM devices hides the target id and the lun from us and these are
+not needed for sending scsi user commands to the device as the Srom driver 
+will look them up from the internal configuration using the minor device number
+as an index. 
+
+So, just to have the right "output" printed from cdrecord, give it the target 
+id and lun as cdrecord wants it.
+
+
+
+

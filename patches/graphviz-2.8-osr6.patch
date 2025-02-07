@@ -1,0 +1,212 @@
+*** ./cmd/lefty/Makefile.in.osr6	Fri Feb  3 14:34:22 2006
+--- ./cmd/lefty/Makefile.in	Fri Aug  4 12:47:33 2006
+***************
+*** 402,408 ****
+  	$(top_builddir)/cmd/lefty/ws/x11/libfilereq/libfilereq.la \
+  	$(top_builddir)/cmd/lefty/os/unix/libos.la \
+  	@X_LIBS@ @XAW_LIBS@ @X_PRE_LIBS@ @XPM_LIBS@ \
+! 	-lXt -lXmu -lXext -lX11 @SOCKET_LIBS@ @MATH_LIBS@
+  
+  EXTRA_DIST = $(lefty_DATA) $(man) $(pdf) \
+  	colors.txt Makefile.old aix_mods cs2l/*
+--- 402,408 ----
+  	$(top_builddir)/cmd/lefty/ws/x11/libfilereq/libfilereq.la \
+  	$(top_builddir)/cmd/lefty/os/unix/libos.la \
+  	@X_LIBS@ @XAW_LIBS@ @X_PRE_LIBS@ @XPM_LIBS@ \
+! 	-lXaw -lXt -lXmu -lXext -lX11 @SOCKET_LIBS@ @MATH_LIBS@
+  
+  EXTRA_DIST = $(lefty_DATA) $(man) $(pdf) \
+  	colors.txt Makefile.old aix_mods cs2l/*
+*** ./contrib/diffimg/diffimg.c.osr6	Fri Jan 27 16:20:45 2006
+--- ./contrib/diffimg/diffimg.c	Fri Aug  4 12:47:33 2006
+***************
+*** 36,42 ****
+--- 36,44 ----
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <unistd.h>
++ #ifndef __USLC__
+  #include <sysexits.h>
++ #endif
+  #include <gd.h>
+  #if defined HAVE_STDBOOL_H && ! defined __cplusplus
+  #include <stdbool.h>
+***************
+*** 49,54 ****
+--- 51,69 ----
+  #define true NOT(false)
+  #endif
+  
++ #ifndef EX_USAGE
++ #define EX_USAGE 1
++ #endif
++ #ifndef EX_NOINPUT
++ #define EX_NOINPUT 2
++ #endif
++ #ifndef EX_UNAVAILABLE
++ #define EX_UNAVAILABLE 3
++ #endif
++ #ifndef EX_DATAERR
++ #define EX_DATAERR 4
++ #endif
++ 
+  static char *pstopng="gs -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=- -q -";
+  
+  static gdImagePtr imageLoad (char *filename)
+*** ./configure.osr6	Fri Feb  3 14:33:33 2006
+--- ./configure	Fri Aug  4 12:50:13 2006
+***************
+*** 5683,5689 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 5683,5689 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5* | sysv5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 5691,5697 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 5691,5697 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 8554,8560 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 8554,8560 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 9216,9239 ****
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!    sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+!       no_undefined_flag='${wl}-z ${wl}text'
+!       if test "$GCC" = yes; then
+! 	archive_cmds='$CC -shared ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       else
+! 	archive_cmds='$CC -G ${wl}-h ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
+!       fi
+!       runpath_var='LD_RUN_PATH'
+!       hardcode_shlibpath_var=no
+!       ;;
+! 
+!     sysv5*)
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 9216,9227 ----
+        runpath_var=LD_RUN_PATH
+        ;;
+  
+!     sysv5* | unixware7*)
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 12470,12476 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+--- 12458,12466 ----
+  	;;
+      esac
+      ;;
+!   sysv5* | unixware7*)
+!       archive_cmds_CXX='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds_CXX='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+***************
+*** 15649,15655 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 15639,15645 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 18111,18117 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+--- 18101,18107 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_GCJ=no
+  	cat <<EOF 1>&2
+*** ./Install-OSR6.osr6	Fri Aug  4 12:48:49 2006
+--- ./Install-OSR6	Fri Aug  4 12:48:39 2006
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/graphviz
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee mout-install

@@ -1,0 +1,23 @@
+*** ./Build-OSR6.osr6	Sat Jul  9 16:18:09 2005
+--- ./Build-OSR6	Sat Jul  9 16:20:03 2005
+***************
+*** 0 ****
+--- 1,18 ----
++ #!/bin/sh
++ 
++ [ "$QTDIR" ] || QTDIR=/opt/kde
++ [ "$QMAKESPEC" ] || QMAKESPEC=unixware-cc
++ export QTDIR QMAKESPEC
++ 
++ cd qt
++ qmake qscintilla.pro
++ make 2>&1 | tee mout
++ 
++ [ -d $QTDIR/include ] || mkdir -p $QTDIR/include
++ cp qextscintilla*.h $QTDIR/include
++ [ -d $QTDIR/translations ] || mkdir -p $QTDIR/translations
++ cp qscintilla*.qm $QTDIR/translations
++ 
++ cd ../designer
++ qmake designer
++ make 2>&1 | tee mout

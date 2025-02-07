@@ -1,0 +1,80 @@
+*** ./Makefile.osr6	Thu Jan  3 21:54:43 2002
+--- ./Makefile	Tue Sep 13 16:21:45 2005
+***************
+*** 2,23 ****
+  
+  # CONFIGURE: If you are using a SystemV-based operating system, such as
+  # Solaris, you will need to uncomment this definition.
+! #SYSV_LIBS =	-lnsl -lsocket -lresolv
+  
+  # CONFIGURE: If you want to compile in support for https, uncomment these
+  # definitions.  You will need to have already built OpenSSL, available at
+  # http://www.openssl.org/  Make sure the SSL_TREE definition points to the
+  # tree with your OpenSSL installation - depending on how you installed it,
+  # it may be in /usr/local instead of /usr/local/ssl.
+! #SSL_TREE =	/usr/local/ssl
+! #SSL_DEFS =	-DUSE_SSL
+  #SSL_INC =	-I$(SSL_TREE)/include
+  #SSL_LIBS =	-L$(SSL_TREE)/lib -lssl -lcrypto
+  
+! 
+! BINDIR =	/usr/local/bin
+! MANDIR =	/usr/local/man/man1
+! CC =		gcc -Wall
+  CFLAGS =	-O $(SRANDOM_DEFS) $(SSL_DEFS) $(SSL_INC)
+  #CFLAGS =	-g $(SRANDOM_DEFS) $(SSL_DEFS) $(SSL_INC)
+  LDFLAGS =	-s $(SSL_LIBS) $(SYSV_LIBS)
+--- 2,26 ----
+  
+  # CONFIGURE: If you are using a SystemV-based operating system, such as
+  # Solaris, you will need to uncomment this definition.
+! SYSV_LIBS =	-lnsl -lsocket -lresolv
+  
+  # CONFIGURE: If you want to compile in support for https, uncomment these
+  # definitions.  You will need to have already built OpenSSL, available at
+  # http://www.openssl.org/  Make sure the SSL_TREE definition points to the
+  # tree with your OpenSSL installation - depending on how you installed it,
+  # it may be in /usr/local instead of /usr/local/ssl.
+! SSL_TREE =	/usr
+! SSL_DEFS =	-DUSE_SSL
+  #SSL_INC =	-I$(SSL_TREE)/include
+  #SSL_LIBS =	-L$(SSL_TREE)/lib -lssl -lcrypto
++ SSL_INC =
++ SSL_LIBS =	-lssl -lcrypto
+  
+! DESTDIR=
+! BINDIR =	$(DESTDIR)/usr/bin
+! MANDIR =	$(DESTDIR)/usr/man/man1
+! #CC =		gcc -Wall
+! CC =		cc -Kpthread -Kalloca -Kinline
+  CFLAGS =	-O $(SRANDOM_DEFS) $(SSL_DEFS) $(SSL_INC)
+  #CFLAGS =	-g $(SRANDOM_DEFS) $(SSL_DEFS) $(SSL_INC)
+  LDFLAGS =	-s $(SSL_LIBS) $(SYSV_LIBS)
+*** ./Build-OSR6.osr6	Tue Sep 13 16:22:16 2005
+--- ./Build-OSR6	Tue Sep 13 16:22:06 2005
+***************
+*** 0 ****
+--- 1,6 ----
++ #!/bin/sh
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Tue Sep 13 16:22:19 2005
+--- ./Install-OSR6	Tue Sep 13 16:22:34 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/http_load
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

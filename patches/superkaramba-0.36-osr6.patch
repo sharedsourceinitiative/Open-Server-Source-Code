@@ -1,0 +1,410 @@
+*** ./src/misc_python.cpp.osr6	Mon Apr 18 22:01:22 2005
+--- ./src/misc_python.cpp	Sun Sep 11 20:03:59 2005
+***************
+*** 26,31 ****
+--- 26,34 ----
+  #undef _XOPEN_SOURCE
+  #endif
+  
++ #include <sys/types.h>
++ #include <sys/sockio.h>
++ #include <netinet/in6.h>
+  #include <Python.h>
+  #include <qobject.h>
+  #include "karamba.h"
+*** ./src/karamba_python.cpp.osr6	Mon Apr 18 21:06:00 2005
+--- ./src/karamba_python.cpp	Sun Sep 11 20:03:59 2005
+***************
+*** 26,31 ****
+--- 26,32 ----
+  #undef _XOPEN_SOURCE
+  #endif
+  
++ #include <stdio.h>
+  #include <Python.h>
+  #include "karambaapp.h"
+  
+*** ./src/Makefile.in.osr6	Mon Apr 18 21:18:07 2005
+--- ./src/Makefile.in	Sun Sep 11 20:05:28 2005
+***************
+*** 412,418 ****
+  #>- superkaramba_SOURCES = main.cpp karamba.cpp meter.h meter.cpp bar.h bar.cpp sensor.h sensor.cpp datesensor.h datesensor.cpp textlabel.h textlabel.cpp memsensor.h memsensor.cpp uptimesensor.h uptimesensor.cpp cpusensor.h cpusensor.cpp networksensor.h networksensor.cpp imagelabel.h imagelabel.cpp graph.h graph.cpp xmmssensor.h xmmssensor.cpp programsensor.h programsensor.cpp disksensor.h disksensor.cpp sensorparams.h sensorparams.cpp sensorsensor.h sensorsensor.cpp textfilesensor.h textfilesensor.cpp clickarea.h clickarea.cpp noatunsensor.h noatunsensor.cpp karambarootpixmap.h karambarootpixmap.cpp clickmap.h clickmap.cpp rsssensor.h rsssensor.cpp textfield.h textfield.cpp taskmanager.h taskmanager.cpp showdesktop.h showdesktop.cpp richtextlabel.h richtextlabel.cpp karambasessionmanaged.h karambasessionmanaged.cpp welcomeform.h welcomeform.cpp systemtray.h systemtray.cpp bar_python.cpp bar_python.h meter_python.cpp meter_python.h textlabel_python.cpp textlabel_python.h richtextlabel_python.cpp richtextlabel_python.h imagelabel_python.cpp imagelabel_python.h config_python.cpp config_python.h misc_python.cpp misc_python.h systray_python.cpp systray_python.h task_python.cpp task_python.h widget_python.cpp widget_python.h menu_python.cpp menu_python.h themelistwindow.cpp themelistwindow.h karambalistboxitem.h karambalistboxitem.cpp graph_python.cpp graph_python.h dcopinterface.skel dcopinterface.stub karambainterface.cpp karambainterface.h karambaapp.cpp karamba_python.cpp
+  #>+ 1
+  superkaramba_SOURCES=main.cpp karamba.cpp meter.h meter.cpp bar.h bar.cpp sensor.h sensor.cpp datesensor.h datesensor.cpp textlabel.h textlabel.cpp memsensor.h memsensor.cpp uptimesensor.h uptimesensor.cpp cpusensor.h cpusensor.cpp networksensor.h networksensor.cpp imagelabel.h imagelabel.cpp graph.h graph.cpp xmmssensor.h xmmssensor.cpp programsensor.h programsensor.cpp disksensor.h disksensor.cpp sensorparams.h sensorparams.cpp sensorsensor.h sensorsensor.cpp textfilesensor.h textfilesensor.cpp clickarea.h clickarea.cpp noatunsensor.h noatunsensor.cpp karambarootpixmap.h karambarootpixmap.cpp clickmap.h clickmap.cpp rsssensor.h rsssensor.cpp textfield.h textfield.cpp taskmanager.h taskmanager.cpp showdesktop.h showdesktop.cpp richtextlabel.h richtextlabel.cpp karambasessionmanaged.h karambasessionmanaged.cpp welcomeform.h welcomeform.cpp systemtray.h systemtray.cpp bar_python.cpp bar_python.h meter_python.cpp meter_python.h textlabel_python.cpp textlabel_python.h richtextlabel_python.cpp richtextlabel_python.h imagelabel_python.cpp imagelabel_python.h config_python.cpp config_python.h misc_python.cpp misc_python.h systray_python.cpp systray_python.h task_python.cpp task_python.h widget_python.cpp widget_python.h menu_python.cpp menu_python.h themelistwindow.cpp themelistwindow.h karambalistboxitem.h karambalistboxitem.cpp graph_python.cpp graph_python.h   karambainterface.cpp karambainterface.h karambaapp.cpp karamba_python.cpp dcopinterface_skel.cpp dcopinterface_stub.cpp
+! superkaramba_LDFLAGS = -Wl,-export-dynamic  $(KDE_RPATH) $(all_libraries) $(PYTHONLIB)  
+  superkaramba_LDADD = -lkio -lXpm $(LIB_KDEUI) $(XMMS_LIBS) $(LIBPYTHON)
+  
+  # this is where the desktop file will go 
+--- 412,418 ----
+  #>- superkaramba_SOURCES = main.cpp karamba.cpp meter.h meter.cpp bar.h bar.cpp sensor.h sensor.cpp datesensor.h datesensor.cpp textlabel.h textlabel.cpp memsensor.h memsensor.cpp uptimesensor.h uptimesensor.cpp cpusensor.h cpusensor.cpp networksensor.h networksensor.cpp imagelabel.h imagelabel.cpp graph.h graph.cpp xmmssensor.h xmmssensor.cpp programsensor.h programsensor.cpp disksensor.h disksensor.cpp sensorparams.h sensorparams.cpp sensorsensor.h sensorsensor.cpp textfilesensor.h textfilesensor.cpp clickarea.h clickarea.cpp noatunsensor.h noatunsensor.cpp karambarootpixmap.h karambarootpixmap.cpp clickmap.h clickmap.cpp rsssensor.h rsssensor.cpp textfield.h textfield.cpp taskmanager.h taskmanager.cpp showdesktop.h showdesktop.cpp richtextlabel.h richtextlabel.cpp karambasessionmanaged.h karambasessionmanaged.cpp welcomeform.h welcomeform.cpp systemtray.h systemtray.cpp bar_python.cpp bar_python.h meter_python.cpp meter_python.h textlabel_python.cpp textlabel_python.h richtextlabel_python.cpp richtextlabel_python.h imagelabel_python.cpp imagelabel_python.h config_python.cpp config_python.h misc_python.cpp misc_python.h systray_python.cpp systray_python.h task_python.cpp task_python.h widget_python.cpp widget_python.h menu_python.cpp menu_python.h themelistwindow.cpp themelistwindow.h karambalistboxitem.h karambalistboxitem.cpp graph_python.cpp graph_python.h dcopinterface.skel dcopinterface.stub karambainterface.cpp karambainterface.h karambaapp.cpp karamba_python.cpp
+  #>+ 1
+  superkaramba_SOURCES=main.cpp karamba.cpp meter.h meter.cpp bar.h bar.cpp sensor.h sensor.cpp datesensor.h datesensor.cpp textlabel.h textlabel.cpp memsensor.h memsensor.cpp uptimesensor.h uptimesensor.cpp cpusensor.h cpusensor.cpp networksensor.h networksensor.cpp imagelabel.h imagelabel.cpp graph.h graph.cpp xmmssensor.h xmmssensor.cpp programsensor.h programsensor.cpp disksensor.h disksensor.cpp sensorparams.h sensorparams.cpp sensorsensor.h sensorsensor.cpp textfilesensor.h textfilesensor.cpp clickarea.h clickarea.cpp noatunsensor.h noatunsensor.cpp karambarootpixmap.h karambarootpixmap.cpp clickmap.h clickmap.cpp rsssensor.h rsssensor.cpp textfield.h textfield.cpp taskmanager.h taskmanager.cpp showdesktop.h showdesktop.cpp richtextlabel.h richtextlabel.cpp karambasessionmanaged.h karambasessionmanaged.cpp welcomeform.h welcomeform.cpp systemtray.h systemtray.cpp bar_python.cpp bar_python.h meter_python.cpp meter_python.h textlabel_python.cpp textlabel_python.h richtextlabel_python.cpp richtextlabel_python.h imagelabel_python.cpp imagelabel_python.h config_python.cpp config_python.h misc_python.cpp misc_python.h systray_python.cpp systray_python.h task_python.cpp task_python.h widget_python.cpp widget_python.h menu_python.cpp menu_python.h themelistwindow.cpp themelistwindow.h karambalistboxitem.h karambalistboxitem.cpp graph_python.cpp graph_python.h   karambainterface.cpp karambainterface.h karambaapp.cpp karamba_python.cpp dcopinterface_skel.cpp dcopinterface_stub.cpp
+! superkaramba_LDFLAGS = -Wl,-Bexport  $(KDE_RPATH) $(all_libraries) $(PYTHONLIB)  
+  superkaramba_LDADD = -lkio -lXpm $(LIB_KDEUI) $(XMMS_LIBS) $(LIBPYTHON)
+  
+  # this is where the desktop file will go 
+*** ./Configure-OSR6.osr6	Sun Sep 11 20:03:59 2005
+--- ./Configure-OSR6	Sun Sep 11 20:33:51 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure $* --prefix=/usr --with-qt-dir=/opt/kde --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Mon Apr 18 21:17:58 2005
+--- ./configure	Sun Sep 11 20:03:59 2005
+***************
+*** 3074,3083 ****
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
+!    'extern "C" void std::exit (int) throw (); using std::exit;' \
+!    'extern "C" void std::exit (int); using std::exit;' \
+!    'extern "C" void exit (int) throw ();' \
+!    'extern "C" void exit (int);' \
+     'void exit (int);'
+  do
+    cat >conftest.$ac_ext <<_ACEOF
+--- 3074,3083 ----
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
+!    'extern "C++" void std::exit (int) throw (); using std::exit;' \
+!    'extern "C++" void std::exit (int); using std::exit;' \
+!    'extern "C++" void exit (int) throw ();' \
+!    'extern "C++" void exit (int);' \
+     'void exit (int);'
+  do
+    cat >conftest.$ac_ext <<_ACEOF
+***************
+*** 3806,3910 ****
+      CXXFLAGS=
+    fi
+  fi
+- for ac_declaration in \
+-    '' \
+-    'extern "C" void std::exit (int) throw (); using std::exit;' \
+-    'extern "C" void std::exit (int); using std::exit;' \
+-    'extern "C" void exit (int) throw ();' \
+-    'extern "C" void exit (int);' \
+-    'void exit (int);'
+- do
+-   cat >conftest.$ac_ext <<_ACEOF
+- /* confdefs.h.  */
+- _ACEOF
+- cat confdefs.h >>conftest.$ac_ext
+- cat >>conftest.$ac_ext <<_ACEOF
+- /* end confdefs.h.  */
+- $ac_declaration
+- #include <stdlib.h>
+- int
+- main ()
+- {
+- exit (42);
+-   ;
+-   return 0;
+- }
+- _ACEOF
+- rm -f conftest.$ac_objext
+- if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+-   (eval $ac_compile) 2>conftest.er1
+-   ac_status=$?
+-   grep -v '^ *+' conftest.er1 >conftest.err
+-   rm -f conftest.er1
+-   cat conftest.err >&5
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); } &&
+- 	 { ac_try='test -z "$ac_cxx_werror_flag"
+- 			 || test ! -s conftest.err'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; } &&
+- 	 { ac_try='test -s conftest.$ac_objext'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; }; then
+-   :
+- else
+-   echo "$as_me: failed program was:" >&5
+- sed 's/^/| /' conftest.$ac_ext >&5
+- 
+- continue
+- fi
+- rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+-   cat >conftest.$ac_ext <<_ACEOF
+- /* confdefs.h.  */
+- _ACEOF
+- cat confdefs.h >>conftest.$ac_ext
+- cat >>conftest.$ac_ext <<_ACEOF
+- /* end confdefs.h.  */
+- $ac_declaration
+- int
+- main ()
+- {
+- exit (42);
+-   ;
+-   return 0;
+- }
+- _ACEOF
+- rm -f conftest.$ac_objext
+- if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+-   (eval $ac_compile) 2>conftest.er1
+-   ac_status=$?
+-   grep -v '^ *+' conftest.er1 >conftest.err
+-   rm -f conftest.er1
+-   cat conftest.err >&5
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); } &&
+- 	 { ac_try='test -z "$ac_cxx_werror_flag"
+- 			 || test ! -s conftest.err'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; } &&
+- 	 { ac_try='test -s conftest.$ac_objext'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; }; then
+-   break
+- else
+-   echo "$as_me: failed program was:" >&5
+- sed 's/^/| /' conftest.$ac_ext >&5
+- 
+- fi
+- rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+- done
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+--- 3806,3811 ----
+***************
+*** 6785,6791 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 6686,6692 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 6794,6800 ****
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 6695,6701 ----
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 9030,9036 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 8931,8937 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 9674,9682 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 9575,9582 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 11000,11006 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 10900,10906 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 11098,11104 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 10998,11004 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 14644,14650 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 14544,14550 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 14742,14748 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 14642,14648 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 15774,15780 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 15674,15680 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 20006,20012 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 19906,19912 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 20104,20110 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 20004,20010 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+*** ./Install-OSR6.osr6	Sun Sep 11 20:31:31 2005
+--- ./Install-OSR6	Sun Sep 11 20:31:56 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/superkaramba
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

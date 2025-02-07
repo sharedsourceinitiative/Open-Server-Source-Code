@@ -1,0 +1,43 @@
+*** ./Configure-OSR6.osr6 Mon May 16 17:03:12 2005
+--- ./Configure-OSR6 Mon May 16 17:06:36 2005
+***************
+*** 0 ****
+--- 1,38 ----
++ #!/bin/sh
++ #
++ 
++ PDIR=/usr/src/sco/patches/xv
++ name=xv
++ version=3.10a
++ Patch0=${name}-${version}-linux.patch
++ Patch1=${name}-${version}.JPEG-patch
++ Patch2=${name}-${version}-glibc.patch
++ Patch5=${name}-png.patch
++ Patch6=${name}-pdf.patch
++ Patch7=${name}-gifpatch
++ Patch8=${name}-${version}.TIFF-patch
++ Patch9=${name}-tiff1200.patch
++ Patch10=${name}-mp-tiff-patch
++ Patch11=${name}-longname.patch
++ Patch12=${name}-grabpatch
++ Patch13=${name}-deepcolor.patch
++ Patch14=${name}-vispatch
++ Patch15=${name}-exceed_grab.patch
++ Patch16=${name}-osr5.patch
++ 
++ /usr/gnu/bin/patch -b -z .pngpatch -p1 -i ${PDIR}/$Patch5
++ /usr/gnu/bin/patch -b -z .linuxpatch -p1 -i ${PDIR}/$Patch0
++ /usr/gnu/bin/patch -b -z .jpegpatch -p0 -i ${PDIR}/$Patch1
++ /usr/gnu/bin/patch -b -z .glibcpatch -p1 -i ${PDIR}/$Patch2
++ /usr/gnu/bin/patch -b -z .pdfpatch -i ${PDIR}/$Patch6
++ /usr/gnu/bin/patch -b -z .gifpatch -i ${PDIR}/$Patch7
++ /usr/gnu/bin/patch -b -z .tiffpatch -i ${PDIR}/$Patch8
++ /usr/gnu/bin/patch -b -z .tiff1200patch -i ${PDIR}/$Patch9
++ /usr/gnu/bin/patch -b -z .mptiffpatch -i ${PDIR}/$Patch10
++ /usr/gnu/bin/patch -b -z .longnamepatch -p1 -i ${PDIR}/$Patch11
++ /usr/gnu/bin/patch -b -z .grabpatch -i ${PDIR}/$Patch12
++ /usr/gnu/bin/patch -b -z .deepcolorpatch -i ${PDIR}/$Patch13
++ /usr/gnu/bin/patch -b -z .vispatch -i ${PDIR}/$Patch14
++ /usr/gnu/bin/patch -b -z .exceedgrabpatch -i ${PDIR}/$Patch15
++ /usr/gnu/bin/patch -b -z .osr5patch -p0 -i ${PDIR}/$Patch16
++ 

@@ -1,0 +1,39 @@
+! Madness: class resource file for wator
+Madness*resizable:	TRUE
+! Madness*framework*width:	450
+! Madness*framework*height:	350
+Madness*background:	black
+Madness*topAttachment:	ATTACH_POSITION
+Madness*bottomAttachment:	ATTACH_POSITION
+Madness*leftAttachment:	ATTACH_POSITION
+Madness*rightAttachment:	ATTACH_POSITION
+Madness*drawing_canvas*leftPosition:	01
+Madness*drawing_canvas*rightPosition:	99
+Madness*drawing_canvas*topPosition:	01
+Madness*drawing_canvas*bottomPosition:	90
+Madness*go_button*topPosition:	91
+Madness*go_button*bottomPosition:	99
+Madness*go_button*leftPosition:	01
+Madness*go_button*rightPosition:	24
+Madness*next_button*topPosition:	91
+Madness*next_button*bottomPosition:	99
+Madness*next_button*leftPosition:	26
+Madness*next_button*rightPosition:	49
+Madness*clear_button*topPosition:	91
+Madness*clear_button*bottomPosition:	99
+Madness*clear_button*leftPosition:	51
+Madness*clear_button*rightPosition:	74
+Madness*quit_button*topPosition:	91
+Madness*quit_button*bottomPosition:	99
+Madness*quit_button*leftPosition:	76
+Madness*quit_button*rightPosition:	99
+Madness*go_button*labelString:   PAUSE
+Madness*next_button*labelString:   COLOR
+Madness*clear_button*labelString:   CLEAR
+Madness*quit_button*labelString:   QUIT
+Madness*indicatorOn:   False
+Madness*foreground:	Cyan
+Madness*Foreground:	Cyan
+Madness*bottomShadowColor:	Gray
+Madness*activeBottomShadowColor:	Gray
+Madness*appDefaultsFileInstalled:   True

@@ -1,0 +1,160 @@
+*** ./src/SConscript.osr6 Fri May 20 16:42:12 2005
+--- ./src/SConscript Fri May 20 22:07:20 2005
+***************
+*** 31,37 ****
+  pkg_config_cmd += 'pkg-config --cflags --libs '
+  
+  env.Append (CPPPATH = ['.'])  # why is this necessary?
+- env.Append (CCFLAGS = ['-Wall'])
+  env.Append (YACCFLAGS = [ '-d', '-v' ])
+  
+  if env ['debug'] :
+--- 31,36 ----
+  pkg_config_cmd += 'pkg-config --cflags --libs '
+  
+  env.Append (CPPPATH = ['.'])  # why is this necessary?
+  env.Append (YACCFLAGS = [ '-d', '-v' ])
+  
+  if env ['debug'] :
+*** ./src/nsim_conv.h.osr6 Fri May 20 16:42:12 2005
+--- ./src/nsim_conv.h Fri May 20 22:07:20 2005
+***************
+*** 19,26 ****
+  MA 02111, USA.
+  */
+  
+! 
+! #define unused __attribute__((unused))
+  
+  #define SSIZE 14
+  #define WSIZE 14
+--- 19,25 ----
+  MA 02111, USA.
+  */
+  
+! #define unused
+  
+  #define SSIZE 14
+  #define WSIZE 14
+*** ./src/util.h.osr6 Fri May 20 16:42:12 2005
+--- ./src/util.h Fri May 20 22:07:20 2005
+***************
+*** 39,45 ****
+  void warning (char *format, ...);
+  
+  // generate fatal error message to stderr, doesn't return
+! void fatal (int ret, char *format, ...) __attribute__ ((noreturn));
+  
+  void *alloc (size_t size);
+  
+--- 39,45 ----
+  void warning (char *format, ...);
+  
+  // generate fatal error message to stderr, doesn't return
+! void fatal (int ret, char *format, ...) ;
+  
+  void *alloc (size_t size);
+  
+*** ./src/state_read.c.osr6 Fri May 20 16:42:12 2005
+--- ./src/state_read.c Fri May 20 22:07:20 2005
+***************
+*** 42,50 ****
+  #include "model.h"
+  #include "state_io.h"
+  
+! 
+! #define unused __attribute__((unused))
+! 
+  
+  typedef struct
+  {
+--- 42,48 ----
+  #include "model.h"
+  #include "state_io.h"
+  
+! #define unused
+  
+  typedef struct
+  {
+*** ./src/proc.h.osr6 Fri May 20 16:42:12 2005
+--- ./src/proc.h Fri May 20 22:07:47 2005
+***************
+*** 42,47 ****
+  };
+  
+  
+  typedef uint32_t addr_t;
+  
+  typedef uint16_t rom_word_t;
+--- 42,48 ----
+  };
+  
+  
++ #ifndef __USLC__
+  typedef uint32_t addr_t;
+  #endif
+  
+***************
+*** 43,48 ****
+  
+  
+  typedef uint32_t addr_t;
+  
+  typedef uint16_t rom_word_t;
+  
+--- 44,50 ----
+  
+  #ifndef __USLC__
+  typedef uint32_t addr_t;
++ #endif
+  
+  typedef uint16_t rom_word_t;
+  
+*** ./Build-OSR6.osr6 Fri May 20 22:07:20 2005
+--- ./Build-OSR6 Fri May 20 22:07:20 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ (cd scons-local; tar -xzf scons-local-0.96.90.tar.gz)
++ 
++ python scons-local/scons.py
++ 
++ echo "Install Nonpareil with \"python scons-local/scons.py install\""
+*** ./SConstruct.osr6 Fri May 20 16:42:18 2005
+--- ./SConstruct Fri May 20 22:07:20 2005
+***************
+*** 35,41 ****
+  
+  		 ('prefix',
+  		  'installation path prefix',
+! 		  '/usr/local'),
+  
+  		 BoolOption ('debug',
+  			     help = 'compile for debugging',
+--- 35,41 ----
+  
+  		 ('prefix',
+  		  'installation path prefix',
+! 		  '/usr'),
+  
+  		 BoolOption ('debug',
+  			     help = 'compile for debugging',
+***************
+*** 39,45 ****
+  
+  		 BoolOption ('debug',
+  			     help = 'compile for debugging',
+! 			     default = 1))
+  
+  opts.AddOptions (BoolOption ('has_debugger_gui',
+  			     help = 'enable debugger GUI',
+--- 39,45 ----
+  
+  		 BoolOption ('debug',
+  			     help = 'compile for debugging',
+! 			     default = 0))
+  
+  opts.AddOptions (BoolOption ('has_debugger_gui',
+  			     help = 'enable debugger GUI',

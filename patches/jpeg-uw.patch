@@ -1,0 +1,43 @@
+--- ./configure.uw	1998-03-21 19:08:57.000000000 +0000
++++ ./configure	2003-09-09 04:14:26.022480032 +0000
+@@ -1559,7 +1559,7 @@
+   if test "x$LTSTATIC" = xno; then
+     disable_static="--disable-static"
+   fi
+-  $srcdir/ltconfig $disable_shared $disable_static $srcdir/ltmain.sh
++  $srcdir/ltconfig $disable_shared $disable_static $srcdir/ltmain.sh i586-sco-sysv5
+ fi
+ 
+ # Select memory manager depending on user input.
+--- ./ltconfig.uw	2003-09-09 04:14:26.000000000 +0000
++++ ./ltconfig	2003-09-09 04:29:23.550000045 +0000
+@@ -518,7 +518,7 @@
+     wl='-Qoption ld '
+     ;;
+ 
+-  sysv4.2uw2*)
++  sysv4.2uw2*|sysv5*)
+     pic_flag='-KPIC'
+     link_static_flag='-Bstatic'
+     wl='-Wl,'
+@@ -841,6 +841,11 @@
+     hardcode_direct=yes
+     ;;
+ 
++  sysv5*)
++    archive_cmds='$LD -G -o $lib$libobjs'
++    hardcode_direct=yes
++    ;;
++
+   solaris2*)
+     no_undefined_flag=' -z text'
+     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib$libobjs'
+@@ -1221,7 +1226,7 @@
+   shlibpath_var=LD_LIBRARY_PATH
+   ;;
+ 
+-sysv4.2uw2*)
++sysv4.2uw2*|sysv5*)
+   version_type=linux
+   library_names_spec='${libname}${release}.so.$versuffix ${libname}${release}.so.$major $libname.so'
+   soname_spec='${libname}${release}.so.$major'

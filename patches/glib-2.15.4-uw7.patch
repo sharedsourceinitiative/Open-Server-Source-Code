@@ -1,0 +1,465 @@
+*** ./gthread/gthread-posix.c.uw7	Mon Jan 28 07:03:26 2008
+--- ./gthread/gthread-posix.c	Sun Feb  3 13:45:48 2008
+***************
+*** 51,57 ****
+    int error = (err); 							\
+    if (error)	 		 		 			\
+      g_error ("file %s: line %d (%s): error '%s' during '%s'",		\
+!            __FILE__, __LINE__, __FUNCTION__,				\
+             g_strerror (error), name);					\
+    }G_STMT_END
+  
+--- 51,57 ----
+    int error = (err); 							\
+    if (error)	 		 		 			\
+      g_error ("file %s: line %d (%s): error '%s' during '%s'",		\
+!            __FILE__, __LINE__, __func__,				\
+             g_strerror (error), name);					\
+    }G_STMT_END
+  
+*** ./gio/tests/Makefile.in.uw7	Sun Feb  3 13:46:06 2008
+--- ./gio/tests/Makefile.in	Sun Feb  3 13:46:56 2008
+***************
+*** 309,315 ****
+  progs_ldadd = \
+  	$(top_builddir)/glib/libglib-2.0.la 		\
+  	$(top_builddir)/gobject/libgobject-2.0.la	\
+! 	$(top_builddir)/gio/libgio-2.0.la
+  
+  memory_input_stream_SOURCES = memory-input-stream.c
+  memory_input_stream_LDADD = $(progs_ldadd)
+--- 309,316 ----
+  progs_ldadd = \
+  	$(top_builddir)/glib/libglib-2.0.la 		\
+  	$(top_builddir)/gobject/libgobject-2.0.la	\
+! 	$(top_builddir)/gio/libgio-2.0.la		\
+! 	$(top_builddir)/gio/xdgmime/libxdgmime.la
+  
+  memory_input_stream_SOURCES = memory-input-stream.c
+  memory_input_stream_LDADD = $(progs_ldadd)
+*** ./gio/tests/data-input-stream.c.uw7	Sun Feb  3 13:48:49 2008
+--- ./gio/tests/data-input-stream.c	Sun Feb  3 13:54:04 2008
+***************
+*** 262,268 ****
+  	  break;
+  	}
+        if ((data) && (! error))  
+! 	g_assert_cmpint (data, ==, TEST_DATA_RETYPE_BUFF(data_type, (buffer + pos)));
+        
+        pos += data_size;
+      }
+--- 262,268 ----
+  	  break;
+  	}
+        if ((data) && (! error))  
+! 	g_assert_cmpint (data, ==, TEST_DATA_RETYPE_BUFF(data_type, ((int)buffer + pos)));
+        
+        pos += data_size;
+      }
+***************
+*** 289,295 ****
+        guchar x = 0;
+        while (! x)
+  	x = (guchar)g_rand_int (rand);
+!       *(guchar*)(buffer + sizeof(guchar) * i) = x; 
+      }
+  
+    base_stream = g_memory_input_stream_new ();
+--- 289,295 ----
+        guchar x = 0;
+        while (! x)
+  	x = (guchar)g_rand_int (rand);
+!       *(guchar*)((int)buffer + sizeof(guchar) * i) = x; 
+      }
+  
+    base_stream = g_memory_input_stream_new ();
+*** ./gio/tests/data-output-stream.c.uw7	Sun Feb  3 13:55:25 2008
+--- ./gio/tests/data-output-stream.c	Sun Feb  3 13:57:06 2008
+***************
+*** 183,207 ****
+        switch (data_type)
+  	{
+  	case TEST_DATA_BYTE:
+! 	  res = g_data_output_stream_put_byte (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT16:
+! 	  res = g_data_output_stream_put_int16 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT16:
+! 	  res = g_data_output_stream_put_uint16 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT32:
+! 	  res = g_data_output_stream_put_int32 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT32:
+! 	  res = g_data_output_stream_put_uint32 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT64:
+! 	  res = g_data_output_stream_put_int64 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT64:
+! 	  res = g_data_output_stream_put_uint64 (G_DATA_OUTPUT_STREAM (stream), TEST_DATA_RETYPE_BUFF (data_type, (buffer + pos)), NULL, &error);
+  	  break;
+  	}
+        g_assert (error == NULL);
+--- 183,214 ----
+        switch (data_type)
+  	{
+  	case TEST_DATA_BYTE:
+! 	  res = g_data_output_stream_put_byte (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT16:
+! 	  res = g_data_output_stream_put_int16 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT16:
+! 	  res = g_data_output_stream_put_uint16 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT32:
+! 	  res = g_data_output_stream_put_int32 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT32:
+! 	  res = g_data_output_stream_put_uint32 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_INT64:
+! 	  res = g_data_output_stream_put_int64 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	case TEST_DATA_UINT64:
+! 	  res = g_data_output_stream_put_uint64 (G_DATA_OUTPUT_STREAM (stream),
+!       TEST_DATA_RETYPE_BUFF (data_type, ((int)buffer + pos)), NULL, &error);
+  	  break;
+  	}
+        g_assert (error == NULL);
+***************
+*** 215,221 ****
+    data = 0;
+    while (pos < len)
+      {
+!       data = TEST_DATA_RETYPE_BUFF(data_type, (stream_data + pos));
+        if (swap)
+  	{
+  	  switch (data_type)
+--- 222,228 ----
+    data = 0;
+    while (pos < len)
+      {
+!       data = TEST_DATA_RETYPE_BUFF(data_type, ((int)stream_data + pos));
+        if (swap)
+  	{
+  	  switch (data_type)
+***************
+*** 236,242 ****
+  	      break;
+  	    }
+  	}
+!       g_assert_cmpint (data, ==, TEST_DATA_RETYPE_BUFF(data_type, (buffer + pos)));
+        break;
+        
+        pos += data_size;
+--- 243,249 ----
+  	      break;
+  	    }
+  	}
+!       g_assert_cmpint (data, ==, TEST_DATA_RETYPE_BUFF(data_type, ((int)buffer + pos)));
+        break;
+        
+        pos += data_size;
+***************
+*** 262,268 ****
+      {
+        guchar x = 0;
+        while (! x)  x = (guchar)g_rand_int (rand);
+!       *(guchar*)(buffer + sizeof(guchar) * i) = x; 
+      }
+  
+    for (i = 0; i < 3; i++)
+--- 269,275 ----
+      {
+        guchar x = 0;
+        while (! x)  x = (guchar)g_rand_int (rand);
+!       *(guchar*)((int)buffer + sizeof(guchar) * i) = x; 
+      }
+  
+    for (i = 0; i < 3; i++)
+*** ./gio/gbufferedinputstream.c.uw7	Mon Jan 28 07:03:24 2008
+--- ./gio/gbufferedinputstream.c	Sun Feb  3 13:45:48 2008
+***************
+*** 481,487 ****
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __FUNCTION__);
+        return;
+      }
+    
+--- 481,487 ----
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __func__);
+        return;
+      }
+    
+*** ./gio/ginputstream.c.uw7	Mon Jan 28 07:03:24 2008
+--- ./gio/ginputstream.c	Sun Feb  3 13:45:48 2008
+***************
+*** 183,189 ****
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __FUNCTION__);
+        return -1;
+      }
+  
+--- 183,189 ----
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __func__);
+        return -1;
+      }
+  
+***************
+*** 315,321 ****
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __FUNCTION__);
+        return -1;
+      }
+    
+--- 315,321 ----
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __func__);
+        return -1;
+      }
+    
+***************
+*** 557,563 ****
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __FUNCTION__);
+        return;
+      }
+  
+--- 557,563 ----
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __func__);
+        return;
+      }
+  
+***************
+*** 682,688 ****
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __FUNCTION__);
+        return;
+      }
+  
+--- 682,688 ----
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __func__);
+        return;
+      }
+  
+*** ./gio/goutputstream.c.uw7	Mon Jan 28 07:03:24 2008
+--- ./gio/goutputstream.c	Sun Feb  3 13:45:48 2008
+***************
+*** 190,196 ****
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __FUNCTION__);
+        return -1;
+      }
+  
+--- 190,196 ----
+    if (((gssize) count) < 0)
+      {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+! 		   _("Too large count value passed to %s"), __func__);
+        return -1;
+      }
+  
+***************
+*** 645,651 ****
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __FUNCTION__);
+        return;
+      }
+  
+--- 645,651 ----
+  					   user_data,
+  					   G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
+  					   _("Too large count value passed to %s"),
+! 					   __func__);
+        return;
+      }
+  
+*** ./gio/glocalfile.c.uw7	Mon Jan 28 07:03:24 2008
+--- ./gio/glocalfile.c	Sun Feb  3 13:45:48 2008
+***************
+*** 49,55 ****
+  #if defined(HAVE_STATFS) && defined(HAVE_STATVFS)
+  /* Some systems have both statfs and statvfs, pick the
+     most "native" for these */
+! # if defined(sun) && defined(__SVR4)
+     /* on solaris, statfs doesn't even have the
+        f_bavail field */
+  #  define USE_STATVFS
+--- 49,55 ----
+  #if defined(HAVE_STATFS) && defined(HAVE_STATVFS)
+  /* Some systems have both statfs and statvfs, pick the
+     most "native" for these */
+! # if defined(__USLC__) || (defined(sun) && defined(__SVR4))
+     /* on solaris, statfs doesn't even have the
+        f_bavail field */
+  #  define USE_STATVFS
+*** ./glib/gtester.c.uw7	Mon Jan 28 07:03:22 2008
+--- ./glib/gtester.c	Sun Feb  3 13:45:48 2008
+***************
+*** 273,285 ****
+    GTestLogBuffer *tlb;
+    GSList *slist, *free_list = NULL;
+    GError *error = NULL;
+!   const gchar *argv[99 + g_slist_length (subtest_args) + g_slist_length (subtest_paths)];
+    GPid pid = 0;
+    gint report_pipe[2] = { -1, -1 };
+    guint child_report_cb_id = 0;
+    gboolean loop_pending;
+    gint i = 0;
+  
+    if (pipe (report_pipe) < 0)
+      {
+        if (subtest_mode_fatal)
+--- 273,286 ----
+    GTestLogBuffer *tlb;
+    GSList *slist, *free_list = NULL;
+    GError *error = NULL;
+!   const gchar **argv;
+    GPid pid = 0;
+    gint report_pipe[2] = { -1, -1 };
+    guint child_report_cb_id = 0;
+    gboolean loop_pending;
+    gint i = 0;
+  
++   argv = (gchar **)malloc(99 + g_slist_length (subtest_args) + g_slist_length (subtest_paths));
+    if (pipe (report_pipe) < 0)
+      {
+        if (subtest_mode_fatal)
+*** ./Build-UW7.uw7	Sun Feb  3 13:45:48 2008
+--- ./Build-UW7	Sun Feb  3 13:45:48 2008
+***************
+*** 0 ****
+--- 1,32 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2 -I/usr/local/include"
++ LDFLAGS="-L/usr/local/lib"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS LDFLAGS NM M4 INSTALL
++ PCRE_CFLAGS="-I/usr/local/include"
++ PCRE_LIBS="-L/usr/local/lib -lpcre"
++ export PCRE_CFLAGS PCRE_LIBS
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr/local --sysconfdir=/etc --mandir=/usr/local/man \
++             --with-threads=posix --disable-shared --enable-static \
++             --with-pcre=system \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ gmake $* 2>&1 | tee $MOUT
+*** ./Install-UW7.uw7	Sun Feb  3 13:45:48 2008
+--- ./Install-UW7	Sun Feb  3 13:45:48 2008
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/glib
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ gmake install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.uw7	Mon Jan 28 08:54:37 2008
+--- ./configure	Sun Feb  3 13:45:48 2008
+***************
+*** 38820,38827 ****
+  
+  rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+          fi
+- 	# Tru64Unix requires -pthread to find pthread.h. See #103020
+- 	CPPFLAGS="$CPPFLAGS -pthread"
+  	if test "x$have_threads" = xno; then
+  	cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+--- 38820,38825 ----
+***************
+*** 38909,38915 ****
+      # One of them does for most gcc versions and some other platforms/compilers
+      # too and could be considered as the canonical way to go.
+      case $host in
+!       *-*-cygwin*|*-*-darwin*)
+           # skip cygwin and darwin -pthread or -pthreads test
+           ;;
+        *-solaris*)
+--- 38907,38913 ----
+      # One of them does for most gcc versions and some other platforms/compilers
+      # too and could be considered as the canonical way to go.
+      case $host in
+!       *-*-cygwin*|*-*-darwin*|*sysv5*)
+           # skip cygwin and darwin -pthread or -pthreads test
+           ;;
+        *-solaris*)
+***************
+*** 39060,39066 ****
+  		G_THREAD_CFLAGS="-threads"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+  		;;
+! 	*-sysv5uw7*) # UnixWare 7
+  		# We are not using gcc with -pthread. Catched above.
+  		G_THREAD_CFLAGS="-Kthread"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+--- 39058,39064 ----
+  		G_THREAD_CFLAGS="-threads"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS
+  		;;
+! 	*-sysv5*) # UnixWare 7
+  		# We are not using gcc with -pthread. Catched above.
+  		G_THREAD_CFLAGS="-Kthread"
+  		G_THREAD_LIBS=$G_THREAD_CFLAGS

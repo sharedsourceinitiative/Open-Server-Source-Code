@@ -1,0 +1,322 @@
+*** ./machine/m_svr5.c.osr6	Fri Mar 10 06:32:08 2000
+--- ./machine/m_svr5.c	Mon Mar 17 16:42:59 2008
+***************
+*** 1,12 ****
+  /* 
+   * top - a top users display for Unix
+   *
+!  * SYNOPSIS:  For Intel based System V Release 5 (Unixware7)
+   * 
+   * DESCRIPTION:
+   * System V release 5 for i[3456]86
+   * Works for:
+!  * i586-sco-sysv5uw7  i386 SCO UNIX_SVR5 (UnixWare 7)
+   * 
+   * LIBS:  -lelf -lmas
+   * 
+--- 1,12 ----
+  /* 
+   * top - a top users display for Unix
+   *
+!  * SYNOPSIS:  For Intel based System V Release 5 (Unixware 7 and OpenServer 6)
+   * 
+   * DESCRIPTION:
+   * System V release 5 for i[3456]86
+   * Works for:
+!  * i586-sco-sysv5  i386 SCO UNIX_SVR5 (UnixWare 7 and OpenServer 6)
+   * 
+   * LIBS:  -lelf -lmas
+   * 
+*** ./.defaults.osr6	Mon Mar 17 16:42:59 2008
+--- ./.defaults	Mon Mar 17 16:42:59 2008
+***************
+*** 0 ****
+--- 1,20 ----
++ set module = 'svr5'
++ set LoadMax = '5.0'
++ set topn = '-1'
++ set NominalTopn = '18'
++ set delay = '5'
++ set owner = 'root'
++ set group = 'mem'
++ set mode = '2711'
++ set random = '0'
++ set TableSize = '37'
++ set bindir = '/usr/bin'
++ set mandir = '/usr/man/man1'
++ set manext = '1'
++ set mansty = 'man'
++ set Cmdshell = '/bin/sh'
++ set Cmdcc = 'cc'
++ set Cmdawk = 'awk'
++ set Cmdinstall = './install'
++ set cdefs = '-O'
++ set ColourDef = 'yes'
+*** ./top.c.osr6	Tue Aug 26 06:31:52 2003
+--- ./top.c	Mon Mar 17 16:42:59 2008
+***************
+*** 962,968 ****
+  				    "Order to sort: ");
+  				if (readline(tempbuf2, sizeof(tempbuf2), No) > 0)
+  				{
+! 				  if ((i = string_index(tempbuf2, statics.order_names)) == -1)
+  					{
+  					  new_message(MT_standout,
+  					      " %s: unrecognized sorting order", tempbuf2);
+--- 962,990 ----
+  				    "Order to sort: ");
+  				if (readline(tempbuf2, sizeof(tempbuf2), No) > 0)
+  				{
+!                       /* show sort orders */
+!                       if (tempbuf2[0] == '?' )  
+!                       {
+!                         static char onbuf[100];
+!                         if (*onbuf == '\0')
+!                         {
+!                             char *s1 = onbuf,
+!                                  **sp = statics.order_names;
+!                             *s1='\0';
+!                             while(*sp)  
+!                             {
+!                                 sprintf(s1, "%s, ", *sp++);
+!                                 s1 += strlen(s1);
+!                                 if ( s1 - onbuf > 65 )
+!                                     break;
+!                             }
+!                             s1[0] = '\0';
+!                             if (s1-onbuf >=2) s1[-2] = '\0';
+!                         }
+! 			   new_message(MT_standout, " Sort Orders: %s ", onbuf);
+! 			   no_command = Yes;
+!                                   } 
+!                else if ((i = string_index(tempbuf2, statics.order_names)) == -1)
+  					{
+  					  new_message(MT_standout,
+  					      " %s: unrecognized sorting order", tempbuf2);
+*** ./commands.c.osr6	Tue Aug 26 06:24:49 2003
+--- ./commands.c	Mon Mar 17 16:42:59 2008
+***************
+*** 77,83 ****
+  n or #  - change number of processes to display\n", stdout);
+  #ifdef ORDER
+  	fputs("\
+! o       - specify sort order (size, res, cpu, time)\n", stdout);
+  #endif
+  	fputs("\
+  r       - renice a process\n\
+--- 77,83 ----
+  n or #  - change number of processes to display\n", stdout);
+  #ifdef ORDER
+  	fputs("\
+! o       - specify sort order (size, res, cpu, time, ? shows keys)\n", stdout);
+  #endif
+  	fputs("\
+  r       - renice a process\n\
+*** ./utils.c.osr6	Wed Jun 18 07:43:07 2003
+--- ./utils.c	Mon Mar 17 16:42:59 2008
+***************
+*** 142,147 ****
+--- 142,148 ----
+   *	to the END of the string "to".
+   */
+  
++ /*
+  char *strecpy(to, from)
+  
+  register char *to;
+***************
+*** 151,156 ****
+--- 152,158 ----
+      while ((*to++ = *from++) != '\0');
+      return(--to);
+  }
++ */
+  
+  /*
+   * string_index(string, array) - find string in array and return index
+***************
+*** 468,474 ****
+  	}
+      }
+  
+!     p = strecpy(p, itoa(amt));
+      *p++ = tag;
+      *p = '\0';
+  #else
+--- 470,476 ----
+  	}
+      }
+  
+!     p = strecpy(p, itoa(amt), 0);
+      *p++ = tag;
+      *p = '\0';
+  #else
+*** ./Build-OSR6.osr6	Mon Mar 17 16:42:59 2008
+--- ./Build-OSR6	Mon Mar 17 16:42:59 2008
+***************
+*** 0 ****
+--- 1,24 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./Configure svr5 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Makefile.X.osr6	Thu Jun  5 04:11:19 2003
+--- ./Makefile.X	Mon Mar 17 16:42:59 2008
+***************
+*** 101,117 ****
+  install: top top.1 install-top install-$(MANSTY)
+  
+  install-top:
+! 	$(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) top $(BINDIR)
+  
+  install-man:
+! 	$(INSTALL) top.1 $(MANDIR)/top.$(MANEXT)
+  
+  install-catman:
+! 	tbl top.1 | nroff -man > $(MANDIR)/top.$(MANEXT)
+  
+  installmeta: top top.1
+! 	$(INSTALL) -o $(OWNER) -m 755 -g $(GROUP) metatop $(BINDIR)/top
+! 	@echo $(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) top $(BINDIR)/top-`uname -m`-`uname -r`
+  	@$(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) \
+! 		top $(BINDIR)/top-`uname -m`-`uname -r`
+! 	$(INSTALL) top.1 $(MANDIR)/top.$(MANEXT)
+--- 101,117 ----
+  install: top top.1 install-top install-$(MANSTY)
+  
+  install-top:
+! 	$(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) top $(DESTDIR)$(BINDIR)
+  
+  install-man:
+! 	$(INSTALL) top.1 $(DESTDIR)$(MANDIR)/top.$(MANEXT)
+  
+  install-catman:
+! 	tbl top.1 | nroff -man > $(DESTDIR)$(MANDIR)/top.$(MANEXT)
+  
+  installmeta: top top.1
+! 	$(INSTALL) -o $(OWNER) -m 755 -g $(GROUP) metatop $(DESTDIR)$(BINDIR)/top
+! 	@echo $(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) top $(DESTDIR)$(BINDIR)/top-`uname -m`-`uname -r`
+  	@$(INSTALL) -o $(OWNER) -m $(MODE) -g $(GROUP) \
+! 		top $(DESTDIR)$(BINDIR)/top-`uname -m`-`uname -r`
+! 	$(INSTALL) top.1 $(DESTDIR)$(MANDIR)/top.$(MANEXT)
+*** ./display.c.osr6	Wed Jun 18 07:43:07 2003
+--- ./display.c	Mon Mar 17 16:42:59 2008
+***************
+*** 766,772 ****
+  #endif
+        /* copy it in to our buffer */
+        base = smart_terminal ? screenbuf + lineindex(line) : screenbuf;
+!       p = strecpy(base, thisline);
+        
+        /* zero fill the rest of it */
+        memzero(p, display_width - (p - base));
+--- 766,772 ----
+  #endif
+        /* copy it in to our buffer */
+        base = smart_terminal ? screenbuf + lineindex(line) : screenbuf;
+!       p = strecpy(base, thisline, 0);
+        
+        /* zero fill the rest of it */
+        memzero(p, display_width - (p - base));
+***************
+*** 811,817 ****
+  	fputs(newline, stdout);
+  
+  	/* copy it in to the buffer */
+! 	optr = strecpy(bufferline, newline);
+  
+  	/* zero fill the rest of it */
+  	memzero(optr, display_width - (optr - bufferline));
+--- 811,817 ----
+  	fputs(newline, stdout);
+  
+  	/* copy it in to the buffer */
+! 	optr = strecpy(bufferline, newline, 0);
+  
+  	/* zero fill the rest of it */
+  	memzero(optr, display_width - (optr - bufferline));
+***************
+*** 1086,1107 ****
+  	    if (thisname[0] == 'K')
+  	    {
+  		/* yes: format it as a memory value */
+! 		p = strecpy(p, format_k(num));
+  
+  		/* skip over the K, since it was included by format_k */
+! 		p = strecpy(p, thisname+1);
+  	    }
+  	    else
+  	    {
+! 		p = strecpy(p, itoa(num));
+! 		p = strecpy(p, thisname);
+  	    }
+  	}
+  
+  	/* ignore negative numbers, but display corresponding string */
+  	else if (num < 0)
+  	{
+! 	    p = strecpy(p, thisname);
+  	}
+      }
+  
+--- 1086,1107 ----
+  	    if (thisname[0] == 'K')
+  	    {
+  		/* yes: format it as a memory value */
+! 		p = strecpy(p, format_k(num), 0);
+  
+  		/* skip over the K, since it was included by format_k */
+! 		p = strecpy(p, thisname+1, 0);
+  	    }
+  	    else
+  	    {
+! 		p = strecpy(p, itoa(num), 0);
+! 		p = strecpy(p, thisname, 0);
+  	    }
+  	}
+  
+  	/* ignore negative numbers, but display corresponding string */
+  	else if (num < 0)
+  	{
+! 	    p = strecpy(p, thisname, 0);
+  	}
+      }
+  
+*** ./Install-OSR6.osr6	Mon Mar 17 16:42:59 2008
+--- ./Install-OSR6	Mon Mar 17 16:44:09 2008
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/top
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/usr/bin
++ mkdir -p $D/usr/man/man1
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

@@ -1,0 +1,7 @@
+echo "Making tags files"
+make tags
+echo "Backing up previous shar file, if any"
+[ -f lds.shar ] && mv lds.shar backups/lds.shar-
+echo "Creating new shar file"
+shar README Imakefile Package *.c *.h lds.man tags TAGS params/* > lds.shar
+echo "Done"

@@ -1,0 +1,16 @@
+Begin3
+Title:		kfortune
+Version:	1.3
+Entered-date:	29DEC98
+Description:	KFortune is a little program for Kde.
+		It shows a 'fortune' every time Kde is started.
+Keywords:	KFortune, fortune, KDE, Qt
+Author:         <pte@ddsw.nl> Pieter Eendebak
+Maintained-by:  <pte@ddsw.nl> Pieter Eendebak
+Primary-site:	http://www.fys.ruu.nl/~eendebak/kde/kfortune.html
+Home-Page:	http://www.fys.ruu.nl/~eendebak/kde/kfortune.html
+Alternate-site:	ftp://ftp.kde.org/pub/kde
+Original-site:	None
+Platforms:	Linux with Qt 1.31 and Kde libs
+Copying-policy: GPL 
+End

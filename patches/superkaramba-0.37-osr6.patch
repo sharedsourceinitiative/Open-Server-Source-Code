@@ -1,0 +1,410 @@
+*** ./superkaramba/src/misc_python.cpp.osr6	Thu Jul  7 19:38:42 2005
+--- ./superkaramba/src/misc_python.cpp	Sun Sep 11 21:18:05 2005
+***************
+*** 26,31 ****
+--- 26,34 ----
+  #undef _XOPEN_SOURCE
+  #endif
+  
++ #include <sys/types.h>
++ #include <sys/sockio.h>
++ #include <netinet/in6.h>
+  #include <Python.h>
+  #include <qobject.h>
+  #include "kdebug.h"
+*** ./superkaramba/src/Makefile.in.osr6	Thu Jul  7 19:40:59 2005
+--- ./superkaramba/src/Makefile.in	Sun Sep 11 21:19:33 2005
+***************
+*** 477,483 ****
+  
+  
+  # kde_cfg_DATA = superkaramba.kcfg
+! superkaramba_LDFLAGS = -Wl,-export-dynamic  $(KDE_RPATH) $(all_libraries) $(PYTHONLIB) $(XMMS_LDFLAGS)
+  superkaramba_LDADD = -lkio $(LIB_KDEUI) $(XMMS_LDADD) $(LIBPYTHON) $(LIBKVM) $(LIB_KNEWSTUFF)
+  
+  # this is where the desktop file will go
+--- 477,483 ----
+  
+  
+  # kde_cfg_DATA = superkaramba.kcfg
+! superkaramba_LDFLAGS = -Wl,-Bexport $(KDE_RPATH) $(all_libraries) $(PYTHONLIB) $(XMMS_LDFLAGS)
+  superkaramba_LDADD = -lkio $(LIB_KDEUI) $(XMMS_LDADD) $(LIBPYTHON) $(LIBKVM) $(LIB_KNEWSTUFF)
+  
+  # this is where the desktop file will go
+*** ./superkaramba/src/karamba_python.cpp.osr6	Thu Jul  7 19:38:42 2005
+--- ./superkaramba/src/karamba_python.cpp	Sun Sep 11 21:18:49 2005
+***************
+*** 26,31 ****
+--- 26,32 ----
+  #undef _XOPEN_SOURCE
+  #endif
+  
++ #include <stdio.h>
+  #include <Python.h>
+  #include "karambaapp.h"
+  #include "themefile.h"
+*** ./Configure-OSR6.osr6	Sun Sep 11 21:15:14 2005
+--- ./Configure-OSR6	Sun Sep 11 21:15:14 2005
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure $* --prefix=/usr --with-qt-dir=/opt/kde --program-prefix="" \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./configure.osr6	Thu Jul  7 19:40:46 2005
+--- ./configure	Sun Sep 11 21:17:10 2005
+***************
+*** 3264,3273 ****
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
+!    'extern "C" void std::exit (int) throw (); using std::exit;' \
+!    'extern "C" void std::exit (int); using std::exit;' \
+!    'extern "C" void exit (int) throw ();' \
+!    'extern "C" void exit (int);' \
+     'void exit (int);'
+  do
+    cat >conftest.$ac_ext <<_ACEOF
+--- 3264,3273 ----
+    (exit $ac_status); }; }; then
+    for ac_declaration in \
+     '' \
+!    'extern "C++" void std::exit (int) throw (); using std::exit;' \
+!    'extern "C++" void std::exit (int); using std::exit;' \
+!    'extern "C++" void exit (int) throw ();' \
+!    'extern "C++" void exit (int);' \
+     'void exit (int);'
+  do
+    cat >conftest.$ac_ext <<_ACEOF
+***************
+*** 3996,4100 ****
+      CXXFLAGS=
+    fi
+  fi
+- for ac_declaration in \
+-    '' \
+-    'extern "C" void std::exit (int) throw (); using std::exit;' \
+-    'extern "C" void std::exit (int); using std::exit;' \
+-    'extern "C" void exit (int) throw ();' \
+-    'extern "C" void exit (int);' \
+-    'void exit (int);'
+- do
+-   cat >conftest.$ac_ext <<_ACEOF
+- /* confdefs.h.  */
+- _ACEOF
+- cat confdefs.h >>conftest.$ac_ext
+- cat >>conftest.$ac_ext <<_ACEOF
+- /* end confdefs.h.  */
+- $ac_declaration
+- #include <stdlib.h>
+- int
+- main ()
+- {
+- exit (42);
+-   ;
+-   return 0;
+- }
+- _ACEOF
+- rm -f conftest.$ac_objext
+- if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+-   (eval $ac_compile) 2>conftest.er1
+-   ac_status=$?
+-   grep -v '^ *+' conftest.er1 >conftest.err
+-   rm -f conftest.er1
+-   cat conftest.err >&5
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); } &&
+- 	 { ac_try='test -z "$ac_cxx_werror_flag"
+- 			 || test ! -s conftest.err'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; } &&
+- 	 { ac_try='test -s conftest.$ac_objext'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; }; then
+-   :
+- else
+-   echo "$as_me: failed program was:" >&5
+- sed 's/^/| /' conftest.$ac_ext >&5
+- 
+- continue
+- fi
+- rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+-   cat >conftest.$ac_ext <<_ACEOF
+- /* confdefs.h.  */
+- _ACEOF
+- cat confdefs.h >>conftest.$ac_ext
+- cat >>conftest.$ac_ext <<_ACEOF
+- /* end confdefs.h.  */
+- $ac_declaration
+- int
+- main ()
+- {
+- exit (42);
+-   ;
+-   return 0;
+- }
+- _ACEOF
+- rm -f conftest.$ac_objext
+- if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+-   (eval $ac_compile) 2>conftest.er1
+-   ac_status=$?
+-   grep -v '^ *+' conftest.er1 >conftest.err
+-   rm -f conftest.er1
+-   cat conftest.err >&5
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); } &&
+- 	 { ac_try='test -z "$ac_cxx_werror_flag"
+- 			 || test ! -s conftest.err'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; } &&
+- 	 { ac_try='test -s conftest.$ac_objext'
+-   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-   (eval $ac_try) 2>&5
+-   ac_status=$?
+-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-   (exit $ac_status); }; }; then
+-   break
+- else
+-   echo "$as_me: failed program was:" >&5
+- sed 's/^/| /' conftest.$ac_ext >&5
+- 
+- fi
+- rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+- done
+  rm -f conftest*
+  if test -n "$ac_declaration"; then
+    echo '#ifdef __cplusplus' >>confdefs.h
+--- 3996,4001 ----
+***************
+*** 7413,7419 ****
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+--- 7314,7320 ----
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+! sysv5* | sco3.2v5*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  
+***************
+*** 7422,7428 ****
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+--- 7323,7329 ----
+    lt_cv_file_magic_test_file=/lib/libc.so
+    ;;
+  
+! sysv4 | sysv4.2uw2* | sysv4.3*)
+    case $host_vendor in
+    motorola)
+      lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+***************
+*** 9657,9663 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+--- 9558,9564 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs=no
+  	cat <<EOF 1>&2
+***************
+*** 10312,10320 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 10213,10220 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 11638,11644 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 11538,11544 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 11736,11742 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 11636,11642 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 15304,15310 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 15204,15210 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 15402,15408 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 15302,15308 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 16434,16440 ****
+        fi
+        ;;
+  
+!     solaris* | sysv5*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+--- 16334,16340 ----
+        fi
+        ;;
+  
+!     solaris*)
+        if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
+  	ld_shlibs_F77=no
+  	cat <<EOF 1>&2
+***************
+*** 20688,20694 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 20588,20594 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+***************
+*** 20786,20792 ****
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+--- 20686,20692 ----
+  #endif
+  
+  #ifdef __cplusplus
+! extern "C++" void exit (int);
+  #endif
+  
+  void fnord() { int i=42;}
+*** ./Install-OSR6.osr6	Sun Sep 11 21:15:14 2005
+--- ./Install-OSR6	Sun Sep 11 21:15:14 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/superkaramba
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

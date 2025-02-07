@@ -1,0 +1,221 @@
+--- ./Configure-OSR6.00	2008-12-13 16:37:38.260000009 -0800
++++ ./Configure-OSR6	2008-12-13 16:37:38.260000006 -0800
+@@ -0,0 +1,23 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++CFLAGS="-O2"
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-g" ]
++then
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="$CFLAGS -Wall"
++else
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++fi
++ac_cv_type_u_int64_t=yes
++export CC CXX CFLAGS NM M4 INSTALL ac_cv_type_u_int64_t
++rm -f mout-configure
++./configure --prefix=/usr --mandir=/usr/man --infodir=/usr/gnu/info \
++            --sysconfdir=/etc \
++            --with-gd=/usr/include/gd2 \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./webalizer.c.00	2008-07-12 15:07:34.000000000 -0700
++++ ./webalizer.c	2008-12-13 16:37:38.270000002 -0800
+@@ -61,6 +61,11 @@
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
++#if defined(__USLC__)
++#ifndef __BIT_TYPES_DEFINED__
++#define __BIT_TYPES_DEFINED__
++#endif /* __BIT_TYPES_DEFINED__ */
++#endif /* __USLC__ */
+ #include <db.h>
+ #endif  /* USE_DNS */
+ 
+@@ -84,6 +89,18 @@
+ #include "dns_resolv.h"
+ #endif
+ 
++#ifndef AI_NUMERICHOST
++/*
++ * some platforms don't support AI_NUMERICHOST; define as zero if using
++ * the system version of getaddrinfo...
++ */
++#if defined(HAVE_STRUCT_ADDRINFO) && defined(HAVE_GETADDRINFO)
++#define AI_NUMERICHOST  0
++#else
++#define AI_NUMERICHOST  0x0004
++#endif
++#endif
++
+ /* internal function prototypes */
+ 
+ void    clear_month();                              /* clear monthly stuff */
+@@ -569,10 +586,17 @@
+       fflush(stdout);
+       (gz_log)?dns_resolver(zlog_fp):dns_resolver(log_fp);
+ #ifdef USE_BZIP
+-      (gz_log==COMP_BZIP)?bz2_rewind(&zlog_fp, log_fname, "rb"):
++      if (gz_log==COMP_BZIP)
++          bz2_rewind(&zlog_fp, log_fname, "rb");
++      else
+ #endif
+-      (gz_log==COMP_GZIP)?gzrewind(zlog_fp):
+-      (log_fname)?rewind(log_fp):exit(0);
++          if (gz_log==COMP_GZIP)
++              gzrewind(zlog_fp);
++          else
++              if (log_fname)
++                  rewind(log_fp);
++              else
++                  exit(0);
+    }
+ 
+    if (strstr(argv[0],"webazolver")!=0) exit(0);   /* webazolver exits here */
+--- ./dns_resolv.c.00	2008-06-30 22:51:40.000000000 -0700
++++ ./dns_resolv.c	2008-12-13 16:37:38.270000037 -0800
+@@ -61,6 +61,11 @@
+ #include <sys/stat.h>
+ #include <sys/time.h>
+ #include <sys/wait.h>
++#if defined(__USLC__)
++#ifndef __BIT_TYPES_DEFINED__
++#define __BIT_TYPES_DEFINED__
++#endif /* __BIT_TYPES_DEFINED__ */
++#endif /* __USLC__ */
+ #include <db.h>                                /* DB header ****************/
+ #include "webalizer.h"                         /* main header              */
+ #include "lang.h"                              /* language declares        */
+@@ -68,6 +73,18 @@
+ #include "parser.h"                            /* log parser functions     */
+ #include "dns_resolv.h"                        /* our header               */
+ 
++#ifndef AI_NUMERICHOST
++/*
++ * some platforms don't support AI_NUMERICHOST; define as zero if using
++ * the system version of getaddrinfo...
++ */
++#if defined(HAVE_STRUCT_ADDRINFO) && defined(HAVE_GETADDRINFO)
++#define AI_NUMERICHOST  0
++#else
++#define AI_NUMERICHOST  0x0004
++#endif
++#endif
++
+ /* local data */
+ 
+ DB       *dns_db   = NULL;                     /* DNS cache database       */
+@@ -347,7 +364,7 @@
+ {
+    DNODEPTR  trav;
+ 
+-   char   child_buf[MAXHOST+3-((unsigned long)&trav+sizeof(trav))%3];
++   char   *child_buf;
+    char   dns_buf[MAXHOST];
+    int    i;
+    int    pid;
+@@ -357,6 +374,8 @@
+   
+    struct sigaction sigChildAction;
+   
++   child_buf = (char *)malloc(MAXHOST+3-((unsigned long)&trav+sizeof(trav))%3);
++
+    sigChildAction.sa_handler = sigChild;
+    sigChildAction.sa_flags   = SA_NOCLDSTOP|SA_RESTART;
+    sigemptyset(&sigChildAction.sa_mask);
+@@ -641,6 +660,7 @@
+          }
+       }
+    }
++   free(child_buf);
+    return;
+ }
+ 
+@@ -859,7 +879,7 @@
+    i=geo_db->get(geo_db, NULL, &k, &v, 0);
+ 
+    if (i) strncpy(str, "Unknown", 8);
+-   else   strncpy(str, v.data+3, v.size-3);
++   else   strncpy(str, (u_int32_t)(v.data)+3, v.size-3);
+    return str;
+ }
+ 
+--- ./wcmgr.c.00	2008-07-12 15:07:46.000000000 -0700
++++ ./wcmgr.c	2008-12-13 16:37:38.270000062 -0800
+@@ -70,6 +70,12 @@
+ #include <sys/types.h>
+ #endif
+ 
++#if defined(__USLC__)
++#include <sys/bitypes.h>
++#ifndef __BIT_TYPES_DEFINED__
++#define __BIT_TYPES_DEFINED__
++#endif /* __BIT_TYPES_DEFINED__ */
++#endif /* __USLC__ */
+ #include <db.h>
+ #include "webalizer.h"
+ 
+--- ./Install-OSR6.00	2008-12-13 16:37:38.280000014 -0800
++++ ./Install-OSR6	2008-12-13 16:37:38.280000011 -0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/webalizer
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./Makefile.in.00	2008-06-30 15:04:39.000000000 -0700
++++ ./Makefile.in	2008-12-13 16:37:38.280000028 -0800
+@@ -19,9 +19,10 @@
+ prefix          = @prefix@
+ exec_prefix     = @exec_prefix@
+ datadir         = @datarootdir@
++mandir          = @mandir@
+ 
+ BINDIR          = @bindir@
+-MANDIR          = ${datadir}/man/man1
++MANDIR          = ${mandir}/man1
+ ETCDIR          = @sysconfdir@
+ GEODB           = @GEODB_LOC@
+ CC              = @CC@
+--- ./sample.conf.00	2008-07-10 00:09:33.000000000 -0700
++++ ./sample.conf	2008-12-13 16:38:01.960000026 -0800
+@@ -26,7 +26,7 @@
+ # (bzip2 compressed file), it will be decompressed on the fly as it
+ # is being read.
+ 
+-#LogFile        /var/lib/httpd/logs/access_log
++LogFile        /usr/lib/apache/logs/access_log
+ 
+ # LogType defines the log type being processed.  Normally, the Webalizer
+ # expects a CLF or Combined web server log as input.  Using this option,
+@@ -40,7 +40,7 @@
+ # should be a full path name, however relative ones might work as well.
+ # If no output directory is specified, the current directory will be used.
+ 
+-#OutputDir      /var/lib/httpd/htdocs/usage
++OutputDir      /usr/lib/apache/htdocs/usage
+ 
+ # HistoryName allows you to specify the name of the history file produced
+ # by the Webalizer.  The history file keeps the data for previous months,
+@@ -724,7 +724,7 @@
+ # it will default to the current output directory.  Do not use a
+ # trailing slash ('/').
+ 
+-#DumpPath	/var/lib/httpd/logs
++DumpPath	/usr/lib/apache/logs
+ 
+ # The DumpHeader keyword specifies if a header record should be
+ # written to the file.  A header record is the first record of the

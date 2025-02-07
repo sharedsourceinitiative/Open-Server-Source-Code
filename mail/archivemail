@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# archivemail - maintain hypermail archives of my mailfolders
+#
+# written 17-Oct-97 by Ronald Joe Record (rr@sco.com)
+#
+
+# The full pathname to the Hypermail document root
+D=/usr/local/lib/apache/htdocs/hypermail
+
+# Your home directory
+H=/home/rr
+
+# An existing password protection access file
+P=$D/Inbox/.htaccess
+
+# A list of directories that contain mail folders
+FOLDERS="$H/.mailbox $H/nsmail/* $H/mailfolders/* $H/Carbons/*"
+
+for i in $FOLDERS
+do
+	echo $i | grep Unsent > /dev/null && continue
+	echo $i | grep Trash > /dev/null && continue
+    b=`basename $i`
+	[ "$b" = "*" ] && continue
+	DNAM=$b
+	echo $i | grep $H/Carbons > /dev/null && DNAM=Carbons_$b
+	echo $i | grep $H/.mailbox > /dev/null && DNAM=Incoming
+	[ -d $D/$DNAM ] || {
+		mkdir -p $D/$DNAM
+		# new mail folders get password protected by default
+		[ -f $P ] && cp $P $D/$DNAM/.htaccess
+	}
+    /usr/local/bin/hypermail -m $i -d $D/$DNAM -l "rr's $DNAM mail folder"
+done
+
+[ -f $D/index.html ] && cp $D/index.html $D/index.html_old
+
+echo "<HTML>
+<HEAD>
+<TITLE>Hypermail Archives</TITLE>
+</HEAD>
+<BODY BGCOLOR=#000000 TEXT=#FFFFFF LINK=#00FFFF VLINK=#FFFF00 ALINK=#FF0000>
+<CENTER>
+<H1>Hypermail Archives</H1>
+<P>
+(*) indicates password protected access
+<P>
+<TABLE WIDTH=100% BORDER=6 CELLPADDING=3 CELLSPACING=3>
+<TR>" > $D/index.html
+
+TNUM=0
+for i in $D/*
+do
+    [ -d $i ] && {
+		b=`basename $i`
+		r=
+		[ -f $i/.htaccess ] && r="(*)"
+        echo "<TD><TABLE WIDTH=100%>
+			  <TR><TD ALIGN=LEFT><A HREF=$b>$b</A></TD>
+			  <TD ALIGN=RIGHT>$r</TD></TR></TABLE></TD>" >> $D/index.html
+		TNUM=`expr $TNUM + 1`
+		[ "$TNUM" = "4" ] && {
+			echo "</TR><TR>" >> $D/index.html
+			TNUM=0
+		}
+	}
+done
+
+echo "</TR></TABLE>
+</BODY>
+</HTML>" >> $D/index.html
+

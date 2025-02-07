@@ -1,0 +1,40 @@
+*** ./Build-OSR6.osr6	Mon Dec 10 11:31:02 2007
+--- ./Build-OSR6	Mon Dec 10 12:03:16 2007
+***************
+*** 0 ****
+--- 1,17 ----
++ #!/bin/sh
++ #
++ rm -f mout
++ CXX="CC -Kpthread -Kalloca" \
++ CC="cc -Kpthread -Kalloca" \
++ ./configure --prefix /usr/zope \
++             --with-python /bin/python 2>&1 | tee mout-configure
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
++ 
++ #MOUT=mout-check
++ #[ "$1" ] && MOUT=mout-$1
++ #[ -f $MOUT ] && mv $MOUT $MOUT-prev
++ #make check 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Mon Dec 10 11:31:02 2007
+--- ./Install-OSR6	Mon Dec 10 12:02:47 2007
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ D=/u/tmp/zope
++ 
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ 
++ MOUT=mout-install
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ 
++ /bin/python install.py -q install --skip-build \
++                        --home /usr/zope --root $D 2>&1 | tee $MOUT

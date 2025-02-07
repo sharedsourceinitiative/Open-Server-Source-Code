@@ -1,0 +1,132 @@
+# A SAMPLE .PROCMAILRC FILE FOR NOVICES
+# Written by Catherine Hampton <ariel@best.com>
+# Released to the Public Domain.
+#
+#
+# Set your variables
+SHELL=/bin/ksh              #Shell used to run procmail.  Be sure this points to
+                            #your system's copy of ksh.  DO NOT substitute a
+                            #different shell unless you really know UNIX
+
+PATH=$HOME/bin:/bin:/usr/bin:/usr/local/bin
+                            #Path for your programs -- this is probably best
+                            #left alone.
+
+MAILDIR=$HOME/Mail          #you'd better make sure this directory exists
+
+DEFAULT=/var/mail/$USER         #default incoming mailbox for Gemini users
+#DEFAULT=$HOME/inbox         #default incoming mailbox for shell2-5 users
+                            #on Best Internet.  Substitute the correct
+                            #setting for your system.
+
+LOGFILE=$MAILDIR/log        #Logs message disposition.  Recommended.
+
+SENDMAIL=/usr/lib/sendmail    #useful for autoreply recipes.  If you are
+                               #not on Best Internet, modify this to point
+                               #to your system's copy of sendmail.
+
+FORMAIL=/usr/local/bin/formail #also useful for autoreply recipes.  If you
+                               #are not on Best Internet, modify this to
+                               #your system's copy of formail.
+
+LINEBUF=16384                  #Needed to keep Procmail from choking on large
+                               #lists of spam sites. :(
+
+SBDIR=$MAILDIR/shared             #Directory where Spam Bouncer files are located
+
+ADMINFOLDER=$MAILDIR/admin.incoming  #for bounced mail, mail from root, postmaster, abuse
+
+BLOCKFOLDER=$MAILDIR/block.incoming  #for suspicious mail, but possibly not spam
+
+BULKFOLDER=$MAILDIR/bulk.incoming    #for bulk mail which appears legitimate
+
+SPAMFOLDER=$MAILDIR/spam.incoming    #change this to SPAMFOLDER=/dev/null
+                                     #to delete spam entirely
+
+# These variables are needed only if you are installing the full version of the
+# Spam Bouncer.
+
+ALTFROM=login@otherdomain.com       #Alternate "From" line for autoreplies
+BYPASSWD=twispo                     #Password for users to bypass spam filtering
+NOLOOP=$ALTFROM                      #Variable to check for mailing loops when
+                                     #autoreplying -- leave as is.
+
+# BEGIN RECIPES
+
+# Nuke duplicate messages
+:0 Wh: msgid.lock
+| $FORMAIL -D 8192 msgid.cache
+
+# Create a backup cache of 100 most recent messages in case of mistakes
+:0 c
+backup
+
+  :0 ic
+  | cd backup && rm -f dummy `ls -t msg.* | sed -e 1,100d`
+
+# Regenerate "From" lines to make sure they are valid
+:0 fhw
+| formail -I "From " -a "From "
+
+# Send bounced mail and mail from admin accounts to its own folder
+:0:
+* (^FROM_MAILER|\
+   ^From.*[^0-9A-Za-z]abuse@|\
+   ^From.*[^0-9a-zA-Z]spam@)
+| $FORMAIL -A"X-Sorted: Admin" >>$ADMINFOLDER
+
+# MAILING LISTS
+
+# Filter out mail from all mailing lists you are on =before= spam
+# filtering.  I included two I subscribe to and recommend highly, but
+# your list will doubtless be different.  Just duplicate the recipe
+# for each mailing list you are on, and put the correct address for
+# the list in the condition statement.  (The "* ^TO" part.)  If you
+# read mail on shell, you may find it easier to deliver this mail
+# to separate folders, especially for busy lists.  I do. :)
+
+# List Mom mail (GREAT list for mailing list managers)
+:0:
+* ^TOlistmom-talk@skyweyr.com
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+# Procmail list (Wonderful for new Procmail users!)
+:0:
+* ^TOprocmail@Informatik.RWTH-Aachen.DE
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+
+# Call the Spam Bouncer (lite version) to filter remaining mail for spam.
+INCLUDERC=$SBDIR/splite.rc
+
+# Call the Spam Bouncer to filter remaining mail for spam.
+# (Comment out the statement above, and uncomment this one, if you prefer
+# the full version.)
+#INCLUDERC=$SBDIR/spam.rc
+
+
+# Sort out mail that really is to you from mail Bcc'd to you, or mail
+# which doesn't have any of your email addresses on the To: or Cc: line.
+# (Best Internet users -- I recommend =NOT= putting your
+# login@shellx.best.com, login@nntp?.best.com, or login@shell#.ba.best.com
+# addresses in here if you post to Usenet from shell, since they appear in
+# those posts, and spammers tend to collect them. :()
+#
+# This does =wonders= in keeping spam from appearing in your personal
+# mail. :)
+#
+# Substitute your shell account email address, custom domain, and any other email
+# address you may have for the entries below.
+:0:
+* ^(To:|Cc:).*(login@shelldomain\.com|\
+         .*@customdomain\.com|\
+         login@otherdomain\.net)
+| $FORMAIL -A"X-Sorted: Default" >>$DEFAULT
+
+# Deliver email which passed spam filtering, but which wasn't sent to
+# a recognizable personal email address of yours, to your "bulk mail"
+# folder, for reading on a less-urgent basis.
+:0:
+| $FORMAIL -A"X-Sorted: Bulk" >>$BULKFOLDER
+
+# Done :)

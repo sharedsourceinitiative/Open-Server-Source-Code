@@ -1,0 +1,50 @@
+*** ./Configure-OSR6.osr6	Mon Feb 13 11:56:33 2006
+--- ./Configure-OSR6	Mon Feb 13 11:58:07 2006
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ 
++ # Apply xpdf 3.01pl2 patch
++ /usr/gnu/bin/patch -p1 -b -z .pl2 -i ../../patches/xpdf-3.01pl2.patch
++ 
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --sysconfdir=/etc \
++             --enable-freetype2 \
++             --with-freetype2-includes=/usr/include/freetype2 \
++             --without-t1-library \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Mon Feb 13 11:56:33 2006
+--- ./Install-OSR6	Mon Feb 13 11:56:33 2006
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/xpdf
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

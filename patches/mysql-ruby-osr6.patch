@@ -1,0 +1,30 @@
+*** ./Build-OSR6.osr6	Thu Nov  8 17:47:11 2007
+--- ./Build-OSR6	Thu Nov  8 17:47:05 2007
+***************
+*** 0 ****
+--- 1,8 ----
++ #!/bin/sh
++ 
++ ruby extconf.rb 2>&1 > mout-ruby
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Thu Nov  8 17:49:30 2007
+--- ./Install-OSR6	Thu Nov  8 17:49:52 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rubymysql
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

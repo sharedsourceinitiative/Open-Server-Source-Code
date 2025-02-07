@@ -1,0 +1,239 @@
+*** ./src/udp.c.osr6	Mon Jan 19 17:47:56 2004
+--- ./src/udp.c	Mon Sep  5 12:27:01 2005
+***************
+*** 329,342 ****
+  {
+    gint bytes_received;
+    struct sockaddr_storage sa;
+!   gint sa_len = sizeof(struct sockaddr_storage);
+  
+    g_return_val_if_fail (socket, -1);
+    g_return_val_if_fail (buffer, -1);
+  
+    bytes_received = recvfrom (socket->sockfd, 
+  			     (void*) buffer, length, 
+! 			     0, (struct sockaddr*) &sa, &sa_len);
+  
+    if (bytes_received == -1)
+      return -1;
+--- 329,342 ----
+  {
+    gint bytes_received;
+    struct sockaddr_storage sa;
+!   gint my_sa_len = sizeof(struct sockaddr_storage);
+  
+    g_return_val_if_fail (socket, -1);
+    g_return_val_if_fail (buffer, -1);
+  
+    bytes_received = recvfrom (socket->sockfd, 
+  			     (void*) buffer, length, 
+! 			     0, (struct sockaddr*) &sa, &my_sa_len);
+  
+    if (bytes_received == -1)
+      return -1;
+*** ./configure.osr6	Mon Mar  1 16:10:56 2004
+--- ./configure	Mon Sep  5 12:28:15 2005
+***************
+*** 4776,4782 ****
+    echo "$as_me:$LINENO: checking for -pthread" >&5
+  echo $ECHO_N "checking for -pthread... $ECHO_C" >&6
+    gnet_save_LIBS=$LIBS
+!   LIBS="$LIBS -pthread"
+    dash_pthread=""
+    cat >conftest.$ac_ext <<_ACEOF
+  int main() { return 0; }
+--- 4776,4782 ----
+    echo "$as_me:$LINENO: checking for -pthread" >&5
+  echo $ECHO_N "checking for -pthread... $ECHO_C" >&6
+    gnet_save_LIBS=$LIBS
+!   LIBS="$LIBS"
+    dash_pthread=""
+    cat >conftest.$ac_ext <<_ACEOF
+  int main() { return 0; }
+***************
+*** 4793,4799 ****
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   dash_pthread="-pthread"
+  	 echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+  else
+--- 4793,4799 ----
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   dash_pthread=""
+  	 echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+  else
+***************
+*** 4804,4810 ****
+  echo "${ECHO_T}no" >&6
+           echo "$as_me:$LINENO: checking for -pthreads" >&5
+  echo $ECHO_N "checking for -pthreads... $ECHO_C" >&6
+!          LIBS="$gnet_save_LIBS -pthreads"
+  	 cat >conftest.$ac_ext <<_ACEOF
+  int main() { return 0; }
+  _ACEOF
+--- 4804,4810 ----
+  echo "${ECHO_T}no" >&6
+           echo "$as_me:$LINENO: checking for -pthreads" >&5
+  echo $ECHO_N "checking for -pthreads... $ECHO_C" >&6
+!          LIBS="$gnet_save_LIBS"
+  	 cat >conftest.$ac_ext <<_ACEOF
+  int main() { return 0; }
+  _ACEOF
+***************
+*** 4820,4826 ****
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   dash_pthread="-pthreads"
+  	   echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+  else
+--- 4820,4826 ----
+    ac_status=$?
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+!   dash_pthread=""
+  	   echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+  else
+***************
+*** 4837,4849 ****
+    LIBS="$gnet_save_LIBS $dash_pthread"
+  
+    if test "x$dash_pthread" == "x"; then
+!     echo "$as_me:$LINENO: checking for pthread_create in -lpthread" >&5
+! echo $ECHO_N "checking for pthread_create in -lpthread... $ECHO_C" >&6
+  if test "${ac_cv_lib_pthread_pthread_create+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+- LIBS="-lpthread  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  #include "confdefs.h"
+--- 4837,4848 ----
+    LIBS="$gnet_save_LIBS $dash_pthread"
+  
+    if test "x$dash_pthread" == "x"; then
+!     echo "$as_me:$LINENO: checking for pthread_create" >&5
+! echo $ECHO_N "checking for pthread_create... $ECHO_C" >&6
+  if test "${ac_cv_lib_pthread_pthread_create+set}" = set; then
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+  cat >conftest.$ac_ext <<_ACEOF
+  #line $LINENO "configure"
+  #include "confdefs.h"
+***************
+*** 4893,4899 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   PTHREAD_LIBS="-lpthread"
+  fi
+  
+      echo "$as_me:$LINENO: checking for pthread_create in -lc_r" >&5
+--- 4892,4898 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_pthread_pthread_create" >&5
+  echo "${ECHO_T}$ac_cv_lib_pthread_pthread_create" >&6
+  if test $ac_cv_lib_pthread_pthread_create = yes; then
+!   PTHREAD_LIBS=""
+  fi
+  
+      echo "$as_me:$LINENO: checking for pthread_create in -lc_r" >&5
+***************
+*** 5431,5441 ****
+    echo "$as_me:$LINENO: \$? = $ac_status" >&5
+    (exit $ac_status); }; }; then
+  
+- 
+- cat >>confdefs.h <<\_ACEOF
+- #define HAVE_IPV6 1
+- _ACEOF
+- 
+      echo "$as_me:$LINENO: result: yes" >&5
+  echo "${ECHO_T}yes" >&6
+  
+--- 5430,5435 ----
+*** ./ltconfig.osr6	Mon Mar  1 16:11:14 2004
+--- ./ltconfig	Mon Sep  5 12:27:01 2005
+***************
+*** 1210,1216 ****
+      fi
+      ;;
+  
+!   solaris* | sysv5*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+--- 1210,1216 ----
+      fi
+      ;;
+  
+!   solaris*)
+      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+        ld_shlibs=no
+        cat <<EOF 1>&2
+***************
+*** 1488,1496 ****
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linkopts'
+!     archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+! 		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linkopts~$rm $lib.exp'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+--- 1488,1496 ----
+      no_undefined_flag=' -z text'
+      # $CC -shared without GNU ld will not create a library from C++
+      # object files and a static libstdc++, better avoid it by now
+!     archive_cmds='$LD -G${allow_undefined_flag} -h /usr/lib/$soname -o $lib $libobjs $deplibs $linkopts'
+!     archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols
+! -h /usr/lib/$soname -o $lib $libobjs $deplibs $linkopts'
+      hardcode_libdir_flag_spec=
+      hardcode_shlibpath_var=no
+      runpath_var='LD_RUN_PATH'
+***************
+*** 2077,2086 ****
+    library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
+    soname_spec='${libname}${release}.so$major'
+    shlibpath_var=LD_LIBRARY_PATH
+    case "$host_vendor" in
+-     ncr)
+-       deplibs_check_method='pass_all'
+-       ;;
+      motorola)
+        need_lib_prefix=no
+        need_version=no
+--- 2077,2084 ----
+    library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
+    soname_spec='${libname}${release}.so$major'
+    shlibpath_var=LD_LIBRARY_PATH
++   deplibs_check_method='pass_all'
+    case "$host_vendor" in
+      motorola)
+        need_lib_prefix=no
+        need_version=no
+*** ./Install-OSR6.osr6	Mon Sep  5 12:27:01 2005
+--- ./Install-OSR6	Mon Sep  5 12:27:01 2005
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gnet
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

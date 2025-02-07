@@ -1,0 +1,398 @@
+.TH LDS 6X
+.SH NAME
+lds \- generate and display a lattice dynamical system
+.SH SYNOPSIS
+.in +4n
+.ti -4n
+\fIlds\fR
+[-2APcdmpq] [-W 
+\fIwidth\fR] [-H 
+\fIheight\fR] [-w
+\fIwide\fR] [-h
+\fIhigh\fR] [-i 
+\fIinit\fR] [-n 
+\fIlambda\fR ] [-b 
+\fIn\fR ] [-F 
+\fIfreq\fR] [-B 
+\fIf | r | n\fR ]
+[-C 
+\fIepsilon1\fR ] [-L 
+\fIepsilon2\fR ] [-R 
+\fIepsilon3\fR ]
+[-r 
+\fIdelta\fR ] [-E 
+\fIrho\fR ] [-M 
+\fIomega\fR ] [-T 
+\fIheight\fR] [-o 
+\fIfname\fR]
+.sp 2
+.ft B
+.SH DESCRIPTION
+\fIlds\fR
+generates and displays a sequence of curves or 
+cellular automata like figures which graphically represent the 
+evolution of a Lattice Dynamical System (LDS). An LDS is an array
+of cells, each of which represents a dynamical system. Each cell
+is coupled to its nearest neighbors. The dynamical systems available
+in this software package are currently the logistic map, circle map
+and tent map. The state of each cell in the LDS is a real number in
+the unit interval. The evolution of the lattice is determined by an
+iteration thru the specified dynamic (e.g. the logistic equation)
+followed by a weighted averaging with its nearest neighbors. 
+.sp
+By default,
+\fIlds\fR 
+calculates and displays a 1-dimensional LDS. A 2-dimensional
+LDS can be specified on the command line (see the descriptions of the
+\fI-h, -2\fR and \fI-H\fR options below). In the 2-D case, nearest neighbors
+are defined to be left, right, upper and lower (no diagonal neighbors).
+In the 1-D case, nearest neighbors are simply left and right.
+.sp
+Command line arguments and run-time keyboard input allow lds to simulate
+a wide variety of lattice dynamical systems. The user can specify the
+dynamic to be used, the non-linearity parameter, the strength of coupling,
+the initial conditions, the size of the array, the lenght of the run,
+whether and how to evolve connection strengths, and more. During the run,
+the display of an evolving 1-D LDS can either be CA-like with each generation
+being represented as a horizontal line evolving upward in the window or as
+points or a curve with X axis the lattice and Y-axis the cell states [0,1].
+The display of an evolving 2-D LDS can either be CA-like with each generation
+being represented as a rectangle evolving upward in the window or as points
+or a curve with X axis the projected lattice and Y-axis the cell states [0,1].
+In addition, graphical display of cell states can be toggled between actual
+state and phase difference with left neighbor. 
+.sp
+Site and spatial histogram windows can also be displayed. The X-axis for
+the site histogram curve is the unit interval [0,1] while the Y-axis is
+the number of lattice sites which have taken on that value. The X-axis for
+the spatial histogram window is the projection of the lattice down onto its
+horizontal width while the Y-axis is the unit interval [0,1].
+.sp
+Lattice dynamical systems are also referred to as coupled map lattices.
+.sp
+.SH OPTIONS
+.sp
+.ft B
+.ti 5
+-2 
+.ft R
+.ti 8
+Default to a two dimensional lattice. Defaults for width and height are now
+256x256.
+.ft B
+.ti 5
+-A 
+.ft R
+.ti 8
+Creates site histogram curve
+.ft B
+.ti 5
+-p 
+.ft R
+.ti 8
+Indicates draw phase 1st differences
+.ft B
+.ti 5
+-q 
+.ft R
+.ti 8
+Indicates not to draw "quilt" style. In quilt mode, the lattice is moved
+upward in the window each generation (if the window is larger than the
+lattice). If the "-q" option is specified, subseqeunt generations overwrite 
+the previous one.
+.ft B
+.ti 5
+-c
+.ft R
+.ti 8
+Indicates draw curves
+.ft B
+.ti 5
+-P
+.ft R
+.ti 8
+Indicates draw points (when in curve drawing mode)
+.ft B
+.ti 5
+-m
+.ft R
+.ti 8
+Indicates monochrome plot
+.ft B
+.ti 5
+-B [ f | r | 
+.IR b ]
+.ft R
+.in 8
+Selects fixed zero, random, or specified fixed value of boundaries.
+Option -Bf sets boundaries to zero; -Br selects randomly fluctuating
+boundaries; and -Bb assigns value 0 < b < 1 to boundaries.
+The default boundary specification is periodic.
+.in -8
+.ft B
+.ti 5
+-w
+.I n
+.ft R
+.ti 8
+Indicates the lattice is 
+.I n
+cells wide (default is full screen)
+.ft B
+.ti 5
+-h
+.I n
+.ft R
+.ti 8
+Indicates the lattice is 
+.I n
+cells high (default is 1 in the absense of the 
+.I -2
+argument and 256 when 
+.I -2
+is specified)
+.ft B
+.ti 5
+-W
+.I n
+.ft R
+.ti 8
+Indicates the windows are 
+.I n
+pixels wide (default is full screen)
+.ft B
+.ti 5
+-H
+.I n
+.ft R
+.ti 8
+Indicates the windows are 
+.I n
+pixels high (default is full screen in the absense of the
+.I -2
+argument and 256 when
+.I -2
+is specified)
+.ft B
+.ti 5
+-i [ p
+.I n
+| 
+.I nnnn
+| r ]
+.ft R
+.in 8
+Selects initial condition. Option -ip
+.I n
+indicates periodic initial conditions with frequency 
+.IR n .
+Option -i
+.I nnnnn
+indicates center cells are given values 
+.IR 1/n .
+Option -ir selects random initial conditions (which is the default)
+.in -8
+.ft B
+.ti 5
+-n [ r | l | p
+.I m
+| lambda ]
+.ft R
+.in 8
+Selects non-linearity parameter values (default is 3.7). Option -nr 
+selects randomly assigned non-linearity parameters. Option -nl
+selects linearly assigned non-linearity parameters. Option -np
+.I m
+selects periodically assigned non-linearity parameters with frequency
+.IR m .
+Option  -n lambda
+selects non-linearity parameter lambda for all sites.
+.in -8
+.ft B
+.ti 5
+-b
+.I n
+.ft R
+.ti 8
+Begin graphing at generation 
+.I n 
+(default is 1)
+.ft B
+.ti 5
+-F 
+.I n
+.ft R
+.ti 8
+Indicates display every 
+.I n'th 
+generation (1 is default)
+.ft B
+.ti 5
+-C
+.I epsilon1
+.ft R
+.ti 8
+Indicates weight of center cell (default 0.9) where 0 < epsilon1 < 1.
+.ft B
+.ti 5
+-L
+.I epsilon2
+.ft R
+.ti 8
+Indicates weight of left neighbor (default 0.05) where 0 < epsilon2 < 1.
+.ft B
+.ti 5
+-R
+.I epsilon3
+.ft R
+.ti 8
+Indicates weight of right neighbor (default 0.05) where 0 < epsilon3 < 1.
+.ft B
+.ti 5
+-r
+.I delta
+.ft R
+.in 8
+Indicates range outside of which differences are graphed (0 < delta < 1)
+This value also serves as the determining distance over which connection
+strengths weaken rather than strengthen (when the -E flag is specified).
+.in -8
+.ft B
+.ti 5
+-E
+.I rho
+.ft R
+.in 8
+Indicates the rate at which connection strengths evolve (0 < rho < 1).
+Connection strengths do not change if no -E flag is present.
+.in -8
+.ft B
+.ti 5
+-M
+.I omega
+.ft R
+.in 8
+Selects circle map
+.in -8
+.ft B
+.ti 5
+-T
+.I height
+.ft R
+.in 8
+Selects tent map
+.in -8
+.ft B
+.ti 5
+-o 
+.ft R
+.I fname
+.ti 8
+Outputs graphed generations to file 
+.IR fname .
+.ft B
+.sp
+.SH NOTES
+.sp
+.ft R
+.in 5
+In the absence of either the -M or -T arguments, the logistic map is used.
+.in -5
+.sp
+.ti 5
+During display, use of the keys 
+.I 123456789+-<>BDEFHILPQRSWXcdfhimpswxq? 
+indicates:
+.ft I
+.sp
+.ti 10
+(1-9) Set the frequency to 1-9
+.ti 10
+(+) Increment the frequency by 1
+.ti 10
+(-) Decrement the frequency by 1
+.ti 10
+(>) Double the frequency
+.ti 10
+(<) Halve the frequency
+.ti 10
+(B) Begin again
+.ti 10
+(c) toggle curve/cell display
+.ti 10
+(d) draw
+.ti 10
+(D) Flush the drawing buffer
+.ti 10
+(E) Erase each generation
+.ti 10
+(f or F) Save the drawing window to a file
+.ti 10
+(h) Display histogram curve
+.ti 10
+(H) Histogram tracking toggled
+.ti 10
+(I) Increment the stripe interval
+.ti 10
+(i) Decrement the stripe interval
+.ti 10
+(L) Lines drawn
+.ti 10
+(m) multi-step
+.ti 10
+(p) Toggle display of phase 1st differences
+.ti 10
+(P) Points drawn
+.ti 10
+(R) Spin the color wheel
+.ti 10
+(s) single step 
+.ti 10
+(S) Spin the color wheel and increment the spin length
+.ti 10
+(w) Decrement the color wheel index
+.ti 10
+(W) Increment the color wheel index
+.ti 10
+(x) Clear the window
+.ti 10
+(X) Toggle complex dynamical systems mode
+.ti 10
+(Q or q) quit
+.sp 2
+.ft B
+.SH AUTHOR
+.sp
+.ft R
+.in 5
+.I lds
+was written by Ronald Record. Questions, suggestions, and comments may be
+directed via e-mail to rr@sco.com or ...uunet!sco!rr.
+.sp 2
+.ft B
+.SH REFERENCES
+.sp
+.ft R
+The literature is sparse but includes the following excellent papers :
+.sp
+"Lyapunov Analysis and Information Flow in Coupled Map Lattices" by
+Kunihiko Kaneko, Physica 23D (1986) 436-447
+.sp
+"Spatiotemporal Chaos in One- and Two- Dimensional Coupled Map Lattices"
+by Kaneko
+.sp
+"Spatiotemporal Chaos and Noise" by Gottfried Mayer-Kress and Kaneko,
+J. Stat. Phys.(1988)
+.sp
+"Pattern Competition Intermittency and Selective Flicker Noise in
+Spatiotemporal Chaos" by Kaneko, Physics Letters A, V125, 1 (1987)
+.sp
+"Pattern Dynamics in Spatiotemporal Chaos" by Kaneko (1987)
+.sp
+"Phenomenology of Spatial-Temporal Chaos" by Jim Crutchfield and Kaneko,
+appearing as a chapter in "Directions in Chaos" edited by Hao Bai-lin,
+World Scientific Publishing (1987)
+.sp
+"Robust Space-Time Intermittency and 1/f Noise" by James Keeler and Doyne
+Farmer, Physica 23D (1986) 413-435
+.sp

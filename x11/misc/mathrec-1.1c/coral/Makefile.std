@@ -1,0 +1,25 @@
+CC = cc  
+CFLAGS = -O
+LIBS = -lm -lX11
+DESTBIN = /usr/bin/X11
+DESTMAN = /usr/man/manl
+
+coral: coral.o
+	$(CC) $(CFLAGS) -o coral coral.o $(LIBS)
+
+coral.o: coral.c coral.h patchlevel.h
+	$(CC) $(CFLAGS) -c coral.c
+
+install: coral
+	cp coral $(DESTBIN)/coral;
+	cd $(DESTBIN); chmod 755 coral
+
+install.man:
+	cp coral.man $(DESTMAN)/coral.l; chmod 644 $(DESTMAN)/coral.l
+      
+clean:
+	rm -f coral coral.o core
+
+uninstall:
+	cd $(DESTBIN); rm -f coral
+	rm -f $(DESTMAN)/coral.l

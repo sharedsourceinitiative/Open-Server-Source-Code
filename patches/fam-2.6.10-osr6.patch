@@ -1,0 +1,202 @@
+--- ./fam/FileSystem.c++.00	2003-04-14 21:21:30.000000000 -0700
++++ ./fam/FileSystem.c++	2005-06-27 16:20:52.605448002 -0700
+@@ -22,7 +22,7 @@
+ 
+ #include "FileSystem.h"
+ 
+-#include <mntent.h>
++#include <sys/mntent.h>
+ #include <string.h>
+ 
+ #include "Event.h"
+--- ./fam/NFSFileSystem.c++.00	2003-04-14 21:21:38.000000000 -0700
++++ ./fam/NFSFileSystem.c++	2005-06-27 16:20:55.935128011 -0700
+@@ -24,7 +24,7 @@
+ #include "NFSFileSystem.h"
+ 
+ #include <assert.h>
+-#include <mntent.h>
++#include <sys/mntent.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+--- ./fam/FileSystemTable.c++.00	2003-04-14 21:21:31.000000000 -0700
++++ ./fam/FileSystemTable.c++	2005-06-27 16:20:11.308728005 -0700
+@@ -23,7 +23,7 @@
+ #include <stddef.h>
+ #include "FileSystemTable.h"
+ 
+-#include <mntent.h>
++#include <sys/mntent.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+@@ -31,6 +31,10 @@
+ #include <sys/statvfs.h>
+ #endif
+ 
++#ifndef MNTTYPE_NFS
++#define MNTTYPE_NFS "nfs"
++#endif
++
+ #include "Cred.h"
+ #include "Event.h"
+ #include "FileSystem.h"
+--- ./configure.00	2003-04-14 23:17:16.000000000 -0700
++++ ./configure	2005-06-27 16:15:40.680408004 -0700
+@@ -3378,11 +3378,11 @@
+   lt_cv_file_magic_test_file=/lib/libc.so
+   ;;
+ 
+-sysv5uw[78]* | sysv4*uw2*)
++sysv5* | sysv4*uw2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
++sysv4 | sysv4.2uw2* | sysv4.3*)
+   case $host_vendor in
+   motorola)
+     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
+@@ -5451,7 +5451,7 @@
+     fi
+     ;;
+ 
+-  solaris* | sysv5*)
++  solaris*)
+     if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+       ld_shlibs=no
+       cat <<EOF 1>&2
+@@ -5901,9 +5901,8 @@
+     no_undefined_flag=' -z text'
+     # $CC -shared without GNU ld will not create a library from C++
+     # object files and a static libstdc++, better avoid it by now
+-    archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+-    archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+-		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
++    archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
++    archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+     hardcode_libdir_flag_spec=
+     hardcode_shlibpath_var=no
+     runpath_var='LD_RUN_PATH'
+@@ -9680,7 +9679,6 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ 
+-typedef int fhandle_t;
+ #include <rpc/rpc.h>
+ #include <rpcsvc/mount.h>
+ 
+@@ -9787,61 +9785,8 @@
+ fi
+ 
+ 
+-
+-
+-
+-
+-    echo "$as_me:$LINENO: checking mntent.h for MNTTYPE_NFS" >&5
+-echo $ECHO_N "checking mntent.h for MNTTYPE_NFS... $ECHO_C" >&6
+-    cat >conftest.$ac_ext <<_ACEOF
+-#line $LINENO "configure"
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h >>conftest.$ac_ext
+-cat >>conftest.$ac_ext <<_ACEOF
+-/* end confdefs.h.  */
+-#include <mntent.h>
+-int
+-main ()
+-{
+-const char *foo = MNTTYPE_NFS;
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-rm -f conftest.$ac_objext
+-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+-  (eval $ac_compile) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); } &&
+-         { ac_try='test -s conftest.$ac_objext'
+-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-  (eval $ac_try) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; }; then
+-  fam_have_decl_in_mntent=yes
+-else
+-  echo "$as_me: failed program was:" >&5
+-sed 's/^/| /' conftest.$ac_ext >&5
+-
+-fam_have_decl_in_mntent=no
+-fi
+-rm -f conftest.$ac_objext conftest.$ac_ext
+-    echo "$as_me:$LINENO: result: $fam_have_decl_in_mntent" >&5
+-echo "${ECHO_T}$fam_have_decl_in_mntent" >&6
+-    if test "$fam_have_decl_in_mntent" = "yes"; then
+-	:
+-    else
+-	{ { echo "$as_me:$LINENO: error: Didn't find MNTTYPE_NFS in mntent.h" >&5
+-echo "$as_me: error: Didn't find MNTTYPE_NFS in mntent.h" >&2;}
+-   { (exit 1); exit 1; }; }
+-    fi
+-
+-
+-    echo "$as_me:$LINENO: checking mntent.h for MNTTYPE_NFS2" >&5
+-echo $ECHO_N "checking mntent.h for MNTTYPE_NFS2... $ECHO_C" >&6
++    echo "$as_me:$LINENO: checking sys/mntent.h for MNTTYPE_NFS2" >&5
++echo $ECHO_N "checking sys/mntent.h for MNTTYPE_NFS2... $ECHO_C" >&6
+     cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -9849,7 +9794,7 @@
+ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+-#include <mntent.h>
++#include <sys/mntent.h>
+ int
+ main ()
+ {
+@@ -9890,8 +9835,8 @@
+     fi
+ 
+ 
+-    echo "$as_me:$LINENO: checking mntent.h for MNTTYPE_NFS3" >&5
+-echo $ECHO_N "checking mntent.h for MNTTYPE_NFS3... $ECHO_C" >&6
++    echo "$as_me:$LINENO: checking sys/mntent.h for MNTTYPE_NFS3" >&5
++echo $ECHO_N "checking sys/mntent.h for MNTTYPE_NFS3... $ECHO_C" >&6
+     cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -9899,7 +9844,7 @@
+ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+-#include <mntent.h>
++#include <sys/mntent.h>
+ int
+ main ()
+ {
+@@ -9940,8 +9885,8 @@
+     fi
+ 
+ 
+-    echo "$as_me:$LINENO: checking mntent.h for MNTTYPE_CACHEFS" >&5
+-echo $ECHO_N "checking mntent.h for MNTTYPE_CACHEFS... $ECHO_C" >&6
++    echo "$as_me:$LINENO: checking sys/mntent.h for MNTTYPE_CACHEFS" >&5
++echo $ECHO_N "checking sys/mntent.h for MNTTYPE_CACHEFS... $ECHO_C" >&6
+     cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -9949,7 +9894,7 @@
+ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+-#include <mntent.h>
++#include <sys/mntent.h>
+ int
+ main ()
+ {

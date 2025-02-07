@@ -1,0 +1,650 @@
+--- src/exec/libdx/memory.c.00	Fri Mar 17 15:11:48 2000
++++ src/exec/libdx/memory.c	Fri Sep 22 09:40:22 2000
+@@ -41,7 +41,7 @@
+ #include <sys/m88kbcs.h>
+ #endif
+ 
+-#if solaris
++#if defined(solaris) || defined(unixware)
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/param.h>
+--- src/exec/dxmods/_compoper1.c.00	Sat Jun  5 13:25:38 1999
++++ src/exec/dxmods/_compoper1.c	Fri Sep 22 09:41:36 2000
+@@ -472,6 +472,9 @@
+ #ifdef solaris
+ #   define trunc(x) ((float)((int)(x)))
+ #endif
++#ifdef unixware
++#   define trunc(x) ((float)((int)(x)))
++#endif
+ #ifdef ibmpvs
+ #   define rint(x) ((float)((int)((x) + 0.5)))
+ #   define trunc(x) ((float)((int)(x)))
+--- src/exec/dpexec/dxmain.c.00	Wed Apr  5 11:34:13 2000
++++ src/exec/dpexec/dxmain.c	Fri Sep 22 09:43:57 2000
+@@ -2345,7 +2345,7 @@
+ #define	EX_SELECT	16
+ #define	EX_INCREMENT	0x1
+ #define	EX_LIMIT	0x100
+-#elif solaris
++#elif defined(solaris) || defined(unixware)
+ #define	EX_SELECT	0
+ #define	EX_INCREMENT	0x1
+ #define	EX_LIMIT	0x100
+--- src/exec/dpexec/loader.c.00	Sat Jun  5 13:25:38 1999
++++ src/exec/dpexec/loader.c	Fri Sep 22 09:45:29 2000
+@@ -85,7 +85,7 @@
+ #endif /* hp700 */
+ 
+ 
+-#if defined(sun4) || defined(solaris) || defined(sgi) || defined(alphax) || defined(aviion) || defined(linux) || defined(cygwin) || defined(freebsd)
++#if defined(sun4) || defined(solaris) || defined(sgi) || defined(alphax) || defined(aviion) || defined(linux) || defined(cygwin) || defined(freebsd) || defined(unixware)
+ 
+ #include <dlfcn.h>
+ typedef void *Handle;
+@@ -102,7 +102,7 @@
+ #endif
+ 
+ 
+-#endif /* sun4 or solaris or sgi or alpha or aviion of linux */
++#endif /* sun4 or solaris or sgi or alpha or aviion or linux or unixware */
+ 
+ 
+ /* default for unsupported platforms */
+@@ -574,7 +574,7 @@
+ #endif  /* hp700 */
+ 
+ 
+-#if defined(sun4) || defined(solaris) || defined(sgi) || defined(alphax) || defined(aviion) || defined(linux) || defined(cygwin) || defined(freebsd)
++#if defined(sun4) || defined(solaris) || defined(sgi) || defined(alphax) || defined(aviion) || defined(linux) || defined(cygwin) || defined(freebsd) || defined(unixware)
+ 
+ 
+ #define __ROUTINES_DEF
+--- src/exec/dpexec/optarg.c.00	Thu Jul  8 08:36:40 1999
++++ src/exec/dpexec/optarg.c	Fri Sep 22 11:26:34 2000
+@@ -165,4 +165,5 @@
+ }
+ } 
+ 
+-#endif    /* End of #ifdef Cygwin. */
+\ No newline at end of file
++#endif    /* End of ifdef Cygwin. */
++
+--- src/uipp/dxuilib/PacketIF.C.00	Sat Jul 31 08:08:32 1999
++++ src/uipp/dxuilib/PacketIF.C	Fri Sep 22 15:50:05 2000
+@@ -9,6 +9,20 @@
+ #include <dxconfig.h>
+ #include "../base/defines.h"
+ 
++#if defined(unixware) && defined(_POSIX_SOURCE)
++typedef unsigned char   u_char;
++typedef unsigned short  u_short;
++typedef unsigned short  ushort;
++typedef unsigned int    u_int;
++typedef unsigned long   u_long;
++typedef unsigned int    pl_t;
++extern "C" int getdtablesize(void);
++struct timeval {
++        long    tv_sec;         /* seconds */
++        long    tv_usec;        /* and microseconds */
++};
++#endif
++
+ #if defined(_AIX41)
+ #include <strings.h>
+ #endif
+@@ -163,7 +177,6 @@
+ #include <net/if.h>
+ #include <net/if_arp.h>
+ #endif
+-
+ 
+ #ifdef DXD_NON_UNIX_SOCKETS  //SMH hack it out hack it in
+ #undef send
+--- src/uipp/dxuilib/Makefile.in.00	Wed Apr  5 12:01:19 2000
++++ src/uipp/dxuilib/Makefile.in	Fri Sep 22 13:52:41 2000
+@@ -197,11 +197,11 @@
+ VPEPage.o VPEPostIt.o VPERoot.o ValueInstance.o ValueListInstance.o \
+ ViewControlDialog.o WorkSpaceComponent.o delete.o new.o netyacc.o
+ AR = ar
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS@ @DX_RTL_CFLAGS@
+ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+ CCLD = $(CC)
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/dxuilib/ControlPanelWorkSpace.C.00	Tue Jul 13 13:48:56 1999
++++ src/uipp/dxuilib/ControlPanelWorkSpace.C	Fri Sep 22 14:33:35 2000
+@@ -37,8 +37,13 @@
+ #include "../widgets/WorkspaceW.h"
+ 
+ // gethostname is needed by nodeTransferCB which is part of drag-n-drop
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/dxuilib/DXChild.C.00	Mon Oct 25 18:33:02 1999
++++ src/uipp/dxuilib/DXChild.C	Fri Sep 22 14:55:44 2000
+@@ -93,6 +93,12 @@
+ extern "C" int getdtablesize();
+ #endif
+ 
++#ifdef unixware
++extern "C" FILE *popen(const char *, const char *);
++extern "C" int  pclose(FILE *);
++extern "C" int  getdtablesize(void);
++#endif
++
+ #ifdef hp700
+ #include <time.h>
+ #endif
+--- src/uipp/dxuilib/DXDragSource.C.00	Fri Sep 22 15:01:28 2000
++++ src/uipp/dxuilib/DXDragSource.C	Fri Sep 22 15:00:15 2000
+@@ -30,8 +30,13 @@
+ #include <netdb.h>
+ #endif
+ 
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(windows) && defined(HAVE_WINSOCK_H)
+--- src/uipp/dxuilib/DXDropSite.C.00	Sat Jul 31 08:08:32 1999
++++ src/uipp/dxuilib/DXDropSite.C	Fri Sep 22 15:02:30 2000
+@@ -33,8 +33,13 @@
+ #include <netdb.h>
+ #endif
+ 
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(windows) && defined(HAVE_WINSOCK_H)
+--- src/uipp/dxuilib/LabelDecorator.C.00	Tue Jul 13 13:48:56 1999
++++ src/uipp/dxuilib/LabelDecorator.C	Fri Sep 22 15:11:27 2000
+@@ -49,8 +49,13 @@
+ #endif
+ 
+ // gethostname is needed by decodeDragType 
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/dxuilib/PageTab.C.00	Mon May 10 08:46:17 1999
++++ src/uipp/dxuilib/PageTab.C	Fri Sep 22 15:11:43 2000
+@@ -36,8 +36,13 @@
+ };
+ 
+ // gethostname is needed by decodeDropType which is part of drag-n-drop
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/dxuilib/ImageWindow.C.00	Tue Oct 26 12:44:06 1999
++++ src/uipp/dxuilib/ImageWindow.C	Fri Sep 22 15:15:12 2000
+@@ -116,8 +116,13 @@
+ # undef abs
+ #endif
+ 
+-#ifdef NEEDS_GETHOSTNAME_DECL
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *,int);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/dxuilib/StandIn.C.00	Thu Dec 23 10:38:47 1999
++++ src/uipp/dxuilib/StandIn.C	Fri Sep 22 15:11:59 2000
+@@ -56,8 +56,13 @@
+ #include "moduledragmask.bm"
+ 
+ // gethostname is needed by selectedNodesCB which is part of drag-n-drop
+-#if defined(NEEDS_GETHOSTNAME_DECL) 
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/dxuilib/Network.C.00	Wed Dec 15 11:52:51 1999
++++ src/uipp/dxuilib/Network.C	Fri Sep 22 15:21:37 2000
+@@ -9,6 +9,11 @@
+ #include <dxconfig.h>
+ #include "defines.h"
+ 
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int putenv(char *);
++extern "C" FILE *popen(const char *, const char *);
++extern "C" int pclose(FILE *);
++#endif
+ 
+ #ifdef OS2
+ #include <stdlib.h>
+--- src/uipp/base/UIConfig.h.00	Wed Dec 15 11:52:08 1999
++++ src/uipp/base/UIConfig.h	Fri Sep 22 09:58:30 2000
+@@ -88,7 +88,7 @@
+ */
+ #if defined(sgi)
+ # define EXECVE_2ND_TYPE char **
+-#elif defined(hp700) || defined(aviion) || defined(ibm6000) || defined(solaris) || defined(alphax) || defined(linux) || defined(freebsd)
++#elif defined(hp700) || defined(aviion) || defined(ibm6000) || defined(solaris) || defined(alphax) || defined(linux) || defined(freebsd) || defined(unixware)
+ # define EXECVE_2ND_TYPE char * const*
+ #else
+ # define EXECVE_2ND_TYPE const char **
+@@ -96,7 +96,7 @@
+ 
+ #if defined(sun4) || defined(sgi)
+ # define EXECVE_3RD_TYPE char **
+-#elif defined(hp700) || defined(aviion) || defined(ibm6000) || defined(solaris) || defined(alphax) || defined(linux) || defined(freebsd)
++#elif defined(hp700) || defined(aviion) || defined(ibm6000) || defined(solaris) || defined(alphax) || defined(linux) || defined(freebsd) || defined(unixware)
+ # define EXECVE_3RD_TYPE char * const*
+ #else
+ # define EXECVE_3RD_TYPE const char **
+@@ -253,8 +253,10 @@
+ # define DXD_ARCHNAME "alphax"
+ #endif
+ 
+-
+-
++#ifdef unixware
++# define DXD_ARCHNAME "unixware"
++# define DXD_HAS_CRYPT 1
++#endif
+ 
+ 
+ #ifdef DXD_WIN 
+--- src/uipp/base/DragSource.C.00	Tue Jul 13 13:48:53 1999
++++ src/uipp/base/DragSource.C	Fri Sep 22 15:12:42 2000
+@@ -31,8 +31,13 @@
+ #include <netdb.h>
+ #endif
+ 
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/base/DropSite.C.00	Tue Jul 13 13:48:53 1999
++++ src/uipp/base/DropSite.C	Fri Sep 22 15:13:00 2000
+@@ -29,8 +29,13 @@
+ #include <netdb.h>
+ #endif
+ 
+-#if defined(NEEDS_GETHOSTNAME_DECL)
++#if defined(NEEDS_GETHOSTNAME_DECL) || defined(unixware)
++#if defined(unixware) && defined(_POSIX_SOURCE)
++extern "C" int gethostname(char *, size_t);
++#endif
++#ifndef unixware
+ extern "C" int gethostname(char *address, int address_len);
++#endif
+ #endif
+ 
+ #if defined(DXD_WIN)
+--- src/uipp/base/Makefile.in.00	Wed Apr  5 12:01:26 2000
++++ src/uipp/base/Makefile.in	Fri Sep 22 15:58:01 2000
+@@ -148,11 +148,11 @@
+ WorkSpaceInfo.o WorkSpaceRoot.o XHandler.o XmUtility.o lex.o util.o \
+ helpcallbacks.o help.o helplist.o helpstack.o history.o parse.o
+ AR = ar
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS@ @DX_RTL_CFLAGS@
+ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+ CCLD = $(CC)
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/base/Strings.C.00	Mon May 10 08:45:53 1999
++++ src/uipp/base/Strings.C	Mon Sep 25 10:32:42 2000
+@@ -25,9 +25,10 @@
+ #include "lex.h"
+ 
+ //
+-// The alpha has it but has not header for it
++// The alpha has it but has not header for it and the _POSIX_SOURCE
++// define loses it for UnixWare
+ //
+-#if defined(DXD_NEEDS_MKTEMP) || defined(alphax)
++#if defined(DXD_NEEDS_MKTEMP) || defined(alphax) || defined(unixware)
+ extern "C" char *mktemp(char *);
+ #endif
+ 
+--- src/uipp/dxui/Makefile.in.00	Wed Apr  5 12:01:39 2000
++++ src/uipp/dxui/Makefile.in	Mon Sep 25 10:46:03 2000
+@@ -180,7 +180,7 @@
+ dxui_DEPENDENCIES =  ../dxuilib/libDXUI.a ../base/libBASE.a \
+ ../widgets/libWIDGETS.a
+ dxui_LDFLAGS = 
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/prompter/Makefile.in.00	Wed Apr  5 12:01:44 2000
++++ src/uipp/prompter/Makefile.in	Mon Sep 25 10:59:23 2000
+@@ -138,7 +138,7 @@
+ prompter_DEPENDENCIES =  ../base/libBASE.a ../widgets/libWIDGETS.a \
+ ../dxl/libDXL.a
+ prompter_LDFLAGS = 
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/tutor/Makefile.in.00	Wed Apr  5 12:01:46 2000
++++ src/uipp/tutor/Makefile.in	Mon Sep 25 11:06:41 2000
+@@ -128,7 +128,7 @@
+ tutor_DEPENDENCIES =  ../base/libBASE.a ../widgets/libWIDGETS.a \
+ ../dxl/libDXL.a
+ tutor_LDFLAGS = 
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/mb/Makefile.in.00	Wed Apr  5 12:01:48 2000
++++ src/uipp/mb/Makefile.in	Mon Sep 25 11:09:34 2000
+@@ -130,7 +130,7 @@
+ builder_DEPENDENCIES =  ../base/libBASE.a ../widgets/libWIDGETS.a \
+ ../dxl/libDXL.a
+ builder_LDFLAGS = 
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/startup/Makefile.in.00	Wed Apr  5 12:01:50 2000
++++ src/uipp/startup/Makefile.in	Mon Sep 25 11:12:58 2000
+@@ -128,7 +128,7 @@
+ startupui_DEPENDENCIES =  ../base/libBASE.a ../widgets/libWIDGETS.a \
+ ../dxl/libDXL.a
+ startupui_LDFLAGS = 
+-CXXFLAGS = @CXXFLAGS@
++CXXFLAGS = @CXXFLAGS@ @DX_RTL_CFLAGS@
+ CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ CXXLD = $(CXX)
+ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+--- src/uipp/startup/StartupWindow.C.00	Mon Oct 25 18:01:52 1999
++++ src/uipp/startup/StartupWindow.C	Mon Sep 25 11:43:23 2000
+@@ -63,7 +63,7 @@
+ // On these platforms, the pipe doesn't work that way so we'll make a
+ // polling loop that runs once every few seconds and checks the child pid.
+ //
+-#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4) || defined(linux) || defined(cygwin) || defined(freebsd)
++#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4) || defined(linux) || defined(cygwin) || defined(freebsd) || defined(unixware)
+ #define USE_WAIT3 1
+ #endif
+ 
+@@ -78,6 +78,13 @@
+ #endif
+ #else
+ #include <wait.h>
++#endif
++
++#if defined(unixware)
++extern "C" FILE *popen(const char *, const char *);
++extern "C" int pclose(FILE *);
++struct rusage;
++extern "C" pid_t wait3(int *, int, struct rusage *);
+ #endif
+ 
+ FILE* StartupWindow::TutorConn = NUL(FILE*);
+--- src/uipp/java/server/DXLink.c.00	Wed Apr  5 10:57:22 2000
++++ src/uipp/java/server/DXLink.c	Mon Sep 25 11:35:36 2000
+@@ -37,7 +37,7 @@
+  * the other platforms.
+  */
+ #if defined(ibm6000) || defined(sgi)
+-#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4)
++#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4) || defined(unixware)
+ #define USE_WAIT3 1
+ #endif
+ 
+--- include/dx/arch.h.00	Fri Sep 22 08:49:59 2000
++++ include/dx/arch.h	Fri Sep 22 10:50:00 2000
+@@ -121,6 +121,13 @@
+ /* program to run for remote shell */
+ #define RSH "/usr/bin/rsh"
+ 
++#ifdef __USLC__    /* UnixWare */
++
++#undef F_CHAR_READY
++#define F_CHAR_READY(fp) ((fp)->__cnt > 0)
++
++#endif
++
+ #ifdef linux
+ 
+ #undef F_CHAR_READY
+@@ -345,6 +352,7 @@
+ #endif  /* sun4 */
+ 
+ 
++
+ /* sun sparc solaris 
+  */
+ #ifdef solaris
+@@ -428,6 +436,52 @@
+ 
+ 
+ #endif  /* solaris */
++
++
++#ifdef unixware
++
++#include <sys/types.h>
++
++/* supports full IEEE standard floating point, including under/overflow */
++#define DXD_STANDARD_IEEE 1
++
++/* defined if we support multiprocessor version */
++#define DXD_IS_MP 1
++
++/* do we need to keep a parent wait-process around? */
++#define DXD_EXEC_WAIT_PROCESS 1
++
++/* defined if we want to get processor status window */
++#define DXD_PROCESSOR_STATUS 1
++
++/* does this system support sysconf(3)? */
++#define DXD_HAS_SYSCONF 1
++
++/* supports popen() */
++#define DXD_POPEN_OK 1
++
++/* do you need to declare the system error list explicitly? */
++#define DXD_SYSERRLIST_DECL 1
++
++/* socket-specific ifdefs */
++#define DXD_SOCKET_UNIXDOMAIN_OK 1
++#define DXD_HAS_GETHOSTBYNAME    1
++#define MAXFUPLIM FD_SETSIZE
++
++/* can use the crypt system call for data encryption */
++#define DXD_HAS_CRYPT  1
++
++/* system includes are in /usr/include/sys and /usr/include/unistd.h exists */
++#define DXD_HAS_UNIX_SYS_INCLUDES 1
++#define DXD_HAS_UNISTD_H 1
++
++/* cannot load runtime-loadable modules after forking */
++#define DXD_NO_MP_RUNTIME 1
++
++/* system includes support for the vfork() system call */
++#define DXD_HAS_VFORK 1
++
++#endif  /* unixware */
+ 
+ 
+ /* data general AViiON
+--- bin/dxworker.in.00	Mon Mar 13 14:48:28 2000
++++ bin/dxworker.in	Fri Sep 22 10:15:19 2000
+@@ -128,6 +128,14 @@
+ 
+     breaksw
+ 
++  case UnixWare:
++    set exarch=unixware
++    set uiarch=unixware
++
++    set remote=/usr/bin/rsh
++
++    breaksw
++
+   default:
+     echo unknown machine type
+     exit 1
+@@ -1463,6 +1471,7 @@
+   case alphax:
+   case linux:
+   case freebsd:
++  case unixware:
+     breaksw
+   
+   default:
+--- configure.00	Fri Mar 31 12:07:21 2000
++++ configure	Fri Sep 22 11:47:15 2000
+@@ -1278,6 +1278,9 @@
+ 	if test $unameS = "SunOS" ; then
+ 	    ARCH=solaris
+ 	fi
++	if test $unameS = "UnixWare" ; then
++	    ARCH=unixware
++	fi
+     fi
+     echo "$ac_t""$ARCH" 1>&6
+     
+@@ -1313,6 +1316,13 @@
+ EOF
+ 
+ 	    ;;
++	unixware)
++	    DXEXEC_EXP='-Wl,-Bexport'
++	    cat >> confdefs.h <<EOF
++#define DXEXEC_EXP $DXEXEC_EXP
++EOF
++
++	    ;;
+     esac
+     echo "$ac_t""done" 1>&6
+ 
+@@ -3437,6 +3447,10 @@
+                 DX_RTL_LDFLAGS="--shared "
+ 		DX_RTL_DXENTRY="-eDXEntry"
+         fi
++        if test $ARCH = "unixware" ; then
++                DX_RTL_CFLAGS=" -Dunixware -D_POSIX_SOURCE"
++                DX_RTL_LDFLAGS=" -G "
++        fi
+ 
+ echo $ac_n "checking for regex in -lgen""... $ac_c" 1>&6
+ echo "configure:3443: checking for regex in -lgen" >&5
+@@ -3736,7 +3750,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lX11  $LIBS"
++LIBS="-lX11 -lsocket -lnsl $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 3742 "configure"
+ #include "confdefs.h"
+@@ -3770,7 +3784,7 @@
+ #define $ac_tr_lib 1
+ EOF
+ 
+-  LIBS="-lX11 $LIBS"
++  LIBS="-lX11 -lsocket -lnsl $LIBS"
+ 
+ else
+   echo "$ac_t""no" 1>&6
+@@ -3783,7 +3797,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lXt  $LIBS"
++LIBS="-lXt -lICE -lSM  $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 3789 "configure"
+ #include "confdefs.h"
+@@ -3817,7 +3831,7 @@
+ #define $ac_tr_lib 1
+ EOF
+ 
+-  LIBS="-lXt $LIBS"
++  LIBS="-lXt -lICE -lSM $LIBS"
+ 
+ else
+   echo "$ac_t""no" 1>&6
+@@ -6815,7 +6829,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lsocket  $LIBS"
++LIBS="-lsocket -lnsl $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 6821 "configure"
+ #include "confdefs.h"
+@@ -6862,7 +6876,7 @@
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+   ac_save_LIBS="$LIBS"
+-LIBS="-lnsl  $LIBS"
++LIBS="-lsocket -lnsl  $LIBS"
+ cat > conftest.$ac_ext <<EOF
+ #line 6868 "configure"
+ #include "confdefs.h"

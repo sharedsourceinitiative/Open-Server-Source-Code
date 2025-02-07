@@ -1,0 +1,67 @@
+--- ./contrib/cube/Makefile.uw	2003-09-14 01:52:25.000000000 +0000
++++ ./contrib/cube/Makefile	2005-04-18 18:53:42.510000009 +0000
+@@ -11,6 +11,8 @@
+ DOCS = README.cube
+ REGRESS = cube
+ 
++cube.o: cube.c
++	cc -Kthread -Kalloca -KPIC -I. -I../../src/include -I/usr/include  -c -o cube.o cube.c
+ 
+ # cubescan is compiled as part of cubeparse
+ cubeparse.o: cubescan.c
+--- ./src/bin/pg_ctl/pg_ctl.sh.uw	2005-04-18 18:53:42.490000054 +0000
++++ ./src/bin/pg_ctl/pg_ctl.sh	2005-04-18 18:53:42.510000025 +0000
+@@ -397,7 +397,7 @@
+ 	$silence_echo $ECHO_N "waiting for postmaster to start..."$ECHO_C
+ 	while :
+ 	do
+-	    if ps -C postmaster >/dev/null 2>&1
++	    if /bin/ps -af | grep -v grep | grep -q postmaster >/dev/null 2>&1
+ 	    then
+ 		break;
+ 	    else
+--- ./src/Makefile.shlib.uw	2003-10-20 01:34:33.000000000 +0000
++++ ./src/Makefile.shlib	2005-04-18 18:53:42.510000046 +0000
+@@ -174,7 +174,7 @@
+   else
+     LINK.shared		= $(CC) -G
+     endif
+-  LINK.shared		+= -Wl,-z,text -Wl,-h,$(soname)
++  LINK.shared		+= -Wl,-z,text -Wl,-h,/usr/lib/postgresql/$(soname)
+ endif
+ 
+ ifeq ($(PORTNAME), svr4)
+@@ -194,7 +194,7 @@
+   else
+     LINK.shared		= $(CC) -G
+   endif
+-  LINK.shared		+= -Wl,-z,text -Wl,-h,$(soname) 
++  LINK.shared		+= -Wl,-z,text -Wl,-h,/usr/lib/postgresql/$(soname) 
+ endif
+ 
+ ifeq ($(PORTNAME), cygwin)
+@@ -238,7 +238,7 @@
+ ifdef MK_NO_LORDER
+ 	$(LINK.static) $@ $^
+ else
+-	$(LINK.static) $@ `$(LORDER) $^ | tsort`
++	$(LINK.static) $@ `$(LORDER) $^ | /usr/ccs/bin/tsort`
+ endif
+ 	$(RANLIB) $@
+ 
+--- ./configure.in.uw	2005-04-18 18:53:42.000000000 +0000
++++ ./configure.in	2005-04-18 19:10:09.350000017 +0000
+@@ -869,13 +869,6 @@
+ AC_CHECK_DECLS(fdatasync, [], [], [#include <unistd.h>])
+ 
+ HAVE_IPV6=no
+-AC_CHECK_TYPE([struct sockaddr_in6],
+-              [AC_CHECK_FUNC(inet_ntop,
+-                             [AC_DEFINE(HAVE_IPV6, 1, [Define to 1 if you have support for IPv6.])
+-							  HAVE_IPV6=yes])],
+-              [],
+-[$ac_includes_default
+-#include <netinet/in.h>])
+ AC_SUBST(HAVE_IPV6)
+ 
+ AC_CACHE_CHECK([for PS_STRINGS], [pgac_cv_var_PS_STRINGS],

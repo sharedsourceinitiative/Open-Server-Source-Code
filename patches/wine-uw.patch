@@ -1,0 +1,246 @@
+--- ./dlls/msvcrt/data.c.uw	2004-07-19 11:07:19.000000000 +0000
++++ ./dlls/msvcrt/data.c	2004-09-29 16:47:27.980000023 +0000
+@@ -52,7 +52,7 @@
+ MSVCRT_wchar_t **MSVCRT___wargv;
+ char *MSVCRT__acmdln;
+ MSVCRT_wchar_t *MSVCRT__wcmdln;
+-char **_environ = 0;
++char **_myenviron = 0;
+ MSVCRT_wchar_t **_wenviron = 0;
+ char **MSVCRT___initenv = 0;
+ MSVCRT_wchar_t **MSVCRT___winitenv = 0;
+@@ -206,9 +206,9 @@
+  */
+ char*** __p__environ(void)
+ {
+-  if (!_environ)
+-    _environ = msvcrt_SnapshotOfEnvironmentA(NULL);
+-  return &_environ;
++  if (!_myenviron)
++    _myenviron = msvcrt_SnapshotOfEnvironmentA(NULL);
++  return &_myenviron;
+ }
+ 
+ /*********************************************************************
+@@ -312,7 +312,7 @@
+   /* FIXME: more things to free */
+   if (MSVCRT___initenv) HeapFree(GetProcessHeap(), 0, MSVCRT___initenv);
+   if (MSVCRT___winitenv) HeapFree(GetProcessHeap(), 0, MSVCRT___winitenv);
+-  if (_environ) HeapFree(GetProcessHeap(), 0, _environ);
++  if (_myenviron) HeapFree(GetProcessHeap(), 0, _myenviron);
+   if (_wenviron) HeapFree(GetProcessHeap(), 0, _wenviron);
+   if (MSVCRT__pgmptr) HeapFree(GetProcessHeap(), 0, MSVCRT__pgmptr);
+   if (MSVCRT__wpgmptr) HeapFree(GetProcessHeap(), 0, MSVCRT__wpgmptr);
+--- ./dlls/msvcrt/msvcrt.h.uw	2004-09-15 06:22:18.000000000 +0000
++++ ./dlls/msvcrt/msvcrt.h	2004-09-29 16:47:27.980000040 +0000
+@@ -95,7 +95,7 @@
+ void   _purecall(void);
+ void   _amsg_exit(int errnum);
+ 
+-extern char **_environ;
++extern char **_myenviron;
+ extern MSVCRT_wchar_t **_wenviron;
+ 
+ extern char ** msvcrt_SnapshotOfEnvironmentA(char **);
+--- ./dlls/msvcrt/environ.c.uw	2004-08-15 16:15:28.000000000 +0000
++++ ./dlls/msvcrt/environ.c	2004-09-29 16:47:28.270000011 +0000
+@@ -97,8 +97,8 @@
+  if ((ret == -1) && (GetLastError() == ERROR_ENVVAR_NOT_FOUND)) ret = 0;
+ 
+  /* Update the __p__environ array only when already initialized */
+- if (_environ)
+-   _environ = msvcrt_SnapshotOfEnvironmentA(_environ);
++ if (_myenviron)
++   _myenviron = msvcrt_SnapshotOfEnvironmentA(_myenviron);
+  if (_wenviron)
+    _wenviron = msvcrt_SnapshotOfEnvironmentW(_wenviron);
+  return ret;
+@@ -133,8 +133,8 @@
+  if ((ret == -1) && (GetLastError() == ERROR_ENVVAR_NOT_FOUND)) ret = 0;
+ 
+  /* Update the __p__environ array only when already initialized */
+- if (_environ)
+-   _environ = msvcrt_SnapshotOfEnvironmentA(_environ);
++ if (_myenviron)
++   _myenviron = msvcrt_SnapshotOfEnvironmentA(_myenviron);
+  if (_wenviron)
+    _wenviron = msvcrt_SnapshotOfEnvironmentW(_wenviron);
+  return ret;
+--- ./dlls/msvcrt/msvcrt.spec.uw	2004-07-19 11:07:23.000000000 +0000
++++ ./dlls/msvcrt/msvcrt.spec	2004-09-29 16:47:28.270000029 +0000
+@@ -200,7 +200,7 @@
+ @ cdecl _ecvt(double long ptr ptr)
+ @ cdecl _endthread ()
+ @ cdecl _endthreadex(long)
+-@ extern _environ
++@ extern _myenviron
+ @ cdecl _eof(long)
+ @ cdecl _errno() MSVCRT__errno
+ @ cdecl _except_handler2(ptr ptr ptr ptr)
+--- ./libs/wine/ldt.c.uw	2003-12-13 16:39:47.000000000 +0000
++++ ./libs/wine/ldt.c	2004-09-29 16:47:28.280000001 +0000
+@@ -104,7 +104,9 @@
+ 
+ #if defined(__svr4__) || defined(_SCO_DS)
+ #include <sys/sysi86.h>
++#ifdef _SCO_DS
+ extern int sysi86(int,void*);
++#endif
+ #ifndef __sun__
+ #include <sys/seg.h>
+ #endif
+--- ./include/winuser.h.uw	2004-09-06 15:10:14.000000000 +0000
++++ ./include/winuser.h	2004-09-29 16:47:28.280000040 +0000
+@@ -1792,6 +1792,16 @@
+ DECL_WINELIB_TYPE_AW(PWNDCLASSEX)
+ DECL_WINELIB_TYPE_AW(LPWNDCLASSEX)
+ 
++#ifdef MSG
++#undef MSG
++#endif
++#ifdef PMSG
++#undef PMSG
++#endif
++#ifdef LPMSG
++#undef LPMSG
++#endif
++
+ typedef struct tagMSG
+ {
+     HWND    hwnd;
+--- ./include/winsock.h.uw	2004-09-06 15:10:14.000000000 +0000
++++ ./include/winsock.h	2004-09-29 16:47:28.290000006 +0000
+@@ -66,6 +66,7 @@
+ #  define select unix_select
+ #  include <sys/types.h>
+ #  include <time.h>
++#  include <sys/time.h>
+ #  include <stdlib.h>
+ #  undef fd_set
+ #  undef timeval
+--- ./configure.ac.uw	2004-09-15 06:22:10.000000000 +0000
++++ ./configure.ac	2004-09-29 16:51:01.020000017 +0000
+@@ -120,13 +120,13 @@
+ AC_CHECK_LIB(i386,i386_set_ldt)
+ dnl Check for -lossaudio for NetBSD
+ AC_CHECK_LIB(ossaudio,_oss_ioctl)
+-dnl Check for -lw for Solaris
++dnl Check for -lw for UnixWare
+ AC_CHECK_FUNCS(iswalnum,,AC_CHECK_LIB(w,iswalnum))
+-dnl Check for -lnsl for Solaris
+-AC_CHECK_FUNCS(gethostbyname,,AC_CHECK_LIB(nsl,gethostbyname))
+-dnl Check for -lsocket for Solaris
++dnl Check for -lsocket for UnixWare
++AC_CHECK_FUNCS(gethostbyname,,AC_CHECK_LIB(socket,gethostbyname))
++dnl Check for -lsocket for UnixWare
+ AC_CHECK_FUNCS(connect,,AC_CHECK_LIB(socket,connect))
+-dnl Check for -lresolv for Solaris
++dnl Check for -lresolv for UnixWare
+ AC_CHECK_FUNCS(inet_aton,,AC_CHECK_LIB(resolv,inet_aton))
+ dnl Check for -lxpg4 for FreeBSD
+ AC_CHECK_LIB(xpg4,_xpg4_setrunelocale)
+@@ -737,14 +737,6 @@
+     EXTRACFLAGS="$EXTRACFLAGS -fno-strict-aliasing"
+   fi
+ 
+-  dnl Check for -gstabs+ option
+-  AC_CACHE_CHECK([for gcc -gstabs+ support], ac_cv_c_gcc_gstabs,
+-      [WINE_TRY_CFLAGS([-gstabs+],ac_cv_c_gcc_gstabs="yes", ac_cv_c_gcc_gstabs="no")])
+-  if test "$ac_cv_c_gcc_gstabs" = "yes"
+-  then
+-    EXTRACFLAGS="$EXTRACFLAGS -gstabs+"
+-  fi
+-
+   dnl Check for noisy string.h
+   saved_CFLAGS="$CFLAGS"
+   CFLAGS="$CFLAGS -Wpointer-arith -Werror"
+@@ -869,14 +861,14 @@
+       DLLFLAGS="$DLLFLAGS -fPIC"
+       DLLEXT=".so"
+       AC_CACHE_CHECK([whether we can build a GNU style ELF dll], ac_cv_c_dll_gnuelf,
+-          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-soname,conftest.so.1.0,-Bsymbolic],
++          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-hconftest.so.1.0],
+                            ac_cv_c_dll_gnuelf="yes",ac_cv_c_dll_gnuelf="no")])
+       if test "$ac_cv_c_dll_gnuelf" = "yes"
+       then
+-        LDSHARED="\$(CC) -shared \$(SONAME:%=-Wl,-soname,%)"
+-        LDDLLFLAGS="-shared -Wl,-Bsymbolic"
++        LDSHARED="\$(CC) -shared \$(SONAME:%=-Wl,-h,%)"
++        LDDLLFLAGS="-shared"
+         AC_CACHE_CHECK([whether the linker accepts -z defs], ac_cv_c_dll_zdefs,
+-          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-Bsymbolic,-z,defs],
++          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-z,defs],
+                            ac_cv_c_dll_zdefs="yes",ac_cv_c_dll_zdefs="no")])
+         if test "$ac_cv_c_dll_zdefs" = "yes"
+         then
+@@ -884,7 +876,7 @@
+         fi
+ 
+         AC_CACHE_CHECK([whether the linker accepts -init and -fini], ac_cv_c_dll_init_fini,
+-          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-Bsymbolic,-init,__wine_spec_init,-fini,__wine_spec_fini],
++          [WINE_TRY_CFLAGS([-fPIC -shared -Wl,-init,__wine_spec_init,-fini,__wine_spec_fini],
+                            ac_cv_c_dll_init_fini="yes",ac_cv_c_dll_init_fini="no")])
+         if test "$ac_cv_c_dll_init_fini" = "yes"
+         then
+@@ -922,7 +914,7 @@
+         esac
+ 
+       else
+-        AC_CACHE_CHECK(whether we can build a UnixWare (Solaris) dll, ac_cv_c_dll_unixware,
++        AC_CACHE_CHECK(whether we can build a UnixWare dll, ac_cv_c_dll_unixware,
+             [WINE_TRY_CFLAGS([-fPIC -Wl,-G,-h,conftest.so.1.0,-B,symbolic],
+                              ac_cv_c_dll_unixware="yes",ac_cv_c_dll_unixware="no")])
+         if test "$ac_cv_c_dll_unixware" = "yes"
+@@ -1011,24 +1003,24 @@
+ 
+ if test "$LIBEXT" = "so" -o "$LIBEXT" = "dylib"
+ then
+-  WINE_GET_SONAME(X11,XCreateWindow,[$X_LIBS $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(Xext,XextCreateExtension,[$X_LIBS -lX11 $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(Xi,XOpenDevice,[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(Xrender,XRenderQueryExtension,[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(Xrandr,XRRQueryExtension,[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(freetype,FT_Init_FreeType,[$X_LIBS])
+-  WINE_GET_SONAME(GL,glXQueryExtension,[$X_LIBS $X_EXTRA_LIBS])
+-  WINE_GET_SONAME(txc_dxtn,fetch_2d_texel_rgba_dxt1)
+-  WINE_GET_SONAME(cups,cupsGetDefault)
+-  WINE_GET_SONAME(jack,jack_client_new)
+-  WINE_GET_SONAME(fontconfig,FcInit)
+-  WINE_GET_SONAME(ssl,SSL_library_init)
+-  WINE_GET_SONAME(crypto,BIO_new_socket)
+-  WINE_GET_SONAME(ncurses,waddch)
+-  WINE_GET_SONAME(curses,waddch)
+-  WINE_GET_SONAME(jpeg,jpeg_start_decompress)
+-  WINE_GET_SONAME(ungif,DGifOpen)
+-  WINE_GET_SONAME(gif,DGifOpen)
++  WINE_GET_SONAME(X11,XCreateWindow,[-lX11 -lsocket])
++  WINE_GET_SONAME(Xext,XextCreateExtension,[-lX11 -lsocket])
++  WINE_GET_SONAME(Xi,XOpenDevice,[-lXext -lX11 -lsocket])
++  WINE_GET_SONAME(Xrender,XRenderQueryExtension,[-lXext -lX11 -lsocket])
++  WINE_GET_SONAME(Xrandr,XRRQueryExtension,[-lXext -lX11 -lsocket])
++  WINE_GET_SONAME(freetype,FT_Init_FreeType,[-lX11 -lsocket])
++  WINE_GET_SONAME(GL,glXQueryExtension,[-lX11 -lsocket])
++  WINE_GET_SONAME(txc_dxtn,fetch_2d_texel_rgba_dxt1,[-lsocket])
++  WINE_GET_SONAME(cups,cupsGetDefault,[-lsocket])
++  WINE_GET_SONAME(jack,jack_client_new,[-lsocket])
++  WINE_GET_SONAME(fontconfig,FcInit,[-lsocket])
++  WINE_GET_SONAME(ssl,SSL_library_init,[-lsocket])
++  WINE_GET_SONAME(crypto,BIO_new_socket,[-lsocket])
++  WINE_GET_SONAME(ncurses,waddch,[-lsocket])
++  WINE_GET_SONAME(curses,waddch,[-lsocket])
++  WINE_GET_SONAME(jpeg,jpeg_start_decompress,[-lX11 -lsocket])
++  WINE_GET_SONAME(ungif,DGifOpen,[-lX11 -lsocket])
++  WINE_GET_SONAME(gif,DGifOpen,[-lX11 -lsocket])
+ fi
+ 
+ 
+@@ -1268,7 +1260,8 @@
+ 
+ AC_C_CONST
+ AC_C_INLINE
+-AC_CHECK_TYPES([mode_t, off_t, pid_t, size_t, ssize_t, socklen_t, long long, fsblkcnt_t, fsfilcnt_t])
++AC_CHECK_TYPES([mode_t, off_t, pid_t, size_t, ssize_t, socklen_t, long long, fsblkcnt_t, fsfilcnt_t],,,[#define _GNU_SOURCE
++#include <sys/socket.h>])
+ 
+ AC_CACHE_CHECK([whether linux/input.h is for real],
+ 	wine_cv_linux_input_h,

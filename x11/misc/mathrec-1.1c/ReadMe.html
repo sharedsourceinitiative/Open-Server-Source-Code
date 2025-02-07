@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<TITLE>Mathematical Recreations</TITLE>
+</HEAD>
+<BODY>
+<H1>Mathematical Recreations</H1>
+<P>
+<DL>
+<DT><B>Authored and Contributed by</B>
+<DD>Ronald Joe Record (except "xwator" authored and contributed by
+Ronald Joe Record and Brian Chapman)
+<DT><B>Restrictions</B>
+<DD>Copyright 1990, 1991, 1992, 1993, 1994 Ronald Joe Record 
+(except "xwator" Copyright 1990 Ronald Joe Record and Brian Chapman)
+
+<DT><B>Description</B>
+<DD>
+The mathrec package consists of several X11 clients :
+<UL>
+<LI><A HREF="coral/ReadMe.html">coral</A>
+<LI><A HREF="endo/ReadMe.html">endo</A>
+<LI><A HREF="gasket/ReadMe.html">gasket</A>
+<LI><A HREF="hop/ReadMe.html">hop</A>
+<LI><A HREF="julia/ReadMe.html">julia</A>
+<LI><A HREF="lds/ReadMe.html">lds</A>
+<LI><A HREF="lyap/ReadMe.html">lyap</A>
+<LI><A HREF="madness/ReadMe.html">madness</A>
+<LI><A HREF="julia/ReadMe.html">mandel</A>
+<LI><A HREF="splines/ReadMe.html">splines</A>
+<LI><A HREF="spore/ReadMe.html">spore</A>
+<LI><A HREF="stars/ReadMe.html">stars</A>
+<LI><A HREF="xtopo/ReadMe.html">xtopo</A>
+<LI><A HREF="xwator/ReadMe.html">xwator</A>
+</UL>
+<DT><B>Build</B>
+<DD>
+To build the mathrec binaries, use the Imakefile. 
+To build with the Imakefile, first type
+"xmkmf -a" or "imake -DUseInstalled -I/usr/lib/X11/config" if your system 
+doesn't have xmkmf. Then just type "make" and the mathrec binaries will be
+built. 
+
+<DT><B>Install</B>
+<DD>
+To install mathrec, you can simply run "make install; make install.man".
+Since mathrec is built with imake, it honors the DESTDIR setting. So, if
+you want to install the mathrec package in a "packaging ground", you can
+set the DESTDIR environment variable to the location below which the files
+will be installed.
+
+<DT><B>Known Limitations</B>
+<DD>These programs were originally written for 8-bit PseudoColor X11 displays.
+I have modified them so that they work on a TrueColor visual but many of
+the features are not present without a PseudoColor display. For instance,
+the installation of a private colormap and the spinning of the color map
+are features available only on a PseudoColor display visual.
+
+<DT><B>Productivity</B>
+<DD>These programs and others like them are probably responsible for more
+CPU cycles than any other single application.
+
+<DT><B>Safety</B>
+<DD>I have used these for years without harm.
+
+<DT><B>Work Planned</B>
+<DD>None
+
+<DT><B>Documentation</B>
+<DD>manual pages.
+
+<DT><B>Verification</B>
+<DD>Execute any or all of the shell scripts provided in
+/usr/local/mathrec/julia, /usr/local/mathrec/mandel, /usr/local/mathrec/lds,
+/usr/local/mathrec/endo,
+/usr/local/mathrec/lyap,
+/usr/local/mathrec/madness and
+/usr/local/mathrec/splines.
+
+<DT><B>Feedback</B>
+<DD>
+Ideas, comments, additions, deletions, suggestions, bug reports, code review,...
+e-mail Ronald Record at rr@sco.com 
+
+</DL>
+</BODY>
+</HTML>

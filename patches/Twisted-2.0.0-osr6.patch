@@ -1,0 +1,12 @@
+*** ./Build-OSR6.osr6 Mon May 16 18:19:04 2005
+--- ./Build-OSR6 Mon May 16 18:19:49 2005
+***************
+*** 0 ****
+--- 1,7 ----
++ #!/bin/sh
++ 
++ echo "\nNo build necessary for Twisted."
++ echo "To install, run the command:"
++ echo "\n\tpython setup.py install\n"
++ 
++ exit 0

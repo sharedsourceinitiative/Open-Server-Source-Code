@@ -1,0 +1,97 @@
+*** ./src/modules/loaders/loader_tga.c.osr6	Mon Apr  9 18:40:40 2007
+--- ./src/modules/loaders/loader_tga.c	Sun Aug 12 14:10:06 2007
+***************
+*** 331,337 ****
+  
+          /* bufptr is the next byte to be read from the buffer */
+          bufptr = filedata;
+! 	bufend = filedata + datasize;
+  
+          /* dataptr is the next 32-bit pixel to be filled in */
+          dataptr = im->data;
+--- 331,337 ----
+  
+          /* bufptr is the next byte to be read from the buffer */
+          bufptr = filedata;
+! 	bufend = (char *)filedata + datasize;
+  
+          /* dataptr is the next 32-bit pixel to be filled in */
+          dataptr = im->data;
+*** ./Configure-OSR6.osr6	Sun Aug 12 14:10:06 2007
+--- ./Configure-OSR6	Sun Aug 12 14:10:06 2007
+***************
+*** 0 ****
+--- 1,20 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM="nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr --sysconfdir=/etc --disable-mmx \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sun Aug 12 14:10:06 2007
+--- ./Install-OSR6	Sun Aug 12 14:10:06 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/imlib2
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
+*** ./configure.osr6	Sun May  6 09:40:06 2007
+--- ./configure	Sun Aug 12 14:38:22 2007
+***************
+*** 24014,24020 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgif  $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 24014,24020 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lgif -L/usr/X11R6/lib -lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 24086,24092 ****
+  { echo "$as_me:$LINENO: result: $ac_cv_lib_gif_DGifOpenFileName" >&5
+  echo "${ECHO_T}$ac_cv_lib_gif_DGifOpenFileName" >&6; }
+  if test $ac_cv_lib_gif_DGifOpenFileName = yes; then
+!   gif_libs="-lgif"
+        gif_ok=yes
+  else
+    gif_ok=no
+--- 24086,24092 ----
+  { echo "$as_me:$LINENO: result: $ac_cv_lib_gif_DGifOpenFileName" >&5
+  echo "${ECHO_T}$ac_cv_lib_gif_DGifOpenFileName" >&6; }
+  if test $ac_cv_lib_gif_DGifOpenFileName = yes; then
+!   gif_libs="-lgif -L/usr/X11R6/lib -lX11"
+        gif_ok=yes
+  else
+    gif_ok=no

@@ -1,0 +1,160 @@
+*** ./Build-OSR6.osr6	Thu Sep 22 11:37:07 2005
+--- ./Build-OSR6	Thu Sep 22 11:37:07 2005
+***************
+*** 0 ****
+--- 1,14 ----
++ #!/bin/sh
++ 
++ MAKE=/usr/gnu/bin/make
++ export MAKE
++ xmkmf -a
++ 
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ 
++ $MAKE World 2>&1 | tee $MOUT-World
++ cd Xvnc
++ ./configure 2>&1 | tee $MOUT-configure
++ $MAKE 2>&1 | tee $MOUT
+*** ./vncserver.osr6	Thu Jul 31 07:19:37 2003
+--- ./vncserver	Thu Sep 22 11:37:25 2005
+***************
+*** 36,50 ****
+  $geometry = "1024x768";
+  $depth = 24;
+  $desktopName = "X";
+! $vncClasses = "/usr/local/vnc/classes";
+  $vncUserDir = "$ENV{HOME}/.vnc";
+- $fontPath = "unix/:7100";
+  
+  # Here is another example of setting the font path:
+! # $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
+  
+  # X colors database path is optional, uncomment and edit to use:
+! # $colorPath = "/usr/lib/X11/rgb";
+  
+  # You might wish to make your vnc directory under /tmp, to make sure
+  # passwords are always kept on the local filesystem. To do that, just
+--- 36,49 ----
+  $geometry = "1024x768";
+  $depth = 24;
+  $desktopName = "X";
+! $vncClasses = "/usr/share/vnc/classes";
+  $vncUserDir = "$ENV{HOME}/.vnc";
+  
+  # Here is another example of setting the font path:
+! $fontPath = "/usr/X11R6/lib/X11/fonts/misc/,/usr/X11R6/lib/X11/fonts/75dpi/,/usr/X11R6/lib/X11/fonts/100dpi/";
+  
+  # X colors database path is optional, uncomment and edit to use:
+! #$colorPath = "/usr/X11R6/lib/X11/rgb.txt";
+  
+  # You might wish to make your vnc directory under /tmp, to make sure
+  # passwords are always kept on the local filesystem. To do that, just
+***************
+*** 57,63 ****
+  
+  $defaultXStartup
+      = ("#!/bin/sh\n\n".
+!        "xrdb \$HOME/.Xresources\n".
+         "xsetroot -solid grey\n".
+         "xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n".
+         "twm &\n");
+--- 56,64 ----
+  
+  $defaultXStartup
+      = ("#!/bin/sh\n\n".
+!        "PATH=/usr/X11R6/bin:/usr/gnu/bin:\$PATH:/usr/bin/X11:/usr/local/bin\n".
+!        "export PATH\n".
+!        "[ -f \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n".
+         "xsetroot -solid grey\n".
+         "xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n".
+         "twm &\n");
+***************
+*** 554,559 ****
+--- 555,566 ----
+      ($prog) = ($0 =~ m|([^/]+)$|);
+  
+      #
++     # Add /usr/X11R6/bin and /usr/gnu/bin to our PATH
++     #
++ 
++     $ENV{PATH} = "/etc:/usr/bin:/tcb/bin:/usr/X11R6/bin:/usr/gnu/bin";
++ 
++     #
+      # Check we have all the commands we'll need on the path.
+      #
+  
+***************
+*** 571,576 ****
+--- 578,589 ----
+      # Check the HOME and USER environment variables are both set.
+      #
+  
++     #
++     # Set the USER environment variable to 'id -u -n'
++     #
++ 
++     $ENV{USER} = `id -u -n`;
++ 
+      unless (defined($ENV{HOME})) {
+  	die "$prog: The HOME environment variable is not set.\n";
+      }
+*** ./Install-OSR6.osr6	Thu Sep 22 11:37:07 2005
+--- ./Install-OSR6	Thu Sep 22 11:37:07 2005
+***************
+*** 0 ****
+--- 1,53 ----
++ #!/bin/sh
++ 
++ buildroot=/u/tmp/tightvnc
++ _bindir=/usr/bin
++ _mandir=/usr/man
++ _datadir=/usr/share
++ 
++ [ -d $buildroot ] && rm -rf $buildroot
++ mkdir -p $buildroot
++ 
++ mkdir -p ${buildroot}${_bindir}
++ mkdir -p ${buildroot}${_mandir}/man1
++ ./vncinstall ${buildroot}${_bindir} ${buildroot}${_mandir}
++ 
++ mkdir -p ${buildroot}${_datadir}/vnc
++ cp -pR classes ${buildroot}${_datadir}/vnc
++ 
++ #strip ${buildroot}${_bindir}/* || :
++ 
++ mkdir -p ${buildroot}/etc/init.d
++ install -m755 vncserver.init ${buildroot}/etc/init.d/vncserver
++ 
++ mkdir -p ${buildroot}/etc/sysconfig
++ cat > ${buildroot}/etc/sysconfig/vncservers << EOF
++ # The VNCSERVERS variable is a list of display:user pairs.
++ #
++ # Uncomment the line below to start a VNC server on display :1
++ # as my 'myusername' (adjust this to your own).  You will also
++ # need to set a VNC password; run 'man vncpasswd' to see how
++ # to do that.  
++ #
++ # DO NOT RUN THIS SERVICE if your local area network is
++ # untrusted!  For a secure way of using VNC, see
++ # <URL:http://www.uk.research.att.com/vnc/sshvnc.html>.
++ 
++ # VNCSERVERS="1:myusername"
++ EOF
++ chmod 644 ${buildroot}/etc/sysconfig/vncservers
++ 
++ mkdir -p ${buildroot}/etc/X11/applnk/Applications
++ cat > ${buildroot}/etc/X11/applnk/Applications/vncviewer.desktop << EOF
++ [Desktop Entry]
++ Name=VNC Viewer
++ Comment=VNC client application
++ Exec=/usr/bin/vncviewer
++ Terminal=0
++ Type=Application
++ EOF
++ 
++ mkdir -p ${buildroot}/usr/share/doc/packages/tightvnc
++ cp LICENCE.TXT README WhatsNew ChangeLog \
++    ${buildroot}/usr/share/doc/packages/tightvnc
++ 

@@ -1,0 +1,51 @@
+*** ./Configure-OSR6.00	Tue Aug 16 11:18:54 2005
+--- ./Configure-OSR6	Tue Aug 16 11:18:48 2005
+***************
+*** 0 ****
+--- 1,28 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --x-includes=/usr/X11R6/include \
++             --x-libraries=/usr/X11R6/lib \
++             --with-tcl=/usr/gnu/lib \
++             --with-tk=/usr/gnu/lib \
++             --with-tclincls=/usr/gnu/include \
++             --with-tkincls=/usr/gnu/include \
++             --with-tcllibs=/usr/gnu/lib \
++             --with-tklibs=/usr/gnu/lib \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.00	Tue Aug 16 13:34:53 2005
+--- ./Install-OSR6	Tue Aug 16 13:37:15 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/blt
++ INSTALL_ROOT=$D
++ INSTALL_DIR=$D
++ export INSTALL_ROOT INSTALL_DIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D/usr/lib
++ make install INSTALL_ROOT=$D INSTALL_DIR=$D 2>&1 | tee $MOUT
++ 

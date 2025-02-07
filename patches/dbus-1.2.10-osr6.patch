@@ -1,0 +1,150 @@
+--- ./bus/Makefile.in.00	2008-12-19 11:36:16.000000000 -0800
++++ ./bus/Makefile.in	2009-01-08 11:17:39.970000027 -0800
+@@ -478,6 +478,7 @@
+ dbus_daemon_LDADD = \
+ 	$(EFENCE)					\
+ 	$(DBUS_BUS_LIBS)				\
++	-lthread				\
+ 	$(top_builddir)/dbus/libdbus-convenience.la
+ 
+ dbus_daemon_LDFLAGS = @R_DYNAMIC_LDFLAG@ @SECTION_LDFLAGS@ @PIE_LDFLAGS@
+@@ -501,6 +502,7 @@
+ 
+ dbus_daemon_launch_helper_LDADD = \
+ 	$(DBUS_LAUNCHER_LIBS)			\
++	-lthread			\
+ 	$(top_builddir)/dbus/libdbus-convenience.la
+ 
+ dbus_daemon_launch_helper_LDFLAGS = @R_DYNAMIC_LDFLAG@ @SECTION_LDFLAGS@
+@@ -510,6 +512,7 @@
+ 
+ dbus_daemon_launch_helper_test_LDADD = \
+ 	$(DBUS_LAUNCHER_LIBS)			\
++	-lthread			\
+ 	$(top_builddir)/dbus/libdbus-convenience.la
+ 
+ dbus_daemon_launch_helper_test_LDFLAGS = @R_DYNAMIC_LDFLAG@ @SECTION_LDFLAGS@
+@@ -522,6 +525,7 @@
+ 
+ bus_test_launch_helper_LDADD = \
+ 	$(DBUS_LAUNCHER_LIBS)			\
++	-lthread			\
+ 	$(top_builddir)/dbus/libdbus-convenience.la
+ 
+ bus_test_launch_helper_LDFLAGS = @R_DYNAMIC_LDFLAG@ @SECTION_LDFLAGS@
+--- ./dbus/dbus-sysdeps-unix.c.00	2008-12-19 11:35:23.000000000 -0800
++++ ./dbus/dbus-sysdeps-unix.c	2009-01-08 11:17:39.970000061 -0800
+@@ -1491,7 +1491,11 @@
+     struct passwd p_str;
+ 
+     /* retrieve maximum needed size for buf */
++#ifdef _SC_GETPW_R_SIZE_MAX
+     buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
++#else
++    buflen = 1024;
++#endif
+ 
+     /* sysconf actually returns a long, but everything else expects size_t,
+      * so just recast here.
+--- ./dbus/dbus-sysdeps-util-unix.c.00	2008-12-19 11:35:23.000000000 -0800
++++ ./dbus/dbus-sysdeps-util-unix.c	2009-01-08 11:17:39.980000022 -0800
+@@ -53,6 +53,8 @@
+ #include <sys/syslimits.h>
+ #endif
+ 
++#include <sys/syslog.h>
++
+ #ifndef O_BINARY
+ #define O_BINARY 0
+ #endif
+@@ -866,7 +868,11 @@
+     dbus_bool_t b;
+ 
+     /* retrieve maximum needed size for buf */
++#ifdef _SC_GETGR_R_SIZE_MAX
+     buflen = sysconf (_SC_GETGR_R_SIZE_MAX);
++#else
++    buflen = 1024;
++#endif
+ 
+     /* sysconf actually returns a long, but everything else expects size_t,
+      * so just recast here.
+@@ -1227,4 +1233,4 @@
+   _dbus_string_free (&cmdline);
+   _dbus_string_free (&path);
+   return FALSE;
+-}
+\ No newline at end of file
++}
+--- ./Configure-OSR6.00	2009-01-08 11:08:07.180000026 -0800
++++ ./Configure-OSR6	2009-01-08 11:17:39.980000043 -0800
+@@ -32,3 +32,37 @@
+             --with-system-pid-file=/var/run/dbus/pid \
+             --mandir=/usr/local/man --infodir=/usr/local/share/info \
+             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -O2 -Wall"
++  LIBS=""
++fi
++PATH=/usr/local/bin:/usr/gnu/bin:$PATH
++LDFLAGS="-L/usr/local/lib"
++LIBS=-lthread
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PATH PKG_CONFIG_PATH LIBS LDFLAGS
++export LIBS
++rm -f mout-configure
++./configure --prefix=/usr/local --program-prefix="" \
++            --disable-shared --enable-static \
++            --enable-doxygen-docs \
++            --with-system-socket=/var/run/dbus/system_bus_socket \
++            --with-system-pid-file=/var/run/dbus/pid \
++            --mandir=/usr/local/man --infodir=/usr/local/share/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+--- ./Install-OSR6.00	2009-01-08 11:08:07.180000041 -0800
++++ ./Install-OSR6	2009-01-08 11:17:39.980000060 -0800
+@@ -10,3 +10,15 @@
+ mkdir -p $D
+ make install DESTDIR=$D 2>&1 | tee $MOUT
+ 
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/dbus
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
+--- ./configure.00	2008-12-19 11:36:18.000000000 -0800
++++ ./configure	2009-01-08 11:21:41.710000084 -0800
+@@ -20979,9 +20979,9 @@
+   *) if cc_supports_flag -fPIE; then
+         PIE_CFLAGS="-fPIE"
+         if ld_supports_flag -z,relro; then
+-           PIE_LDFLAGS="-pie -Wl,-z,relro"
++           PIE_LDFLAGS="-Wl,-z,relro"
+         else
+-           PIE_LDFLAGS="-pie"
++           PIE_LDFLAGS=""
+         fi
+      fi
+      ;;

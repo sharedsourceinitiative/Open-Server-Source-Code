@@ -1,0 +1,41 @@
+*** ./src/Fl_File_Icon2.cxx.osr6	Sun Feb 29 04:47:36 2004
+--- ./src/Fl_File_Icon2.cxx	Sat Jul  2 13:06:36 2005
+***************
+*** 266,276 ****
+      }
+      else if (strcmp(command, "endoutlinepolygon") == 0 && outline)
+      {
+!       unsigned cval; // Color value
+  
+        // Set the outline color; see above for valid values...
+        if (strcmp(params, "iconcolor") == 0)
+!         cval = FL_ICON_COLOR;
+        else if (strcmp(params, "shadowcolor") == 0)
+          cval = FL_DARK3;
+        else if (strcmp(params, "outlinecolor") == 0)
+--- 266,276 ----
+      }
+      else if (strcmp(command, "endoutlinepolygon") == 0 && outline)
+      {
+!       unsigned int cval; // Color value
+  
+        // Set the outline color; see above for valid values...
+        if (strcmp(params, "iconcolor") == 0)
+!         cval = (unsigned int)FL_ICON_COLOR;
+        else if (strcmp(params, "shadowcolor") == 0)
+          cval = FL_DARK3;
+        else if (strcmp(params, "outlinecolor") == 0)
+*** ./Install-OSR6.osr6	Sat Jul  2 13:08:57 2005
+--- ./Install-OSR6	Sat Jul  2 13:09:12 2005
+***************
+*** 0 ****
+--- 1,9 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/fltk
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

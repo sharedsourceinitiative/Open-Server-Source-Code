@@ -1,0 +1,259 @@
+#!/bin/ksh
+# NSS 1.6 - Netscape Startup Script - Wrapper for Netscape.
+# Author: Eon. 1998-2000. Feel free to use this script.
+# Email: eon@eon.za.net
+# Go to my homepage (http://eon.za.net/linux/nss/) for more information,
+# a changelog, and installation instructions.
+
+# Thanks go to all those people who gave me suggestions, ideas, fixes, etc.!
+#
+# This version, based on NSS 1.6, was modified by Ronald Record (rr@sco.com)
+# and Bela Lubkin (belal@sco.com) for use on SCO OpenServer and UnixWare.
+# It should still function identical to NSS 1.6 on all other platforms.
+#
+
+# ****************************************************************************
+# This is where you can configure the script:
+# ****************************************************************************
+
+# Note that you can't have a netscape executable that is named auto, nor have
+# it executed from a subdirectory (of the current working directory)
+# called auto. This will fail... But hey! Who calls it's Netscape executable
+# 'auto' anyway? ;)
+# The settings below should be ok for most users... Default is 'auto'setup.
+
+# This is the directory where Netscape Communicator or Navigator is installed.
+# If you would like the script to autodetect it for you, set to auto.
+# This feature will NOT overide an already set MOZILLA_HOME.
+MOZILLA_INSTALL=auto
+#MOZILLA_INSTALL=/opt/netscape
+
+# This is the Netscape executable. Normally it is called netscape, but some
+# systems can also have it named netscape-communicator, netscape-navigator,
+# or maybe even something else. Normally set this to auto to let the script
+# determine the executable's name.
+# if you set this manually you should include the full pathname.
+MOZILLA_EX=auto
+#MOZILLA_EX=/usr/bin/X11/netscape
+
+# Disable about splash: if set to yes it will start Netscape the first time
+# with the -no-about-splash option. This will disable the logo screen, which
+# is normally displayed.
+ABOUT_SPLASH_DISABLE=yes
+
+# ****************************************************************************
+# No need to go below this line if you don't know what you are doing ;)
+# ****************************************************************************
+
+# The script itself:
+
+# The script now only echo's text if something goes wrong. If you want the
+# script allways write to the screen what is going on, then change /dev/null
+# into /dev/tty... Of course you can also give a filename here...
+# Note: this is really only for debugging.
+ECHO=/dev/null
+#ECHO=/dev/tty
+
+echo "--- NSS 1.6 ---" > $ECHO
+
+# Check for the existence of MOZILLA_HOME:
+if [ Z$MOZILLA_HOME=Z ]; then
+    echo "Check MOZILLA_HOME: set by script." > $ECHO
+    MOZILLA_HOME=$MOZILLA_INSTALL
+fi
+
+# Should we autodetect the MOZILLA_HOME directory?
+if [ $MOZILLA_HOME = "auto" ]; then
+    # Indeed, we should autodetect :)
+    if [ -d /opt/netscape ]; then
+	MOZILLA_HOME=/opt/netscape
+    elif [ -d /usr/local/netscape ]; then
+	MOZILLA_HOME=/usr/local/netscape
+    elif [ -d /usr/netscape ]; then
+	MOZILLA_HOME=/usr/netscape
+    elif [ -d /usr/lib/netscape ]; then
+	MOZILLA_HOME=/usr/lib/netscape
+    # Correct me if I'm wrong: the following path is used by Solaris:
+    elif [ -d /opt/NSCPcom ]; then
+	MOZILLA_HOME=/opt/NSCPcom
+    else
+	exec echo "Could not find Netscape directory."
+    fi
+    echo "Auto MOZILLA_HOME: autodetection: "$MOZILLA_HOME > $ECHO
+fi
+
+# Should we autodetect the MOZILLA executable?
+if [ $MOZILLA_EX = "auto" ]; then
+    # Yes, we should :)
+    if [ -e $MOZILLA_HOME/netscape ]; then
+	MOZILLA_EX=$MOZILLA_HOME/netscape
+    elif [ -e $MOZILLA_HOME/netscape-communicator ]; then
+	MOZILLA_EX=$MOZILLA_HOME/netscape-communicator
+    elif [ -e $MOZILLA_HOME/netscape-navigator ]; then
+	MOZILLA_EX=$MOZILLA_HOME/netscape-navigator
+    # Could not find netscape executable in MOZILLA_HOME, trying globally...
+    elif [ -e /usr/bin/netscape ]; then
+	MOZILLA_EX=/usr/bin/netscape
+    elif [ -e /usr/bin/X11/netscape ]; then
+	MOZILLA_EX=/usr/bin/X11/netscape
+    elif [ -e /usr/bin/X/netscape ]; then
+	MOZILLA_EX=/usr/bin/X/netscape
+    elif [ -e /usr/X11R6/bin/netscape ]; then
+	MOZILLA_EX=/usr/X11R6/bin/netscape
+    else
+	exec echo "Could not find Netscape executable."
+    fi
+    echo "Auto MOZILLA_EX: autodetection: "$MOZILLA_EX > $ECHO
+fi
+
+# First check for a left lock file.
+if [ -L $HOME/.netscape/lock ]; then
+    # Lock file found
+    echo "Check lock: Lock file found." > $ECHO
+    if ! (ps -e || ps x) | grep `ls -l $HOME/.netscape/lock | cut -d \: -f 3 | grep '[1234567890]*'` | grep -v -q -s 'grep'; then
+	# Netscape not in memory, but we found a lock file.
+	echo "Check lock: Removing left lock file." > $ECHO
+	rm $HOME/.netscape/lock
+    fi
+fi
+#
+# SCO specific startup stuff (rr@sco.com)
+#
+SYSTEM=`uname -s`
+[ "$SYSTEM" = "UnixWare" ] || [ "$SYSTEM" = "SCO_SV" ] && {
+  # Change <systemname>:0 to unix:0 to work around Xlib bug
+  case $DISPLAY in
+    :*|`hostname`:*|`uname -n`:*)
+      DISPLAY=unix:`echo $DISPLAY | sed 's/.*://'`;;
+  esac
+  export DISPLAY
+
+  # Turn on non-network local connections to the X server
+  # (this permits scohelp to start NS for context-sensitive help)
+  case $DISPLAY in
+    unix:*) xhost +local: >&-;;
+  esac
+
+  # Remove XMODIFIERS from the environment if it's there,
+  # to allow charsets to work correctly
+  unset XMODIFIERS
+
+  # Don't use the IXI version of the Motif form Widget because it
+  # causes the Edit->Preferences dialog to be too small
+  if [ ! -n "$USEPREMIERADDS" ]  ; then
+        USEPREMIERADDS=ALL,-form
+  fi
+  export USEPREMIERADDS
+}
+#
+# End of SCO specific stuff (rr@sco.com)
+#
+# Starting Netscape:
+export MOZILLA_HOME
+
+if [ -L $HOME/.netscape/lock ]; then
+    # Hmmm... Netscape is running...
+    echo "Exec: Netscape is already running." > $ECHO
+    if echo " $*" | grep '[-]remote' > /dev/null; then
+	echo "Exec: -remote detected. Passing it to Netscape." > $ECHO
+	exec $MOZILLA_EX $*
+    else
+	# We may have a problem here... First check if any options were given.
+	if [ $# = 0 ]; then
+	    # No options, so opening a new browser window.
+	    $MOZILLA_EX -remote 'openBrowser()'
+	else
+	    # Checking all options.
+	    while test -n "$1"
+	    do
+		MOZILLA_OPTION=$1
+		unset REMOTE_COMMAND
+		unset URL
+
+                case $MOZILLA_OPTION in
+                    -composer|-edit|composer|edit)
+                        REMOTE_COMMAND='editURL'
+	                URL=$2
+                        shift
+
+                        # Check if it the URL is a file name.
+		        if echo "$URL" | grep -q -v '^[a-zA-Z]*://'
+                        then
+                            # File name absolute or relative?
+                            case $URL in
+                                /*)
+                                    break
+                                    ;;
+                                *)
+                                    URL="$PWD/$URL"
+                                    ;;
+                            esac
+                            URL="file://localhost$URL"
+                        fi
+                        ;;
+
+                    -discussions|-news|discussions|news)
+                        REMOTE_COMMAND='openNews'
+                        ;;
+
+                    -mail|mail)
+                        REMOTE_COMMAND='openInbox'
+                        ;;
+
+                    -*)
+                        ;;
+
+                    *)
+                        REMOTE_COMMAND='openBrowser'
+	                URL=$MOZILLA_OPTION
+			if [ -e $URL ]; then
+			    case $URL in
+				/*)
+				    URL="file:$URL";;
+				*)
+				    URL="file:$PWD/$URL";;
+			    esac
+			fi
+                        ;;
+                esac
+
+                if test ! $REMOTE_COMMAND
+                then
+                    echo $MOZILLA_OPTION" could not be executed because Netscape is already running." > $ECHO
+                else
+                    echo "Exec remote: sending $REMOTE_COMMAND($URL) to Netscape." > $ECHO
+                    $MOZILLA_EX -remote "$REMOTE_COMMAND($URL)"
+                fi
+                shift
+	    done
+	fi
+    fi    
+else
+    # Netscape is not running yet.
+    echo "Exec: Netscape is not yet running." > $ECHO
+    if echo " $*" | grep '[-]remote' > /dev/null; then
+	# -remote command detected. We MUST have Netscape running before we
+	# can execute this command. When Netscape detects a -remote command
+	# it seems that it only executes those -remote commands, and that
+	# it does not bother to look at other command line arguments (such
+	# as -mail, etc.)... So we don't have to worry about that...
+	echo "Exec: -remote detected. Will start Netscape first." > $ECHO
+	$MOZILLA_EX &
+	echo "Exec: Netscape is loading..." > $ECHO
+	while ! $MOZILLA_EX -raise 2> /dev/null;
+	do
+	    # Netscape is not yet finished loading... We'll hold...
+	    sleep 1;
+	done
+	echo "Exec remote: sending remote command to Netscape." > $ECHO
+	exec $MOZILLA_EX $*
+    else
+	# He! We can actually start Netscape the normal way! ;)
+	echo "Exec: starting Netscape." > $ECHO
+	if [ $ABOUT_SPLASH_DISABLE = "yes" ]; then
+	    exec $MOZILLA_EX -no-about-splash $*
+	else
+	    exec $MOZILLA_EX $*
+	fi
+    fi
+fi

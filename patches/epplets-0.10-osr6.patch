@@ -1,0 +1,141 @@
+*** ./epplets/Makefile.in.00	Thu May  3 15:02:50 2007
+--- ./epplets/Makefile.in	Fri Aug  3 17:58:34 2007
+***************
+*** 133,139 ****
+  am_E_PlayCD_epplet_OBJECTS = E-PlayCD.$(OBJEXT)
+  E_PlayCD_epplet_OBJECTS = $(am_E_PlayCD_epplet_OBJECTS)
+  am_E_Power_epplet_OBJECTS = E-Power.$(OBJEXT)
+! E_Power_epplet_OBJECTS = $(am_E_Power_epplet_OBJECTS)
+  E_Power_epplet_LDADD = $(LDADD)
+  am_E_SD_epplet_OBJECTS = E-SD.$(OBJEXT) esdcloak.$(OBJEXT) \
+  	utils.$(OBJEXT)
+--- 133,140 ----
+  am_E_PlayCD_epplet_OBJECTS = E-PlayCD.$(OBJEXT)
+  E_PlayCD_epplet_OBJECTS = $(am_E_PlayCD_epplet_OBJECTS)
+  am_E_Power_epplet_OBJECTS = E-Power.$(OBJEXT)
+! E_Power_epplet_OBJECTS = $(am_E_Power_epplet_OBJECTS) \
+! 	/usr/local/lib/libgetline.a
+  E_Power_epplet_LDADD = $(LDADD)
+  am_E_SD_epplet_OBJECTS = E-SD.$(OBJEXT) esdcloak.$(OBJEXT) \
+  	utils.$(OBJEXT)
+*** ./configure.00	Thu May  3 15:02:46 2007
+--- ./configure	Fri Aug  3 17:53:53 2007
+***************
+*** 19746,19752 ****
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-lX11 $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 19746,19752 ----
+    # See if we find them without any special options.
+    # Don't add to $LIBS permanently.
+    ac_save_LIBS=$LIBS
+!   LIBS="-L/usr/X11R6/lib -lX11 $LIBS"
+    cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 19980,19986 ****
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+      # the Alpha needs dnet_stub (dnet does not exist).
+!     ac_xsave_LIBS="$LIBS"; LIBS="$LIBS $X_LIBS -lX11"
+      cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 19980,19986 ----
+      # Martyn Johnson says this is needed for Ultrix, if the X
+      # libraries were built with DECnet support.  And Karl Berry says
+      # the Alpha needs dnet_stub (dnet does not exist).
+!     ac_xsave_LIBS="$LIBS"; LIBS="$LIBS $X_LIBS -L/usr/X11R6/lib -lX11"
+      cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 21676,21682 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lX11 $X_LIBS $SUBLIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 21676,21682 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-L/usr/X11R6/lib -lX11 $X_LIBS $SUBLIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 21735,21741 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_X11_XOpenDisplay" >&5
+  echo "${ECHO_T}$ac_cv_lib_X11_XOpenDisplay" >&6
+  if test $ac_cv_lib_X11_XOpenDisplay = yes; then
+!   X_LIBS="$X_LIBS -lX11"
+  else
+  
+  echo "ERROR:  You need libX11 to build Epplets.  Verify that you have libX11.a or";
+--- 21735,21741 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_X11_XOpenDisplay" >&5
+  echo "${ECHO_T}$ac_cv_lib_X11_XOpenDisplay" >&6
+  if test $ac_cv_lib_X11_XOpenDisplay = yes; then
+!   X_LIBS="$X_LIBS -L/usr/X11R6/lib -lX11"
+  else
+  
+  echo "ERROR:  You need libX11 to build Epplets.  Verify that you have libX11.a or";
+***************
+*** 21753,21759 ****
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-lXext $X_LIBS $SUBLIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+--- 21753,21759 ----
+    echo $ECHO_N "(cached) $ECHO_C" >&6
+  else
+    ac_check_lib_save_LIBS=$LIBS
+! LIBS="-L/usr/X11R6/lib -lXext $X_LIBS $SUBLIBS $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+  /* confdefs.h.  */
+  _ACEOF
+***************
+*** 21812,21818 ****
+  echo "$as_me:$LINENO: result: $ac_cv_lib_Xext_XextAddDisplay" >&5
+  echo "${ECHO_T}$ac_cv_lib_Xext_XextAddDisplay" >&6
+  if test $ac_cv_lib_Xext_XextAddDisplay = yes; then
+!   X_LIBS="-lXext $X_LIBS"
+  else
+  
+  echo "ERROR:  You need libXext to build Epplets.  Verify that you have libXext.a or";
+--- 21812,21818 ----
+  echo "$as_me:$LINENO: result: $ac_cv_lib_Xext_XextAddDisplay" >&5
+  echo "${ECHO_T}$ac_cv_lib_Xext_XextAddDisplay" >&6
+  if test $ac_cv_lib_Xext_XextAddDisplay = yes; then
+!   X_LIBS="-L/usr/X11R6/lib -lXext $X_LIBS"
+  else
+  
+  echo "ERROR:  You need libXext to build Epplets.  Verify that you have libXext.a or";
+*** ./Install-OSR6.00	Fri Aug  3 17:59:03 2007
+--- ./Install-OSR6	Fri Aug  3 17:59:16 2007
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/epplets
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 

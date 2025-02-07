@@ -1,0 +1,129 @@
+*** ./src/Makefile.in.osr6 Mon Apr 25 10:36:33 2005
+--- ./src/Makefile.in Sat May 21 18:04:07 2005
+***************
+*** 167,173 ****
+      lwp_ucontext.c lwp_ucontext.h lwp_stacktrace.c lwp_stacktrace.h \
+      lwp.private.h
+  
+! liblwp_la_CFLAGS = -DLWPDEBUG
+  liblwp_la_LDFLAGS = -version-info $(LIBTOOL_VERSION) $(LIBTOOL_LDFLAGS)
+  
+  noinst_PROGRAMS = cswitch testlwp testlwp-static tdb rw
+--- 167,174 ----
+      lwp_ucontext.c lwp_ucontext.h lwp_stacktrace.c lwp_stacktrace.h \
+      lwp.private.h
+  
+! #liblwp_la_CFLAGS = -DLWPDEBUG
+! liblwp_la_CFLAGS = -U_REENTRANT -O2
+  liblwp_la_LDFLAGS = -version-info $(LIBTOOL_VERSION) $(LIBTOOL_LDFLAGS)
+  
+  noinst_PROGRAMS = cswitch testlwp testlwp-static tdb rw
+*** ./src/lwp.private.h.osr6 Thu Mar  3 10:53:51 2005
+--- ./src/lwp.private.h Sat May 21 18:04:07 2005
+***************
+*** 113,119 ****
+  	     fflush(lwp_logfile);\
+  	 }
+  #else /* !LWPDEBUG */
+! #define lwpdebug(level, msg...)
+  #endif /* !LWPDEBUG */
+  
+  #endif /* _LWP_PRIVATE_ */
+--- 113,119 ----
+  	     fflush(lwp_logfile);\
+  	 }
+  #else /* !LWPDEBUG */
+! #define lwpdebug(level, msg, ...)
+  #endif /* !LWPDEBUG */
+  
+  #endif /* _LWP_PRIVATE_ */
+*** ./configure.osr6 Mon Apr 25 10:36:34 2005
+--- ./configure Sat May 21 18:09:37 2005
+***************
+*** 2686,2692 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-g -O2"
+    else
+!     CFLAGS="-g"
+    fi
+  else
+    if test "$GCC" = yes; then
+--- 2686,2692 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-g -O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  else
+    if test "$GCC" = yes; then
+***************
+*** 2692,2698 ****
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS=
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+--- 2692,2698 ----
+    if test "$GCC" = yes; then
+      CFLAGS="-O2"
+    else
+!     CFLAGS="-O2"
+    fi
+  fi
+  echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+***************
+*** 3998,4004 ****
+    esac
+    ;;
+  
+! sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+--- 3998,4004 ----
+    esac
+    ;;
+  
+! sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5* | unixware7* | sysv4*uw2*)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
+  esac
+***************
+*** 7576,7584 ****
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~$echo "local: *; };" >> $lib.exp~
+!   		$LD -G${allow_undefined_flag} -M $lib.exp -h $soname -o $lib $libobjs $deplibs $linker_flags~$rm $lib.exp'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+--- 7576,7583 ----
+        no_undefined_flag=' -z text'
+        # $CC -shared without GNU ld will not create a library from C++
+        # object files and a static libstdc++, better avoid it by now
+!       archive_cmds='$LD -G${allow_undefined_flag} -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+!       archive_expsym_cmds='$LD -G${allow_undefined_flag} -Bexport:$export_symbols -h $rpath/$soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_libdir_flag_spec=
+        hardcode_shlibpath_var=no
+        runpath_var='LD_RUN_PATH'
+***************
+*** 10742,10748 ****
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5uw[78]* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)
+--- 10741,10747 ----
+  	;;
+      esac
+      ;;
+!   sysv5OpenUNIX8* | sysv5UnixWare7* | sysv5* | unixware7*)
+      archive_cmds_need_lc_CXX=no
+      ;;
+    tandem*)

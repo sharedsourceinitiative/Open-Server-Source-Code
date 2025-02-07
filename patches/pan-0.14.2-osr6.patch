@@ -1,0 +1,33 @@
+*** ./pan/task-grouplist.c.00	Thu Jul 24 16:20:49 2003
+--- ./pan/task-grouplist.c	Fri Jul  8 22:56:30 2005
+***************
+*** 59,65 ****
+  
+  static TaskStateEnum nntp_grouplist_download_all (TaskGroupList*, PanSocket*);
+  
+! static int nntp_grouplist_download_new (TaskGroupList*, PanSocket*);
+  
+  static gchar* task_grouplist_describe (const StatusItem*);
+  
+--- 59,65 ----
+  
+  static TaskStateEnum nntp_grouplist_download_all (TaskGroupList*, PanSocket*);
+  
+! static TaskStateEnum nntp_grouplist_download_new (TaskGroupList*, PanSocket*);
+  
+  static gchar* task_grouplist_describe (const StatusItem*);
+  
+--- Install-OSR6.osr6	2005-07-08 22:57:28.370000003 -0700
++++ Install-OSR6	2005-07-08 22:57:41.900000007 -0700
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/pan
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT

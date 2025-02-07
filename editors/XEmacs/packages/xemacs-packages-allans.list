@@ -1,0 +1,118 @@
+From - Thu Dec 13 14:35:16 2001
+Return-Path: allan@caldera.com
+Received: from mail.ut.caldera.com (qmailr@mail.ut.caldera.com [216.250.130.2]) by johndoe.pdev.sco.com (8.8.7/UW7.0.1) with ESMTP id OAA16057 for <rr@johndoe.pdev.ca.caldera.com>; Thu, 13 Dec 2001 14:34:02 -0800 (PST)
+Received: (qmail 22710 invoked by alias); 13 Dec 2001 22:15:47 -0000
+Delivered-To: rr@caldera.com
+Received: (qmail 22705 invoked by uid 84); 13 Dec 2001 22:15:47 -0000
+Received: from allan@caldera.com by clavin.ut.caldera.com with qmail-scanner-1.00 (uvscan: v4.1.40/v4155. . Clean. Processed in 0.138149 secs); 13 Dec 2001 22:15:47 -0000
+Received: from www11.cruzio.com (63.249.95.28)
+  by mail.ut.caldera.com with SMTP; 13 Dec 2001 22:15:46 -0000
+Received: from aeon.nj.caldera.com (aeon.nj.caldera.com [132.147.135.169])
+	by www11.cruzio.com with ESMTP id OAA23135
+	for <rr@ronrecord.com>; Thu, 13 Dec 2001 14:15:44 -0800 (PST)
+Received: (from allan@localhost) by aeon.nj.caldera.com (8.10.1/UW7.1.1-NSCd) id fBDMFf527462; Thu, 13 Dec 2001 17:15:41 -0500 (EST)
+X-Mailer: 21.4 (patch 3) "Academic Rigor" XEmacs Lucid (via feedmail 10 I);
+	VM 6.97 under 21.4 (patch 3) "Academic Rigor" XEmacs Lucid
+Message-ID: <15385.10381.209308.522969@aeon.newjersey.sco.com>
+Date: Thu, 13 Dec 2001 17:15:41 -0500
+From: "Allan Spiegel" <allan@caldera.com>
+To: rr@ronrecord.com
+Subject: Re: xemacs21.4.3 problem
+References: <15382.34236.494988.401910@aeon.newjersey.sco.com>
+	<01121117194801.09263@noname.nodomain.nowhere>
+	<15385.2901.171548.255015@aeon.newjersey.sco.com>
+	<3C192500.C8D65DB7@ronrecord.com>
+Status:   
+X-Mozilla-Status: 8011
+
+I'd also add
+
+  dired
+  igrep
+  ispell
+  mail-lib
+  mailcrypt
+  net-utils
+  os-utils
+  prog-modes
+  sh-script
+  text-modes
+  tm
+  vm
+
+and maybe 
+
+  elib
+  jde
+  supercite
+
+
+At 14:00 on December 13, Ronald Joe Record wrote:
+  |Reply-To: rr@ronrecord.com
+  |
+  |I'm Sorry,
+  |
+  |I'm not an Emacs/XEmacs user and hops was my XEmacs guy but he's gone.
+  |Which of the many XEmacs packages would you say should be included by
+  |default in a Skunkware XEmacs component ? Would, for instance, efs, base,
+  |c-support, cc-mode, ediff, edit-utils and hm-html-menus be sufficient ?
+  |What would your list look like ?
+  |-rr-
+  |
+  |re:
+  |
+  |Allan Spiegel wrote:
+  |> 
+  |> The xemacs-21.4.3.pkg you have on the skunkware site is
+  |> seriously incomplete as it doesn't seem to include any of the
+  |> packages, not even xemacs-base or efs both of which are asked
+  |> for in the installation instructions,
+  |> http://xemacs.org/Install/index.html.  see
+  |> http://xemacs.org/Develop/packages.html for a description of
+  |> packages.  The description of xemacs-base is "Fundamental XEmacs
+  |> support, you almost certainly need this"
+  |> 
+  |> I recommend including a reasonably complete set of xemacs
+  |> packages in the .pkg.
+  |> 
+  |> At 17:19 on December 11, Ronald Joe Record wrote:
+  |>   |To: allan@caldera.com (Allan Spiegel), rr@caldera.com
+  |>   |Reply-To: Ronald Joe Record <rr@caldera.com>
+  |>   |
+  |>   |Hi Allan,
+  |>   |
+  |>   |Thanks for pointing out this dependancy. Try installing the
+  |>   |Esound package from:
+  |>   |
+  |>   |ftp://ftp2.caldera.com/pub/skunkware/uw7/Packages/esound-0.2.8.pkg
+  |>   |
+  |>   |Let me know if you have further problems. I'll try to remember to correct
+  |>   |the packaging next release.
+  |>   |-rr-
+  |>   |
+  |>   |re:
+  |>   |
+  |>   |On Tuesday 11 December 2001 14:16, Allan Spiegel wrote:
+  |>   |> I just installed xemacs-21.4.3 on ou8 from the skunkware site - i
+  |>   |> previously was using xemacs-20.4  installation didn't complain about
+  |>   |> anything but runtime does; do I need to install something else?
+  |>   |>
+  |>   |> aeon 3169> xemacs
+  |>   |> dynamic linker : xemacs : could not open /usr/local/lib/libesd.so.0
+  |>   |> Killed
+  |> 
+  |> --
+  |>   --Allan B. Spiegel                   Save The Rainforests!
+  |> Caldera Int'l, 430 Mountain Ave, Murray Hill, NJ 07974, Room B-318
+  |>     tel: 908.790.2392                      fax: 908.790.2302
+  |
+  |-- 
+  |Ronald Joe Record, Open Source Architect, Caldera Systems
+  |E-mail: rr@caldera.com   Voice:  831-427-7604   FAX:  831-427-5417
+  |USPS:   400 Encinal Street, Santa Cruz, California 95061
+  |WWW:    http://ronrecord.com
+
+-- 
+  --Allan B. Spiegel                   Save The Rainforests!
+Caldera Int'l, 430 Mountain Ave, Murray Hill, NJ 07974, Room B-318
+    tel: 908.790.2392                      fax: 908.790.2302

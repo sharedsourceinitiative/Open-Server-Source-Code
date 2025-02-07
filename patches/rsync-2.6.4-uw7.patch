@@ -1,0 +1,16 @@
+*** ./Install-UW7.00	Mon Dec 17 16:30:38 2007
+--- ./Install-UW7	Mon Dec 17 16:30:50 2007
+***************
+*** 0 ****
+--- 1,11 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/rsync
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT

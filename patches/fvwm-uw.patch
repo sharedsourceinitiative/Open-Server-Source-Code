@@ -1,0 +1,20 @@
+--- ./modules/FvwmProxy/FvwmProxy.c.uw	2003-02-28 11:41:09.000000000 +0000
++++ ./modules/FvwmProxy/FvwmProxy.c	2003-12-23 18:19:47.070000016 +0000
+@@ -437,14 +437,14 @@
+ 
+ static int myXErrorHandler(Display *display,XErrorEvent *error_event)
+ {
+-	const long messagelen=256;
+-	char buffer[messagelen],function[messagelen];
++/*	const long messagelen=256; */
++	char buffer[256],function[256];
+ 	char request_number[16];
+ 
+ 	sprintf(request_number,"%d",error_event->request_code);
+ 	sprintf(buffer,"UNKNOWN");
+ 	XGetErrorDatabaseText(display,"XRequest",
+-		request_number,buffer,function,messagelen);
++		request_number,buffer,function,256);
+ 
+ 	fprintf(errorFile,"non-fatal X error as follows, display 0x%x"
+ 		" op %d:%d \"%s\" serial %u error %d\n",

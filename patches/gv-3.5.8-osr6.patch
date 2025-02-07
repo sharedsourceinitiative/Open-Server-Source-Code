@@ -1,0 +1,120 @@
+*** ./source/paths.h.osr6	Sat Apr  5 14:00:00 1997
+--- ./source/paths.h	Mon Jul  4 21:54:24 2005
+***************
+*** 34,42 ****
+  #   define INC_XMU(aaa) <XMU_DIRECTORY/aaa>
+  #   define INC_XAW(aaa) <XAW_DIRECTORY/aaa>
+  #else
+! #   define INC_X11(aaa) <X11/##aaa##>
+! #   define INC_XMU(aaa) <X11/Xmu/##aaa##>
+! #   define INC_XAW(aaa) <X11/Xaw3d/##aaa##>
+  #endif
+  
+  #endif /* _PATHS_H_ */
+--- 34,42 ----
+  #   define INC_XMU(aaa) <XMU_DIRECTORY/aaa>
+  #   define INC_XAW(aaa) <XAW_DIRECTORY/aaa>
+  #else
+! #   define INC_X11(aaa) <X11/aaa>
+! #   define INC_XMU(aaa) <X11/Xmu/aaa>
+! #   define INC_XAW(aaa) <X11/Xaw3d/aaa>
+  #endif
+  
+  #endif /* _PATHS_H_ */
+*** ./config.Unix.osr6	Fri Jun  6 15:00:00 1997
+--- ./config.Unix	Mon Jul  4 21:56:10 2005
+***************
+*** 28,41 ****
+  XCOMM ####################################################################
+  XCOMM ##### Miscellaneous settings
+  XCOMM ####################################################################
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM  Destination directories.
+  XCOMM --------------------------------------------------------------------
+!       GV_BINDIR    = /usr/local/bin/
+!       GV_DOCDIR    = /usr/local/doc/gv/
+!       GV_LIBDIR    = /usr/local/lib/gv/
+!       GV_MANDIR    = /usr/local/man/man1/
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM --- The name of the Xaw3d library.
+--- 28,42 ----
+  XCOMM ####################################################################
+  XCOMM ##### Miscellaneous settings
+  XCOMM ####################################################################
++       MAKE    = /usr/gnu/bin/make
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM  Destination directories.
+  XCOMM --------------------------------------------------------------------
+!       GV_BINDIR    = /usr/bin/
+!       GV_DOCDIR    = /usr/share/doc/packages/gv/
+!       GV_LIBDIR    = /usr/lib/gv/
+!       GV_MANDIR    = /usr/man/man1/
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM --- The name of the Xaw3d library.
+***************
+*** 70,77 ****
+  XCOMM --------------------------------------------------------------------
+  XCOMM  The default papersize (can be changed at runtime).
+  XCOMM --------------------------------------------------------------------
+! XCOMM PAPERSIZE = letter
+!       PAPERSIZE = a4
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM  If defined: PDF to PostScript conversion will produce
+--- 71,78 ----
+  XCOMM --------------------------------------------------------------------
+  XCOMM  The default papersize (can be changed at runtime).
+  XCOMM --------------------------------------------------------------------
+!       PAPERSIZE = letter
+! XCOMM PAPERSIZE = a4
+  
+  XCOMM --------------------------------------------------------------------
+  XCOMM  If defined: PDF to PostScript conversion will produce
+*** ./Build-OSR6.osr6	Mon Jul  4 21:54:24 2005
+--- ./Build-OSR6	Mon Jul  4 21:54:24 2005
+***************
+*** 0 ****
+--- 1,21 ----
++ #!/bin/sh
++ #
++ CFLAGS="-O2"
++ NM="/usr/ccs/bin/nm -p"
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4
++ xmkmf
++ make Makefiles
++ MOUT=mout
++ [ "$1" ] && MOUT=mout-$1
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ make $* 2>&1 | tee $MOUT
+*** ./Install-OSR6.osr6	Mon Jul  4 21:56:27 2005
+--- ./Install-OSR6	Mon Jul  4 21:56:56 2005
+***************
+*** 0 ****
+--- 1,13 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/gv
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ make install.man DESTDIR=$D 2>&1 | tee $MOUT-man
++ make install.doc DESTDIR=$D 2>&1 | tee $MOUT-doc

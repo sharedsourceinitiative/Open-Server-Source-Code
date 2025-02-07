@@ -1,0 +1,128 @@
+--- ./Build-OSR6.00	2009-01-05 13:24:24.470000011 -0800
++++ ./Build-OSR6	2009-01-05 13:24:24.470000008 -0800
+@@ -0,0 +1,34 @@
++#!/bin/sh
++#
++HOST=i586-sco-sysv5
++INSTALL=/usr/gnu/bin/install
++NM=nm-p
++M4=/usr/gnu/bin/m4
++if [ "$1" = "-u" ]
++then
++  CC="cc -Kpthread -Kalloca"
++  CXX="CC -Kpthread -Kalloca"
++  CFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  CXXFLAGS="-I/usr/local/include -I/usr/include/stlport -O2"
++  LIBS="-lstlport_sysv5 -lm"
++else
++  CC="gcc -D_REENTRANT"
++  CXX="g++ -D_REENTRANT"
++  CFLAGS="-I/usr/local/include -O2 -Wall"
++  CXXFLAGS="-I/usr/local/include -O2 -Wall"
++  LIBS=""
++fi
++PATH=/usr/local/bin:/usr/gnu/bin:$PATH
++PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
++LDFLAGS="-L/usr/local/lib"
++export CC CXX CFLAGS CXXFLAGS NM M4 INSTALL PATH PKG_CONFIG_PATH LIBS LDFLAGS
++rm -f mout-configure
++./configure --prefix=/usr/local \
++            --enable-shared --enable-static \
++            --mandir=/usr/local/man --infodir=/usr/local/share/info \
++            --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
++
++MOUT=mout
++[ "$1" ] && MOUT=mout-$1
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++make $* 2>&1 | tee $MOUT
+--- ./Install-OSR6.00	2009-01-05 13:24:24.470000025 -0800
++++ ./Install-OSR6	2009-01-05 15:49:13.700000019 -0800
+@@ -0,0 +1,64 @@
++#!/bin/sh
++
++MOUT=mout-install
++D=/u/tmp/gtkgcc
++DESTDIR=$D
++export DESTDIR
++
++[ -f $MOUT ] && mv $MOUT $MOUT-prev
++[ -d $D ] && rm -rf $D
++mkdir -p $D
++make install DESTDIR=$D 2>&1 | tee $MOUT
++
++H=`pwd`
++cd modules/other/gail/libgail-util
++gcc -D_REENTRANT -shared  .libs/libgailutil_la-gailmisc.o .libs/libgailutil_la-gailtextutil.o   -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gtk/.libs -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk/.libs -Wl,-rpath -Wl,/usr/X11R6/lib -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -Wl,-rpath -Wl,/usr/local/lib -Wl,-rpath -Wl,/usr/X11R6/lib -L/v/src/sco/libraries/gtk+-2.14.6/gdk/.libs -L/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -L/usr/local/lib ../../../../gtk/.libs/libgtk-x11-2.0.so -L/usr/X11R6/lib -L/usr/lib /v/src/sco/libraries/gtk+-2.14.6/gdk/.libs/libgdk-x11-2.0.so ../../../../gdk/.libs/libgdk-x11-2.0.so /usr/X11R6/lib/libXinerama.so /usr/X11R6/lib/libXrandr.so /usr/X11R6/lib/libXcursor.so /v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libpangocairo-1.0.a /usr/X11R6/lib/libXcomposite.so /usr/X11R6/lib/libXext.so /usr/X11R6/lib/libXdamage.so /usr/X11R6/lib/libXfixes.so /usr/local/lib/libatk-1.0.a /usr/local/lib/libcairo.a /usr/local/lib/libpixman-1.a /usr/lib/libpng12.so /usr/X11R6/lib/libXrender.so /usr/X11R6/lib/libX11.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket /usr/local/lib/libgio-2.0.a /usr/local/lib/libpangoft2-1.0.a /usr/local/lib/libpango-1.0.a /usr/lib/libfontconfig.so /usr/lib/libfreetype.so /usr/lib/libz.so /usr/lib/libexpat.so /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm    -Wl,-soname -Wl,/usr/local/lib/libgailutil.so.18 -o .libs/libgailutil.so.18
++
++cp .libs/libgailutil.so.18 $D/usr/local/lib
++
++cd $H/gdk
++
++gcc -D_REENTRANT -shared  .libs/gdk.o .libs/gdkapplaunchcontext.o .libs/gdkcairo.o .libs/gdkcolor.o .libs/gdkcursor.o .libs/gdkdisplay.o .libs/gdkdisplaymanager.o .libs/gdkdnd.o .libs/gdkdraw.o .libs/gdkevents.o .libs/gdkfont.o .libs/gdkgc.o .libs/gdkglobals.o .libs/gdkimage.o .libs/gdkkeys.o .libs/gdkkeyuni.o .libs/gdkpango.o .libs/gdkpixbuf-drawable.o .libs/gdkpixbuf-render.o .libs/gdkpixmap.o .libs/gdkpolyreg-generic.o .libs/gdkrectangle.o .libs/gdkregion-generic.o .libs/gdkrgb.o .libs/gdkscreen.o .libs/gdkselection.o .libs/gdkvisual.o .libs/gdkwindow.o .libs/gdkwindowimpl.o .libs/gdkenumtypes.o  -Wl,--whole-archive x11/.libs/libgdk-x11.a -Wl,--no-whole-archive  -Wl,-rpath -Wl,/usr/X11R6/lib -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -Wl,-rpath -Wl,/usr/X11R6/lib -Wl,-rpath -Wl,/usr/local/lib -L/usr/local/lib -L/usr/X11R6/lib /usr/local/lib/libpangocairo-1.0.a -L/usr/lib /usr/local/lib/libcairo.a /usr/local/lib/libpixman-1.a /usr/lib/libpng12.so /usr/local/lib/libpangoft2-1.0.a /usr/local/lib/libpango-1.0.a /usr/local/lib/libgio-2.0.a /usr/lib/libfontconfig.so /usr/lib/libfreetype.so /usr/lib/libz.so /usr/lib/libexpat.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket /usr/X11R6/lib/libXinerama.so /usr/X11R6/lib/libXrandr.so /usr/X11R6/lib/libXcursor.so /usr/X11R6/lib/libXrender.so /usr/X11R6/lib/libXcomposite.so /usr/X11R6/lib/libXext.so /usr/X11R6/lib/libXdamage.so /usr/X11R6/lib/libXfixes.so /usr/X11R6/lib/libX11.so ../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm    -Wl,-soname -Wl,/usr/local/lib/libgdk-x11-2.0.so.1400 -Wl,-retain-symbols-file -Wl,.libs/libgdk-x11-2.0.exp -o .libs/libgdk-x11-2.0.so.1400
++
++cp .libs/libgdk-x11-2.0.so.1400 $D/usr/local/lib
++
++cd $H/gdk-pixbuf
++
++gcc -D_REENTRANT -shared  .libs/gdk-pixbuf.o .libs/gdk-pixbuf-animation.o .libs/gdk-pixbuf-data.o .libs/gdk-pixbuf-io.o .libs/gdk-pixbuf-loader.o .libs/gdk-pixbuf-scale.o .libs/gdk-pixbuf-simple-anim.o .libs/gdk-pixbuf-scaled-anim.o .libs/gdk-pixbuf-util.o .libs/gdk-pixdata.o .libs/gdk-pixbuf-enum-types.o  -Wl,--whole-archive pixops/.libs/libpixops.a -Wl,--no-whole-archive  -L/usr/local/lib /usr/local/lib/libgio-2.0.a /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm    -Wl,-soname -Wl,/usr/local/lib/libgdk_pixbuf-2.0.so.1400 -Wl,-retain-symbols-file -Wl,.libs/libgdk_pixbuf-2.0.exp -o .libs/libgdk_pixbuf-2.0.so.1400
++
++cp .libs/libgdk_pixbuf-2.0.so.1400 $D/usr/local/lib
++
++cd $H/contrib/gdk-pixbuf-xlib
++
++gcc -D_REENTRANT -shared  .libs/gdk-pixbuf-xlib.o .libs/gdk-pixbuf-xlib-render.o .libs/gdk-pixbuf-xlib-drawable.o .libs/gdk-pixbuf-xlibrgb.o   -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -Wl,-rpath -Wl,/usr/X11R6/lib -Wl,-rpath -Wl,/usr/local/lib -Wl,-rpath -Wl,/usr/X11R6/lib -L/usr/local/lib ../../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so -L/usr/X11R6/lib /usr/local/lib/libgio-2.0.a /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a /usr/X11R6/lib/libX11.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket -lm    -Wl,-soname -Wl,/usr/local/lib/libgdk_pixbuf_xlib-2.0.so.1400 -o .libs/libgdk_pixbuf_xlib-2.0.so.1400
++
++cp .libs/libgdk_pixbuf_xlib-2.0.so.1400 $D/usr/local/lib
++
++cd $H/gtk
++
++gcc -D_REENTRANT -shared  .libs/gtkquery.o .libs/gtksearchengine.o .libs/gtksearchenginesimple.o .libs/fnmatch.o .libs/gtkaboutdialog.o .libs/gtkaccelgroup.o .libs/gtkaccellabel.o .libs/gtkaccelmap.o .libs/gtkaccessible.o .libs/gtkaction.o .libs/gtkactiongroup.o .libs/gtkadjustment.o .libs/gtkalignment.o .libs/gtkarrow.o .libs/gtkaspectframe.o .libs/gtkassistant.o .libs/gtkbbox.o .libs/gtkbin.o .libs/gtkbindings.o .libs/gtkbox.o .libs/gtkbuildable.o .libs/gtkbuilder.o .libs/gtkbuilderparser.o .libs/gtkbutton.o .libs/gtkcalendar.o .libs/gtkcelleditable.o .libs/gtkcelllayout.o .libs/gtkcellrenderer.o .libs/gtkcellrendereraccel.o .libs/gtkcellrenderercombo.o .libs/gtkcellrendererpixbuf.o .libs/gtkcellrendererprogress.o .libs/gtkcellrendererspin.o .libs/gtkcellrenderertext.o .libs/gtkcellrenderertoggle.o .libs/gtkcellview.o .libs/gtkcheckbutton.o .libs/gtkcheckmenuitem.o .libs/gtkcolorbutton.o .libs/gtkcolorsel.o .libs/gtkcolorseldialog.o .libs/gtkcombobox.o .libs/gtkcomboboxentry.o .libs/gtkcontainer.o .libs/gtkcurve.o .libs/gtkdialog.o .libs/gtkdrawingarea.o .libs/gtkeditable.o .libs/gtkentry.o .libs/gtkentrycompletion.o .libs/gtkeventbox.o .libs/gtkexpander.o .libs/gtkfilechooser.o .libs/gtkfilechooserbutton.o .libs/gtkfilechooserdefault.o .libs/gtkfilechooserdialog.o .libs/gtkfilechooserembed.o .libs/gtkfilechooserentry.o .libs/gtkfilechoosersettings.o .libs/gtkfilechooserutils.o .libs/gtkfilechooserwidget.o .libs/gtkfilefilter.o .libs/gtkfilesystem.o .libs/gtkfilesystemmodel.o .libs/gtkfixed.o .libs/gtkfontbutton.o .libs/gtkfontsel.o .libs/gtkframe.o .libs/gtkgamma.o .libs/gtkgc.o .libs/gtkhandlebox.o .libs/gtkhbbox.o .libs/gtkhbox.o .libs/gtkhpaned.o .libs/gtkhruler.o .libs/gtkhscale.o .libs/gtkhscrollbar.o .libs/gtkhseparator.o .libs/gtkhsv.o .libs/gtkiconcache.o .libs/gtkiconcachevalidator.o .libs/gtkiconfactory.o .libs/gtkicontheme.o .libs/gtkiconview.o .libs/gtkimage.o .libs/gtkimagemenuitem.o .libs/gtkimcontext.o .libs/gtkimcontextsimple.o .libs/gtkimmodule.o .libs/gtkimmulticontext.o .libs/gtkinputdialog.o .libs/gtkinvisible.o .libs/gtkitem.o .libs/gtkkeyhash.o .libs/gtklabel.o .libs/gtklayout.o .libs/gtklinkbutton.o .libs/gtkliststore.o .libs/gtkmain.o .libs/gtkmarshal.o .libs/gtkmarshalers.o .libs/gtkmenu.o .libs/gtkmenubar.o .libs/gtkmenuitem.o .libs/gtkmenushell.o .libs/gtkmenutoolbutton.o .libs/gtkmessagedialog.o .libs/gtkmisc.o .libs/gtkmnemonichash.o .libs/gtkmodules.o .libs/gtkmountoperation.o .libs/gtknotebook.o .libs/gtkobject.o .libs/gtkpagesetup.o .libs/gtkpaned.o .libs/gtkpapersize.o .libs/gtkpathbar.o .libs/gtkplug.o .libs/gtkprintcontext.o .libs/gtkprintoperation.o .libs/gtkprintoperationpreview.o .libs/gtkprintsettings.o .libs/gtkprintutils.o .libs/gtkprogressbar.o .libs/gtkradioaction.o .libs/gtkradiobutton.o .libs/gtkradiomenuitem.o .libs/gtkradiotoolbutton.o .libs/gtkrange.o .libs/gtkrbtree.o .libs/gtkrc.o .libs/gtkrecentaction.o .libs/gtkrecentchooserdefault.o .libs/gtkrecentchooserdialog.o .libs/gtkrecentchoosermenu.o .libs/gtkrecentchooserwidget.o .libs/gtkrecentchooserutils.o .libs/gtkrecentchooser.o .libs/gtkrecentfilter.o .libs/gtkrecentmanager.o .libs/gtkruler.o .libs/gtkscale.o .libs/gtkscalebutton.o .libs/gtkscrollbar.o .libs/gtkscrolledwindow.o .libs/gtkselection.o .libs/gtkseparator.o .libs/gtkseparatormenuitem.o .libs/gtkseparatortoolitem.o .libs/gtksettings.o .libs/gtksizegroup.o .libs/gtkshow.o .libs/gtksocket.o .libs/gtkspinbutton.o .libs/gtkstatusbar.o .libs/gtkstatusicon.o .libs/gtkstock.o .libs/gtkstyle.o .libs/gtktable.o .libs/gtktearoffmenuitem.o .libs/gtktestutils.o .libs/gtktextbtree.o .libs/gtktextbuffer.o .libs/gtktextbufferrichtext.o .libs/gtktextbufferserialize.o .libs/gtktextchild.o .libs/gtktextdisplay.o .libs/gtktextiter.o .libs/gtktextlayout.o .libs/gtktextmark.o .libs/gtktextsegment.o .libs/gtktexttag.o .libs/gtktexttagtable.o .libs/gtktexttypes.o .libs/gtktextutil.o .libs/gtktextview.o .libs/gtkthemes.o .libs/gtktoggleaction.o .libs/gtktogglebutton.o .libs/gtktoggletoolbutton.o .libs/gtktoolbar.o .libs/gtktoolbutton.o .libs/gtktoolitem.o .libs/gtktoolshell.o .libs/gtktooltip.o .libs/gtktreedatalist.o .libs/gtktreednd.o .libs/gtktreemodel.o .libs/gtktreemodelfilter.o .libs/gtktreemodelsort.o .libs/gtktreeselection.o .libs/gtktreesortable.o .libs/gtktreestore.o .libs/gtktreeview.o .libs/gtktreeviewcolumn.o .libs/gtktypebuiltins.o .libs/gtktypeutils.o .libs/gtkuimanager.o .libs/gtkvbbox.o .libs/gtkvbox.o .libs/gtkvolumebutton.o .libs/gtkviewport.o .libs/gtkvpaned.o .libs/gtkvruler.o .libs/gtkvscale.o .libs/gtkvscrollbar.o .libs/gtkvseparator.o .libs/gtkwidget.o .libs/gtkwindow-decorate.o .libs/gtkwindow.o .libs/gtkclipboard.o .libs/gtkdnd.o .libs/gtktext.o .libs/gtktree.o .libs/gtktreeitem.o .libs/gtkclist.o .libs/gtkcombo.o .libs/gtkctree.o .libs/gtkfilesel.o .libs/gtkitemfactory.o .libs/gtklist.o .libs/gtklistitem.o .libs/gtkoldeditable.o .libs/gtkoptionmenu.o .libs/gtkpixmap.o .libs/gtkpreview.o .libs/gtkprogress.o .libs/gtksignal.o .libs/gtktipsquery.o .libs/gtktooltips.o .libs/gtkpagesetupunixdialog.o .libs/gtkprinter.o .libs/gtkprinteroption.o .libs/gtkprinteroptionset.o .libs/gtkprinteroptionwidget.o .libs/gtkprintjob.o .libs/gtkprintoperation-unix.o .libs/gtkprintunixdialog.o .libs/gtkprintbackend.o .libs/gtksearchenginebeagle.o .libs/gtksearchenginetracker.o .libs/gtkplug-x11.o .libs/gtksocket-x11.o .libs/gtkxembed.o .libs/gtktrayicon-x11.o   -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -Wl,-rpath -Wl,/v/src/sco/libraries/gtk+-2.14.6/gdk/.libs -Wl,-rpath -Wl,/usr/X11R6/lib -Wl,-rpath -Wl,/usr/local/lib -Wl,-rpath -Wl,/usr/X11R6/lib -L/v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs -L/usr/local/lib ../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so ../gdk/.libs/libgdk-x11-2.0.so -L/usr/X11R6/lib -L/usr/lib /usr/X11R6/lib/libXinerama.so /usr/X11R6/lib/libXrandr.so /usr/X11R6/lib/libXcursor.so /v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libpangocairo-1.0.a /usr/X11R6/lib/libXcomposite.so /usr/X11R6/lib/libXext.so /usr/X11R6/lib/libXdamage.so /usr/X11R6/lib/libXfixes.so /usr/local/lib/libatk-1.0.a /usr/local/lib/libcairo.a /usr/local/lib/libpixman-1.a /usr/lib/libpng12.so /usr/X11R6/lib/libXrender.so /usr/X11R6/lib/libX11.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket /usr/local/lib/libgio-2.0.a /usr/local/lib/libpangoft2-1.0.a /usr/local/lib/libpango-1.0.a /usr/lib/libfontconfig.so /usr/lib/libfreetype.so /usr/lib/libz.so /usr/lib/libexpat.so /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm    -Wl,-soname -Wl,/usr/local/lib/libgtk-x11-2.0.so.1400 -Wl,-retain-symbols-file -Wl,.libs/libgtk-x11-2.0.exp -o .libs/libgtk-x11-2.0.so.1400
++
++cp .libs/libgtk-x11-2.0.so.1400 $D/usr/local/lib
++
++cd $H/gdk-pixbuf
++
++gcc -D_REENTRANT -DGDK_PIXBUF_DISABLE_DEPRECATED -I/usr/local/include -O2 -Wall -o .libs/gdk-pixbuf-csource gdk-pixbuf-csource.o  -L/usr/local/lib ./.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libgio-2.0.a /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm -Wl,-rpath -Wl,/usr/local/lib
++gcc -D_REENTRANT -DGDK_PIXBUF_DISABLE_DEPRECATED -I/usr/local/include -O2 -Wall -o .libs/gdk-pixbuf-query-loaders queryloaders.o  -L/usr/local/lib ./.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libgio-2.0.a /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm -Wl,-rpath -Wl,/usr/local/lib
++
++cp .libs/gdk-pixbuf-csource $D/usr/local/bin
++cp .libs/gdk-pixbuf-query-loaders $D/usr/local/bin
++
++cd $H/demos/gtk-demo
++
++gcc -D_REENTRANT -DGDK_PIXBUF_DISABLE_DEPRECATED -I/usr/local/include -O2 -Wall -o .libs/gtk-demo appwindow.o assistant.o builder.o button_box.o changedisplay.o clipboard.o colorsel.o combobox.o dialog.o drawingarea.o editable_cells.o entry_completion.o expander.o hypertext.o iconview.o iconview_edit.o images.o list_store.o menus.o panes.o pickers.o pixbufs.o printing.o rotated_text.o sizegroup.o stock_browser.o textview.o textscroll.o tree_store.o ui_manager.o main.o -Wl,--export-dynamic  -L/usr/local/lib ../../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so ../../gdk/.libs/libgdk-x11-2.0.so -L/usr/X11R6/lib ../../gtk/.libs/libgtk-x11-2.0.so /v/src/sco/libraries/gtk+-2.14.6/gdk/.libs/libgdk-x11-2.0.so /usr/X11R6/lib/libXinerama.so /usr/X11R6/lib/libXrandr.so /usr/X11R6/lib/libXcursor.so /v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libcairo.a /usr/local/lib/libpangoft2-1.0.a /usr/X11R6/lib/libXcomposite.so /usr/X11R6/lib/libXext.so /usr/X11R6/lib/libXdamage.so /usr/X11R6/lib/libXfixes.so /usr/local/lib/libpixman-1.a /usr/lib/libpng12.so /usr/X11R6/lib/libXrender.so /usr/X11R6/lib/libX11.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket /usr/local/lib/libpango-1.0.a /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/lib/libfontconfig.so /usr/lib/libfreetype.so /usr/lib/libz.so /usr/lib/libexpat.so /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm -Wl,-rpath -Wl,/usr/local/lib -Wl,-rpath -Wl,/usr/X11R6/lib
++
++cp .libs/gtk-demo $D/usr/local/bin
++
++cd $H/gtk
++
++gcc -D_REENTRANT -DGDK_PIXBUF_DISABLE_DEPRECATED -I/usr/local/include -O2 -Wall -o .libs/gtk-query-immodules-2.0 queryimmodules.o  -L/usr/local/lib ./.libs/libgtk-x11-2.0.so -L/usr/X11R6/lib /v/src/sco/libraries/gtk+-2.14.6/gdk/.libs/libgdk-x11-2.0.so ../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so ../gdk/.libs/libgdk-x11-2.0.so /usr/local/lib/libcairo.a /usr/local/lib/libpangoft2-1.0.a /usr/local/lib/libpixman-1.a /usr/lib/libpng12.so /usr/local/lib/libpango-1.0.a /usr/lib/libfontconfig.so /usr/lib/libfreetype.so /usr/lib/libz.so /usr/lib/libexpat.so /usr/X11R6/lib/libXinerama.so /usr/X11R6/lib/libXrandr.so /usr/X11R6/lib/libXcursor.so /usr/X11R6/lib/libXrender.so /usr/X11R6/lib/libXcomposite.so /usr/X11R6/lib/libXext.so /usr/X11R6/lib/libXdamage.so /usr/X11R6/lib/libXfixes.so /usr/X11R6/lib/libX11.so /usr/X11R6/lib/libXau.so /usr/X11R6/lib/libXdmcp.so -lsocket /v/src/sco/libraries/gtk+-2.14.6/gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm -Wl,-rpath -Wl,/usr/local/lib -Wl,-rpath -Wl,/usr/X11R6/lib
++gcc -D_REENTRANT -DGDK_PIXBUF_DISABLE_DEPRECATED -I/usr/local/include -O2 -Wall -o .libs/gtk-update-icon-cache updateiconcache.o  -L/usr/local/lib ../gdk-pixbuf/.libs/libgdk_pixbuf-2.0.so /usr/local/lib/libgobject-2.0.a /usr/local/lib/libgmodule-2.0.a /usr/local/lib/libglib-2.0.a /usr/local/lib/libintl.a /usr/local/lib/libiconv.a -lm -Wl,-rpath -Wl,/usr/local/lib
++
++cp .libs/gtk-query-immodules-2.0 $D/usr/local/bin
++cp .libs/gtk-update-icon-cache $D/usr/local/bin
++
+--- ./configure.00	2008-12-15 10:44:36.000000000 -0800
++++ ./configure	2009-01-05 13:24:24.480000145 -0800
+@@ -11071,8 +11071,8 @@
+       runpath_var='LD_RUN_PATH'
+ 
+       if test "$GCC" = yes; then
+-	archive_cmds='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	archive_expsym_cmds='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_cmds='$CC -shared ${wl}-soname ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++	archive_expsym_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+       else
+ 	archive_cmds='$CC -G ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	archive_expsym_cmds='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+@@ -14294,8 +14294,8 @@
+ 	    archive_expsym_cmds_CXX='$CC -G ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+ 	    ;;
+ 	  *)
+-	    archive_cmds_CXX='$CC -shared ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
+-	    archive_expsym_cmds_CXX='$CC -shared ${wl}-Bexport:$export_symbols ${wl}-h,$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_cmds_CXX='$CC -shared ${wl}-soname ${wl}$soname -o $lib $libobjs $deplibs $compiler_flags'
++	    archive_expsym_cmds_CXX='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+ 	    ;;
+ 	esac
+       ;;

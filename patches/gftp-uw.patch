@@ -1,0 +1,40 @@
+--- ./lib/gftp.h.uw	2003-11-08 12:23:20.000000000 +0000
++++ ./lib/gftp.h	2003-11-09 19:36:55.970000001 +0000
+@@ -33,6 +33,7 @@
+ #ifndef TIOCGWINSZ
+ #include <sys/ioctl.h>
+ #endif
++#include <sys/mkdev.h>
+ #include <sys/wait.h>
+ #include <sys/utsname.h>
+ #include <netinet/in.h>
+@@ -91,18 +92,6 @@
+ #define GFTP_GET_AI_FAMILY(request)	AF_INET
+ #endif
+ 
+-/* We need the major() and minor() macros in the user interface. If they aren't
+-   defined by the system, we'll just define them here. */
+-#ifndef major
+-#warning major macro was not defined by the system. Defining one that is probably wrong for your system
+-#define major(dev) (((dev) >> 8) & 0xff)
+-#endif
+-
+-#ifndef minor
+-#warning minor macro was not defined by the system. Defining one that is probably wrong for your system
+-#define minor(dev) ((dev) & 0xff)
+-#endif
+-
+ #ifdef WITH_DMALLOC
+ 
+ #undef g_malloc
+--- ./src/text/Makefile.in.uw	2003-11-09 14:07:15.000000000 +0000
++++ ./src/text/Makefile.in	2003-11-09 19:41:24.220000013 +0000
+@@ -115,7 +115,7 @@
+ EXTRA_PROGRAMS = gftp-text
+ gftp_text_SOURCES = gftp-text.c 
+ INCLUDES = @GLIB_CFLAGS@ -DSHARE_DIR=\"$(datadir)/gftp\" -I../../intl
+-LDADD = ../../lib/libgftp.a @GLIB_LIBS@ @EXTRA_LIBS@ @READLINE_LIBS@ @SSL_LIBS@
++LDADD = ../../lib/libgftp.a @GLIB_LIBS@ @EXTRA_LIBS@ @READLINE_LIBS@ @SSL_LIBS@ @INTLLIBS@
+ noinst_HEADERS = gftp-text.h
+ localedir = $(datadir)/locale
+ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs

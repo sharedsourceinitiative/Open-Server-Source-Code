@@ -1,0 +1,47 @@
+
+Installing TightVNC on OpenServer 5
+
+
+TightVNC needs bash, perl and Glib. It expects bash
+and perl in /usr/local/bin, so if they are in /usr/bin, do a
+
+# ln -s /usr/bin/perl /usr/local/bin/perl
+# ln -s /usr/bin/bash /usr/local/bin/bash
+
+It seems to expect some files in a different directory. Check if
+"/usr/X11R6" exists. If not,
+ln -s /usr /usr/X11R6
+There should now be the directory "/usr/X11R6/lib/X11/fonts".
+
+If perl and bash are not installed, download and install
+from skunkware (or from the CD that came with the system).
+
+Download Glib from skunkware. I installed Glib-1.5 from the
+Glib-1.5-VOLS.tar file.
+tar xvf Glib-1.5-VOLS.tar to extract the VOL.* files.
+Use 'scoadmin software' or the GUI to install from Media Images.
+
+Install tightvnc from the tightvnc-1.2.2-VOLS.tar file.
+tar xvf tigntvnc-1.2.2-VOLS.tar to extract the VOL.* files.
+Use 'scoadmin software' or the GUI to install from Media Images.
+
+
+Using tightvnc.
+
+As the user, type "vncpasswd" and give a password that will be needed
+to connect to the Virtual Computer screen. NOTE: vncserver asks for the
+password, but it did not work correctly for me.
+
+'vncserver' starts VNC. You should see 'Xvnc' running. Note the display
+number. You will connect to the VNC window in the browser with
+"http://:580N/ <http://:580n/>" where N
+is the number returned from vncserver.
+
+To end the session, each user connected to the display should use the
+'disconnect' option. Then, as the user that started vncserver, type
+"vncserver -kill :N" where N is the display number.
+
+Information is in the .vnc directory in $HOME of the user who runs
+vncserver.
+
+

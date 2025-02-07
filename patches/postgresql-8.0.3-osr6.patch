@@ -1,0 +1,49 @@
+*** ./Configure-OSR6.osr6	Sat Aug 20 18:03:54 2005
+--- ./Configure-OSR6	Sat Aug 20 18:41:11 2005
+***************
+*** 0 ****
+--- 1,27 ----
++ #!/bin/sh
++ #
++ HOST=i586-sco-sysv5
++ CFLAGS="-O2"
++ INSTALL=/usr/gnu/bin/install
++ NM=nm-p
++ M4=/usr/gnu/bin/m4
++ if [ "$1" = "-g" ]
++ then
++   CC="gcc -D_REENTRANT"
++   CXX="g++ -D_REENTRANT"
++   CFLAGS="$CFLAGS -Wall"
++ else
++   CC="cc -Kpthread -Kalloca"
++   CXX="CC -Kpthread -Kalloca"
++ fi
++ export CC CXX CFLAGS NM M4 INSTALL
++ rm -f mout-configure
++ ./configure --prefix=/usr \
++             --disable-rpath \
++             --with-CXX --with-perl --enable-multibyte --enable-cassert \
++             --with-tcl --with-tk --with-tcl-config=/usr/gnu/lib \
++             --enable-locale --with-python --with-readline \
++             --with-openssl --sysconfdir=/etc/sysconfig/pgsql \
++             --datadir=/usr/share/postgresql \
++             --with-docdir=/usr/share/doc/packages --enable-syslog --with-x \
++             --host=$HOST --target=$HOST --build=$HOST 2>&1 | tee mout-configure
+*** ./Install-OSR6.osr6	Sat Aug 20 18:03:54 2005
+--- ./Install-OSR6	Sat Aug 20 18:03:54 2005
+***************
+*** 0 ****
+--- 1,12 ----
++ #!/bin/sh
++ 
++ MOUT=mout-install
++ D=/u/tmp/pgsql
++ DESTDIR=$D
++ export DESTDIR
++ 
++ [ -f $MOUT ] && mv $MOUT $MOUT-prev
++ [ -d $D ] && rm -rf $D
++ mkdir -p $D
++ make install DESTDIR=$D 2>&1 | tee $MOUT
++ 
